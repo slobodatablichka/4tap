@@ -502,5 +502,83 @@
     "to": "ios-actions",
     "relation": "запрещает произвольный запуск приложений",
     "type": "constraint"
+  },
+  {
+    "from": "command-space",
+    "to": "platform-adaptation-model",
+    "relation": "общая семантика переносится через",
+    "type": "model"
+  },
+  {
+    "from": "system-gestures",
+    "to": "platform-adaptation-model",
+    "relation": "общая модель реестра",
+    "type": "model"
+  },
+  {
+    "from": "user-gestures",
+    "to": "platform-adaptation-model",
+    "relation": "общая модель реестра",
+    "type": "model"
+  },
+  {
+    "from": "platform-adaptation-model",
+    "to": "android-activation-redesign",
+    "relation": "требует Android-specific entry",
+    "type": "model"
+  },
+  {
+    "from": "platform-adaptation-model",
+    "to": "ios-action-redesign",
+    "relation": "требует iOS-specific execution",
+    "type": "model"
+  },
+  {
+    "from": "platform-adaptation-model",
+    "to": "wechat-mini-program",
+    "relation": "реализуется как contained adapter",
+    "type": "model"
+  },
+  {
+    "from": "platform-adaptation-model",
+    "to": "whatsapp-business",
+    "relation": "реализуется как chat adapter",
+    "type": "model"
+  },
+  {
+    "from": "android-global-trigger-limitation",
+    "to": "android-activation-redesign",
+    "relation": "требует перепроектирования",
+    "type": "constraint"
+  },
+  {
+    "from": "android-activation-redesign",
+    "to": "android-quad-tap",
+    "relation": "решает, можно ли сохранить Quad Tap",
+    "type": "model"
+  },
+  {
+    "from": "roadmap-1",
+    "to": "android-activation-redesign",
+    "relation": "блокирует MVP до решения",
+    "type": "roadmap"
+  },
+  {
+    "from": "ios-actions",
+    "to": "ios-action-redesign",
+    "relation": "блокирует текущую модель",
+    "type": "constraint"
+  },
+  {
+    "from": "ios-limits",
+    "to": "ios-action-redesign",
+    "relation": "задаёт границы решения",
+    "type": "constraint"
+  },
+  {
+    "from": "roadmap-3",
+    "to": "ios-action-redesign",
+    "relation": "требует решения для iOS",
+    "type": "roadmap"
   }
 ]
