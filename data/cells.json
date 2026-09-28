@@ -477,10 +477,10 @@
     "id": "android-global-trigger-limitation",
     "section": "android",
     "order": 25,
-    "title": "Global Touch Trigger Limitation",
+    "title": "Arbitrary-area Global Tap Limitation",
     "group": "PLATFORM LIMIT",
-    "short": "Public Android APIs do not provide the passive, non-interfering global raw-touch stream required by the original Quad Tap concept.",
-    "description": "Начиная с API 34 AccessibilityService.onMotionEvent() может получать MotionEvent от выбранных источников, но события от этих источников после этого не передаются остальной системе. TouchInteractionController работает в режиме touch exploration, который изменяет семантику касаний и требует явного управления/делегирования потока. Поэтому исходное требование «пассивно наблюдать четыре тапа в любом месте и при этом не менять обычную доставку касаний приложению» через эти публичные accessibility-механизмы не реализуется в заявленном виде.",
+    "short": "Заблокирован не Quad Tap как жест, а сценарий пассивного распознавания четырёх тапов в произвольной области поверх чужого приложения.",
+    "description": "Техническая проверка снимает только исходный вариант «четыре тапа где угодно на экране при сохранении обычной доставки всех касаний приложению». Публичные AccessibilityService-механизмы не дают такого пассивного глобального raw-touch потока без изменения/перехвата доставки событий. Это не запрещает Quad Tap как системный жест, если Android/OEM заранее выделяет системно управляемую область и обрабатывает касания на уровне SystemUI/input policy.",
     "purpose": "Make the main Android feasibility blocker explicit and prevent the conceptual flow from being mistaken for an implemented capability.",
     "kind": "core",
     "models": [
@@ -503,12 +503,11 @@
       "touch_exploration": "changes interaction semantics"
     },
     "constraints": [
-      "Нужен другой механизм активации либо существенно иной interaction model.",
-      "Quad Tap как алгоритм можно сохранить только при появлении допустимого источника событий."
+      "Сценарий произвольной области отложен.",
+      "Обычный APK не может сам объявить новую глобальную системную touch-зону.",
+      "Для системной зоны требуется Android/OEM/SystemUI integration."
     ],
-    "open_questions": [
-      "Какой альтернативный механизм активации сохраняет скорость KnockUI и приемлемый UX?"
-    ],
+    "open_questions": [],
     "tags": [
       "android",
       "blocker",
@@ -519,7 +518,7 @@
       "state": "blocked-as-specified",
       "date": "2026-09-28",
       "confidence": "high",
-      "summary": "Главный Android-блокер подтверждён: пассивный глобальный Quad Tap без вмешательства в обычную доставку touch-событий не получается реализовать через рассмотренные публичные AccessibilityService-механизмы.",
+      "summary": "Заблокирован именно arbitrary-area passive global Quad Tap для обычного приложения; OEM/system-owned touch region остаётся отдельным допустимым направлением исследования.",
       "sources": [
         {
           "label": "Android AccessibilityService API",
@@ -530,18 +529,18 @@
           "url": "https://developer.android.com/reference/android/accessibilityservice/TouchInteractionController"
         }
       ],
-      "next_step": "До реализации Android MVP выбрать и проверить новый механизм активации.",
-      "implication": "Прямая архитектурная цепочка AccessibilityService → пассивный Quad Tap больше не считается допустимой."
+      "next_step": "Проектировать системно выделенную область Quad Tap совместно с Android/OEM.",
+      "implication": "Не удалять Quad Tap из продукта; перенести его из «где угодно» в OEM/SystemUI-owned reserved zone."
     }
   },
   {
     "id": "android-activation-redesign",
     "section": "android",
     "order": 27,
-    "title": "Android Activation Redesign",
+    "title": "Android Activation Architecture",
     "group": "ARCHITECTURE DECISION",
-    "short": "Нужно выбрать замену пассивному глобальному источнику событий, сохранив максимально быстрый вход в KnockUI.",
-    "description": "После технической проверки проблема Android локализована: алгоритм четырёх тапов и локальный холст сами по себе реализуемы, но исходный способ пассивного глобального получения касаний не подтверждён. Следующее архитектурное решение должно определить допустимый публичный trigger. Quad Tap может остаться только если новый trigger действительно даёт требуемый поток событий без недопустимого вмешательства в чужой UI.",
+    "short": "Основной Android-путь меняется: Quad Tap сохраняется, но переносится в специальную системную область, предоставленную Android/OEM.",
+    "description": "Решение проекта после технической проверки: сценарий четырёх тапов в произвольной области временно снимается. Целевой вариант — Android/OEM предоставляет системно управляемую touch-зону, в которой четыре тапа распознаются SystemUI/input policy и запускают KnockUI. Это принципиально отличается от попытки обычного APK пассивно слушать весь экран.",
     "purpose": "Сделать главный нерешённый вопрос Android MVP отдельным архитектурным узлом.",
     "kind": "core",
     "models": [
@@ -551,7 +550,7 @@
     "platforms": [
       "android"
     ],
-    "status": "needs-validation",
+    "status": "concept",
     "inputs": [
       "Global Touch Trigger Limitation",
       "Требование быстрого вызова",
@@ -561,16 +560,18 @@
       "Выбранный Android activation contract"
     ],
     "parameters": {
-      "decision_status": "TBD"
+      "decision_status": "accepted direction",
+      "primary_path": "OEM/SystemUI reserved touch zone → Quad Tap → KnockUI"
     },
     "constraints": [
-      "Не использовать обходы системных защит.",
-      "Не считать AccessibilityService пассивным глобальным touch listener.",
-      "Решение должно быть проверено на реальных устройствах и на соответствие правилам распространения."
+      "Требуется OEM/system integration.",
+      "Конкретная геометрия зоны ещё не выбрана.",
+      "Нельзя считать обычный systemGestures inset достаточным сам по себе: Android документирует, что простые taps в gesture insets обычно всё равно доходят приложению; зона должна реально принадлежать системному touch target/input policy."
     ],
     "open_questions": [
-      "Какие публичные trigger-механизмы сравниваем?",
-      "Можно ли сохранить именно Quad Tap или потребуется другой пользовательский жест/действие?"
+      "Где именно расположить системную область?",
+      "Должна ли область быть визуально обозначена или оставаться невидимой?",
+      "Как система ведёт себя после 1/2/3 тапов, если 4-й не состоялся?"
     ],
     "tags": [
       "android",
@@ -579,22 +580,99 @@
       "mvp"
     ],
     "verification": {
+      "state": "verified-constrained",
+      "date": "2026-09-28",
+      "confidence": "high",
+      "summary": "Android имеет системные gesture/touch regions с приоритетом системы, но обычное приложение не может создать новый mandatory system gesture. Для Quad Tap нужен OEM/SystemUI-owned region или изменение input policy.",
+      "sources": [
+        {
+          "label": "Android — WindowInsets.Type.systemGestures / mandatorySystemGestures",
+          "url": "https://developer.android.com/reference/android/view/WindowInsets.Type"
+        },
+        {
+          "label": "Android — Gesture navigation compatibility",
+          "url": "https://developer.android.com/develop/ui/views/touch-and-input/gestures/gesturenav"
+        },
+        {
+          "label": "AOSP — Android Compatibility Definition (system gesture handling)",
+          "url": "https://source.android.com/docs/compatibility/17/android-17-cdd"
+        }
+      ],
+      "next_step": "Спроектировать OEM/SystemUI touch target и протокол распознавания 4 taps.",
+      "implication": "Quad Tap остаётся фирменным Android trigger, но только в системно предоставленной зоне."
+    }
+  },
+  {
+    "id": "android-oem-quad-zone",
+    "section": "android",
+    "order": 28,
+    "title": "OEM Reserved Quad Tap Zone",
+    "group": "SYSTEM INPUT",
+    "short": "Специальная системная touch-зона Android/OEM, зарезервированная для четырёх тапов KnockUI.",
+    "description": "Целевая модель: Android/OEM/SystemUI владеет небольшой областью экрана и получает касания в ней с системным приоритетом. В этой области SystemUI/input policy считает последовательность из четырёх тапов и при успехе запускает KnockUI. В отличие от прежней модели, KnockUI не пытается пассивно наблюдать весь экран.",
+    "purpose": "Сохранить фирменный вызов «тап-тап-тап-тап», устранив конфликт с произвольными касаниями чужих приложений.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "android"
+    ],
+    "status": "concept",
+    "inputs": [
+      "Touch events inside OEM-owned zone"
+    ],
+    "outputs": [
+      "Quad Tap event / KnockUI activation"
+    ],
+    "parameters": {
+      "owner": "Android/OEM/SystemUI",
+      "geometry": "TBD",
+      "visibility": "TBD",
+      "gesture": "4 taps",
+      "outside_zone": "ordinary app behavior unchanged"
+    },
+    "constraints": [
+      "Обычный сторонний APK не может сам превратить произвольную область в mandatory system touch zone.",
+      "Просто объявить область systemGestures недостаточно для taps: официальная документация указывает, что простые taps в system gesture insets обычно доставляются окну.",
+      "Нужен реальный system-owned touch target или OEM input-policy handling.",
+      "Совместимость с Home/Back/Quick Switch и требованиями Android CDD должна быть проверена для выбранного расположения."
+    ],
+    "open_questions": [
+      "Нижний угол, край, отдельный участок system overlay или иная геометрия?",
+      "Какой размер зоны обеспечивает быстрый blind-use без ложных срабатываний?",
+      "Что происходит с одиночным/двойным/тройным тапом в этой зоне?",
+      "Нужен ли визуальный affordance для первого запуска/обучения?"
+    ],
+    "tags": [
+      "android",
+      "oem",
+      "systemui",
+      "quad-tap",
+      "reserved-zone"
+    ],
+    "verification": {
       "state": "requires-prototype",
       "date": "2026-09-28",
       "confidence": "high",
-      "summary": "Техническая проверка выявила необходимость перепроектирования точки входа Android; конкретная замена пока не выбрана.",
+      "summary": "Системно зарезервированная область является архитектурно правдоподобным OEM-путём, но конкретная реализация Quad Tap требует SystemUI/input-policy prototype и проверки CDD/UX.",
       "sources": [
         {
-          "label": "Android AccessibilityService API",
-          "url": "https://developer.android.com/reference/android/accessibilityservice/AccessibilityService"
+          "label": "Android — WindowInsets.Type.systemGestures / mandatorySystemGestures",
+          "url": "https://developer.android.com/reference/android/view/WindowInsets.Type"
         },
         {
-          "label": "Android TouchInteractionController API",
-          "url": "https://developer.android.com/reference/android/accessibilityservice/TouchInteractionController"
+          "label": "Android — Gesture navigation compatibility",
+          "url": "https://developer.android.com/develop/ui/views/touch-and-input/gestures/gesturenav"
+        },
+        {
+          "label": "AOSP — Android Compatibility Definition (system gesture handling)",
+          "url": "https://source.android.com/docs/compatibility/17/android-17-cdd"
         }
       ],
-      "next_step": "Составить кандидаты Android activation mechanisms и проверить их по API, UX и Play policy.",
-      "implication": "Это решение является главным блокирующим архитектурным решением для Android MVP."
+      "next_step": "Выбрать 2–3 геометрии зоны и сделать OEM/SystemUI design specification.",
+      "implication": "Проблема глобального arbitrary touch listener исчезает; главный вопрос переносится в OEM integration и UX системной зоны."
     }
   },
   {
@@ -602,9 +680,9 @@
     "section": "android",
     "title": "Quad Tap",
     "group": "ACTIVATION",
-    "short": "Четыре последовательных касания служат кандидатом на глобальный жест активации.",
-    "description": "The four-tap detector itself is straightforward once a valid event stream exists: count four taps, apply spatial and temporal thresholds, then continue to zone validation. The unresolved issue is not the detector algorithm but obtaining a compliant passive global event source without disrupting ordinary input.",
-    "purpose": "Активировать KnockUI без конфликта с обычным свайпом и набором текста.",
+    "short": "Четыре последовательных тапа в системно выделенной OEM-зоне инициируют KnockUI.",
+    "description": "Quad Tap сохраняется как фирменный механизм активации Android, но основной сценарий теперь ограничен специальной системной зоной. SystemUI/input policy получает события этой зоны, проверяет четыре тапа с временными/пространственными условиями и при успехе вызывает KnockUI.",
+    "purpose": "Активировать KnockUI четырьмя тапами в зарезервированной Android/OEM области.",
     "kind": "core",
     "models": [
       "b2c",
@@ -615,10 +693,10 @@
     ],
     "status": "needs-validation",
     "inputs": [
-      "Последовательность касаний"
+      "Touch sequence from OEM Reserved Quad Tap Zone"
     ],
     "outputs": [
-      "Activation candidate"
+      "KnockUI activation"
     ],
     "parameters": {
       "taps": 4,
@@ -626,12 +704,12 @@
       "interval_ms": "300–400"
     },
     "constraints": [
-      "Original passive global event source is blocked by the verified Android touch limitation.",
-      "≈50 px and 300–400 ms remain UX hypotheses requiring device tests."
+      "Работает только после появления OEM/SystemUI-owned zone.",
+      "≈50 px и 300–400 ms остаются стартовыми UX-гипотезами, а не утверждёнными параметрами."
     ],
     "open_questions": [
-      "What supported trigger source supplies the tap sequence?",
-      "What radius/timing values minimize false positives across density classes?"
+      "Какие timing/radius параметры оптимальны именно внутри выбранной системной зоны?",
+      "Нужно ли требовать четыре тапа в одной точке или допускается небольшое перемещение?"
     ],
     "tags": [
       "android",
@@ -642,7 +720,7 @@
       "state": "requires-prototype",
       "date": "2026-09-28",
       "confidence": "high",
-      "summary": "The tap-sequence algorithm is implementable, but the original global passive event source is not. Timing/radius also require empirical tuning.",
+      "summary": "Quad Tap как локальный распознаватель последовательности технически реалистичен при наличии system-owned event source; проверять нужно UX-параметры и OEM integration.",
       "sources": [
         {
           "label": "Android AccessibilityService API",
@@ -653,17 +731,18 @@
           "url": "https://developer.android.com/reference/android/accessibilityservice/TouchInteractionController"
         }
       ],
-      "next_step": "Prototype the gesture only after choosing a supported activation source."
+      "next_step": "После выбора зоны реализовать системный prototype 4-tap detector.",
+      "implication": "Quad Tap больше не рассматривается как глобальный anywhere-listener; он является жестом специальной системной зоны."
     }
   },
   {
     "id": "android-zone-validation",
     "section": "android",
     "order": 40,
-    "title": "Activation Zone Validation",
+    "title": "Arbitrary-area Zone Validation — deferred",
     "group": "ACTIVATION",
-    "short": "После Quad Tap система проверяет, допустима ли точка активации.",
-    "description": "AccessibilityNodeInfo can expose node bounds and properties such as clickability, but the accessibility tree does not necessarily map one-to-one to the rendered view hierarchy. Custom views must explicitly publish accessibility semantics. Therefore KnockUI can heuristically avoid known clickable/accessibility nodes, but it cannot guarantee that every pixel classified as «empty» is non-interactive across arbitrary third-party apps.",
+    "short": "Проверка «пустого места» чужого приложения относится к отложенному сценарию тапов где угодно и больше не входит в основной Android flow.",
+    "description": "Этот узел сохраняется как документирование прежней идеи. В основной архитектуре с OEM Reserved Quad Tap Zone проверка активного/неактивного элемента чужого приложения не нужна: точка активации заранее находится в системно принадлежащей области. Если проект когда-либо вернётся к arbitrary-area activation, ограничения AccessibilityNodeInfo снова станут актуальны.",
     "purpose": "Снизить конфликты KnockUI с системным и прикладным интерфейсом.",
     "kind": "core",
     "models": [
@@ -673,7 +752,7 @@
     "platforms": [
       "android"
     ],
-    "status": "needs-validation",
+    "status": "concept",
     "inputs": [
       "Координата 4-го тапа",
       "Контекст интерфейса"
@@ -682,15 +761,15 @@
       "allow / cancel"
     ],
     "parameters": {
-      "protected_areas": "status bar, navigation, active controls"
+      "primary_flow": false,
+      "deferred_for": "arbitrary-area activation"
     },
     "constraints": [
       "Universal empty-zone detection across arbitrary third-party UI cannot be guaranteed from accessibility metadata.",
       "Custom views, embedded surfaces, games and poorly exposed accessibility trees can hide interactive semantics."
     ],
     "open_questions": [
-      "Should the product replace «empty zone» with a deterministic explicit activation region/gesture?",
-      "What fallback rule applies when accessibility semantics are incomplete?"
+      "Возвращаться ли вообще к arbitrary-area activation после OEM-версии?"
     ],
     "tags": [
       "android",
@@ -713,7 +792,7 @@
         }
       ],
       "next_step": "Treat zone validation as heuristic unless the activation design is changed.",
-      "implication": "Термин «пустая зона» нельзя использовать как гарантированно определяемое состояние чужого интерфейса; это только эвристика по доступной accessibility-семантике."
+      "implication": "Не участвует в основном OEM-zone Android flow."
     }
   },
   {
@@ -722,7 +801,7 @@
     "title": "Local Canvas",
     "group": "INPUT",
     "short": "Локальная невидимая область ввода вокруг последнего тапа.",
-    "description": "После активации создаётся локализованная область для ввода двух знаков. Краткая рамка показывает границы. Выход за границу до первого распознавания может сбрасывать режим.",
+    "description": "После успешного системного Quad Tap KnockUI создаёт локализованную область для ввода двух знаков. Вопрос глобального распознавания касаний к Local Canvas больше не относится: canvas появляется только после системной активации.",
     "purpose": "Ограничить жестовый ввод небольшой областью и не перекрывать весь экран.",
     "kind": "core",
     "models": [
@@ -734,7 +813,7 @@
     ],
     "status": "concept",
     "inputs": [
-      "Координата активации"
+      "KnockUI activation from system Quad Tap"
     ],
     "outputs": [
       "Gesture input surface",
