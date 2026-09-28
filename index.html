@@ -10,7 +10,7 @@
 <body>
   <header class="topbar">
     <div>
-      <div class="eyebrow">INTERACTIVE TECHNICAL DOCUMENTATION · v0.3</div>
+      <div class="eyebrow">INTERACTIVE TECHNICAL DOCUMENTATION · v0.4</div>
       <h1>KnockUI / 4Тап</h1>
       <p class="subtitle">Единая карта продукта: Android · iOS · WeChat · WhatsApp · B2C · B2B</p>
     </div>
@@ -44,6 +44,18 @@
         </select>
         </div>
         <div class="status-group">
+          <label for="verification-filter">Тех.проверка</label>
+          <select id="verification-filter">
+            <option value="all">Все</option>
+            <option value="verified-supported">Подтверждено</option>
+            <option value="verified-constrained">С ограничениями</option>
+            <option value="blocked-as-specified">Блокер схемы</option>
+            <option value="requires-prototype">Нужен прототип</option>
+            <option value="non-technical">Не техническое</option>
+            <option value="unverified">Ещё не проверено</option>
+          </select>
+        </div>
+        <div class="status-group">
           <label for="relation-filter">Связи</label>
           <select id="relation-filter">
             <option value="all">Все связи</option>
@@ -58,6 +70,9 @@
       <span><i class="dot approved"></i>утверждено</span>
       <span><i class="dot concept"></i>концепция</span>
       <span><i class="dot validate"></i>требует проверки</span>
+      <span class="verification-key"><i class="verify-chip supported"></i>тех. подтверждено</span>
+      <span class="verification-key"><i class="verify-chip constrained"></i>с ограничениями</span>
+      <span class="verification-key"><i class="verify-chip blocked"></i>блокер</span>
       <span class="relation-key"><i class="rel-line flow"></i>поток</span>
       <span class="relation-key"><i class="rel-line model"></i>модель</span>
       <span class="relation-key"><i class="rel-line constraint"></i>ограничение</span>
