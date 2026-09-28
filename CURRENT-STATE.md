@@ -210,6 +210,21 @@
 
 Тем самым практически подтверждена граница «внешняя система → 4Tap». Это всё ещё не является реализацией системной reserved touch-zone или Quad Tap в SystemUI/input policy. Именно эта зона теперь остаётся основным незакрытым Android activation-контуром.
 
+
+## Android SystemUI Quad Tap zone design
+
+Утверждена минимальная спецификация первого настоящего системного prototype:
+- две system-owned зоны в нижних углах;
+- baseline: `58 × 44 dp`;
+- UX comparison: `52×40`, `58×44`, `64×48`;
+- touch sequence внутри зоны полностью принадлежит SystemUI;
+- 1/2/3 незавершённых taps по timeout сбрасываются и не replay-ятся нижележащему приложению;
+- первый prototype сохраняет уже проверенные параметры Quad Tap: 4 taps, 45–700 ms inter-tap, 280 ms max tap duration, 20 dp movement;
+- LEFT/RIGHT независимы;
+- first pass: portrait only.
+
+Среда первого системного prototype выбрана: AOSP `android-latest-release` + Cuttlefish x86_64 userdebug на отдельном Linux host. Downstream после `ActivationRequest` остаётся неизменным и уже подтверждён.
+
 ## iOS implementation options
 
 iOS больше не описывается как keyboard-only архитектура. Зафиксированы варианты реализации, окончательный выбор отложен.
