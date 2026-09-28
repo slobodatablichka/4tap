@@ -102,18 +102,6 @@
     "type": "constraint"
   },
   {
-    "from": "android-quad-tap",
-    "to": "android-zone-validation",
-    "relation": "передаёт на проверку зоны",
-    "type": "flow"
-  },
-  {
-    "from": "android-zone-validation",
-    "to": "android-local-canvas",
-    "relation": "при allow открывает",
-    "type": "flow"
-  },
-  {
     "from": "android-local-canvas",
     "to": "android-failsafe",
     "relation": "имеет ветвь отмены",
@@ -468,18 +456,6 @@
     "type": "governance"
   },
   {
-    "from": "android-integration",
-    "to": "android-global-trigger-limitation",
-    "relation": "ограничен публичной моделью touch events",
-    "type": "constraint"
-  },
-  {
-    "from": "android-global-trigger-limitation",
-    "to": "android-quad-tap",
-    "relation": "блокирует пассивный глобальный источник",
-    "type": "constraint"
-  },
-  {
     "from": "android-permissions",
     "to": "android-local-canvas",
     "relation": "разрешает application overlay",
@@ -546,18 +522,6 @@
     "type": "model"
   },
   {
-    "from": "android-global-trigger-limitation",
-    "to": "android-activation-redesign",
-    "relation": "требует перепроектирования",
-    "type": "constraint"
-  },
-  {
-    "from": "android-activation-redesign",
-    "to": "android-quad-tap",
-    "relation": "решает, можно ли сохранить Quad Tap",
-    "type": "model"
-  },
-  {
     "from": "roadmap-1",
     "to": "android-activation-redesign",
     "relation": "блокирует MVP до решения",
@@ -580,5 +544,47 @@
     "to": "ios-action-redesign",
     "relation": "требует решения для iOS",
     "type": "roadmap"
+  },
+  {
+    "from": "android-global-trigger-limitation",
+    "to": "android-activation-redesign",
+    "relation": "снимает сценарий «где угодно»",
+    "type": "constraint"
+  },
+  {
+    "from": "android-activation-redesign",
+    "to": "android-oem-quad-zone",
+    "relation": "выбирает системную зону как основной путь",
+    "type": "model"
+  },
+  {
+    "from": "android-oem-quad-zone",
+    "to": "android-quad-tap",
+    "relation": "передаёт системные taps",
+    "type": "flow"
+  },
+  {
+    "from": "android-quad-tap",
+    "to": "android-local-canvas",
+    "relation": "при 4 taps активирует",
+    "type": "flow"
+  },
+  {
+    "from": "android-global-trigger-limitation",
+    "to": "android-zone-validation",
+    "relation": "оставляет только как deferred arbitrary-area branch",
+    "type": "constraint"
+  },
+  {
+    "from": "roadmap-1",
+    "to": "android-oem-quad-zone",
+    "relation": "требует OEM/SystemUI integration",
+    "type": "roadmap"
+  },
+  {
+    "from": "android-integration",
+    "to": "android-activation-redesign",
+    "relation": "переходит к OEM/system activation",
+    "type": "model"
   }
 ]
