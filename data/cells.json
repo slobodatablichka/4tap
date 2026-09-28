@@ -801,7 +801,7 @@
     "title": "Local Canvas",
     "group": "INPUT",
     "short": "Локальная невидимая область ввода вокруг последнего тапа.",
-    "description": "После успешного системного Quad Tap KnockUI создаёт локализованную область для ввода двух знаков. Вопрос глобального распознавания касаний к Local Canvas больше не относится: canvas появляется только после системной активации.",
+    "description": "После успешной системной активации KnockUI создаёт локализованную область для ввода. Эта область реализуется как временный touchable overlay поверх текущего приложения. Вопрос глобального распознавания касаний к Local Canvas не относится: canvas появляется только после активации и сам получает штрихи пользователя.",
     "purpose": "Ограничить жестовый ввод небольшой областью и не перекрывать весь экран.",
     "kind": "core",
     "models": [
@@ -816,7 +816,7 @@
       "KnockUI activation from system Quad Tap"
     ],
     "outputs": [
-      "Gesture input surface",
+      "Drawing Overlay Surface",
       "Canvas boundary"
     ],
     "parameters": {
@@ -825,12 +825,14 @@
       "scope": "localized overlay",
       "overlay_type": "TYPE_APPLICATION_OVERLAY",
       "permission": "SYSTEM_ALERT_WINDOW",
-      "non_touchable_flag": "FLAG_NOT_TOUCHABLE — такой overlay сам не получает touch"
+      "non_touchable_flag": "FLAG_NOT_TOUCHABLE — такой overlay сам не получает touch",
+      "pass_through_required": false
     },
     "constraints": [
-      "Локальный touchable canvas реалистичен только после уже состоявшейся активации.",
-      "FLAG_NOT_TOUCHABLE нельзя использовать для самого жестового canvas, если он должен принимать штрихи.",
-      "Размер 200×200 dp и визуальная рамка требуют UX-тестов на разных плотностях."
+      "Canvas появляется только после активации KnockUI.",
+      "Для ввода штрихов overlay должен быть touchable.",
+      "Касания внутри canvas во время ввода принадлежат KnockUI, а не нижележащему приложению.",
+      "Размер 200×200 dp и визуальная рамка остаются стартовыми параметрами для UX-тестов."
     ],
     "open_questions": [],
     "tags": [
@@ -843,7 +845,7 @@
       "state": "verified-constrained",
       "date": "2026-09-28",
       "confidence": "high",
-      "summary": "TYPE_APPLICATION_OVERLAY и permission flow подтверждены. Не-touchable overlay не может собирать жесты; локальный touchable canvas подходит как post-activation input surface.",
+      "summary": "Локальный post-activation canvas подтверждён как рабочее направление: touchable overlay может принимать жестовый ввод поверх другого приложения.",
       "sources": [
         {
           "label": "Android WindowManager.LayoutParams",
@@ -855,7 +857,80 @@
         }
       ],
       "next_step": "Prototype the 200×200 dp canvas after replacing the global trigger.",
-      "implication": "Overlay решает отображение/локальный ввод после активации, но не создаёт пассивный глобальный trigger."
+      "implication": "Рисование двух символов не требует глобального passive touch listener; после активации KnockUI может владеть небольшим временным input surface."
+    }
+  },
+  {
+    "id": "android-drawing-overlay",
+    "section": "android",
+    "order": 52,
+    "title": "Drawing Overlay Surface",
+    "group": "INPUT",
+    "short": "После активации KnockUI может открыть небольшой touchable overlay поверх текущего приложения и принимать в нём рисование двух знаков.",
+    "description": "Ограничение глобального passive touch capture не мешает самому рисованию после активации. KnockUI может создать локальное окно TYPE_APPLICATION_OVERLAY с разрешением SYSTEM_ALERT_WINDOW. Если окно touchable, касания внутри его границ получает KnockUI, поэтому пользователь может рисовать первый и второй знак поверх видимого текущего приложения. Нижележащее приложение в пределах этого временного canvas во время ввода реагировать на эти касания не должно. Pass-through для gesture canvas не требуется.",
+    "purpose": "Отделить технически рабочий post-activation ввод жестов от сложной задачи первоначального глобального вызова KnockUI.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "android"
+    ],
+    "status": "concept",
+    "inputs": [
+      "KnockUI activation",
+      "Touch input inside local overlay"
+    ],
+    "outputs": [
+      "Stroke 1",
+      "Stroke 2"
+    ],
+    "parameters": {
+      "window_type": "TYPE_APPLICATION_OVERLAY",
+      "permission": "SYSTEM_ALERT_WINDOW",
+      "touch_mode": "touchable",
+      "pass_through_required": false,
+      "lifecycle": "temporary; shown only during KnockUI command input"
+    },
+    "constraints": [
+      "Пользователь должен выдать разрешение на отображение поверх других приложений, если используется TYPE_APPLICATION_OVERLAY.",
+      "Touchable overlay забирает касания внутри своей области на время ввода.",
+      "Ограничения Android 12 на untrusted pass-through относятся к попыткам пропускать touch через overlay; для gesture canvas такой pass-through не нужен.",
+      "Размер, положение и визуальная обратная связь canvas требуют UX-тестов."
+    ],
+    "open_questions": [
+      "Должен ли canvas быть полностью невидимым или иметь краткую рамку/подсветку?",
+      "Какой размер и позиционирование дают лучший blind-use после системной активации?"
+    ],
+    "tags": [
+      "android",
+      "overlay",
+      "drawing",
+      "input",
+      "canvas"
+    ],
+    "verification": {
+      "state": "verified-constrained",
+      "date": "2026-09-28",
+      "confidence": "high",
+      "summary": "Post-activation drawing surface is technically feasible: a touchable TYPE_APPLICATION_OVERLAY can receive KnockUI strokes above another app. Android 12 pass-through restrictions do not block this design because the input canvas is not intended to pass touches through.",
+      "sources": [
+        {
+          "label": "Android WindowManager.LayoutParams — TYPE_APPLICATION_OVERLAY",
+          "url": "https://developer.android.com/reference/android/view/WindowManager.LayoutParams"
+        },
+        {
+          "label": "Android Settings — ACTION_MANAGE_OVERLAY_PERMISSION / canDrawOverlays",
+          "url": "https://developer.android.com/reference/android/provider/Settings"
+        },
+        {
+          "label": "Android 12 — untrusted touch events / overlay pass-through restrictions",
+          "url": "https://developer.android.com/about/versions/12/behavior-changes-all"
+        }
+      ],
+      "next_step": "Prototype the local touchable overlay and verify stroke latency, sizing and dismissal on real devices.",
+      "implication": "The hard Android problem is activation, not the subsequent two-symbol drawing surface."
     }
   },
   {
