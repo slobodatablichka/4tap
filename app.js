@@ -7,7 +7,8 @@
     selectedId: null,
     filter: 'all',
     status: 'all',
-    query: ''
+    query: '',
+    relationMode: 'all'
   };
 
   const mapEl = document.getElementById('system-map');
@@ -20,6 +21,8 @@
   const resultCount = document.getElementById('result-count');
   const docSearch = document.getElementById('doc-search');
   const statusFilter = document.getElementById('status-filter');
+  const relationFilter = document.getElementById('relation-filter');
+  const integrityBadge = document.getElementById('integrity-badge');
   const gestureSpace = document.getElementById('gesture-space');
   const matrix = document.getElementById('gesture-matrix');
   const comboSearch = document.getElementById('combo-search');
@@ -44,6 +47,8 @@
     state.cells = cells;
     state.relations = relations;
     state.gestures = gestures.assignments || [];
+    const integrity = validateData();
+    renderIntegrity(integrity);
     render();
     renderMatrix();
     openFromHash();
@@ -53,6 +58,58 @@
   });
 
   function assertOk(r){ if(!r.ok) throw new Error(r.status + ' ' + r.url); return r; }
+
+  function validateData() {
+    const errors = [];
+    const warnings = [];
+    const sectionIds = new Set();
+    state.sections.forEach(s => {
+      if (!s.id) errors.push('Раздел без id');
+      else if (sectionIds.has(s.id)) errors.push('Дублирующийся раздел: ' + s.id);
+      else sectionIds.add(s.id);
+    });
+
+    const cellIds = new Set();
+    state.cells.forEach(c => {
+      if (!c.id) errors.push('Ячейка без id');
+      else if (cellIds.has(c.id)) errors.push('Дублирующаяся ячейка: ' + c.id);
+      else cellIds.add(c.id);
+      if (!sectionIds.has(c.section)) errors.push('Неизвестный section у ' + c.id + ': ' + c.section);
+      if (!['approved','concept','needs-validation'].includes(c.status)) errors.push('Неизвестный status у ' + c.id);
+    });
+
+    const relationKeys = new Set();
+    const degree = new Map(state.cells.map(c => [c.id, 0]));
+    const allowedTypes = new Set(['flow','branch','model','constraint','strategy','roadmap','governance']);
+    state.relations.forEach((r,i) => {
+      if (!cellIds.has(r.from) || !cellIds.has(r.to)) errors.push('Связь #' + (i+1) + ' ссылается на неизвестную ячейку');
+      if (!allowedTypes.has(r.type)) errors.push('Связь #' + (i+1) + ' имеет неизвестный type: ' + r.type);
+      const key = [r.from,r.to,r.type,r.relation].join('|');
+      if (relationKeys.has(key)) errors.push('Дублирующаяся связь: ' + key);
+      relationKeys.add(key);
+      if (degree.has(r.from)) degree.set(r.from, degree.get(r.from) + 1);
+      if (degree.has(r.to)) degree.set(r.to, degree.get(r.to) + 1);
+    });
+    for (const [id,n] of degree) if (n === 0) warnings.push('Изолированная ячейка: ' + id);
+    return {errors,warnings};
+  }
+
+  function renderIntegrity(result) {
+    const total = state.cells.length + ' ячеек · ' + state.relations.length + ' связей';
+    if (result.errors.length) {
+      integrityBadge.className = 'integrity-badge error';
+      integrityBadge.textContent = 'Ошибка данных: ' + result.errors.length + ' · ' + total;
+      integrityBadge.title = result.errors.join('\n');
+    } else if (result.warnings.length) {
+      integrityBadge.className = 'integrity-badge warn';
+      integrityBadge.textContent = 'Данные целы, предупреждений: ' + result.warnings.length + ' · ' + total;
+      integrityBadge.title = result.warnings.join('\n');
+    } else {
+      integrityBadge.className = 'integrity-badge ok';
+      integrityBadge.textContent = 'Data integrity: OK · ' + total;
+      integrityBadge.title = 'Все section/id/relations согласованы; изолированных ячеек нет.';
+    }
+  }
 
   function searchable(cell) {
     return [
@@ -220,24 +277,55 @@
     svg.setAttribute('width', stageRect.width);
     svg.setAttribute('height', stageRect.height);
 
-    state.relations.forEach(rel => {
+    state.relations.forEach((rel,index) => {
       if (!visibleIds.has(rel.from) || !visibleIds.has(rel.to)) return;
+      const isActive = !!activeId && (rel.from === activeId || rel.to === activeId);
+      if (state.relationMode === 'focus' && !isActive) return;
+      if (state.relationMode === 'flow' && !['flow','branch'].includes(rel.type)) return;
+
       const a = document.querySelector(`.map-cell[data-id="${CSS.escape(rel.from)}"]`);
       const b = document.querySelector(`.map-cell[data-id="${CSS.escape(rel.to)}"]`);
       if (!a || !b) return;
       const ar = a.getBoundingClientRect();
       const br = b.getBoundingClientRect();
+      const acx = ar.left + ar.width/2 - stageRect.left;
+      const acy = ar.top + ar.height/2 - stageRect.top;
+      const bcx = br.left + br.width/2 - stageRect.left;
+      const bcy = br.top + br.height/2 - stageRect.top;
+      const dx = bcx - acx, dy = bcy - acy;
 
-      const x1 = ar.left + ar.width/2 - stageRect.left;
-      const y1 = ar.top + ar.height - stageRect.top;
-      const x2 = br.left + br.width/2 - stageRect.left;
-      const y2 = br.top - stageRect.top;
-      const mid = (y1 + y2)/2;
+      let x1,y1,x2,y2,d,mx,my;
+      if (Math.abs(dy) >= Math.abs(dx) * 0.55) {
+        const down = dy >= 0;
+        x1 = acx; y1 = (down ? ar.bottom : ar.top) - stageRect.top;
+        x2 = bcx; y2 = (down ? br.top : br.bottom) - stageRect.top;
+        const cy = (y1+y2)/2;
+        d = `M ${x1} ${y1} C ${x1} ${cy}, ${x2} ${cy}, ${x2} ${y2}`;
+        mx=(x1+x2)/2; my=cy;
+      } else {
+        const right = dx >= 0;
+        x1 = (right ? ar.right : ar.left) - stageRect.left; y1 = acy;
+        x2 = (right ? br.left : br.right) - stageRect.left; y2 = bcy;
+        const cx = (x1+x2)/2;
+        d = `M ${x1} ${y1} C ${cx} ${y1}, ${cx} ${y2}, ${x2} ${y2}`;
+        mx=cx; my=(y1+y2)/2;
+      }
 
       const path = document.createElementNS('http://www.w3.org/2000/svg','path');
-      path.setAttribute('d', `M ${x1} ${y1} C ${x1} ${mid}, ${x2} ${mid}, ${x2} ${y2}`);
-      if (activeId && (rel.from === activeId || rel.to === activeId)) path.classList.add('active');
+      path.setAttribute('d', d);
+      path.classList.add('relation','relation-' + rel.type);
+      if (isActive) path.classList.add('active');
       svg.appendChild(path);
+
+      if (isActive && rel.relation) {
+        const label = document.createElementNS('http://www.w3.org/2000/svg','text');
+        label.setAttribute('x', mx);
+        label.setAttribute('y', my - 4);
+        label.setAttribute('text-anchor','middle');
+        label.classList.add('relation-label');
+        label.textContent = rel.relation;
+        svg.appendChild(label);
+      }
     });
   }
 
@@ -262,6 +350,11 @@
   statusFilter.addEventListener('change', () => {
     state.status = statusFilter.value;
     render();
+  });
+
+  relationFilter.addEventListener('change', () => {
+    state.relationMode = relationFilter.value;
+    drawRelations(new Set(state.cells.filter(visible).map(c => c.id)), state.selectedId);
   });
 
   docSearch.addEventListener('input', () => {
