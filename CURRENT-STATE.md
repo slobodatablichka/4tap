@@ -107,3 +107,14 @@
 - ограничения Android 12 на untrusted pass-through поэтому не блокируют эту схему.
 
 Добавлена ячейка `android-drawing-overlay`. Основной input flow теперь проходит через неё: `Local Canvas → Drawing Overlay Surface → Gesture 1`.
+
+
+## Android overlay over WeChat / WhatsApp
+
+Зафиксирована двухконтурная модель:
+- на Android системный/OEM-вызов KnockUI может открыть временный Drawing Overlay Surface поверх текущего foreground app, в том числе поверх WeChat и WhatsApp;
+- одновременно сохраняются собственные внутренние KnockUI-пути: WeChat Mini Program и WhatsApp Business/chat transport;
+- эти пути независимы и не заменяют друг друга;
+- данное решение относится к Android; iOS рассматривается отдельно.
+
+Добавлена ячейка `android-overlay-over-host-apps`.
