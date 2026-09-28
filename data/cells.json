@@ -1066,8 +1066,14 @@
     "outputs": [
       "Первый символ"
     ],
-    "parameters": {},
-    "constraints": [],
+    "parameters": {
+      "prototype_result": "LEFT SC OK; RIGHT SC OK",
+      "prototype_scope": "in-app Activity; not global/OEM trigger"
+    },
+    "constraints": [
+      "Текущий успешный corner → 4-tap → canvas → S → C → SC prototype работает внутри 4Tap Activity и не подтверждает системный/OEM trigger.",
+      "Post-activation TYPE_APPLICATION_OVERLAY поверх другого приложения требует отдельной real-device проверки."
+    ],
     "open_questions": [],
     "tags": [
       "android",
@@ -2865,7 +2871,7 @@
     "title": "Stage 1 — Android MVP",
     "group": "ROADMAP",
     "short": "Android B2C: активация, распознавание, локальный холст и пользовательские назначения.",
-    "description": "Первый этап включает прототип глобальной интеграции, Quad Tap, распознавание Graffiti, UI-конструктор назначений и Local Canvas.",
+    "description": "Первый этап включает Android activation path, Quad Tap, распознавание Graffiti, Local Canvas и дальнейшую маршрутизацию команд. Ограниченная in-app цепочка уже подтверждена на физическом устройстве с обоих нижних углов; системный/OEM trigger и настоящий overlay поверх другого приложения проверяются отдельно.",
     "purpose": "Проверить основной пользовательский цикл KnockUI на Android.",
     "kind": "b2c",
     "models": [
