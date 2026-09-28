@@ -1124,15 +1124,15 @@
       "state": "requires-prototype",
       "date": "2026-09-28",
       "confidence": "high",
-      "summary": "$1 is technically suitable as an MVP recognizer candidate, but KnockUI accuracy claims require its own dataset and tests.",
+      "summary": "The limited real-device prototype now confirms recognition of the original Palm Graffiti S and C and correct SC sequencing. Full A–Z / 0–9 accuracy remains unvalidated and still requires its own dataset and tests.",
       "sources": [
         {
           "label": "$1 Unistroke Recognizer — University of Washington",
           "url": "https://depts.washington.edu/acelab/proj/dollar/index.html"
         }
       ],
-      "next_step": "First validate S/C recognition and SC sequencing on real finger input; expand toward the 36-symbol benchmark only after this limited prototype works.",
-      "implication": "Нельзя переносить опубликованную точность $1 на KnockUI. Требуется собственная матрица ошибок для 36 символов и пальцевого ввода."
+      "next_step": "S/C and SC sequencing are now confirmed on a real Android device. Next move the working recognizer into the post-activation local KnockUI surface; defer the 36-symbol benchmark until the limited end-to-end flow is stable.",
+      "implication": "Ограниченный S/C prototype подтверждает жизнеспособность направленно-чувствительного одноштрихового распознавания на реальном пальцевом вводе, но нельзя переносить этот результат на весь алфавит. Для 36 символов всё ещё нужна собственная матрица ошибок."
     }
   },
   {
