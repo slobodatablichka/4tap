@@ -8,15 +8,37 @@
     "description": "4Тап рассматривается как самостоятельный пользовательский продукт. Пользователь выбирает свободную комбинацию и назначает запуск приложения, deep link или другое поддерживаемое действие.",
     "purpose": "Дать пользователю быстрый доступ к собственным действиям из доступного контекста платформы.",
     "kind": "b2c",
-    "models": ["b2c"],
-    "platforms": ["shared","android","ios","wechat","whatsapp"],
+    "models": [
+      "b2c"
+    ],
+    "platforms": [
+      "shared",
+      "android",
+      "ios",
+      "wechat",
+      "whatsapp"
+    ],
     "status": "approved",
-    "inputs": ["Свободная комбинация", "Выбранное действие"],
-    "outputs": ["Пользовательское назначение"],
-    "parameters": {"editable": true},
-    "constraints": ["Доступность конкретного типа действия зависит от платформы."],
+    "inputs": [
+      "Свободная комбинация",
+      "Выбранное действие"
+    ],
+    "outputs": [
+      "Пользовательское назначение"
+    ],
+    "parameters": {
+      "editable": true
+    },
+    "constraints": [
+      "Доступность конкретного типа действия зависит от платформы."
+    ],
     "open_questions": [],
-    "tags": ["product","b2c","custom"]
+    "tags": [
+      "product",
+      "b2c",
+      "custom"
+    ],
+    "order": 10
   },
   {
     "id": "product-b2b",
@@ -27,15 +49,40 @@
     "description": "В B2B-модели KnockUI выступает как транспортный протокол. Определённые комбинации могут быть зарезервированы партнёром и иметь приоритет над пользовательскими назначениями.",
     "purpose": "Предоставить партнёру стабильный namespace команд внутри KnockUI.",
     "kind": "b2b",
-    "models": ["b2b"],
-    "platforms": ["shared","android","ios","wechat","whatsapp"],
+    "models": [
+      "b2b"
+    ],
+    "platforms": [
+      "shared",
+      "android",
+      "ios",
+      "wechat",
+      "whatsapp"
+    ],
     "status": "concept",
-    "inputs": ["Зарезервированная комбинация", "Партнёрское действие"],
-    "outputs": ["SystemGesture / системное назначение"],
-    "parameters": {"editable": false, "priority": 1},
-    "constraints": ["Механизм доставки партнёрского действия зависит от платформы."],
-    "open_questions": ["Как формализуется резервирование комбинаций между партнёрами?"],
-    "tags": ["product","b2b","reserved"]
+    "inputs": [
+      "Зарезервированная комбинация",
+      "Партнёрское действие"
+    ],
+    "outputs": [
+      "SystemGesture / системное назначение"
+    ],
+    "parameters": {
+      "editable": false,
+      "priority": 1
+    },
+    "constraints": [
+      "Механизм доставки партнёрского действия зависит от платформы."
+    ],
+    "open_questions": [
+      "Как формализуется резервирование комбинаций между партнёрами?"
+    ],
+    "tags": [
+      "product",
+      "b2b",
+      "reserved"
+    ],
+    "order": 20
   },
   {
     "id": "command-space",
@@ -46,15 +93,40 @@
     "description": "Базовый словарь содержит 36 символов. При запрете пары из двух одинаковых символов получается 36 × 35 = 1260 двухсимвольных команд.",
     "purpose": "Создать компактный и запоминаемый namespace команд.",
     "kind": "core",
-    "models": ["b2c","b2b"],
-    "platforms": ["shared","android","ios","wechat","whatsapp"],
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "shared",
+      "android",
+      "ios",
+      "wechat",
+      "whatsapp"
+    ],
     "status": "approved",
-    "inputs": ["Первый символ", "Второй символ"],
-    "outputs": ["Команда XY"],
-    "parameters": {"alphabet": "A–Z + 0–9", "capacity": 1260, "same_symbol_pair": "excluded"},
-    "constraints": ["В конкретном канале способ ввода символов может отличаться."],
+    "inputs": [
+      "Первый символ",
+      "Второй символ"
+    ],
+    "outputs": [
+      "Команда XY"
+    ],
+    "parameters": {
+      "alphabet": "A–Z + 0–9",
+      "capacity": 1260,
+      "same_symbol_pair": "excluded"
+    },
+    "constraints": [
+      "В конкретном канале способ ввода символов может отличаться."
+    ],
     "open_questions": [],
-    "tags": ["protocol","combo","namespace"]
+    "tags": [
+      "protocol",
+      "combo",
+      "namespace"
+    ],
+    "order": 30
   },
   {
     "id": "system-gestures",
@@ -65,15 +137,39 @@
     "description": "Системные комбинации принадлежат слою B2B/партнёрской интеграции. Пользователь может видеть их, но не должен менять действие или удалять назначение.",
     "purpose": "Гарантировать стабильность зарезервированных команд.",
     "kind": "b2b",
-    "models": ["b2b"],
-    "platforms": ["shared","android","ios","wechat","whatsapp"],
+    "models": [
+      "b2b"
+    ],
+    "platforms": [
+      "shared",
+      "android",
+      "ios",
+      "wechat",
+      "whatsapp"
+    ],
     "status": "concept",
-    "inputs": ["Команда XY"],
-    "outputs": ["Системное действие"],
-    "parameters": {"editable": false, "lookup_priority": 1},
-    "constraints": ["Требуется механизм поставки и обновления системного реестра."],
-    "open_questions": ["Где хранится канонический B2B-реестр?", "Как разрешаются конфликты резервирования?"],
-    "tags": ["registry","b2b"]
+    "inputs": [
+      "Команда XY"
+    ],
+    "outputs": [
+      "Системное действие"
+    ],
+    "parameters": {
+      "editable": false,
+      "lookup_priority": 1
+    },
+    "constraints": [
+      "Требуется механизм поставки и обновления системного реестра."
+    ],
+    "open_questions": [
+      "Где хранится канонический B2B-реестр?",
+      "Как разрешаются конфликты резервирования?"
+    ],
+    "tags": [
+      "registry",
+      "b2b"
+    ],
+    "order": 40
   },
   {
     "id": "user-gestures",
@@ -84,17 +180,38 @@
     "description": "Пользовательский реестр содержит назначения, созданные самим пользователем. Проверяется после SystemGestures.",
     "purpose": "Хранить персональные команды пользователя.",
     "kind": "b2c",
-    "models": ["b2c"],
-    "platforms": ["shared","android","ios","wechat","whatsapp"],
+    "models": [
+      "b2c"
+    ],
+    "platforms": [
+      "shared",
+      "android",
+      "ios",
+      "wechat",
+      "whatsapp"
+    ],
     "status": "approved",
-    "inputs": ["Команда XY", "Пользовательское действие"],
-    "outputs": ["Персональное назначение"],
-    "parameters": {"editable": true, "lookup_priority": 2},
-    "constraints": ["Хранилище и доступные действия зависят от платформы."],
+    "inputs": [
+      "Команда XY",
+      "Пользовательское действие"
+    ],
+    "outputs": [
+      "Персональное назначение"
+    ],
+    "parameters": {
+      "editable": true,
+      "lookup_priority": 2
+    },
+    "constraints": [
+      "Хранилище и доступные действия зависят от платформы."
+    ],
     "open_questions": [],
-    "tags": ["registry","b2c"]
+    "tags": [
+      "registry",
+      "b2c"
+    ],
+    "order": 50
   },
-
   {
     "id": "android-integration",
     "section": "android",
@@ -104,15 +221,38 @@
     "description": "Текущая концепция опирается на AccessibilityService и overlay-механику. Способ глобального получения касаний поверх сторонних приложений, соответствие политике магазина и точный набор разрешений должны подтверждаться прототипом.",
     "purpose": "Обеспечить точку входа KnockUI поверх других приложений Android.",
     "kind": "core",
-    "models": ["b2c","b2b"],
-    "platforms": ["android"],
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "android"
+    ],
     "status": "needs-validation",
-    "inputs": ["Системные события Android"],
-    "outputs": ["Сигнал возможной активации"],
-    "parameters": {"candidate_service": "AccessibilityService", "candidate_overlay": "TYPE_APPLICATION_OVERLAY"},
-    "constraints": ["Политики Android/Google Play", "Разрешения", "Ограничения фоновой работы"],
-    "open_questions": ["Какая легитимная архитектура даёт требуемую глобальность без блокировки распространения?"],
-    "tags": ["android","accessibility","overlay"]
+    "inputs": [
+      "Системные события Android"
+    ],
+    "outputs": [
+      "Сигнал возможной активации"
+    ],
+    "parameters": {
+      "candidate_service": "AccessibilityService",
+      "candidate_overlay": "TYPE_APPLICATION_OVERLAY"
+    },
+    "constraints": [
+      "Политики Android/Google Play",
+      "Разрешения",
+      "Ограничения фоновой работы"
+    ],
+    "open_questions": [
+      "Какая легитимная архитектура даёт требуемую глобальность без блокировки распространения?"
+    ],
+    "tags": [
+      "android",
+      "accessibility",
+      "overlay"
+    ],
+    "order": 10
   },
   {
     "id": "android-quad-tap",
@@ -123,15 +263,38 @@
     "description": "Сервис игнорирует одиночные, двойные и тройные касания. Концептуально учитываются четыре ACTION_DOWN, локальная геометрия и максимальный интервал.",
     "purpose": "Активировать KnockUI без конфликта с обычным свайпом и набором текста.",
     "kind": "core",
-    "models": ["b2c","b2b"],
-    "platforms": ["android"],
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "android"
+    ],
     "status": "needs-validation",
-    "inputs": ["Последовательность касаний"],
-    "outputs": ["Активация локального холста"],
-    "parameters": {"taps": 4, "radius_px": "≈50", "interval_ms": "300–400"},
-    "constraints": ["Неактивная зона экрана", "Статус-бар и навигация имеют приоритет", "Параметры требуют UX-тестов"],
-    "open_questions": ["Надёжно ли определяется неактивная зона чужого приложения?"],
-    "tags": ["android","activation"]
+    "inputs": [
+      "Последовательность касаний"
+    ],
+    "outputs": [
+      "Активация локального холста"
+    ],
+    "parameters": {
+      "taps": 4,
+      "radius_px": "≈50",
+      "interval_ms": "300–400"
+    },
+    "constraints": [
+      "Неактивная зона экрана",
+      "Статус-бар и навигация имеют приоритет",
+      "Параметры требуют UX-тестов"
+    ],
+    "open_questions": [
+      "Надёжно ли определяется неактивная зона чужого приложения?"
+    ],
+    "tags": [
+      "android",
+      "activation"
+    ],
+    "order": 20
   },
   {
     "id": "android-local-canvas",
@@ -142,15 +305,34 @@
     "description": "После активации создаётся локализованная область для ввода двух знаков. Краткая рамка показывает границы. Выход за границу до первого распознавания может сбрасывать режим.",
     "purpose": "Ограничить жестовый ввод небольшой областью и не перекрывать весь экран.",
     "kind": "core",
-    "models": ["b2c","b2b"],
-    "platforms": ["android"],
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "android"
+    ],
     "status": "concept",
-    "inputs": ["Координата активации"],
-    "outputs": ["Поток штриха"],
-    "parameters": {"size": "200×200 dp", "feedback": "pulse frame + haptic"},
-    "constraints": ["Размер должен тестироваться на разных плотностях и диагоналях."],
+    "inputs": [
+      "Координата активации"
+    ],
+    "outputs": [
+      "Поток штриха"
+    ],
+    "parameters": {
+      "size": "200×200 dp",
+      "feedback": "pulse frame + haptic"
+    },
+    "constraints": [
+      "Размер должен тестироваться на разных плотностях и диагоналях."
+    ],
     "open_questions": [],
-    "tags": ["android","canvas","input"]
+    "tags": [
+      "android",
+      "canvas",
+      "input"
+    ],
+    "order": 30
   },
   {
     "id": "android-gesture-1",
@@ -161,15 +343,28 @@
     "description": "Пользователь одним непрерывным движением вводит первый знак Graffiti/Unistroke.",
     "purpose": "Получить первый символ команды.",
     "kind": "core",
-    "models": ["b2c","b2b"],
-    "platforms": ["android"],
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "android"
+    ],
     "status": "concept",
-    "inputs": ["Штрих"],
-    "outputs": ["Первый символ"],
+    "inputs": [
+      "Штрих"
+    ],
+    "outputs": [
+      "Первый символ"
+    ],
     "parameters": {},
     "constraints": [],
     "open_questions": [],
-    "tags": ["android","graffiti"]
+    "tags": [
+      "android",
+      "graffiti"
+    ],
+    "order": 40
   },
   {
     "id": "android-gesture-2",
@@ -180,15 +375,32 @@
     "description": "После распознавания первого знака пользователь вводит второй. Начало второго штриха может происходить сразу или после короткой паузы.",
     "purpose": "Получить второй символ команды.",
     "kind": "core",
-    "models": ["b2c","b2b"],
-    "platforms": ["android"],
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "android"
+    ],
     "status": "concept",
-    "inputs": ["Штрих"],
-    "outputs": ["Второй символ"],
-    "parameters": {"concept_wait": "≤1 s"},
-    "constraints": ["Тайминг требует UX-тестов."],
+    "inputs": [
+      "Штрих"
+    ],
+    "outputs": [
+      "Второй символ"
+    ],
+    "parameters": {
+      "concept_wait": "≤1 s"
+    },
+    "constraints": [
+      "Тайминг требует UX-тестов."
+    ],
     "open_questions": [],
-    "tags": ["android","graffiti"]
+    "tags": [
+      "android",
+      "graffiti"
+    ],
+    "order": 50
   },
   {
     "id": "android-recognizer",
@@ -199,15 +411,37 @@
     "description": "Для MVP предлагается $1 Recognizer с набором шаблонов Graffiti. Порог уверенности и устойчивость к вариативности почерка должны быть измерены.",
     "purpose": "Преобразовать траекторию пальца в символ.",
     "kind": "core",
-    "models": ["b2c","b2b"],
-    "platforms": ["android"],
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "android"
+    ],
     "status": "needs-validation",
-    "inputs": ["Нормализованный штрих"],
-    "outputs": ["Символ + confidence"],
-    "parameters": {"candidate": "$1 Recognizer", "alphabet": "A–Z + 0–9"},
-    "constraints": ["Ошибки распознавания", "Вариативность почерка"],
-    "open_questions": ["Какой порог confidence приемлем?", "Нужен ли персональный калибровочный слой?"],
-    "tags": ["android","recognition"]
+    "inputs": [
+      "Нормализованный штрих"
+    ],
+    "outputs": [
+      "Символ + confidence"
+    ],
+    "parameters": {
+      "candidate": "$1 Recognizer",
+      "alphabet": "A–Z + 0–9"
+    },
+    "constraints": [
+      "Ошибки распознавания",
+      "Вариативность почерка"
+    ],
+    "open_questions": [
+      "Какой порог confidence приемлем?",
+      "Нужен ли персональный калибровочный слой?"
+    ],
+    "tags": [
+      "android",
+      "recognition"
+    ],
+    "order": 60
   },
   {
     "id": "android-command",
@@ -218,15 +452,29 @@
     "description": "Android-реализация передаёт двухсимвольный код общему диспетчеру KnockUI.",
     "purpose": "Перейти от распознавания к маршрутизации действия.",
     "kind": "core",
-    "models": ["b2c","b2b"],
-    "platforms": ["android"],
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "android"
+    ],
     "status": "approved",
-    "inputs": ["Символ 1", "Символ 2"],
-    "outputs": ["Команда XY"],
+    "inputs": [
+      "Символ 1",
+      "Символ 2"
+    ],
+    "outputs": [
+      "Команда XY"
+    ],
     "parameters": {},
     "constraints": [],
     "open_questions": [],
-    "tags": ["android","routing"]
+    "tags": [
+      "android",
+      "routing"
+    ],
+    "order": 70
   },
   {
     "id": "android-dispatcher",
@@ -237,15 +485,32 @@
     "description": "Маршрутизация использует общий приоритет: сначала системный реестр, затем пользовательский.",
     "purpose": "Однозначно разрешить команду XY в действие.",
     "kind": "core",
-    "models": ["b2c","b2b"],
-    "platforms": ["android"],
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "android"
+    ],
     "status": "approved",
-    "inputs": ["Команда XY"],
-    "outputs": ["App launch / Deep Link / другое действие"],
-    "parameters": {"lookup": "SystemGestures → UserGestures"},
-    "constraints": ["Фактический запуск ограничен Android API и состоянием устройства."],
+    "inputs": [
+      "Команда XY"
+    ],
+    "outputs": [
+      "App launch / Deep Link / другое действие"
+    ],
+    "parameters": {
+      "lookup": "SystemGestures → UserGestures"
+    },
+    "constraints": [
+      "Фактический запуск ограничен Android API и состоянием устройства."
+    ],
     "open_questions": [],
-    "tags": ["android","dispatcher"]
+    "tags": [
+      "android",
+      "dispatcher"
+    ],
+    "order": 80
   },
   {
     "id": "android-actions",
@@ -256,17 +521,34 @@
     "description": "Типы действий должны иметь общий контракт, проверку доступности обработчика и предсказуемый fallback.",
     "purpose": "Исполнить разрешённое действие после маршрутизации команды.",
     "kind": "b2c",
-    "models": ["b2c","b2b"],
-    "platforms": ["android"],
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "android"
+    ],
     "status": "needs-validation",
-    "inputs": ["Resolved action"],
-    "outputs": ["Запущенное действие"],
-    "parameters": {"examples": "app, deep link, URL, settings"},
-    "constraints": ["Ограничения фонового запуска", "Отсутствующий обработчик URI"],
+    "inputs": [
+      "Resolved action"
+    ],
+    "outputs": [
+      "Запущенное действие"
+    ],
+    "parameters": {
+      "examples": "app, deep link, URL, settings"
+    },
+    "constraints": [
+      "Ограничения фонового запуска",
+      "Отсутствующий обработчик URI"
+    ],
     "open_questions": [],
-    "tags": ["android","action"]
+    "tags": [
+      "android",
+      "action"
+    ],
+    "order": 90
   },
-
   {
     "id": "ios-keyboard",
     "section": "ios",
@@ -276,15 +558,37 @@
     "description": "В исходной концепции iOS-реализация описана как IME/клавиатура. Этот канал не следует трактовать как глобальный overlay: пользовательская клавиатура действует только в контекстах, где система показывает и допускает соответствующую клавиатуру.",
     "purpose": "Дать iOS-пользователю доступ к KnockUI через разрешённый системный интерфейс.",
     "kind": "core",
-    "models": ["b2c","b2b"],
-    "platforms": ["ios"],
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "ios"
+    ],
     "status": "needs-validation",
-    "inputs": ["Вызванная пользовательская клавиатура"],
-    "outputs": ["KnockUI input surface"],
-    "parameters": {"candidate": "Custom Keyboard Extension"},
-    "constraints": ["Не является глобальным жестом поверх любых приложений", "Зависит от доступности клавиатуры в текущем контексте"],
-    "open_questions": ["Каков допустимый UX переключения на KnockUI-клавиатуру?", "Какие действия могут быть безопасно инициированы из extension?"],
-    "tags": ["ios","keyboard","extension"]
+    "inputs": [
+      "Вызванная пользовательская клавиатура"
+    ],
+    "outputs": [
+      "KnockUI input surface"
+    ],
+    "parameters": {
+      "candidate": "Custom Keyboard Extension"
+    },
+    "constraints": [
+      "Не является глобальным жестом поверх любых приложений",
+      "Зависит от доступности клавиатуры в текущем контексте"
+    ],
+    "open_questions": [
+      "Каков допустимый UX переключения на KnockUI-клавиатуру?",
+      "Какие действия могут быть безопасно инициированы из extension?"
+    ],
+    "tags": [
+      "ios",
+      "keyboard",
+      "extension"
+    ],
+    "order": 10
   },
   {
     "id": "ios-activation",
@@ -295,15 +599,32 @@
     "description": "Предлагаемый сценарий: пользователь переключается на клавиатуру KnockUI через штатный механизм выбора клавиатуры, после чего получает жестовую поверхность.",
     "purpose": "Предоставить явную точку входа без попытки имитировать Android-глобальность.",
     "kind": "core",
-    "models": ["b2c","b2b"],
-    "platforms": ["ios"],
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "ios"
+    ],
     "status": "concept",
-    "inputs": ["Действие пользователя по смене клавиатуры"],
-    "outputs": ["Активная KnockUI keyboard"],
-    "parameters": {"candidate_trigger": "Globe / keyboard switch"},
-    "constraints": ["Требует активного текстового контекста или иного поддерживаемого системного сценария."],
+    "inputs": [
+      "Действие пользователя по смене клавиатуры"
+    ],
+    "outputs": [
+      "Активная KnockUI keyboard"
+    ],
+    "parameters": {
+      "candidate_trigger": "Globe / keyboard switch"
+    },
+    "constraints": [
+      "Требует активного текстового контекста или иного поддерживаемого системного сценария."
+    ],
     "open_questions": [],
-    "tags": ["ios","activation"]
+    "tags": [
+      "ios",
+      "activation"
+    ],
+    "order": 20
   },
   {
     "id": "ios-graffiti",
@@ -314,15 +635,33 @@
     "description": "Жестовая логика может повторять общий язык KnockUI, но работает внутри bounds клавиатурного extension.",
     "purpose": "Сохранить общий двухсимвольный язык команд на iOS.",
     "kind": "core",
-    "models": ["b2c","b2b"],
-    "platforms": ["ios"],
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "ios"
+    ],
     "status": "concept",
-    "inputs": ["Gesture 1", "Gesture 2"],
-    "outputs": ["Команда XY"],
-    "parameters": {"alphabet": "A–Z + 0–9"},
-    "constraints": ["Размер и жесты ограничены областью extension."],
+    "inputs": [
+      "Gesture 1",
+      "Gesture 2"
+    ],
+    "outputs": [
+      "Команда XY"
+    ],
+    "parameters": {
+      "alphabet": "A–Z + 0–9"
+    },
+    "constraints": [
+      "Размер и жесты ограничены областью extension."
+    ],
     "open_questions": [],
-    "tags": ["ios","graffiti"]
+    "tags": [
+      "ios",
+      "graffiti"
+    ],
+    "order": 30
   },
   {
     "id": "ios-dispatch",
@@ -333,15 +672,34 @@
     "description": "Общий namespace SystemGestures/UserGestures можно сохранить, но доступные действия и способы их запуска требуют отдельной платформенной спецификации.",
     "purpose": "Связать общую команду KnockUI с реальным действием iOS.",
     "kind": "core",
-    "models": ["b2c","b2b"],
-    "platforms": ["ios"],
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "ios"
+    ],
     "status": "needs-validation",
-    "inputs": ["Команда XY"],
-    "outputs": ["Допустимое iOS-действие"],
+    "inputs": [
+      "Команда XY"
+    ],
+    "outputs": [
+      "Допустимое iOS-действие"
+    ],
     "parameters": {},
-    "constraints": ["Sandbox и extension restrictions", "Ограниченные способы открытия внешних ресурсов"],
-    "open_questions": ["Нужен ли companion app?", "Как передавать назначение между extension и основным приложением?"],
-    "tags": ["ios","routing"]
+    "constraints": [
+      "Sandbox и extension restrictions",
+      "Ограниченные способы открытия внешних ресурсов"
+    ],
+    "open_questions": [
+      "Нужен ли companion app?",
+      "Как передавать назначение между extension и основным приложением?"
+    ],
+    "tags": [
+      "ios",
+      "routing"
+    ],
+    "order": 40
   },
   {
     "id": "ios-limits",
@@ -352,17 +710,29 @@
     "description": "Документация должна явно разделять общий язык KnockUI и конкретный механизм доступа. На iOS нельзя автоматически переносить предположения Android о глобальном прослушивании касаний и overlay.",
     "purpose": "Не допустить ложного ощущения кроссплатформенной эквивалентности.",
     "kind": "core",
-    "models": ["b2c","b2b"],
-    "platforms": ["ios"],
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "ios"
+    ],
     "status": "approved",
     "inputs": [],
-    "outputs": ["Платформенная граница"],
+    "outputs": [
+      "Платформенная граница"
+    ],
     "parameters": {},
-    "constraints": ["iOS security model"],
+    "constraints": [
+      "iOS security model"
+    ],
     "open_questions": [],
-    "tags": ["ios","boundary"]
+    "tags": [
+      "ios",
+      "boundary"
+    ],
+    "order": 50
   },
-
   {
     "id": "wechat-mini-program",
     "section": "wechat",
@@ -372,15 +742,36 @@
     "description": "Исходная стратегия предполагает перенос логики в WeChat Mini Program. Такой вариант работает внутри экосистемы WeChat и не является глобальным жестом операционной системы.",
     "purpose": "Доставить механику KnockUI пользователям внутри доминирующей локальной экосистемы.",
     "kind": "core",
-    "models": ["b2c","b2b"],
-    "platforms": ["wechat"],
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "wechat"
+    ],
     "status": "concept",
-    "inputs": ["Открытый Mini Program"],
-    "outputs": ["KnockUI surface внутри WeChat"],
-    "parameters": {"candidate_runtime": "Mini Program / JS"},
-    "constraints": ["Работа только внутри разрешённого контекста WeChat", "API и политики Mini Program"],
-    "open_questions": ["Какие действия доступны Mini Program без выхода из WeChat?"],
-    "tags": ["wechat","china","mini-program"]
+    "inputs": [
+      "Открытый Mini Program"
+    ],
+    "outputs": [
+      "KnockUI surface внутри WeChat"
+    ],
+    "parameters": {
+      "candidate_runtime": "Mini Program / JS"
+    },
+    "constraints": [
+      "Работа только внутри разрешённого контекста WeChat",
+      "API и политики Mini Program"
+    ],
+    "open_questions": [
+      "Какие действия доступны Mini Program без выхода из WeChat?"
+    ],
+    "tags": [
+      "wechat",
+      "china",
+      "mini-program"
+    ],
+    "order": 10
   },
   {
     "id": "wechat-input",
@@ -391,15 +782,34 @@
     "description": "Внутри Mini Program можно сохранить двухсимвольный язык KnockUI, если разрешённый UI/gesture layer обеспечивает достаточную отзывчивость.",
     "purpose": "Сохранить узнаваемый командный язык в китайском контуре.",
     "kind": "core",
-    "models": ["b2c","b2b"],
-    "platforms": ["wechat"],
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "wechat"
+    ],
     "status": "needs-validation",
-    "inputs": ["Пользовательский ввод"],
-    "outputs": ["Команда XY"],
-    "parameters": {"namespace": 1260},
-    "constraints": ["Жесты ограничены областью Mini Program."],
-    "open_questions": ["Нужно ли сохранять Graffiti один к одному или адаптировать жесты под WeChat UX?"],
-    "tags": ["wechat","input"]
+    "inputs": [
+      "Пользовательский ввод"
+    ],
+    "outputs": [
+      "Команда XY"
+    ],
+    "parameters": {
+      "namespace": 1260
+    },
+    "constraints": [
+      "Жесты ограничены областью Mini Program."
+    ],
+    "open_questions": [
+      "Нужно ли сохранять Graffiti один к одному или адаптировать жесты под WeChat UX?"
+    ],
+    "tags": [
+      "wechat",
+      "input"
+    ],
+    "order": 20
   },
   {
     "id": "wechat-routing",
@@ -410,15 +820,30 @@
     "description": "SystemGestures/UserGestures остаются логической моделью, но набор исполнимых действий определяется API WeChat.",
     "purpose": "Связать командный namespace KnockUI с функциями WeChat-контекста.",
     "kind": "core",
-    "models": ["b2c","b2b"],
-    "platforms": ["wechat"],
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "wechat"
+    ],
     "status": "needs-validation",
-    "inputs": ["Команда XY"],
-    "outputs": ["WeChat / Mini Program action"],
+    "inputs": [
+      "Команда XY"
+    ],
+    "outputs": [
+      "WeChat / Mini Program action"
+    ],
     "parameters": {},
-    "constraints": ["WeChat API и политика Mini Program"],
+    "constraints": [
+      "WeChat API и политика Mini Program"
+    ],
     "open_questions": [],
-    "tags": ["wechat","routing"]
+    "tags": [
+      "wechat",
+      "routing"
+    ],
+    "order": 30
   },
   {
     "id": "wechat-distribution",
@@ -429,17 +854,33 @@
     "description": "Стратегическая гипотеза исходной спецификации: распространение китайской реализации опирается не на Google Play, а на локальные каналы и экосистемы.",
     "purpose": "Определить канал привлечения пользователей в китайском сегменте.",
     "kind": "b2c",
-    "models": ["b2c"],
-    "platforms": ["wechat"],
+    "models": [
+      "b2c"
+    ],
+    "platforms": [
+      "wechat"
+    ],
     "status": "needs-validation",
-    "inputs": ["Douyin", "Xiaohongshu", "WeChat ecosystem"],
-    "outputs": ["Traffic to Mini Program"],
+    "inputs": [
+      "Douyin",
+      "Xiaohongshu",
+      "WeChat ecosystem"
+    ],
+    "outputs": [
+      "Traffic to Mini Program"
+    ],
     "parameters": {},
-    "constraints": ["Требуется локальная маркетинговая и юридическая верификация."],
+    "constraints": [
+      "Требуется локальная маркетинговая и юридическая верификация."
+    ],
     "open_questions": [],
-    "tags": ["wechat","distribution","china"]
+    "tags": [
+      "wechat",
+      "distribution",
+      "china"
+    ],
+    "order": 40
   },
-
   {
     "id": "whatsapp-business",
     "section": "whatsapp",
@@ -449,15 +890,36 @@
     "description": "Это не жестовый системный интерфейс. KnockUI здесь превращается в быстрый командный слой внутри диалога: пользователь отправляет короткую команду, а бизнес-логика разрешает её в действие или ответ.",
     "purpose": "Использовать привычный пользователю мессенджер как транспорт команды.",
     "kind": "core",
-    "models": ["b2c","b2b"],
-    "platforms": ["whatsapp"],
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "whatsapp"
+    ],
     "status": "concept",
-    "inputs": ["WhatsApp conversation"],
-    "outputs": ["Command interaction"],
-    "parameters": {"candidate": "WhatsApp Business API"},
-    "constraints": ["Нет глобального жеста", "Работа внутри чата и правил Business API"],
-    "open_questions": ["Какие действия допустимы без ухудшения UX из-за чатовой задержки?"],
-    "tags": ["whatsapp","india","chatbot"]
+    "inputs": [
+      "WhatsApp conversation"
+    ],
+    "outputs": [
+      "Command interaction"
+    ],
+    "parameters": {
+      "candidate": "WhatsApp Business API"
+    },
+    "constraints": [
+      "Нет глобального жеста",
+      "Работа внутри чата и правил Business API"
+    ],
+    "open_questions": [
+      "Какие действия допустимы без ухудшения UX из-за чатовой задержки?"
+    ],
+    "tags": [
+      "whatsapp",
+      "india",
+      "chatbot"
+    ],
+    "order": 10
   },
   {
     "id": "whatsapp-command",
@@ -468,15 +930,35 @@
     "description": "Общий namespace XY можно сохранить, даже если способ ввода отличается от Graffiti.",
     "purpose": "Сохранить единый командный словарь KnockUI в чатовой среде.",
     "kind": "core",
-    "models": ["b2c","b2b"],
-    "platforms": ["whatsapp"],
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "whatsapp"
+    ],
     "status": "concept",
-    "inputs": ["Текст / быстрый ответ"],
-    "outputs": ["Команда XY"],
-    "parameters": {"namespace": 1260},
-    "constraints": ["Скорость ниже жестового вызова", "Команда видима в чате, если используется текст"],
-    "open_questions": ["Нужен ли альтернативный UI вместо буквального текста XY?"],
-    "tags": ["whatsapp","input"]
+    "inputs": [
+      "Текст / быстрый ответ"
+    ],
+    "outputs": [
+      "Команда XY"
+    ],
+    "parameters": {
+      "namespace": 1260
+    },
+    "constraints": [
+      "Скорость ниже жестового вызова",
+      "Команда видима в чате, если используется текст"
+    ],
+    "open_questions": [
+      "Нужен ли альтернативный UI вместо буквального текста XY?"
+    ],
+    "tags": [
+      "whatsapp",
+      "input"
+    ],
+    "order": 20
   },
   {
     "id": "whatsapp-router",
@@ -487,15 +969,35 @@
     "description": "Маршрутизация может использовать тот же приоритет SystemGestures → UserGestures, но хранение и исполнение происходят на серверной стороне или в связанном сервисе.",
     "purpose": "Перенести семантику KnockUI в мессенджерный backend.",
     "kind": "core",
-    "models": ["b2c","b2b"],
-    "platforms": ["whatsapp"],
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "whatsapp"
+    ],
     "status": "concept",
-    "inputs": ["Команда XY"],
-    "outputs": ["Response / link / business action"],
-    "parameters": {"lookup": "SystemGestures → UserGestures"},
-    "constraints": ["Зависимость от Business API, backend и сетевой задержки"],
-    "open_questions": ["Где хранить персональные UserGestures для чатового пользователя?"],
-    "tags": ["whatsapp","backend","routing"]
+    "inputs": [
+      "Команда XY"
+    ],
+    "outputs": [
+      "Response / link / business action"
+    ],
+    "parameters": {
+      "lookup": "SystemGestures → UserGestures"
+    },
+    "constraints": [
+      "Зависимость от Business API, backend и сетевой задержки"
+    ],
+    "open_questions": [
+      "Где хранить персональные UserGestures для чатового пользователя?"
+    ],
+    "tags": [
+      "whatsapp",
+      "backend",
+      "routing"
+    ],
+    "order": 30
   },
   {
     "id": "whatsapp-response",
@@ -506,17 +1008,31 @@
     "description": "Конечный action contract WhatsApp должен быть отдельным от Android/iOS и отражать реальные возможности Business API.",
     "purpose": "Исполнить команду в рамках мессенджерной модели.",
     "kind": "core",
-    "models": ["b2c","b2b"],
-    "platforms": ["whatsapp"],
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "whatsapp"
+    ],
     "status": "needs-validation",
-    "inputs": ["Resolved action"],
-    "outputs": ["Сообщение / ссылка / действие"],
+    "inputs": [
+      "Resolved action"
+    ],
+    "outputs": [
+      "Сообщение / ссылка / действие"
+    ],
     "parameters": {},
-    "constraints": ["WhatsApp platform rules"],
+    "constraints": [
+      "WhatsApp platform rules"
+    ],
     "open_questions": [],
-    "tags": ["whatsapp","action"]
+    "tags": [
+      "whatsapp",
+      "action"
+    ],
+    "order": 40
   },
-
   {
     "id": "strategy-west",
     "section": "strategy",
@@ -526,15 +1042,30 @@
     "description": "Android должен обеспечивать массовый охват, а iOS — отдельный высокодоходный сегмент. Конкретные рыночные показатели необходимо хранить с источником и датой.",
     "purpose": "Определить платформенный фокус для западных рынков.",
     "kind": "core",
-    "models": ["b2c","b2b"],
-    "platforms": ["android","ios"],
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "android",
+      "ios"
+    ],
     "status": "concept",
-    "inputs": ["USA", "EU"],
-    "outputs": ["Android + iOS strategy"],
+    "inputs": [
+      "USA",
+      "EU"
+    ],
+    "outputs": [
+      "Android + iOS strategy"
+    ],
     "parameters": {},
     "constraints": [],
     "open_questions": [],
-    "tags": ["strategy","west"]
+    "tags": [
+      "strategy",
+      "west"
+    ],
+    "order": 10
   },
   {
     "id": "strategy-china",
@@ -545,15 +1076,30 @@
     "description": "В исходной спецификации основной интерфейсный канал — WeChat / Mini Program, а источники трафика включают Douyin и Xiaohongshu.",
     "purpose": "Адаптировать продукт к китайской цифровой экосистеме.",
     "kind": "core",
-    "models": ["b2c","b2b"],
-    "platforms": ["wechat"],
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "wechat"
+    ],
     "status": "concept",
-    "inputs": ["China"],
-    "outputs": ["WeChat / local ecosystem strategy"],
+    "inputs": [
+      "China"
+    ],
+    "outputs": [
+      "WeChat / local ecosystem strategy"
+    ],
     "parameters": {},
-    "constraints": ["Требуется отдельная юридическая и продуктовая проверка."],
+    "constraints": [
+      "Требуется отдельная юридическая и продуктовая проверка."
+    ],
     "open_questions": [],
-    "tags": ["strategy","china"]
+    "tags": [
+      "strategy",
+      "china"
+    ],
+    "order": 20
   },
   {
     "id": "strategy-india",
@@ -564,15 +1110,28 @@
     "description": "Исходная концепция предполагает чатовую реализацию через WhatsApp Business API вместо отдельного standalone-приложения для части сценариев.",
     "purpose": "Снизить порог входа за счёт привычного мессенджера.",
     "kind": "core",
-    "models": ["b2c","b2b"],
-    "platforms": ["whatsapp"],
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "whatsapp"
+    ],
     "status": "concept",
-    "inputs": ["India"],
-    "outputs": ["WhatsApp strategy"],
+    "inputs": [
+      "India"
+    ],
+    "outputs": [
+      "WhatsApp strategy"
+    ],
     "parameters": {},
     "constraints": [],
     "open_questions": [],
-    "tags": ["strategy","india"]
+    "tags": [
+      "strategy",
+      "india"
+    ],
+    "order": 30
   },
   {
     "id": "strategy-economics",
@@ -583,17 +1142,36 @@
     "description": "В сводной концепции указано: Android-устройств примерно в 3 раза больше, а ARPU iOS в 3.8–5 раз выше Android. Эти цифры должны рассматриваться как исходные рыночные допущения до добавления проверяемых источников.",
     "purpose": "Хранить экономические основания платформенной стратегии.",
     "kind": "core",
-    "models": ["b2c","b2b"],
-    "platforms": ["shared"],
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "shared"
+    ],
     "status": "needs-validation",
-    "inputs": ["Market data 2025"],
-    "outputs": ["Platform economics assumptions"],
-    "parameters": {"android_device_ratio": "≈3×", "ios_arpu_ratio": "3.8–5×"},
-    "constraints": ["Нужны источники, регион и методика расчёта."],
-    "open_questions": ["Какие источники принимаем каноническими для этих двух показателей?"],
-    "tags": ["strategy","economics"]
+    "inputs": [
+      "Market data 2025"
+    ],
+    "outputs": [
+      "Platform economics assumptions"
+    ],
+    "parameters": {
+      "android_device_ratio": "≈3×",
+      "ios_arpu_ratio": "3.8–5×"
+    },
+    "constraints": [
+      "Нужны источники, регион и методика расчёта."
+    ],
+    "open_questions": [
+      "Какие источники принимаем каноническими для этих двух показателей?"
+    ],
+    "tags": [
+      "strategy",
+      "economics"
+    ],
+    "order": 40
   },
-
   {
     "id": "roadmap-1",
     "section": "roadmap",
@@ -603,15 +1181,25 @@
     "description": "Первый этап включает прототип глобальной интеграции, Quad Tap, распознавание Graffiti, UI-конструктор назначений и Local Canvas.",
     "purpose": "Проверить основной пользовательский цикл KnockUI на Android.",
     "kind": "b2c",
-    "models": ["b2c"],
-    "platforms": ["android"],
+    "models": [
+      "b2c"
+    ],
+    "platforms": [
+      "android"
+    ],
     "status": "approved",
     "inputs": [],
-    "outputs": ["Android MVP"],
+    "outputs": [
+      "Android MVP"
+    ],
     "parameters": {},
     "constraints": [],
     "open_questions": [],
-    "tags": ["roadmap","mvp"]
+    "tags": [
+      "roadmap",
+      "mvp"
+    ],
+    "order": 10
   },
   {
     "id": "roadmap-2",
@@ -622,15 +1210,32 @@
     "description": "Второй этап включает работу с ограничениями распространения, энергопотреблением и B2B-слоем зарезервированных комбинаций.",
     "purpose": "Подготовить продукт к масштабированию и партнёрским интеграциям.",
     "kind": "b2b",
-    "models": ["b2b","b2c"],
-    "platforms": ["android"],
+    "models": [
+      "b2b",
+      "b2c"
+    ],
+    "platforms": [
+      "android"
+    ],
     "status": "concept",
-    "inputs": ["Результаты MVP"],
-    "outputs": ["Optimized Android + B2B layer"],
-    "parameters": {"battery_target_from_spec": "<1%/hour"},
-    "constraints": ["Цель энергопотребления требует измерений."],
+    "inputs": [
+      "Результаты MVP"
+    ],
+    "outputs": [
+      "Optimized Android + B2B layer"
+    ],
+    "parameters": {
+      "battery_target_from_spec": "<1%/hour"
+    },
+    "constraints": [
+      "Цель энергопотребления требует измерений."
+    ],
     "open_questions": [],
-    "tags": ["roadmap","b2b"]
+    "tags": [
+      "roadmap",
+      "b2b"
+    ],
+    "order": 20
   },
   {
     "id": "roadmap-3",
@@ -641,17 +1246,33 @@
     "description": "Кроссплатформенность строится не на идентичном системном API, а на сохранении командной семантики KnockUI при разных точках входа.",
     "purpose": "Расширить общий язык KnockUI на дополнительные платформы.",
     "kind": "core",
-    "models": ["b2c","b2b"],
-    "platforms": ["ios","wechat","whatsapp"],
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "ios",
+      "wechat",
+      "whatsapp"
+    ],
     "status": "concept",
-    "inputs": ["Validated core protocol"],
-    "outputs": ["Platform adaptations"],
+    "inputs": [
+      "Validated core protocol"
+    ],
+    "outputs": [
+      "Platform adaptations"
+    ],
     "parameters": {},
-    "constraints": ["Механика активации различается по платформам."],
+    "constraints": [
+      "Механика активации различается по платформам."
+    ],
     "open_questions": [],
-    "tags": ["roadmap","cross-platform"]
+    "tags": [
+      "roadmap",
+      "cross-platform"
+    ],
+    "order": 30
   },
-
   {
     "id": "governance-repo",
     "section": "governance",
@@ -661,15 +1282,31 @@
     "description": "Изменения документации версионируются коммитами. GitHub Pages публикует текущее интерактивное представление.",
     "purpose": "Иметь единую проверяемую историю архитектурных решений.",
     "kind": "core",
-    "models": ["b2c","b2b"],
-    "platforms": ["shared"],
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "shared"
+    ],
     "status": "approved",
-    "inputs": ["JSON data", "HTML/CSS/JS"],
-    "outputs": ["Versioned documentation"],
-    "parameters": {"branch": "main"},
+    "inputs": [
+      "JSON data",
+      "HTML/CSS/JS"
+    ],
+    "outputs": [
+      "Versioned documentation"
+    ],
+    "parameters": {
+      "branch": "main"
+    },
     "constraints": [],
     "open_questions": [],
-    "tags": ["workflow","git"]
+    "tags": [
+      "workflow",
+      "git"
+    ],
+    "order": 10
   },
   {
     "id": "governance-data-first",
@@ -680,15 +1317,28 @@
     "description": "sections.json, cells.json, relations.json и gestures.json являются содержательным слоем. Сайт только визуализирует эти данные.",
     "purpose": "Позволить дополнять документацию без переписывания HTML.",
     "kind": "core",
-    "models": ["b2c","b2b"],
-    "platforms": ["shared"],
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "shared"
+    ],
     "status": "approved",
-    "inputs": ["Structured documentation data"],
-    "outputs": ["Interactive technical map"],
+    "inputs": [
+      "Structured documentation data"
+    ],
+    "outputs": [
+      "Interactive technical map"
+    ],
     "parameters": {},
     "constraints": [],
     "open_questions": [],
-    "tags": ["workflow","documentation"]
+    "tags": [
+      "workflow",
+      "documentation"
+    ],
+    "order": 20
   },
   {
     "id": "governance-modules",
@@ -699,14 +1349,27 @@
     "description": "Работа должна идти итерациями: отдельные модули ввода, распознавания, маршрутизации, реестров и платформенных адаптаций.",
     "purpose": "Уменьшить связность проекта и упростить проверку изменений.",
     "kind": "core",
-    "models": ["b2c","b2b"],
-    "platforms": ["shared"],
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "shared"
+    ],
     "status": "approved",
-    "inputs": ["Module scope"],
-    "outputs": ["Reviewable change"],
+    "inputs": [
+      "Module scope"
+    ],
+    "outputs": [
+      "Reviewable change"
+    ],
     "parameters": {},
     "constraints": [],
     "open_questions": [],
-    "tags": ["workflow","modularity"]
+    "tags": [
+      "workflow",
+      "modularity"
+    ],
+    "order": 30
   }
 ]

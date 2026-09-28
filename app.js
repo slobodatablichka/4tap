@@ -80,7 +80,9 @@
     let count = 0;
 
     state.sections.forEach(section => {
-      const cells = state.cells.filter(c => c.section === section.id && visible(c));
+      const cells = state.cells
+        .filter(c => c.section === section.id && visible(c))
+        .sort((a,b) => (a.order || 0) - (b.order || 0));
       if (!cells.length) return;
 
       const lane = document.createElement('section');
