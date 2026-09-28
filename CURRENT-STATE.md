@@ -63,9 +63,9 @@
 
 ## Следующий этап
 
-1. Android post-activation chain считать подтверждённой: `ActivationRequest → OverlayLauncher → Drawing Overlay → Recognizer → Command`.
-2. In-app 4-tap сохранять только как test harness.
-3. Следующий Android-риск — системный/OEM activation adapter, который должен сформировать тот же `ActivationRequest` без изменения уже подтверждённого downstream-контура.
+1. Android downstream chain и внешний activation adapter считать подтверждёнными.
+2. In-app 4-tap и debug broadcast сохранять только как test harness.
+3. Следующий Android-риск — сама SystemUI/input-policy reserved Quad Tap zone, которая должна формировать уже подтверждённый `ActivationRequest`.
 4. Отдельно продолжать iOS action model и другие платформенные адаптации.
 
 
@@ -197,6 +197,18 @@
 Контрольный результат: `REFACTOR LEFT SC OK`, `RIGHT SC OK`.
 
 Это подтверждает, что источник активации можно менять независимо от overlay/recognizer/command. Текущий in-app 4-tap остаётся test harness. Неподтверждённым остаётся только системный/OEM trigger, который должен подать тот же `ActivationRequest`.
+
+
+## Android external activation adapter verified
+
+Подтверждён внешний activation adapter на физическом Android-устройстве без предварительного открытия 4Tap Activity:
+- внешний explicit broadcast используется как тестовый аналог SystemUI;
+- receiver формирует `ActivationRequest(source = OEM_SYSTEMUI_TEST)`;
+- уже проверенный `OverlayLauncher` открывает настоящий Drawing Overlay поверх другого foreground-приложения;
+- `S → C → SC` завершается корректно;
+- подтверждены обе стороны: `OEM LEFT SC OK`, `OEM RIGHT SC OK`.
+
+Тем самым практически подтверждена граница «внешняя система → 4Tap». Это всё ещё не является реализацией системной reserved touch-zone или Quad Tap в SystemUI/input policy. Именно эта зона теперь остаётся основным незакрытым Android activation-контуром.
 
 ## iOS implementation options
 
