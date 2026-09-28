@@ -1,6 +1,6 @@
 # CURRENT STATE
 
-Дата: 2026-09-28
+Дата: 2026-09-29
 
 ## Текущая версия
 
@@ -63,9 +63,9 @@
 
 ## Следующий этап
 
-1. На Android подтвердить настоящий touchable `TYPE_APPLICATION_OVERLAY` с уже работающим `S → C → SC` поверх другого foreground-приложения.
-2. Системный/OEM Quad Tap продолжать как отдельный activation-контур; текущий in-app corner prototype не считать его доказательством.
-3. После overlay-прототипа связать activation и drawing через явный интерфейс.
+1. Android post-activation chain считать подтверждённой: `ActivationRequest → OverlayLauncher → Drawing Overlay → Recognizer → Command`.
+2. In-app 4-tap сохранять только как test harness.
+3. Следующий Android-риск — системный/OEM activation adapter, который должен сформировать тот же `ActivationRequest` без изменения уже подтверждённого downstream-контура.
 4. Отдельно продолжать iOS action model и другие платформенные адаптации.
 
 
@@ -183,6 +183,20 @@
 - сценарий подтверждён для левой и правой стороны: `LEFT OVERLAY SC OK`, `RIGHT OVERLAY SC OK`.
 
 Это существенно сужает Android-риск: post-activation input surface и двухсимвольное распознавание подтверждены. Неподтверждённым остаётся системный/OEM activation trigger, который должен вызывать уже рабочий overlay без предварительного открытия 4Tap Activity.
+
+
+## Android activation contract verified
+
+После архитектурного разделения повторно подтверждён полный downstream-контур на физическом Android-устройстве:
+- `ActivationRequest`;
+- `OverlayLauncher`;
+- настоящий `TYPE_APPLICATION_OVERLAY`;
+- Palm Graffiti recognizer;
+- двухсимвольная команда `SC`.
+
+Контрольный результат: `REFACTOR LEFT SC OK`, `RIGHT SC OK`.
+
+Это подтверждает, что источник активации можно менять независимо от overlay/recognizer/command. Текущий in-app 4-tap остаётся test harness. Неподтверждённым остаётся только системный/OEM trigger, который должен подать тот же `ActivationRequest`.
 
 ## iOS implementation options
 
