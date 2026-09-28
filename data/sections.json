@@ -1,0 +1,58 @@
+[
+  {
+    "id": "product",
+    "title": "KnockUI Core",
+    "subtitle": "Общая продуктовая модель, действующая независимо от конкретной платформенной реализации.",
+    "order": 10,
+    "platform": "shared"
+  },
+  {
+    "id": "android",
+    "title": "Android",
+    "subtitle": "Глобальный вызов, локальный холст, распознавание двух знаков и запуск действий.",
+    "order": 20,
+    "platform": "android"
+  },
+  {
+    "id": "ios",
+    "title": "iOS",
+    "subtitle": "Адаптация KnockUI через доступные системные точки входа; не предполагается автоматическая эквивалентность Android-глобальному жесту.",
+    "order": 30,
+    "platform": "ios"
+  },
+  {
+    "id": "wechat",
+    "title": "WeChat",
+    "subtitle": "Адаптация внутри экосистемы WeChat / Mini Program.",
+    "order": 40,
+    "platform": "wechat"
+  },
+  {
+    "id": "whatsapp",
+    "title": "WhatsApp",
+    "subtitle": "Адаптация через чатовый интерфейс и WhatsApp Business API.",
+    "order": 50,
+    "platform": "whatsapp"
+  },
+  {
+    "id": "strategy",
+    "title": "Глобальная стратегия",
+    "subtitle": "Региональная сегментация, каналы распространения и рыночные предположения.",
+    "order": 60,
+    "platform": "shared"
+  },
+  {
+    "id": "roadmap",
+    "title": "Roadmap",
+    "subtitle": "Этапность реализации от Android MVP к B2B и кроссплатформенным адаптациям.",
+    "order": 70,
+    "platform": "shared"
+  },
+  {
+    "id": "governance",
+    "title": "Методология проекта",
+    "subtitle": "Репозиторий, модульность, интерактивная документация и управление изменениями.",
+    "order": 80,
+    "platform": "shared"
+  }
+]

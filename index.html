@@ -4,30 +4,50 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="4Tap / KnockUI — интерактивная техническая документация">
-  <title>4Tap — техническая карта</title>
+  <title>KnockUI / 4Tap — техническая карта</title>
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
   <header class="topbar">
     <div>
-      <div class="eyebrow">INTERACTIVE TECHNICAL DOCUMENTATION</div>
-      <h1>4Тап / KnockUI</h1>
-      <p class="subtitle">Архитектура, жесты, связи и параметры проекта</p>
+      <div class="eyebrow">INTERACTIVE TECHNICAL DOCUMENTATION · v0.2</div>
+      <h1>KnockUI / 4Тап</h1>
+      <p class="subtitle">Единая карта продукта: Android · iOS · WeChat · WhatsApp · B2C · B2B</p>
     </div>
-    <div class="top-actions">
-      <button class="mode-btn active" data-mode="all" type="button">Все</button>
-      <button class="mode-btn" data-mode="core" type="button">Core</button>
-      <button class="mode-btn" data-mode="b2c" type="button">B2C</button>
-      <button class="mode-btn" data-mode="b2b" type="button">B2B</button>
+    <div class="searchbox">
+      <label for="doc-search">Поиск</label>
+      <input id="doc-search" type="search" placeholder="Quad Tap, iOS, B2B, Mini Program…">
     </div>
   </header>
 
   <main class="page">
+    <section class="filters" aria-label="Фильтры документации">
+      <div class="filter-group">
+        <span class="filter-label">Контур</span>
+        <button class="filter-btn active" data-filter="all" type="button">Все</button>
+        <button class="filter-btn" data-filter="android" type="button">Android</button>
+        <button class="filter-btn" data-filter="ios" type="button">iOS</button>
+        <button class="filter-btn" data-filter="wechat" type="button">WeChat</button>
+        <button class="filter-btn" data-filter="whatsapp" type="button">WhatsApp</button>
+        <button class="filter-btn" data-filter="b2c" type="button">B2C</button>
+        <button class="filter-btn" data-filter="b2b" type="button">B2B</button>
+      </div>
+      <div class="status-group">
+        <label for="status-filter">Статус</label>
+        <select id="status-filter">
+          <option value="all">Все статусы</option>
+          <option value="approved">Утверждено</option>
+          <option value="concept">Концепция</option>
+          <option value="needs-validation">Требует проверки</option>
+        </select>
+      </div>
+    </section>
+
     <section class="legend" aria-label="Легенда">
-      <span><i class="dot core"></i>ядро</span>
-      <span><i class="dot b2c"></i>B2C</span>
-      <span><i class="dot b2b"></i>B2B</span>
+      <span><i class="dot approved"></i>утверждено</span>
+      <span><i class="dot concept"></i>концепция</span>
       <span><i class="dot validate"></i>требует проверки</span>
+      <span class="legend-note">Клик по ячейке фиксирует выбор и показывает связи.</span>
     </section>
 
     <section class="workspace">
@@ -35,18 +55,27 @@
         <div class="panel-heading">
           <div>
             <div class="eyebrow">SYSTEM MAP</div>
-            <h2>Путь команды</h2>
+            <h2>Полная архитектура KnockUI</h2>
           </div>
-          <div class="hint">Наведите для краткого пояснения. Нажмите для подробностей.</div>
+          <div id="result-count" class="hint"></div>
         </div>
 
-        <div id="system-map" class="system-map" aria-live="polite"></div>
+        <div id="map-stage" class="map-stage">
+          <svg id="relations-svg" class="relations-svg" aria-hidden="true">
+            <defs>
+              <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="strokeWidth">
+                <path d="M0,0 L8,4 L0,8 Z"></path>
+              </marker>
+            </defs>
+          </svg>
+          <div id="system-map" class="system-map" aria-live="polite"></div>
+        </div>
 
         <div class="gesture-space-callout">
           <button id="open-gesture-space" class="gesture-space-button" type="button">
             <span>
               <strong>GESTURE SPACE</strong>
-              <small>A–Z + 0–9 · 1260 допустимых пар</small>
+              <small>A–Z + 0–9 · 1260 допустимых пар · отдельный интерактивный реестр</small>
             </span>
             <span class="arrow">→</span>
           </button>
@@ -54,9 +83,9 @@
       </div>
 
       <aside id="details-panel" class="details-panel">
-        <div class="eyebrow">DETAILS</div>
-        <h2 id="details-title">Выберите ячейку</h2>
-        <p id="details-short" class="details-short">Здесь появится техническое описание выбранного элемента.</p>
+        <div class="eyebrow">TECHNICAL NOTE</div>
+        <h2 id="details-title">Выберите положение</h2>
+        <p id="details-short" class="details-short">Нажмите на любую ячейку карты. Здесь появятся назначение, параметры, входы, выходы, ограничения, открытые вопросы и связи.</p>
         <div id="details-body"></div>
       </aside>
     </section>
@@ -69,12 +98,10 @@
         </div>
         <button id="close-gesture-space" type="button" class="close-btn">Закрыть</button>
       </div>
-
       <div class="registry-toolbar">
         <input id="combo-search" type="search" inputmode="text" maxlength="2" placeholder="Найти, например DR" aria-label="Поиск комбинации">
         <span id="registry-stats"></span>
       </div>
-
       <div class="matrix-wrap">
         <table id="gesture-matrix" class="gesture-matrix" aria-label="Матрица комбинаций"></table>
       </div>
@@ -82,7 +109,6 @@
   </main>
 
   <div id="tooltip" class="tooltip" role="tooltip" hidden></div>
-
   <script src="./app.js" defer></script>
 </body>
 </html>
