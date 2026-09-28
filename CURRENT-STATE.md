@@ -67,3 +67,15 @@
 2. После решения обновить Android flow и разрешения.
 3. Отдельно пересобрать iOS action model без произвольного app launch из keyboard extension.
 4. Затем переходить к минимальным техническим прототипам Android recognizer/canvas и WeChat input.
+
+
+## Полнота технических выводов
+
+Все выводы технической проверки разнесены по интерактивным ячейкам, а не оставлены только в TECH-VERIFICATION-2026-09-28.md.
+
+Дополнительно введены архитектурные узлы:
+- `platform-adaptation-model` — общий протокол при разных platform entry/action models;
+- `android-activation-redesign` — обязательное решение по замене пассивного глобального trigger;
+- `ios-action-redesign` — обязательное решение по iOS execution model.
+
+В `verification` соответствующих ячеек теперь фиксируются не только summary/sources/next_step, но и `implication` — архитектурное следствие. Для WeChat также фиксируется `source_note` о необходимости финальной перепроверки по актуальной официальной документации/DevTools.
