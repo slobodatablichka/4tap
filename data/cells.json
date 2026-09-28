@@ -812,7 +812,7 @@
     "platforms": [
       "android"
     ],
-    "status": "concept",
+    "status": "approved",
     "inputs": [
       "KnockUI activation from system Quad Tap"
     ],
@@ -843,10 +843,10 @@
     ],
     "order": 50,
     "verification": {
-      "state": "verified-constrained",
-      "date": "2026-09-28",
+      "state": "verified-supported",
+      "date": "2026-09-29",
       "confidence": "high",
-      "summary": "Локальный post-activation canvas подтверждён как рабочее направление: touchable overlay может принимать жестовый ввод поверх другого приложения.",
+      "summary": "The local KnockUI canvas has now been verified as a real touchable Android overlay above another foreground app, with successful S → C → SC input.",
       "sources": [
         {
           "label": "Android WindowManager.LayoutParams",
@@ -857,8 +857,8 @@
           "url": "https://developer.android.com/reference/android/provider/Settings"
         }
       ],
-      "next_step": "Prototype the 200×200 dp canvas after replacing the global trigger.",
-      "implication": "Рисование двух символов не требует глобального passive touch listener; после активации KnockUI может владеть небольшим временным input surface."
+      "next_step": "Keep canvas behavior stable while decoupling it from the current in-app activation harness.",
+      "implication": "Local Canvas is no longer only an architectural direction; the post-activation input surface is verified on a physical Android device."
     }
   },
   {
@@ -878,7 +878,7 @@
     "platforms": [
       "android"
     ],
-    "status": "concept",
+    "status": "approved",
     "inputs": [
       "KnockUI activation",
       "Touch input inside local overlay"
@@ -892,7 +892,9 @@
       "permission": "SYSTEM_ALERT_WINDOW",
       "touch_mode": "touchable",
       "pass_through_required": false,
-      "lifecycle": "temporary; shown only during KnockUI command input"
+      "lifecycle": "temporary; shown only during KnockUI command input",
+      "prototype_result": "LEFT OVERLAY SC OK; RIGHT OVERLAY SC OK",
+      "prototype_scope": "real-device overlay over another foreground app"
     },
     "constraints": [
       "Пользователь должен выдать разрешение на отображение поверх других приложений, если используется TYPE_APPLICATION_OVERLAY.",
@@ -912,10 +914,10 @@
       "canvas"
     ],
     "verification": {
-      "state": "verified-constrained",
-      "date": "2026-09-28",
+      "state": "verified-supported",
+      "date": "2026-09-29",
       "confidence": "high",
-      "summary": "Post-activation drawing surface is technically feasible: a touchable TYPE_APPLICATION_OVERLAY can receive KnockUI strokes above another app. Android 12 pass-through restrictions do not block this design because the input canvas is not intended to pass touches through.",
+      "summary": "A real-device prototype confirms that a touchable TYPE_APPLICATION_OVERLAY can remain above another foreground app, accept Palm Graffiti S → C, produce SC, and dismiss cleanly.",
       "sources": [
         {
           "label": "Android WindowManager.LayoutParams — TYPE_APPLICATION_OVERLAY",
@@ -930,8 +932,8 @@
           "url": "https://developer.android.com/about/versions/12/behavior-changes-all"
         }
       ],
-      "next_step": "Prototype the local touchable overlay and verify stroke latency, sizing and dismissal on real devices.",
-      "implication": "The hard Android problem is activation, not the subsequent two-symbol drawing surface."
+      "next_step": "Expose the overlay behind a stable activation contract and connect a future OEM/SystemUI trigger without coupling it to the current in-app test harness.",
+      "implication": "Post-activation drawing is now a confirmed Android capability in the 4Tap prototype. The remaining primary Android risk is activation, not the overlay drawing surface."
     }
   },
   {
@@ -1102,9 +1104,9 @@
       "candidate": "$1 Unistroke Recognizer",
       "alphabet": "A–Z + 0–9",
       "published_role": "rapid prototyping; template matching",
-        "current_prototype_subset": "S, C",
-        "template_reference": "original Palm Graffiti",
-        "direction_sensitive": true
+      "current_prototype_subset": "S, C",
+      "template_reference": "original Palm Graffiti",
+      "direction_sensitive": true
     },
     "constraints": [
       "Ошибки распознавания",
@@ -2881,11 +2883,11 @@
     ],
     "parameters": {
       "prototype_result": "LEFT SC OK; RIGHT SC OK",
-      "prototype_scope": "in-app Activity; not global/OEM trigger"
+      "prototype_scope": "in-app Activity; not global/OEM trigger",
+      "overlay_result": "LEFT OVERLAY SC OK; RIGHT OVERLAY SC OK"
     },
     "constraints": [
-      "Текущий успешный corner → 4-tap → canvas → S → C → SC prototype работает внутри 4Tap Activity и не подтверждает системный/OEM trigger.",
-      "Post-activation TYPE_APPLICATION_OVERLAY поверх другого приложения требует отдельной real-device проверки."
+      "Текущий успешный corner → 4-tap → canvas → S → C → SC prototype работает внутри 4Tap Activity и не подтверждает системный/OEM trigger."
     ],
     "open_questions": [],
     "tags": [
