@@ -604,5 +604,29 @@
     "to": "android-drawing-overlay",
     "relation": "требует overlay permission",
     "type": "constraint"
+  },
+  {
+    "from": "android-drawing-overlay",
+    "to": "android-overlay-over-host-apps",
+    "relation": "может отображаться поверх foreground app",
+    "type": "model"
+  },
+  {
+    "from": "android-overlay-over-host-apps",
+    "to": "wechat-mini-program",
+    "relation": "сосуществует с внутренним WeChat-контуром",
+    "type": "model"
+  },
+  {
+    "from": "android-overlay-over-host-apps",
+    "to": "whatsapp-business",
+    "relation": "сосуществует с внутренним WhatsApp-контуром",
+    "type": "model"
+  },
+  {
+    "from": "platform-adaptation-model",
+    "to": "android-overlay-over-host-apps",
+    "relation": "допускает dual-entry на Android",
+    "type": "model"
   }
 ]
