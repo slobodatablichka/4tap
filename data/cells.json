@@ -564,7 +564,9 @@
       "decision_status": "accepted direction",
       "primary_path": "OEM/SystemUI reserved touch zone → Quad Tap → KnockUI",
       "downstream_contract": "ActivationRequest → OverlayLauncher → Drawing Overlay → Recognizer → Command",
-      "downstream_verification": "REFACTOR LEFT SC OK; RIGHT SC OK"
+      "downstream_verification": "REFACTOR LEFT SC OK; RIGHT SC OK",
+      "external_adapter": "verified",
+      "external_adapter_result": "OEM LEFT SC OK; OEM RIGHT SC OK"
     },
     "constraints": [
       "Требуется OEM/system integration.",
@@ -601,8 +603,8 @@
           "url": "https://source.android.com/docs/compatibility/17/android-17-cdd"
         }
       ],
-      "next_step": "Prototype the OEM/SystemUI activation adapter that emits the already verified ActivationRequest contract.",
-      "implication": "The post-activation path is decoupled and verified. The remaining primary Android uncertainty is the system/OEM source of ActivationRequest."
+      "next_step": "Prototype the actual SystemUI/input-policy reserved Quad Tap zone that emits the already verified ActivationRequest.",
+      "implication": "The external system-to-4Tap interface is verified. The remaining activation uncertainty is the system-owned touch zone and Quad Tap recognition itself."
     }
   },
   {
@@ -634,7 +636,9 @@
       "geometry": "TBD",
       "visibility": "TBD",
       "gesture": "4 taps",
-      "outside_zone": "ordinary app behavior unchanged"
+      "outside_zone": "ordinary app behavior unchanged",
+      "activation_handoff": "verified via debug external adapter",
+      "activation_handoff_result": "OEM LEFT SC OK; OEM RIGHT SC OK"
     },
     "constraints": [
       "Обычный сторонний APK не может сам превратить произвольную область в mandatory system touch zone.",
@@ -657,9 +661,9 @@
     ],
     "verification": {
       "state": "requires-prototype",
-      "date": "2026-09-28",
+      "date": "2026-09-29",
       "confidence": "high",
-      "summary": "Системно зарезервированная область является архитектурно правдоподобным OEM-путём, но конкретная реализация Quad Tap требует SystemUI/input-policy prototype и проверки CDD/UX.",
+      "summary": "The handoff from an external system-like signal into the verified 4Tap ActivationRequest/overlay chain is confirmed on a physical device. The actual SystemUI/input-policy reserved touch zone remains unimplemented and still requires a prototype.",
       "sources": [
         {
           "label": "Android — WindowInsets.Type.systemGestures / mandatorySystemGestures",
@@ -674,8 +678,8 @@
           "url": "https://source.android.com/docs/compatibility/17/android-17-cdd"
         }
       ],
-      "next_step": "Выбрать 2–3 геометрии зоны и сделать OEM/SystemUI design specification.",
-      "implication": "Проблема глобального arbitrary touch listener исчезает; главный вопрос переносится в OEM integration и UX системной зоны."
+      "next_step": "Specify and prototype the SystemUI/input-policy reserved zone, including geometry and incomplete 1/2/3-tap behavior.",
+      "implication": "OEM/SystemUI no longer needs to own the KnockUI overlay or recognizer; it only needs to detect Quad Tap in a system-owned zone and emit the verified activation handoff."
     }
   },
   {
@@ -2888,10 +2892,12 @@
       "prototype_scope": "in-app Activity; not global/OEM trigger",
       "overlay_result": "LEFT OVERLAY SC OK; RIGHT OVERLAY SC OK",
       "activation_contract": "verified",
-      "activation_contract_result": "REFACTOR LEFT SC OK; RIGHT SC OK"
+      "activation_contract_result": "REFACTOR LEFT SC OK; RIGHT SC OK",
+      "external_activation_adapter": "verified",
+      "external_activation_result": "OEM LEFT SC OK; OEM RIGHT SC OK"
     },
     "constraints": [
-      "Downstream activation contract подтверждён; системный/OEM trigger остаётся отдельным неподтверждённым контуром."
+      "Внешний system-like activation handoff подтверждён; реальная SystemUI/input-policy reserved Quad Tap zone ещё не реализована."
     ],
     "open_questions": [],
     "tags": [
