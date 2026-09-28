@@ -94,3 +94,16 @@
 Добавлена ячейка `android-oem-quad-zone`.
 
 Важное техническое уточнение: обычного `systemGestures` inset недостаточно, потому что Android документирует доставку простых taps приложению в gesture insets. Нужен реальный system-owned touch target либо OEM/SystemUI/input-policy integration.
+
+
+## Android post-activation drawing
+
+Зафиксировано отдельное техническое положение:
+- сложность глобального вызова KnockUI не переносится автоматически на последующее рисование;
+- после активации можно использовать небольшой временный touchable `TYPE_APPLICATION_OVERLAY`;
+- overlay принимает штрихи KnockUI внутри своей области;
+- нижележащее приложение в пределах canvas во время ввода не получает эти касания;
+- pass-through для gesture canvas не требуется;
+- ограничения Android 12 на untrusted pass-through поэтому не блокируют эту схему.
+
+Добавлена ячейка `android-drawing-overlay`. Основной input flow теперь проходит через неё: `Local Canvas → Drawing Overlay Surface → Gesture 1`.
