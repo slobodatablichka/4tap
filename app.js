@@ -8,7 +8,8 @@
     filter: 'all',
     status: 'all',
     query: '',
-    relationMode: 'all'
+    relationMode: 'all',
+    verification: 'all'
   };
 
   const mapEl = document.getElementById('system-map');
@@ -22,6 +23,7 @@
   const docSearch = document.getElementById('doc-search');
   const statusFilter = document.getElementById('status-filter');
   const relationFilter = document.getElementById('relation-filter');
+  const verificationFilter = document.getElementById('verification-filter');
   const integrityBadge = document.getElementById('integrity-badge');
   const gestureSpace = document.getElementById('gesture-space');
   const matrix = document.getElementById('gesture-matrix');
@@ -36,6 +38,15 @@
     'concept': 'концепция',
     'needs-validation': 'требует проверки'
   }[value] || value || '—');
+
+  const verificationLabel = value => ({
+    'verified-supported': 'подтверждено',
+    'verified-constrained': 'с ограничениями',
+    'blocked-as-specified': 'блокер схемы',
+    'requires-prototype': 'нужен прототип',
+    'non-technical': 'не техническое',
+    'unverified': 'не проверено'
+  }[value] || value || 'не проверено');
 
   Promise.all([
     fetch('./data/sections.json').then(assertOk).then(r => r.json()),
@@ -78,6 +89,13 @@
       if (!['approved','concept','needs-validation'].includes(c.status)) errors.push('Неизвестный status у ' + c.id);
     });
 
+    const allowedVerification = new Set(['verified-supported','verified-constrained','blocked-as-specified','requires-prototype','non-technical']);
+    state.cells.forEach(c => {
+      if (c.verification?.state && !allowedVerification.has(c.verification.state)) {
+        errors.push('Неизвестный verification.state у ' + c.id + ': ' + c.verification.state);
+      }
+    });
+
     const relationKeys = new Set();
     const degree = new Map(state.cells.map(c => [c.id, 0]));
     const allowedTypes = new Set(['flow','branch','model','constraint','strategy','roadmap','governance']);
@@ -116,7 +134,10 @@
       cell.id, cell.title, cell.group, cell.short, cell.description, cell.purpose,
       ...arr(cell.tags), ...arr(cell.platforms), ...arr(cell.models),
       ...arr(cell.inputs), ...arr(cell.outputs), ...arr(cell.constraints), ...arr(cell.open_questions),
-      ...Object.entries(cell.parameters || {}).flat()
+      ...Object.entries(cell.parameters || {}).flat(),
+      cell.verification?.state || '',
+      cell.verification?.summary || '',
+      cell.verification?.next_step || ''
     ].join(' ').toLowerCase();
   }
 
@@ -126,9 +147,11 @@
           ? arr(cell.models).includes(state.filter)
           : arr(cell.platforms).includes(state.filter) || arr(cell.platforms).includes('shared'));
     const statusOk = state.status === 'all' || cell.status === state.status;
+    const verificationState = cell.verification?.state || 'unverified';
+    const verificationOk = state.verification === 'all' || verificationState === state.verification;
     const q = state.query.trim().toLowerCase();
     const queryOk = !q || searchable(cell).includes(q);
-    return filterOk && statusOk && queryOk;
+    return filterOk && statusOk && verificationOk && queryOk;
   }
 
   function render() {
@@ -169,7 +192,8 @@
           <span class="cell-meta">
             <span class="cell-status">${esc(statusLabel(cell.status))}</span>
             <span class="cell-models">${esc(arr(cell.models).join(' · '))}</span>
-          </span>`;
+          </span>
+          <span class="cell-verification verify-${esc(cell.verification?.state || 'unverified')}">${esc(verificationLabel(cell.verification?.state || 'unverified'))}</span>`;
         b.addEventListener('click', () => selectCell(cell.id, true));
         b.addEventListener('mouseenter', e => showTooltip(e, cell.short));
         b.addEventListener('mousemove', moveTooltip);
@@ -235,8 +259,25 @@
       </ul></div>` : '';
 
     const params = Object.entries(cell.parameters || {});
+    const verification = cell.verification || null;
+    const verificationSources = verification?.sources || [];
+    const verificationHtml = verification ? `
+      <div class="verification-block verify-${esc(verification.state)}">
+        <div class="verification-head">
+          <span>Техническая проверка</span>
+          <b>${esc(verificationLabel(verification.state))}</b>
+        </div>
+        <div class="verification-summary">${esc(verification.summary || '')}</div>
+        ${verification.confidence ? `<div class="verification-meta">Доверие: ${esc(verification.confidence)} · ${esc(verification.date || '')}</div>` : ''}
+        ${verification.next_step ? `<div class="verification-next"><strong>Следующий шаг:</strong> ${esc(verification.next_step)}</div>` : ''}
+        ${verificationSources.length ? `<div class="verification-sources"><strong>Источники</strong>${verificationSources.map(s => `<a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.label || s.url)}</a>`).join('')}</div>` : ''}
+      </div>` : `
+      <div class="verification-block verify-unverified">
+        <div class="verification-head"><span>Техническая проверка</span><b>не проводилась</b></div>
+      </div>`;
     detailsBody.innerHTML = `
       <div class="status-pill">${esc(statusLabel(cell.status))}</div>
+      ${verificationHtml}
       <div class="details-purpose"><strong>Назначение.</strong> ${esc(cell.purpose || '—')}</div>
       <div class="details-description">${esc(cell.description || '')}</div>
       ${params.length ? `<div class="detail-section"><h3>Параметры</h3><div class="detail-grid">${params.map(([k,v]) => `<div class="detail-item"><b>${esc(k)}</b>${esc(v)}</div>`).join('')}</div></div>` : ''}
@@ -257,8 +298,8 @@
         const id = btn.dataset.openCell;
         const target = document.querySelector(`.map-cell[data-id="${CSS.escape(id)}"]`);
         if (!target) {
-          state.filter = 'all'; state.status = 'all'; state.query = '';
-          docSearch.value = ''; statusFilter.value = 'all';
+          state.filter = 'all'; state.status = 'all'; state.verification = 'all'; state.query = '';
+          docSearch.value = ''; statusFilter.value = 'all'; verificationFilter.value = 'all';
           document.querySelectorAll('.filter-btn').forEach(x => x.classList.toggle('active', x.dataset.filter === 'all'));
           render();
         }
@@ -349,6 +390,11 @@
 
   statusFilter.addEventListener('change', () => {
     state.status = statusFilter.value;
+    render();
+  });
+
+  verificationFilter.addEventListener('change', () => {
+    state.verification = verificationFilter.value;
     render();
   });
 
