@@ -102,12 +102,6 @@
     "type": "constraint"
   },
   {
-    "from": "android-integration",
-    "to": "android-quad-tap",
-    "relation": "детектирует кандидат активации",
-    "type": "flow"
-  },
-  {
     "from": "android-quad-tap",
     "to": "android-zone-validation",
     "relation": "передаёт на проверку зоны",
@@ -472,5 +466,41 @@
     "to": "governance-data-first",
     "relation": "восстанавливает данные",
     "type": "governance"
+  },
+  {
+    "from": "android-integration",
+    "to": "android-global-trigger-limitation",
+    "relation": "ограничен публичной моделью touch events",
+    "type": "constraint"
+  },
+  {
+    "from": "android-global-trigger-limitation",
+    "to": "android-quad-tap",
+    "relation": "блокирует пассивный глобальный источник",
+    "type": "constraint"
+  },
+  {
+    "from": "android-permissions",
+    "to": "android-local-canvas",
+    "relation": "разрешает application overlay",
+    "type": "constraint"
+  },
+  {
+    "from": "android-distribution-compliance",
+    "to": "android-integration",
+    "relation": "ограничивает допустимое использование AccessibilityService",
+    "type": "constraint"
+  },
+  {
+    "from": "android-gesture-editor",
+    "to": "android-distribution-compliance",
+    "relation": "требует проверки package visibility",
+    "type": "constraint"
+  },
+  {
+    "from": "ios-limits",
+    "to": "ios-actions",
+    "relation": "запрещает произвольный запуск приложений",
+    "type": "constraint"
   }
 ]
