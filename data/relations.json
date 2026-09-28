@@ -1,52 +1,476 @@
 [
-  {"from":"product-b2c","to":"user-gestures","relation":"uses"},
-  {"from":"product-b2b","to":"system-gestures","relation":"uses"},
-  {"from":"command-space","to":"system-gestures","relation":"namespace"},
-  {"from":"command-space","to":"user-gestures","relation":"namespace"},
-
-  {"from":"android-integration","to":"android-quad-tap","relation":"observes"},
-  {"from":"android-quad-tap","to":"android-local-canvas","relation":"activates"},
-  {"from":"android-local-canvas","to":"android-gesture-1","relation":"captures"},
-  {"from":"android-gesture-1","to":"android-recognizer","relation":"recognize"},
-  {"from":"android-recognizer","to":"android-gesture-2","relation":"continue"},
-  {"from":"android-gesture-2","to":"android-command","relation":"forms"},
-  {"from":"android-command","to":"system-gestures","relation":"lookup-1"},
-  {"from":"android-command","to":"user-gestures","relation":"lookup-2"},
-  {"from":"system-gestures","to":"android-dispatcher","relation":"resolve"},
-  {"from":"user-gestures","to":"android-dispatcher","relation":"resolve"},
-  {"from":"android-dispatcher","to":"android-actions","relation":"execute"},
-
-  {"from":"ios-keyboard","to":"ios-activation","relation":"entry"},
-  {"from":"ios-activation","to":"ios-graffiti","relation":"opens"},
-  {"from":"ios-graffiti","to":"ios-dispatch","relation":"forms XY"},
-  {"from":"ios-dispatch","to":"system-gestures","relation":"uses model"},
-  {"from":"ios-dispatch","to":"user-gestures","relation":"uses model"},
-  {"from":"ios-keyboard","to":"ios-limits","relation":"bounded-by"},
-
-  {"from":"wechat-mini-program","to":"wechat-input","relation":"contains"},
-  {"from":"wechat-input","to":"wechat-routing","relation":"forms XY"},
-  {"from":"wechat-routing","to":"system-gestures","relation":"uses model"},
-  {"from":"wechat-routing","to":"user-gestures","relation":"uses model"},
-  {"from":"wechat-distribution","to":"wechat-mini-program","relation":"traffic"},
-
-  {"from":"whatsapp-business","to":"whatsapp-command","relation":"entry"},
-  {"from":"whatsapp-command","to":"whatsapp-router","relation":"forms XY"},
-  {"from":"whatsapp-router","to":"system-gestures","relation":"uses model"},
-  {"from":"whatsapp-router","to":"user-gestures","relation":"uses model"},
-  {"from":"whatsapp-router","to":"whatsapp-response","relation":"execute"},
-
-  {"from":"strategy-west","to":"android-integration","relation":"platform"},
-  {"from":"strategy-west","to":"ios-keyboard","relation":"platform"},
-  {"from":"strategy-china","to":"wechat-mini-program","relation":"platform"},
-  {"from":"strategy-india","to":"whatsapp-business","relation":"platform"},
-
-  {"from":"roadmap-1","to":"roadmap-2","relation":"next"},
-  {"from":"roadmap-2","to":"roadmap-3","relation":"next"},
-  {"from":"roadmap-1","to":"android-integration","relation":"implements"},
-  {"from":"roadmap-3","to":"ios-keyboard","relation":"implements"},
-  {"from":"roadmap-3","to":"wechat-mini-program","relation":"implements"},
-  {"from":"roadmap-3","to":"whatsapp-business","relation":"implements"},
-
-  {"from":"governance-data-first","to":"governance-repo","relation":"stored-in"},
-  {"from":"governance-modules","to":"governance-repo","relation":"versioned-in"}
+  {
+    "from": "product-b2c",
+    "to": "user-gestures",
+    "relation": "использует пользовательский реестр",
+    "type": "model"
+  },
+  {
+    "from": "product-b2b",
+    "to": "system-gestures",
+    "relation": "использует защищённый реестр",
+    "type": "model"
+  },
+  {
+    "from": "command-space",
+    "to": "system-gestures",
+    "relation": "задаёт namespace",
+    "type": "model"
+  },
+  {
+    "from": "command-space",
+    "to": "user-gestures",
+    "relation": "задаёт namespace",
+    "type": "model"
+  },
+  {
+    "from": "gesture-language",
+    "to": "android-gesture-1",
+    "relation": "задаёт язык жеста",
+    "type": "model"
+  },
+  {
+    "from": "gesture-language",
+    "to": "android-gesture-2",
+    "relation": "задаёт язык жеста",
+    "type": "model"
+  },
+  {
+    "from": "gesture-language",
+    "to": "ios-graffiti",
+    "relation": "адаптируется в",
+    "type": "model"
+  },
+  {
+    "from": "gesture-language",
+    "to": "wechat-input",
+    "relation": "может адаптироваться в",
+    "type": "model"
+  },
+  {
+    "from": "product-context-continuity",
+    "to": "android-integration",
+    "relation": "реализуется через",
+    "type": "model"
+  },
+  {
+    "from": "product-context-continuity",
+    "to": "ios-keyboard",
+    "relation": "адаптируется через",
+    "type": "model"
+  },
+  {
+    "from": "product-context-continuity",
+    "to": "wechat-mini-program",
+    "relation": "адаптируется внутри",
+    "type": "model"
+  },
+  {
+    "from": "product-context-continuity",
+    "to": "whatsapp-business",
+    "relation": "адаптируется внутри",
+    "type": "model"
+  },
+  {
+    "from": "command-space",
+    "to": "android-command",
+    "relation": "определяет формат",
+    "type": "model"
+  },
+  {
+    "from": "command-space",
+    "to": "ios-graffiti",
+    "relation": "определяет namespace",
+    "type": "model"
+  },
+  {
+    "from": "command-space",
+    "to": "wechat-input",
+    "relation": "определяет namespace",
+    "type": "model"
+  },
+  {
+    "from": "command-space",
+    "to": "whatsapp-command",
+    "relation": "определяет namespace",
+    "type": "model"
+  },
+  {
+    "from": "android-permissions",
+    "to": "android-integration",
+    "relation": "разрешает системную интеграцию",
+    "type": "constraint"
+  },
+  {
+    "from": "android-integration",
+    "to": "android-quad-tap",
+    "relation": "детектирует кандидат активации",
+    "type": "flow"
+  },
+  {
+    "from": "android-quad-tap",
+    "to": "android-zone-validation",
+    "relation": "передаёт на проверку зоны",
+    "type": "flow"
+  },
+  {
+    "from": "android-zone-validation",
+    "to": "android-local-canvas",
+    "relation": "при allow открывает",
+    "type": "flow"
+  },
+  {
+    "from": "android-local-canvas",
+    "to": "android-failsafe",
+    "relation": "имеет ветвь отмены",
+    "type": "branch"
+  },
+  {
+    "from": "android-local-canvas",
+    "to": "android-gesture-1",
+    "relation": "принимает первый штрих",
+    "type": "flow"
+  },
+  {
+    "from": "android-gesture-1",
+    "to": "android-recognizer",
+    "relation": "распознаётся",
+    "type": "flow"
+  },
+  {
+    "from": "android-recognizer",
+    "to": "android-symbol-feedback",
+    "relation": "показывает первый символ",
+    "type": "flow"
+  },
+  {
+    "from": "android-symbol-feedback",
+    "to": "android-gesture-2",
+    "relation": "ожидает второй штрих",
+    "type": "flow"
+  },
+  {
+    "from": "android-gesture-2",
+    "to": "android-recognizer",
+    "relation": "повторно использует распознаватель",
+    "type": "flow"
+  },
+  {
+    "from": "android-recognizer",
+    "to": "android-command",
+    "relation": "после двух символов формирует XY",
+    "type": "flow"
+  },
+  {
+    "from": "android-command",
+    "to": "system-gestures",
+    "relation": "lookup priority 1",
+    "type": "flow"
+  },
+  {
+    "from": "android-command",
+    "to": "user-gestures",
+    "relation": "fallback lookup",
+    "type": "flow"
+  },
+  {
+    "from": "system-gestures",
+    "to": "android-dispatcher",
+    "relation": "при совпадении разрешает действие",
+    "type": "flow"
+  },
+  {
+    "from": "user-gestures",
+    "to": "android-dispatcher",
+    "relation": "при совпадении разрешает действие",
+    "type": "flow"
+  },
+  {
+    "from": "android-dispatcher",
+    "to": "android-actions",
+    "relation": "исполняет",
+    "type": "flow"
+  },
+  {
+    "from": "android-registry-storage",
+    "to": "system-gestures",
+    "relation": "реализует Android-хранилище",
+    "type": "model"
+  },
+  {
+    "from": "android-registry-storage",
+    "to": "user-gestures",
+    "relation": "реализует Android-хранилище",
+    "type": "model"
+  },
+  {
+    "from": "android-gesture-editor",
+    "to": "user-gestures",
+    "relation": "создаёт и изменяет",
+    "type": "flow"
+  },
+  {
+    "from": "system-gestures",
+    "to": "android-gesture-editor",
+    "relation": "отображается как locked",
+    "type": "model"
+  },
+  {
+    "from": "ios-activation",
+    "to": "ios-keyboard",
+    "relation": "выбирает клавиатуру KnockUI",
+    "type": "flow"
+  },
+  {
+    "from": "ios-keyboard",
+    "to": "ios-graffiti",
+    "relation": "открывает жестовую поверхность",
+    "type": "flow"
+  },
+  {
+    "from": "ios-graffiti",
+    "to": "ios-dispatch",
+    "relation": "формирует XY",
+    "type": "flow"
+  },
+  {
+    "from": "ios-dispatch",
+    "to": "system-gestures",
+    "relation": "проверяет системную модель",
+    "type": "model"
+  },
+  {
+    "from": "ios-dispatch",
+    "to": "user-gestures",
+    "relation": "проверяет пользовательскую модель",
+    "type": "model"
+  },
+  {
+    "from": "ios-dispatch",
+    "to": "ios-actions",
+    "relation": "исполняет допустимое действие",
+    "type": "flow"
+  },
+  {
+    "from": "ios-limits",
+    "to": "ios-keyboard",
+    "relation": "ограничивает",
+    "type": "constraint"
+  },
+  {
+    "from": "ios-limits",
+    "to": "ios-dispatch",
+    "relation": "ограничивает",
+    "type": "constraint"
+  },
+  {
+    "from": "wechat-mini-program",
+    "to": "wechat-input",
+    "relation": "содержит интерфейс ввода",
+    "type": "flow"
+  },
+  {
+    "from": "wechat-input",
+    "to": "wechat-routing",
+    "relation": "формирует XY",
+    "type": "flow"
+  },
+  {
+    "from": "wechat-routing",
+    "to": "system-gestures",
+    "relation": "использует системную модель",
+    "type": "model"
+  },
+  {
+    "from": "wechat-routing",
+    "to": "user-gestures",
+    "relation": "использует пользовательскую модель",
+    "type": "model"
+  },
+  {
+    "from": "wechat-routing",
+    "to": "wechat-actions",
+    "relation": "исполняет допустимое действие",
+    "type": "flow"
+  },
+  {
+    "from": "strategy-china",
+    "to": "wechat-distribution",
+    "relation": "задаёт канал привлечения",
+    "type": "strategy"
+  },
+  {
+    "from": "wechat-distribution",
+    "to": "wechat-mini-program",
+    "relation": "ведёт трафик в",
+    "type": "strategy"
+  },
+  {
+    "from": "whatsapp-business",
+    "to": "whatsapp-command",
+    "relation": "принимает командный ввод",
+    "type": "flow"
+  },
+  {
+    "from": "whatsapp-command",
+    "to": "whatsapp-router",
+    "relation": "передаёт XY",
+    "type": "flow"
+  },
+  {
+    "from": "whatsapp-router",
+    "to": "system-gestures",
+    "relation": "использует системную модель",
+    "type": "model"
+  },
+  {
+    "from": "whatsapp-router",
+    "to": "user-gestures",
+    "relation": "использует пользовательскую модель",
+    "type": "model"
+  },
+  {
+    "from": "whatsapp-router",
+    "to": "whatsapp-response",
+    "relation": "формирует ответ/действие",
+    "type": "flow"
+  },
+  {
+    "from": "strategy-west",
+    "to": "android-integration",
+    "relation": "выбирает Android-контур",
+    "type": "strategy"
+  },
+  {
+    "from": "strategy-west",
+    "to": "ios-activation",
+    "relation": "выбирает iOS-контур",
+    "type": "strategy"
+  },
+  {
+    "from": "strategy-india",
+    "to": "whatsapp-business",
+    "relation": "выбирает WhatsApp-контур",
+    "type": "strategy"
+  },
+  {
+    "from": "strategy-economics",
+    "to": "strategy-west",
+    "relation": "информирует платформенный фокус",
+    "type": "strategy"
+  },
+  {
+    "from": "roadmap-1",
+    "to": "roadmap-2",
+    "relation": "следующий этап",
+    "type": "roadmap"
+  },
+  {
+    "from": "roadmap-2",
+    "to": "roadmap-3",
+    "relation": "следующий этап",
+    "type": "roadmap"
+  },
+  {
+    "from": "product-b2c",
+    "to": "roadmap-1",
+    "relation": "первично реализуется в",
+    "type": "roadmap"
+  },
+  {
+    "from": "product-b2b",
+    "to": "roadmap-2",
+    "relation": "разворачивается в",
+    "type": "roadmap"
+  },
+  {
+    "from": "roadmap-1",
+    "to": "android-integration",
+    "relation": "включает",
+    "type": "roadmap"
+  },
+  {
+    "from": "roadmap-1",
+    "to": "android-quad-tap",
+    "relation": "включает",
+    "type": "roadmap"
+  },
+  {
+    "from": "roadmap-1",
+    "to": "android-local-canvas",
+    "relation": "включает",
+    "type": "roadmap"
+  },
+  {
+    "from": "roadmap-1",
+    "to": "android-recognizer",
+    "relation": "включает",
+    "type": "roadmap"
+  },
+  {
+    "from": "roadmap-1",
+    "to": "android-gesture-editor",
+    "relation": "включает",
+    "type": "roadmap"
+  },
+  {
+    "from": "roadmap-2",
+    "to": "android-distribution-compliance",
+    "relation": "проверяет",
+    "type": "roadmap"
+  },
+  {
+    "from": "roadmap-2",
+    "to": "android-energy-budget",
+    "relation": "оптимизирует",
+    "type": "roadmap"
+  },
+  {
+    "from": "roadmap-2",
+    "to": "system-gestures",
+    "relation": "вводит B2B-слой",
+    "type": "roadmap"
+  },
+  {
+    "from": "roadmap-3",
+    "to": "ios-keyboard",
+    "relation": "портирует на",
+    "type": "roadmap"
+  },
+  {
+    "from": "roadmap-3",
+    "to": "wechat-mini-program",
+    "relation": "портирует на",
+    "type": "roadmap"
+  },
+  {
+    "from": "roadmap-3",
+    "to": "whatsapp-business",
+    "relation": "расширяет на",
+    "type": "roadmap"
+  },
+  {
+    "from": "governance-data-first",
+    "to": "governance-repo",
+    "relation": "хранится в",
+    "type": "governance"
+  },
+  {
+    "from": "governance-modules",
+    "to": "governance-repo",
+    "relation": "версионируется в",
+    "type": "governance"
+  },
+  {
+    "from": "governance-repo-recovery",
+    "to": "governance-repo",
+    "relation": "читает канон из",
+    "type": "governance"
+  },
+  {
+    "from": "governance-repo-recovery",
+    "to": "governance-data-first",
+    "relation": "восстанавливает данные",
+    "type": "governance"
+  }
 ]
