@@ -217,7 +217,7 @@
     "title": "Platform Adaptation Model",
     "group": "ARCHITECTURE",
     "short": "KnockUI сохраняет общий язык команд и реестров, но точка входа и способ исполнения различаются по платформам.",
-    "description": "Техническая проверка показала, что кроссплатформенность KnockUI нельзя строить как копирование Android-механики. Общими остаются двухсимвольный namespace, SystemGestures/UserGestures и семантика маршрутизации. Android, iOS, WeChat и WhatsApp должны иметь собственные допустимые точки входа и собственные action contracts.",
+    "description": "Кроссплатформенность KnockUI строится не как копирование одной механики. Общими остаются двухсимвольный namespace, SystemGestures/UserGestures и семантика маршрутизации. Android, iOS, WeChat и WhatsApp имеют собственные допустимые точки входа и action contracts. При этом на Android платформенные приложения вроде WeChat и WhatsApp могут одновременно выступать обычными foreground host apps для системного KnockUI overlay и иметь собственные внутренние KnockUI-интеграции.",
     "purpose": "Зафиксировать общий архитектурный принцип после технической проверки платформ.",
     "kind": "core",
     "models": [
@@ -244,7 +244,8 @@
     ],
     "parameters": {
       "shared": "command namespace + registry semantics",
-      "platform_specific": "activation/input + execution/actions"
+      "platform_specific": "activation/input + execution/actions",
+      "android_dual_path": "system overlay over host app + platform-native integration inside host"
     },
     "constraints": [
       "Нельзя считать Android-глобальный жест эталоном, который автоматически переносится на iOS, WeChat или WhatsApp."
@@ -931,6 +932,76 @@
       ],
       "next_step": "Prototype the local touchable overlay and verify stroke latency, sizing and dismissal on real devices.",
       "implication": "The hard Android problem is activation, not the subsequent two-symbol drawing surface."
+    }
+  },
+  {
+    "id": "android-overlay-over-host-apps",
+    "section": "android",
+    "order": 53,
+    "title": "Overlay over Host Apps",
+    "group": "CROSS-APP CONTEXT",
+    "short": "После системной активации Android-версия KnockUI может открыть свой временный touchable overlay поверх текущего приложения, включая WeChat и WhatsApp.",
+    "description": "На Android системный/OEM-вызов KnockUI и последующий Drawing Overlay Surface не зависят от того, какое пользовательское приложение находится на переднем плане. Поэтому тот же Android-контур может работать поверх WeChat, WhatsApp или другого приложения: текущее приложение остаётся видимым снизу, а KnockUI принимает штрихи внутри своего временного overlay. Это отдельный путь от собственных KnockUI-интеграций внутри WeChat и WhatsApp.",
+    "purpose": "Зафиксировать двухконтурную модель: Android system overlay поверх приложения и самостоятельная platform-native интеграция внутри самого WeChat/WhatsApp.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "android",
+      "wechat",
+      "whatsapp"
+    ],
+    "status": "approved",
+    "inputs": [
+      "Android system/OEM KnockUI activation",
+      "Current foreground app"
+    ],
+    "outputs": [
+      "KnockUI drawing surface above current Android app"
+    ],
+    "parameters": {
+      "android_host_apps": "WeChat, WhatsApp, other foreground apps",
+      "overlay_path": "Android system trigger → KnockUI overlay",
+      "native_paths": "WeChat Mini Program / WhatsApp Business remain separate",
+      "ios_scope": "not covered by this decision"
+    },
+    "constraints": [
+      "Положение относится именно к Android-устройствам.",
+      "Overlay требует подтверждённого Android permission/integration path.",
+      "Наличие Android overlay не заменяет и не отменяет самостоятельные WeChat/WhatsApp-интеграции."
+    ],
+    "open_questions": [],
+    "tags": [
+      "android",
+      "overlay",
+      "wechat",
+      "whatsapp",
+      "dual-entry",
+      "host-app"
+    ],
+    "verification": {
+      "state": "verified-constrained",
+      "date": "2026-09-28",
+      "confidence": "high",
+      "summary": "После Android-активации touchable application overlay может находиться поверх текущего foreground app; WeChat и WhatsApp для этого являются обычными host apps. Их собственные KnockUI-контуры остаются независимыми альтернативными путями.",
+      "sources": [
+        {
+          "label": "Android WindowManager.LayoutParams — TYPE_APPLICATION_OVERLAY",
+          "url": "https://developer.android.com/reference/android/view/WindowManager.LayoutParams"
+        },
+        {
+          "label": "Android Settings — ACTION_MANAGE_OVERLAY_PERMISSION / canDrawOverlays",
+          "url": "https://developer.android.com/reference/android/provider/Settings"
+        },
+        {
+          "label": "Android 12 — untrusted touch events / overlay pass-through restrictions",
+          "url": "https://developer.android.com/about/versions/12/behavior-changes-all"
+        }
+      ],
+      "next_step": "Сохранить два независимых entry paths в архитектуре и проверять их отдельно.",
+      "implication": "На Android WeChat/WhatsApp получают одновременно внешний KnockUI-overlay path и собственный внутренний platform-native path."
     }
   },
   {
@@ -1864,7 +1935,7 @@
     "title": "WeChat Mini Program",
     "group": "PLATFORM",
     "short": "Китайский контур KnockUI рассматривается как реализация внутри Mini Program.",
-    "description": "Исходная стратегия предполагает перенос логики в WeChat Mini Program. Такой вариант работает внутри экосистемы WeChat и не является глобальным жестом операционной системы.",
+    "description": "Исходная стратегия предполагает перенос логики в WeChat Mini Program. Такой вариант работает внутри экосистемы WeChat и не является глобальным жестом операционной системы. На Android этот внутренний путь существует параллельно с системным KnockUI overlay, который после активации может открыться поверх самого WeChat.",
     "purpose": "Доставить механику KnockUI пользователям внутри доминирующей локальной экосистемы.",
     "kind": "core",
     "models": [
@@ -1886,7 +1957,8 @@
     },
     "constraints": [
       "Работа только внутри разрешённого контекста WeChat",
-      "API и политики Mini Program"
+      "API и политики Mini Program",
+      "Внутренний WeChat-контур не заменяет Android system-overlay path и не зависит от него."
     ],
     "open_questions": [
       "Какие действия доступны Mini Program без выхода из WeChat?"
@@ -1914,7 +1986,7 @@
       ],
       "next_step": "Validate final implementation in WeChat DevTools and against current official Mini Program docs.",
       "source_note": "В этой проверке не удалось получить прямую каноническую страницу developers.weixin.qq.com; выводы опираются на материалы экосистемы Tencent/WeChat и должны быть перепроверены в актуальной официальной документации и WeChat DevTools перед реализацией.",
-      "implication": "WeChat — contained runtime: KnockUI работает внутри Mini Program и не получает OS-global gesture layer."
+      "implication": "WeChat имеет два разных KnockUI-пути на Android: внешний system overlay поверх WeChat и отдельный contained Mini Program внутри WeChat."
     }
   },
   {
@@ -2131,7 +2203,7 @@
     "title": "WhatsApp Business",
     "group": "PLATFORM",
     "short": "Индийский контур рассматривается как чатовая адаптация через WhatsApp Business API.",
-    "description": "WhatsApp Cloud API is Meta's official business messaging API. A KnockUI adaptation can use WhatsApp as a conversational command transport, with inbound messages delivered to the business backend via webhooks.",
+    "description": "WhatsApp Cloud API — официальный business messaging API Meta. KnockUI может использовать WhatsApp как самостоятельный conversational command transport через webhook/backend. На Android этот внутренний чатовый путь существует параллельно с системным KnockUI overlay, который после активации может открываться поверх самого WhatsApp.",
     "purpose": "Использовать привычный пользователю мессенджер как транспорт команды.",
     "kind": "core",
     "models": [
@@ -2152,8 +2224,9 @@
       "candidate": "WhatsApp Business API"
     },
     "constraints": [
-      "This is a messaging channel, not an OS-global gesture surface.",
-      "Requires WhatsApp Business Platform setup and backend/webhook infrastructure."
+      "Это messaging channel, а не OS-global gesture surface.",
+      "Требуются WhatsApp Business Platform setup и backend/webhook infrastructure.",
+      "Чатовый WhatsApp-контур не заменяет Android system-overlay path и не зависит от него."
     ],
     "open_questions": [
       "Какие действия допустимы без ухудшения UX из-за чатовой задержки?"
@@ -2180,7 +2253,7 @@
         }
       ],
       "next_step": "Implement only after defining the WhatsApp-specific command UX.",
-      "implication": "WhatsApp реализует KnockUI как conversation transport, а не как системный gesture/launcher layer."
+      "implication": "WhatsApp имеет два разных KnockUI-пути на Android: внешний system overlay поверх WhatsApp и отдельный chat/backend transport внутри WhatsApp."
     }
   },
   {
