@@ -562,7 +562,9 @@
     ],
     "parameters": {
       "decision_status": "accepted direction",
-      "primary_path": "OEM/SystemUI reserved touch zone → Quad Tap → KnockUI"
+      "primary_path": "OEM/SystemUI reserved touch zone → Quad Tap → KnockUI",
+      "downstream_contract": "ActivationRequest → OverlayLauncher → Drawing Overlay → Recognizer → Command",
+      "downstream_verification": "REFACTOR LEFT SC OK; RIGHT SC OK"
     },
     "constraints": [
       "Требуется OEM/system integration.",
@@ -599,8 +601,8 @@
           "url": "https://source.android.com/docs/compatibility/17/android-17-cdd"
         }
       ],
-      "next_step": "Спроектировать OEM/SystemUI touch target и протокол распознавания 4 taps.",
-      "implication": "Quad Tap остаётся фирменным Android trigger, но только в системно предоставленной зоне."
+      "next_step": "Prototype the OEM/SystemUI activation adapter that emits the already verified ActivationRequest contract.",
+      "implication": "The post-activation path is decoupled and verified. The remaining primary Android uncertainty is the system/OEM source of ActivationRequest."
     }
   },
   {
@@ -932,7 +934,7 @@
           "url": "https://developer.android.com/about/versions/12/behavior-changes-all"
         }
       ],
-      "next_step": "Expose the overlay behind a stable activation contract and connect a future OEM/SystemUI trigger without coupling it to the current in-app test harness.",
+      "next_step": "Keep the verified overlay/recognizer/command chain stable while attaching a future OEM/SystemUI ActivationRequest source.",
       "implication": "Post-activation drawing is now a confirmed Android capability in the 4Tap prototype. The remaining primary Android risk is activation, not the overlay drawing surface."
     }
   },
@@ -2867,7 +2869,7 @@
     "title": "Stage 1 — Android MVP",
     "group": "ROADMAP",
     "short": "Android B2C: активация, распознавание, локальный холст и пользовательские назначения.",
-    "description": "Первый этап включает Android activation path, Quad Tap, распознавание Graffiti, Local Canvas и дальнейшую маршрутизацию команд. Ограниченная in-app цепочка уже подтверждена на физическом устройстве с обоих нижних углов; системный/OEM trigger и настоящий overlay поверх другого приложения проверяются отдельно.",
+    "description": "Первый этап включает Android activation path, Quad Tap, распознавание Graffiti, Local Canvas и дальнейшую маршрутизацию команд. In-app 4-tap, настоящий overlay и downstream-контракт `ActivationRequest → OverlayLauncher → Drawing Overlay → Recognizer → Command` подтверждены на физическом устройстве; системный/OEM trigger остаётся отдельным незавершённым контуром.",
     "purpose": "Проверить основной пользовательский цикл KnockUI на Android.",
     "kind": "b2c",
     "models": [
@@ -2884,10 +2886,12 @@
     "parameters": {
       "prototype_result": "LEFT SC OK; RIGHT SC OK",
       "prototype_scope": "in-app Activity; not global/OEM trigger",
-      "overlay_result": "LEFT OVERLAY SC OK; RIGHT OVERLAY SC OK"
+      "overlay_result": "LEFT OVERLAY SC OK; RIGHT OVERLAY SC OK",
+      "activation_contract": "verified",
+      "activation_contract_result": "REFACTOR LEFT SC OK; RIGHT SC OK"
     },
     "constraints": [
-      "Текущий успешный corner → 4-tap → canvas → S → C → SC prototype работает внутри 4Tap Activity и не подтверждает системный/OEM trigger."
+      "Downstream activation contract подтверждён; системный/OEM trigger остаётся отдельным неподтверждённым контуром."
     ],
     "open_questions": [],
     "tags": [
