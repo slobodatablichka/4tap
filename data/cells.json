@@ -1562,11 +1562,11 @@
   {
     "id": "ios-activation",
     "section": "ios",
-    "title": "iOS Activation",
+    "title": "iOS Entry Options",
     "group": "ACTIVATION",
-    "short": "Вызов KnockUI через механизм смены клавиатуры, например кнопку Globe.",
-    "description": "Предлагаемый сценарий: пользователь переключается на клавиатуру KnockUI через штатный механизм выбора клавиатуры, после чего получает жестовую поверхность.",
-    "purpose": "Предоставить явную точку входа без попытки имитировать Android-глобальность.",
+    "short": "На iOS KnockUI рассматривает несколько системно допустимых точек входа; окончательный вариант пока не выбран.",
+    "description": "Вместо единственного сценария через кнопку Globe фиксируется набор кандидатов: Custom Keyboard Extension для text-entry контекста, Back Tap через Shortcut, Action Button через Shortcut/Control, а также WidgetKit Controls в Control Center/Lock Screen. Эти варианты различаются по доступности, скорости и тому, может ли действие выполниться без открытия основного приложения.",
+    "purpose": "Собрать допустимые iOS-точки входа без преждевременного выбора одной архитектуры.",
     "kind": "core",
     "models": [
       "b2c",
@@ -1577,18 +1577,25 @@
     ],
     "status": "concept",
     "inputs": [
-      "Действие пользователя по смене клавиатуры"
+      "Пользовательский системный trigger iOS"
     ],
     "outputs": [
-      "Активная KnockUI keyboard"
+      "Выбранный iOS entry path"
     ],
     "parameters": {
-      "candidate_trigger": "Globe / keyboard switch"
+      "decision_status": "TBD",
+      "candidates": "Custom Keyboard, Back Tap, Action Button, Control Center/Lock Screen Control"
     },
     "constraints": [
-      "Требует активного текстового контекста или иного поддерживаемого системного сценария."
+      "Не все варианты доступны на всех моделях iPhone и версиях iOS.",
+      "Ни один из вариантов не создаёт Android-подобный произвольный overlay поверх других приложений.",
+      "Возможность выполнить действие без открытия KnockUI app зависит от конкретного App Intent/Shortcut."
     ],
-    "open_questions": [],
+    "open_questions": [
+      "Какой вариант становится основным?",
+      "Нужна ли комбинация нескольких entry paths?",
+      "Какие действия могут выполняться без ухода из текущего приложения?"
+    ],
     "tags": [
       "ios",
       "activation"
@@ -1598,14 +1605,274 @@
       "state": "verified-constrained",
       "date": "2026-09-28",
       "confidence": "high",
-      "summary": "Switching to a custom keyboard is a valid entry mechanism only in contexts where the custom keyboard is allowed; it is not a global invocation gesture.",
+      "summary": "Apple предоставляет несколько системных способов запуска app actions/shortcuts, но они имеют разные ограничения по контексту и устройствам.",
       "sources": [
         {
-          "label": "Apple — Configuring a custom keyboard interface",
-          "url": "https://developer.apple.com/documentation/uikit/configuring-a-custom-keyboard-interface"
+          "label": "Apple Support — Run shortcuts by tapping the back of your iPhone",
+          "url": "https://support.apple.com/guide/shortcuts/apd897693606/ios"
+        },
+        {
+          "label": "Apple Support — Run shortcuts with the Action button",
+          "url": "https://support.apple.com/guide/shortcuts/apdfea15680b/ios"
+        },
+        {
+          "label": "Apple Developer — WidgetKit Controls",
+          "url": "https://developer.apple.com/documentation/widgetkit/controls-collection"
+        },
+        {
+          "label": "Apple Developer — App Intents",
+          "url": "https://developer.apple.com/documentation/appintents"
+        },
+        {
+          "label": "Apple Developer — App Shortcuts",
+          "url": "https://developer.apple.com/documentation/appintents/app-shortcuts"
         }
       ],
-      "next_step": "Keep this as a context-specific entry point, not an Android-equivalent global trigger."
+      "next_step": "Сравнить варианты по UX, охвату устройств и способности запускать нужный KnockUI action contract.",
+      "implication": "iOS activation следует моделировать как набор вариантов, а не как одну keyboard-only схему."
+    }
+  },
+  {
+    "id": "ios-back-tap",
+    "section": "ios",
+    "order": 12,
+    "title": "Back Tap",
+    "group": "ENTRY OPTION",
+    "short": "Double Tap или Triple Tap по задней панели iPhone может запускать назначенный Shortcut.",
+    "description": "Back Tap — системная accessibility-функция iOS. Пользователь может назначить Double Tap или Triple Tap на запуск Shortcut. Для KnockUI это кандидат на глобальный моторно простой trigger, не требующий попадания в экранную область.",
+    "purpose": "Получить глобальную iOS-точку входа с простым blind-use жестом.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "ios"
+    ],
+    "status": "concept",
+    "inputs": [
+      "Double Tap / Triple Tap on device back"
+    ],
+    "outputs": [
+      "Assigned Shortcut"
+    ],
+    "parameters": {
+      "gestures": "double tap / triple tap",
+      "assignment": "user-configured Shortcut",
+      "screen_target_required": false
+    },
+    "constraints": [
+      "Пользователь должен сам назначить Shortcut в Settings > Accessibility > Touch > Back Tap.",
+      "Back Tap не создаёт overlay поверх текущего приложения.",
+      "Дальнейшее поведение зависит от того, что именно делает назначенный Shortcut/App Intent."
+    ],
+    "open_questions": [
+      "Насколько стабильно распознаётся Back Tap в реальном использовании и с чехлами?",
+      "Можно ли построить полезный KnockUI flow без обязательного открытия основного приложения?",
+      "Следует ли использовать Double Tap или Triple Tap?"
+    ],
+    "tags": [
+      "ios",
+      "back-tap",
+      "shortcut",
+      "entry"
+    ],
+    "verification": {
+      "state": "verified-supported",
+      "date": "2026-09-28",
+      "confidence": "high",
+      "summary": "Apple официально позволяет назначить Shortcut на Double Tap или Triple Tap по задней панели iPhone.",
+      "sources": [
+        {
+          "label": "Apple Support — Run shortcuts by tapping the back of your iPhone",
+          "url": "https://support.apple.com/guide/shortcuts/apd897693606/ios"
+        }
+      ],
+      "next_step": "Прототипировать KnockUI Shortcut и проверить поведение из разных foreground apps.",
+      "implication": "Back Tap является реальным глобальным entry candidate для iOS, но не заменяет отдельную поверхность ввода."
+    }
+  },
+  {
+    "id": "ios-action-button",
+    "section": "ios",
+    "order": 14,
+    "title": "Action Button",
+    "group": "ENTRY OPTION",
+    "short": "На поддерживаемых iPhone Action Button может запускать Shortcut или Control, связанный с KnockUI.",
+    "description": "Apple позволяет назначить Action Button на запуск Shortcut, открытие приложения либо выбранный Control. Для KnockUI это быстрый физический trigger без экранного жеста.",
+    "purpose": "Дать пользователю аппаратную кнопку как прямой системный вход в KnockUI.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "ios"
+    ],
+    "status": "concept",
+    "inputs": [
+      "Press and hold Action Button"
+    ],
+    "outputs": [
+      "Shortcut / Control / app action"
+    ],
+    "parameters": {
+      "availability": "supported iPhone models only",
+      "assignment": "Shortcut or Control"
+    },
+    "constraints": [
+      "Доступно только на моделях iPhone с Action Button.",
+      "Кнопка может быть занята другой пользовательской функцией.",
+      "Action Button сам по себе не даёт overlay поверх текущего приложения."
+    ],
+    "open_questions": [
+      "Насколько пользователи готовы отдать Action Button под KnockUI?",
+      "Лучше назначать Shortcut или WidgetKit Control?"
+    ],
+    "tags": [
+      "ios",
+      "action-button",
+      "shortcut",
+      "entry"
+    ],
+    "verification": {
+      "state": "verified-supported",
+      "date": "2026-09-28",
+      "confidence": "high",
+      "summary": "Apple официально поддерживает запуск Shortcut и Control с Action Button на совместимых моделях.",
+      "sources": [
+        {
+          "label": "Apple Support — Run shortcuts with the Action button",
+          "url": "https://support.apple.com/guide/shortcuts/apdfea15680b/ios"
+        }
+      ],
+      "next_step": "Проверить KnockUI Shortcut/Control на реальном устройстве с Action Button.",
+      "implication": "Action Button — сильный, но не универсальный iOS entry path из-за ограниченного охвата устройств."
+    }
+  },
+  {
+    "id": "ios-system-controls",
+    "section": "ios",
+    "order": 16,
+    "title": "Control Center / Lock Screen Control",
+    "group": "ENTRY OPTION",
+    "short": "WidgetKit Controls позволяют разместить действие KnockUI в Control Center, на Lock Screen и на Action Button.",
+    "description": "WidgetKit Controls — системные кнопки/переключатели, которые пользователь размещает в Control Center или на Lock Screen; на устройствах с Action Button control также может быть назначен на кнопку. Control выполняет App Intent или открывает приложение в определённое представление.",
+    "purpose": "Получить системно видимую точку входа KnockUI без keyboard-only зависимости.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "ios"
+    ],
+    "status": "concept",
+    "inputs": [
+      "Tap Control in Control Center / Lock Screen"
+    ],
+    "outputs": [
+      "App Intent or app open"
+    ],
+    "parameters": {
+      "technology": "WidgetKit Controls",
+      "placements": "Control Center / Lock Screen / Action Button"
+    },
+    "constraints": [
+      "Требует совместимой версии iOS и реализации WidgetKit Control.",
+      "Это явное пользовательское действие в системном UI, а не невидимый глобальный жест.",
+      "Поведение после нажатия определяется App Intent."
+    ],
+    "open_questions": [
+      "Какие placement(s) дают лучший UX для KnockUI?",
+      "Какой App Intent должен запускаться Control-ом?"
+    ],
+    "tags": [
+      "ios",
+      "widgetkit",
+      "control-center",
+      "lock-screen",
+      "entry"
+    ],
+    "verification": {
+      "state": "verified-supported",
+      "date": "2026-09-28",
+      "confidence": "high",
+      "summary": "Apple WidgetKit Controls официально предназначены для запуска app actions из Control Center, Lock Screen и Action Button.",
+      "sources": [
+        {
+          "label": "Apple Developer — WidgetKit Controls",
+          "url": "https://developer.apple.com/documentation/widgetkit/controls-collection"
+        }
+      ],
+      "next_step": "Сделать минимальный Control, вызывающий тестовый KnockUI App Intent.",
+      "implication": "Control Center/Lock Screen — реальный системный entry path, но он более явный и медленный, чем Back Tap."
+    }
+  },
+  {
+    "id": "ios-app-intents-shortcuts",
+    "section": "ios",
+    "order": 18,
+    "title": "App Intents / Shortcuts Bridge",
+    "group": "SYSTEM INTEGRATION",
+    "short": "App Intents и Shortcuts связывают системные iOS triggers с действиями KnockUI.",
+    "description": "App Intent описывает действие KnockUI для системы. App Shortcuts и пользовательские Shortcuts могут вызывать такие действия из Back Tap, Action Button, Siri, Spotlight, Shortcuts и WidgetKit Controls. Это системный мост между iOS entry mechanism и KnockUI logic.",
+    "purpose": "Создать единый iOS execution bridge для нескольких системных точек входа.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "ios"
+    ],
+    "status": "concept",
+    "inputs": [
+      "Back Tap",
+      "Action Button",
+      "Control",
+      "Shortcuts / Siri / Spotlight"
+    ],
+    "outputs": [
+      "KnockUI App Intent result or app open"
+    ],
+    "parameters": {
+      "framework": "App Intents",
+      "integrations": "Shortcuts, App Shortcuts, WidgetKit Controls, Siri, Spotlight"
+    },
+    "constraints": [
+      "Конкретный Intent может выполняться без UI только если его действие и системные правила это допускают.",
+      "OpenIntent/открытие приложения переводит пользователя в KnockUI app и не создаёт overlay поверх текущего приложения.",
+      "Нельзя переносить сюда запрещённую для keyboard extension модель произвольного запуска других приложений."
+    ],
+    "open_questions": [
+      "Какие KnockUI actions можно оформить как headless App Intents?",
+      "Какие действия потребуют открытия приложения?",
+      "Можно ли связать системный trigger с режимом ввода внутри активной KnockUI-клавиатуры без ухода из host app?"
+    ],
+    "tags": [
+      "ios",
+      "app-intents",
+      "shortcuts",
+      "integration"
+    ],
+    "verification": {
+      "state": "verified-constrained",
+      "date": "2026-09-28",
+      "confidence": "high",
+      "summary": "App Intents официально делают действия приложения доступными системным функциям и служат естественным мостом для Shortcuts/Controls. Конкретная возможность работать без открытия приложения зависит от типа intent и действия.",
+      "sources": [
+        {
+          "label": "Apple Developer — App Intents",
+          "url": "https://developer.apple.com/documentation/appintents"
+        },
+        {
+          "label": "Apple Developer — App Shortcuts",
+          "url": "https://developer.apple.com/documentation/appintents/app-shortcuts"
+        }
+      ],
+      "next_step": "Определить минимальный набор KnockUI App Intents и проверить каждый на foreground/background behavior.",
+      "implication": "Несколько iOS entry options могут сходиться в один App Intents/Shortcuts execution layer."
     }
   },
   {
@@ -1613,8 +1880,8 @@
     "section": "ios",
     "title": "Custom Keyboard Extension",
     "group": "PLATFORM",
-    "short": "Предлагаемая точка входа KnockUI на iOS через пользовательскую клавиатуру.",
-    "description": "A Custom Keyboard Extension is a supported iOS extension and can provide KnockUI's gesture surface in text-entry contexts. It is not globally available: secure text fields and phone-pad/name-phone-pad fields use the system keyboard, and host apps may disable third-party keyboards.",
+    "short": "Один из вариантов входа: KnockUI как пользовательская клавиатура в text-entry контексте.",
+    "description": "Custom Keyboard Extension остаётся отдельным вариантом реализации KnockUI внутри приложений, когда активно текстовое поле и сторонняя клавиатура разрешена. Этот путь даёт собственную поверхность Graffiti непосредственно в host app, но не является глобальным iOS trigger и не заменяет Back Tap/Action Button/Controls.",
     "purpose": "Дать iOS-пользователю доступ к KnockUI через разрешённый системный интерфейс.",
     "kind": "core",
     "models": [
@@ -1641,8 +1908,8 @@
       "A host app may reject third-party keyboard extensions."
     ],
     "open_questions": [
-      "Is a text-entry-only KnockUI experience valuable enough without arbitrary app launch?",
-      "Should the iOS concept move to a different system entry point such as App Intents/Shortcuts rather than keyboard-first?"
+      "Насколько ценен keyboard path как постоянный внутренний интерфейс KnockUI?",
+      "Можно ли безопасно связать его с App Intents/Shortcuts для части действий?"
     ],
     "tags": [
       "ios",
@@ -1662,7 +1929,7 @@
         }
       ],
       "next_step": "Reassess whether keyboard is the correct iOS entry point after accounting for action restrictions.",
-      "implication": "Keyboard Extension может быть iOS-поверхностью ввода только в разрешённых text-entry contexts и не является глобальной точкой входа."
+      "implication": "Keyboard Extension — context-specific input path, который сосуществует с глобальными/системными entry options."
     }
   },
   {
@@ -1822,7 +2089,7 @@
     "title": "iOS Action Model Redesign",
     "group": "ARCHITECTURE DECISION",
     "short": "iOS нужен отдельный action contract, не основанный на запуске произвольных приложений из keyboard extension.",
-    "description": "Техническая проверка подтвердила, что Custom Keyboard Extension может служить ограниченной поверхностью ввода, но App Review Guideline 4.4.1 запрещает клавиатурному extension запускать другие приложения, кроме Settings. Поэтому результат команды XY надо перепроектировать: возможные направления — keyboard-native output, взаимодействие с containing app/shared state либо иной iOS-native механизм. Конкретный вариант ещё не утверждён и должен отдельно проверяться.",
+    "description": "Техническая проверка подтвердила, что Custom Keyboard Extension может служить ограниченной поверхностью ввода, но не общим launcher других приложений. Поэтому iOS action model должен быть собран из platform-native механизмов. Кандидаты: keyboard-native output, App Intents/Shortcuts, WidgetKit Controls, Back Tap/Action Button как triggers, containing app/shared state. Конкретная комбинация пока не выбрана.",
     "purpose": "Вынести iOS execution blocker и его архитектурное решение в отдельный узел.",
     "kind": "core",
     "models": [
@@ -1842,7 +2109,8 @@
       "Новый iOS action contract"
     ],
     "parameters": {
-      "decision_status": "TBD"
+      "decision_status": "TBD",
+      "candidates": "keyboard-native output; App Intents/Shortcuts; Controls; containing app"
     },
     "constraints": [
       "Keyboard extension не рассматривается как общий launcher приложений.",
@@ -1850,8 +2118,9 @@
     ],
     "open_questions": [
       "Какие действия остаются внутри keyboard-native UX?",
-      "Нужен ли containing app как execution layer?",
-      "Стоит ли рассматривать отдельную App Intents/Shortcuts архитектуру?"
+      "Какие команды можно выполнить App Intent без открытия KnockUI app?",
+      "Когда нужен containing app?",
+      "Какая комбинация entry/action paths станет основной?"
     ],
     "tags": [
       "ios",
