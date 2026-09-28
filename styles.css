@@ -143,3 +143,7 @@ h1{margin:5px 0 0;font-size:30px;line-height:1}
 .verification-key{display:inline-flex!important;gap:6px!important;align-items:center}
 .verify-chip{width:10px;height:10px;border-radius:3px;display:inline-block;background:#888}
 .verify-chip.supported{background:#54705a}.verify-chip.constrained{background:#586a7e}.verify-chip.blocked{background:#9a4d45}
+
+.verification-implication,.verification-source-note{margin-top:7px;font-size:11px;line-height:1.45}
+.verification-implication{padding:7px 8px;border-radius:6px;background:rgba(0,0,0,.035)}
+.verification-source-note{color:var(--muted)}
