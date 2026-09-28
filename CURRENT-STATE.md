@@ -118,3 +118,25 @@
 - данное решение относится к Android; iOS рассматривается отдельно.
 
 Добавлена ячейка `android-overlay-over-host-apps`.
+
+
+## iOS implementation options
+
+iOS больше не описывается как keyboard-only архитектура. Зафиксированы варианты реализации, окончательный выбор отложен.
+
+Entry candidates:
+- `Custom Keyboard Extension` — ввод внутри text-entry контекста;
+- `Back Tap` — системный Double Tap/Triple Tap по задней панели с запуском Shortcut;
+- `Action Button` — запуск Shortcut/Control на поддерживаемых моделях;
+- `Control Center / Lock Screen Control` — WidgetKit Control.
+
+Общий системный мост:
+- `App Intents / Shortcuts Bridge` — связывает перечисленные системные triggers с действиями KnockUI.
+
+Важно:
+- эти механизмы не создают произвольный overlay поверх чужого iOS-приложения;
+- часть App Intents может выполнять действие без отдельного UI, но это проверяется предметно для каждой команды;
+- открытие приложения через intent/shortcut переводит пользователя в KnockUI app;
+- конкретная комбинация entry/action paths пока не утверждена.
+
+Добавлены ячейки `ios-back-tap`, `ios-action-button`, `ios-system-controls`, `ios-app-intents-shortcuts`. Ячейка `ios-activation` преобразована в общий узел вариантов.
