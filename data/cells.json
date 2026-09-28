@@ -566,7 +566,8 @@
       "downstream_contract": "ActivationRequest → OverlayLauncher → Drawing Overlay → Recognizer → Command",
       "downstream_verification": "REFACTOR LEFT SC OK; RIGHT SC OK",
       "external_adapter": "verified",
-      "external_adapter_result": "OEM LEFT SC OK; OEM RIGHT SC OK"
+      "external_adapter_result": "OEM LEFT SC OK; OEM RIGHT SC OK",
+      "systemui_zone_spec": "baseline 58 × 44 dp; AOSP/Cuttlefish prototype"
     },
     "constraints": [
       "Требуется OEM/system integration.",
@@ -603,7 +604,7 @@
           "url": "https://source.android.com/docs/compatibility/17/android-17-cdd"
         }
       ],
-      "next_step": "Prototype the actual SystemUI/input-policy reserved Quad Tap zone that emits the already verified ActivationRequest.",
+      "next_step": "Implement the reserved Quad Tap zone in SystemUI on AOSP/Cuttlefish and emit the already verified ActivationRequest handoff.",
       "implication": "The external system-to-4Tap interface is verified. The remaining activation uncertainty is the system-owned touch zone and Quad Tap recognition itself."
     }
   },
@@ -638,7 +639,17 @@
       "gesture": "4 taps",
       "outside_zone": "ordinary app behavior unchanged",
       "activation_handoff": "verified via debug external adapter",
-      "activation_handoff_result": "OEM LEFT SC OK; OEM RIGHT SC OK"
+      "activation_handoff_result": "OEM LEFT SC OK; OEM RIGHT SC OK",
+      "geometry_baseline": "58 × 44 dp",
+      "geometry_candidates": "52×40; 58×44; 64×48 dp",
+      "orientation_first_prototype": "portrait only",
+      "tap_count": 4,
+      "inter_tap_ms": "45–700",
+      "max_tap_duration_ms": 280,
+      "max_tap_move_dp": 20,
+      "incomplete_sequence": "reset; no passthrough/replay",
+      "touch_ownership": "SystemUI owns full sequence starting inside zone",
+      "prototype_environment": "AOSP android-latest-release + Cuttlefish x86_64 userdebug"
     },
     "constraints": [
       "Обычный сторонний APK не может сам превратить произвольную область в mandatory system touch zone.",
@@ -647,7 +658,6 @@
       "Совместимость с Home/Back/Quick Switch и требованиями Android CDD должна быть проверена для выбранного расположения."
     ],
     "open_questions": [
-      "Нижний угол, край, отдельный участок system overlay или иная геометрия?",
       "Какой размер зоны обеспечивает быстрый blind-use без ложных срабатываний?",
       "Что происходит с одиночным/двойным/тройным тапом в этой зоне?",
       "Нужен ли визуальный affordance для первого запуска/обучения?"
@@ -678,8 +688,8 @@
           "url": "https://source.android.com/docs/compatibility/17/android-17-cdd"
         }
       ],
-      "next_step": "Specify and prototype the SystemUI/input-policy reserved zone, including geometry and incomplete 1/2/3-tap behavior.",
-      "implication": "OEM/SystemUI no longer needs to own the KnockUI overlay or recognizer; it only needs to detect Quad Tap in a system-owned zone and emit the verified activation handoff."
+      "next_step": "Build the first real SystemUI zone controller in AOSP/Cuttlefish using the 58 × 44 dp baseline, then compare 52×40 and 64×48.",
+      "implication": "Geometry and tap semantics are now specified; the remaining proof is an actual SystemUI/input-policy implementation and navigation-conflict testing."
     }
   },
   {
@@ -2894,7 +2904,9 @@
       "activation_contract": "verified",
       "activation_contract_result": "REFACTOR LEFT SC OK; RIGHT SC OK",
       "external_activation_adapter": "verified",
-      "external_activation_result": "OEM LEFT SC OK; OEM RIGHT SC OK"
+      "external_activation_result": "OEM LEFT SC OK; OEM RIGHT SC OK",
+      "systemui_zone_baseline": "58 × 44 dp",
+      "systemui_environment": "AOSP/Cuttlefish x86_64 userdebug"
     },
     "constraints": [
       "Внешний system-like activation handoff подтверждён; реальная SystemUI/input-policy reserved Quad Tap zone ещё не реализована."
