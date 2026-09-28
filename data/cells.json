@@ -300,7 +300,7 @@
     "title": "Android Integration",
     "group": "PLATFORM",
     "short": "Системная интеграция, необходимая для глобального сценария Android.",
-    "description": "Текущая концепция опирается на AccessibilityService и overlay-механику. Способ глобального получения касаний поверх сторонних приложений, соответствие политике магазина и точный набор разрешений должны подтверждаться прототипом.",
+    "description": "AccessibilityService remains useful for accessibility/window context, and Android overlays are supported with the proper permission. However, the originally proposed AccessibilityService route does not provide a passive screen-wide raw-touch observer that leaves all underlying touch delivery unchanged. Global Quad Tap therefore needs a different activation design.",
     "purpose": "Обеспечить точку входа KnockUI поверх других приложений Android.",
     "kind": "core",
     "models": [
@@ -322,19 +322,41 @@
       "candidate_overlay": "TYPE_APPLICATION_OVERLAY"
     },
     "constraints": [
-      "Политики Android/Google Play",
-      "Разрешения",
-      "Ограничения фоновой работы"
+      "Passive non-interfering global raw-touch capture is blocked by public AccessibilityService semantics as currently specified.",
+      "Google Play AccessibilityService policy and declarations apply if the API remains in the architecture.",
+      "Overlay capability is separately permission-gated."
     ],
     "open_questions": [
-      "Какая легитимная архитектура даёт требуемую глобальность без блокировки распространения?"
+      "Which compliant public activation mechanism should replace passive global Quad Tap?",
+      "Is AccessibilityService still necessary after the activation redesign?"
     ],
     "tags": [
       "android",
       "accessibility",
       "overlay"
     ],
-    "order": 10
+    "order": 10,
+    "verification": {
+      "state": "blocked-as-specified",
+      "date": "2026-09-28",
+      "confidence": "high",
+      "summary": "AccessibilityService/overlay are real Android capabilities, but the specific passive-global-touch architecture is not supported as specified.",
+      "sources": [
+        {
+          "label": "Android AccessibilityService API",
+          "url": "https://developer.android.com/reference/android/accessibilityservice/AccessibilityService"
+        },
+        {
+          "label": "Android TouchInteractionController API",
+          "url": "https://developer.android.com/reference/android/accessibilityservice/TouchInteractionController"
+        },
+        {
+          "label": "Android WindowManager.LayoutParams",
+          "url": "https://developer.android.com/reference/android/view/WindowManager.LayoutParams"
+        }
+      ],
+      "next_step": "Redesign the activation entry point before Android MVP implementation."
+    }
   },
   {
     "id": "android-permissions",
@@ -343,7 +365,7 @@
     "title": "Android Permissions",
     "group": "PLATFORM",
     "short": "Разрешения и включение сервисов, без которых глобальный Android-сценарий не должен запускаться.",
-    "description": "Исходная спецификация предусматривает запрос разрешения на overlay через ACTION_MANAGE_OVERLAY_PERMISSION и включение необходимых системных возможностей. Точный набор разрешений зависит от подтверждённой архитектуры интеграции.",
+    "description": "TYPE_APPLICATION_OVERLAY requires SYSTEM_ALERT_WINDOW and explicit user approval; Android exposes ACTION_MANAGE_OVERLAY_PERMISSION and Settings.canDrawOverlays(). AccessibilityService enablement is a separate user-controlled setting if that service remains part of the final architecture.",
     "purpose": "Сделать системные предпосылки Android явными и проверяемыми.",
     "kind": "core",
     "models": [
@@ -362,11 +384,14 @@
       "Разрешённые системные возможности"
     ],
     "parameters": {
-      "overlay_request": "ACTION_MANAGE_OVERLAY_PERMISSION"
+      "overlay_permission": "SYSTEM_ALERT_WINDOW",
+      "overlay_settings_action": "ACTION_MANAGE_OVERLAY_PERMISSION",
+      "check": "Settings.canDrawOverlays()"
     },
     "constraints": [
-      "Пользователь должен явно выдать необходимые разрешения.",
-      "Набор разрешений должен соответствовать политике распространения."
+      "Overlay permission is special access explicitly granted by the user.",
+      "AccessibilityService must not be treated as implicitly available.",
+      "Exact permission set depends on the redesigned activation mechanism."
     ],
     "open_questions": [
       "Какие разрешения действительно необходимы после прототипирования глобального ввода?"
@@ -375,7 +400,82 @@
       "android",
       "permissions",
       "overlay"
-    ]
+    ],
+    "verification": {
+      "state": "verified-constrained",
+      "date": "2026-09-28",
+      "confidence": "high",
+      "summary": "The overlay permission flow is confirmed. The complete permission set cannot be finalized until the global activation architecture is redesigned.",
+      "sources": [
+        {
+          "label": "Android Settings / overlay permission",
+          "url": "https://developer.android.com/reference/android/provider/Settings"
+        },
+        {
+          "label": "Android WindowManager.LayoutParams",
+          "url": "https://developer.android.com/reference/android/view/WindowManager.LayoutParams"
+        }
+      ],
+      "next_step": "Finalize permissions after selecting the replacement Android trigger."
+    }
+  },
+  {
+    "id": "android-global-trigger-limitation",
+    "section": "android",
+    "order": 25,
+    "title": "Global Touch Trigger Limitation",
+    "group": "PLATFORM LIMIT",
+    "short": "Public Android APIs do not provide the passive, non-interfering global raw-touch stream required by the original Quad Tap concept.",
+    "description": "AccessibilityService.onMotionEvent can observe requested MotionEvent sources on API 34+, but events from those requested sources are not sent to the rest of the system. TouchInteractionController requires touch-exploration mode, which changes touchscreen semantics and intercepts interactions before delegation. Therefore the original requirement «observe four taps anywhere while leaving ordinary touches untouched» is not available through these public accessibility paths as specified.",
+    "purpose": "Make the main Android feasibility blocker explicit and prevent the conceptual flow from being mistaken for an implemented capability.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "android"
+    ],
+    "status": "approved",
+    "inputs": [
+      "AccessibilityService raw-touch candidates"
+    ],
+    "outputs": [
+      "Architecture constraint"
+    ],
+    "parameters": {
+      "onMotionEvent_min_api": 34,
+      "passive_global_touch": "not available as specified",
+      "touch_exploration": "changes interaction semantics"
+    },
+    "constraints": [
+      "A different activation mechanism or materially different interaction model is required unless a compliant public API is found."
+    ],
+    "open_questions": [
+      "Which alternative activation mechanism preserves the product's speed with acceptable UX?"
+    ],
+    "tags": [
+      "android",
+      "blocker",
+      "touch",
+      "accessibility"
+    ],
+    "verification": {
+      "state": "blocked-as-specified",
+      "date": "2026-09-28",
+      "confidence": "high",
+      "summary": "Verified platform limitation: the proposed passive global Quad Tap trigger cannot be implemented with the cited public AccessibilityService raw-touch mechanisms without consuming or altering touch delivery.",
+      "sources": [
+        {
+          "label": "Android AccessibilityService API",
+          "url": "https://developer.android.com/reference/android/accessibilityservice/AccessibilityService"
+        },
+        {
+          "label": "Android TouchInteractionController API",
+          "url": "https://developer.android.com/reference/android/accessibilityservice/TouchInteractionController"
+        }
+      ]
+    }
   },
   {
     "id": "android-quad-tap",
@@ -383,7 +483,7 @@
     "title": "Quad Tap",
     "group": "ACTIVATION",
     "short": "Четыре последовательных касания служат кандидатом на глобальный жест активации.",
-    "description": "Сервис игнорирует одиночные, двойные и тройные касания. Концептуально учитываются четыре ACTION_DOWN, локальная геометрия и максимальный интервал.",
+    "description": "The four-tap detector itself is straightforward once a valid event stream exists: count four taps, apply spatial and temporal thresholds, then continue to zone validation. The unresolved issue is not the detector algorithm but obtaining a compliant passive global event source without disrupting ordinary input.",
     "purpose": "Активировать KnockUI без конфликта с обычным свайпом и набором текста.",
     "kind": "core",
     "models": [
@@ -406,18 +506,35 @@
       "interval_ms": "300–400"
     },
     "constraints": [
-      "Неактивная зона экрана",
-      "Статус-бар и навигация имеют приоритет",
-      "Параметры требуют UX-тестов"
+      "Original passive global event source is blocked by the verified Android touch limitation.",
+      "≈50 px and 300–400 ms remain UX hypotheses requiring device tests."
     ],
     "open_questions": [
-      "Надёжно ли определяется неактивная зона чужого приложения?"
+      "What supported trigger source supplies the tap sequence?",
+      "What radius/timing values minimize false positives across density classes?"
     ],
     "tags": [
       "android",
       "activation"
     ],
-    "order": 30
+    "order": 30,
+    "verification": {
+      "state": "requires-prototype",
+      "date": "2026-09-28",
+      "confidence": "high",
+      "summary": "The tap-sequence algorithm is implementable, but the original global passive event source is not. Timing/radius also require empirical tuning.",
+      "sources": [
+        {
+          "label": "Android AccessibilityService API",
+          "url": "https://developer.android.com/reference/android/accessibilityservice/AccessibilityService"
+        },
+        {
+          "label": "Android TouchInteractionController API",
+          "url": "https://developer.android.com/reference/android/accessibilityservice/TouchInteractionController"
+        }
+      ],
+      "next_step": "Prototype the gesture only after choosing a supported activation source."
+    }
   },
   {
     "id": "android-zone-validation",
@@ -426,7 +543,7 @@
     "title": "Activation Zone Validation",
     "group": "ACTIVATION",
     "short": "После Quad Tap система проверяет, допустима ли точка активации.",
-    "description": "Активация должна отменяться, если финальный тап приходится на системную область или на интерактивный элемент чужого приложения, которому должен остаться приоритет.",
+    "description": "AccessibilityNodeInfo can expose node bounds and properties such as clickability, but the accessibility tree does not necessarily map one-to-one to the rendered view hierarchy. Custom views must explicitly publish accessibility semantics. Therefore KnockUI can heuristically avoid known clickable/accessibility nodes, but it cannot guarantee that every pixel classified as «empty» is non-interactive across arbitrary third-party apps.",
     "purpose": "Снизить конфликты KnockUI с системным и прикладным интерфейсом.",
     "kind": "core",
     "models": [
@@ -448,16 +565,35 @@
       "protected_areas": "status bar, navigation, active controls"
     },
     "constraints": [
-      "Надёжное определение активного чужого элемента требует технической проверки."
+      "Universal empty-zone detection across arbitrary third-party UI cannot be guaranteed from accessibility metadata.",
+      "Custom views, embedded surfaces, games and poorly exposed accessibility trees can hide interactive semantics."
     ],
     "open_questions": [
-      "Каким API определяется «неактивная» зона без перехвата штатного действия приложения?"
+      "Should the product replace «empty zone» with a deterministic explicit activation region/gesture?",
+      "What fallback rule applies when accessibility semantics are incomplete?"
     ],
     "tags": [
       "android",
       "activation",
       "validation"
-    ]
+    ],
+    "verification": {
+      "state": "verified-constrained",
+      "date": "2026-09-28",
+      "confidence": "high",
+      "summary": "Node bounds/clickability can help, but a universal reliable test for an inactive point in every third-party app is not available.",
+      "sources": [
+        {
+          "label": "Android AccessibilityNodeInfo",
+          "url": "https://developer.android.com/reference/android/view/accessibility/AccessibilityNodeInfo"
+        },
+        {
+          "label": "Android custom-view accessibility",
+          "url": "https://developer.android.com/guide/topics/ui/accessibility/views/custom-views"
+        }
+      ],
+      "next_step": "Treat zone validation as heuristic unless the activation design is changed."
+    }
   },
   {
     "id": "android-local-canvas",
@@ -497,7 +633,24 @@
       "canvas",
       "input"
     ],
-    "order": 50
+    "order": 50,
+    "verification": {
+      "state": "verified-constrained",
+      "date": "2026-09-28",
+      "confidence": "high",
+      "summary": "A localized application overlay is supported with SYSTEM_ALERT_WINDOW. A non-touchable overlay cannot itself collect gestures; the touchable input canvas is appropriate only after activation.",
+      "sources": [
+        {
+          "label": "Android WindowManager.LayoutParams",
+          "url": "https://developer.android.com/reference/android/view/WindowManager.LayoutParams"
+        },
+        {
+          "label": "Android Settings / overlay permission",
+          "url": "https://developer.android.com/reference/android/provider/Settings"
+        }
+      ],
+      "next_step": "Prototype the 200×200 dp canvas after replacing the global trigger."
+    }
   },
   {
     "id": "android-failsafe",
@@ -576,7 +729,7 @@
     "title": "Gesture Recognizer",
     "group": "RECOGNITION",
     "short": "Распознаёт одноштриховые знаки A–Z и 0–9.",
-    "description": "Для MVP предлагается $1 Recognizer с набором шаблонов Graffiti. Порог уверенности и устойчивость к вариативности почерка должны быть измерены.",
+    "description": "$1 is a real, lightweight unistroke template matcher designed for rapid UI prototyping. Published work reports strong accuracy on its evaluated gesture sets, but those results do not validate a 36-symbol KnockUI Graffiti alphabet, finger input, or the chosen confidence threshold.",
     "purpose": "Преобразовать траекторию пальца в символ.",
     "kind": "core",
     "models": [
@@ -594,22 +747,37 @@
       "Recognized symbol + confidence"
     ],
     "parameters": {
-      "candidate": "$1 Recognizer",
-      "alphabet": "A–Z + 0–9"
+      "candidate": "$1 Unistroke Recognizer",
+      "alphabet": "A–Z + 0–9",
+      "published_role": "rapid prototyping; template matching"
     },
     "constraints": [
       "Ошибки распознавания",
       "Вариативность почерка"
     ],
     "open_questions": [
-      "Какой порог confidence приемлем?",
-      "Нужен ли персональный калибровочный слой?"
+      "What confusion matrix is obtained for the actual 36 KnockUI symbols?",
+      "What confidence/rejection threshold gives an acceptable false-command rate?",
+      "Is per-user calibration materially beneficial?"
     ],
     "tags": [
       "android",
       "recognition"
     ],
-    "order": 70
+    "order": 70,
+    "verification": {
+      "state": "requires-prototype",
+      "date": "2026-09-28",
+      "confidence": "high",
+      "summary": "$1 is technically suitable as an MVP recognizer candidate, but KnockUI accuracy claims require its own dataset and tests.",
+      "sources": [
+        {
+          "label": "$1 Unistroke Recognizer — University of Washington",
+          "url": "https://depts.washington.edu/acelab/proj/dollar/index.html"
+        }
+      ],
+      "next_step": "Build a 36-symbol benchmark with multiple users and finger traces."
+    }
   },
   {
     "id": "android-symbol-feedback",
@@ -802,7 +970,7 @@
     "title": "Android Actions",
     "group": "ACTION",
     "short": "Запуск приложения, deep link, URL или поддерживаемого системного действия.",
-    "description": "Типы действий должны иметь общий контракт, проверку доступности обработчика и предсказуемый fallback.",
+    "description": "Android supports deep links through intents, and ordinary deep linking is available across Android versions. Launching activities from the background is restricted, but current Android documentation lists user-granted SYSTEM_ALERT_WINDOW as one allowed background-start condition. Final behavior still depends on target SDK, resolver state, target app availability and link verification.",
     "purpose": "Исполнить разрешённое действие после маршрутизации команды.",
     "kind": "b2c",
     "models": [
@@ -812,7 +980,7 @@
     "platforms": [
       "android"
     ],
-    "status": "needs-validation",
+    "status": "concept",
     "inputs": [
       "Resolved action"
     ],
@@ -820,18 +988,39 @@
       "Запущенное действие"
     ],
     "parameters": {
-      "examples": "app, deep link, URL, settings"
+      "examples": "app activity, deep link, verified App Link, settings intent",
+      "background_start": "constrained; SAW is a documented exception"
     },
     "constraints": [
-      "Ограничения фонового запуска",
-      "Отсутствующий обработчик URI"
+      "A URI may resolve to a browser, chooser, different app, or no handler.",
+      "Verified App Links are preferred for owned HTTPS domains.",
+      "Background activity launch rules must be retested for the final target SDK."
     ],
-    "open_questions": [],
+    "open_questions": [
+      "Which action types are part of MVP versus later extensions?"
+    ],
     "tags": [
       "android",
       "action"
     ],
-    "order": 130
+    "order": 130,
+    "verification": {
+      "state": "verified-constrained",
+      "date": "2026-09-28",
+      "confidence": "high",
+      "summary": "App/deep-link execution is supported by Android, subject to intent resolution and background-start/security rules.",
+      "sources": [
+        {
+          "label": "Android deep links",
+          "url": "https://developer.android.com/training/app-links/create-deeplinks"
+        },
+        {
+          "label": "Android background activity launch security",
+          "url": "https://developer.android.com/guide/components/activities/secure-bal"
+        }
+      ],
+      "next_step": "Implement an explicit action contract and test on the final target SDK/device matrix."
+    }
   },
   {
     "id": "android-gesture-editor",
@@ -863,15 +1052,36 @@
       "user_editable": true
     },
     "constraints": [
-      "Нужны поиск/фильтрация: буквальная сетка 1260 ячеек не должна быть единственным способом навигации."
+      "Installed-app discovery is subject to Android 11+ package visibility.",
+      "Google Play treats installed-app inventory as sensitive; broad QUERY_ALL_PACKAGES requires core-function justification and declaration, and targeted visibility should be preferred when sufficient.",
+      "The 1260-space UI should provide search/filtering rather than relying only on a literal matrix."
     ],
-    "open_questions": [],
+    "open_questions": [
+      "Can an ACTION_MAIN/LAUNCHER intent query provide sufficient scoped visibility for the desired app picker without QUERY_ALL_PACKAGES?"
+    ],
     "tags": [
       "android",
       "ui",
       "editor",
       "b2c"
-    ]
+    ],
+    "verification": {
+      "state": "verified-constrained",
+      "date": "2026-09-28",
+      "confidence": "high",
+      "summary": "An app picker is feasible, but enumerating installed apps is privacy-sensitive and package visibility must be scoped to the minimum required.",
+      "sources": [
+        {
+          "label": "Android package visibility",
+          "url": "https://developer.android.com/training/package-visibility/declaring"
+        },
+        {
+          "label": "Google Play QUERY_ALL_PACKAGES policy",
+          "url": "https://support.google.com/googleplay/android-developer/answer/10158779"
+        }
+      ],
+      "next_step": "Prototype package discovery with targeted launcher/intents before considering broad visibility."
+    }
   },
   {
     "id": "android-distribution-compliance",
@@ -880,7 +1090,7 @@
     "title": "Google Play Compliance",
     "group": "DISTRIBUTION",
     "short": "Android-реализация должна пройти допустимый путь публикации и проверки чувствительных возможностей.",
-    "description": "Исходный roadmap упоминал сертификацию как productivity tool. Документация фиксирует это как гипотезу соответствия правилам распространения, а не как обход защит Google Play.",
+    "description": "Google Play allows AccessibilityService in a range of apps, but non-disability-primary apps may not claim isAccessibilityTool=true. They must complete the relevant declaration and provide prominent in-app disclosure and affirmative consent. A «Productivity» category is not a policy exemption or certification path.",
     "purpose": "Проверить, что архитектура и описание продукта совместимы с требованиями магазина.",
     "kind": "core",
     "models": [
@@ -900,19 +1110,41 @@
       "Distribution decision"
     ],
     "parameters": {
-      "candidate_category": "Productivity"
+      "accessibility_tool_flag": "Only if disability support is the app's primary purpose",
+      "non_accessibility_tool": "declaration + disclosure + affirmative consent",
+      "candidate_store_category": "does not create policy exemption"
     },
     "constraints": [
-      "Нельзя проектировать публикацию как обход систем защиты или политики магазина."
+      "Accessibility API use must be the declared, policy-compliant use; narrower APIs should be used where possible.",
+      "Store approval cannot be guaranteed in documentation.",
+      "Do not describe compliance as bypassing Play Protect or policy."
     ],
     "open_questions": [
-      "Допустимы ли выбранные Accessibility/overlay-сценарии для заявленного назначения приложения?"
+      "Will AccessibilityService remain in the architecture after the trigger redesign?",
+      "If yes, can its remaining use be justified under Play policy with a narrower API unavailable?"
     ],
     "tags": [
       "android",
       "distribution",
       "compliance"
-    ]
+    ],
+    "verification": {
+      "state": "verified-constrained",
+      "date": "2026-09-28",
+      "confidence": "high",
+      "summary": "Google Play does not categorically ban non-accessibility-tool AccessibilityService use, but it imposes declaration/disclosure/consent requirements and does not offer a simple «Productivity certification» exemption.",
+      "sources": [
+        {
+          "label": "Google Play AccessibilityService policy",
+          "url": "https://support.google.com/googleplay/android-developer/answer/10964491"
+        },
+        {
+          "label": "Google Play sensitive permissions/APIs policy",
+          "url": "https://support.google.com/googleplay/android-developer/answer/16558241"
+        }
+      ],
+      "next_step": "Re-evaluate policy after the Android trigger architecture is redesigned."
+    }
   },
   {
     "id": "android-energy-budget",
@@ -940,19 +1172,35 @@
       "Measured battery drain"
     ],
     "parameters": {
-      "target_from_spec": "<1% battery/hour"
+      "target_from_spec": "<1% battery/hour",
+      "measurement_candidates": "Power Profiler / system trace / Macrobenchmark power metric where supported"
     },
     "constraints": [
       "Результат зависит от устройства, версии Android и режима использования."
     ],
     "open_questions": [
-      "Какая методика измерения и набор устройств будут каноническими?"
+      "What idle/active workload defines one hour?",
+      "Which physical device/OS matrix is canonical?",
+      "Is <1%/hour measured as device percentage drop or normalized energy estimate?"
     ],
     "tags": [
       "android",
       "performance",
       "battery"
-    ]
+    ],
+    "verification": {
+      "state": "requires-prototype",
+      "date": "2026-09-28",
+      "confidence": "high",
+      "summary": "The <1%/hour number is an engineering target, not a platform guarantee. Android provides profiling tools, but the target must be measured on physical devices under a defined workload.",
+      "sources": [
+        {
+          "label": "Android Power Profiler",
+          "url": "https://developer.android.com/studio/profile/power-profiler"
+        }
+      ],
+      "next_step": "Define workload and device matrix, then measure idle and active scenarios."
+    }
   },
   {
     "id": "ios-activation",
@@ -988,7 +1236,20 @@
       "ios",
       "activation"
     ],
-    "order": 10
+    "order": 10,
+    "verification": {
+      "state": "verified-constrained",
+      "date": "2026-09-28",
+      "confidence": "high",
+      "summary": "Switching to a custom keyboard is a valid entry mechanism only in contexts where the custom keyboard is allowed; it is not a global invocation gesture.",
+      "sources": [
+        {
+          "label": "Apple — Configuring a custom keyboard interface",
+          "url": "https://developer.apple.com/documentation/uikit/configuring-a-custom-keyboard-interface"
+        }
+      ],
+      "next_step": "Keep this as a context-specific entry point, not an Android-equivalent global trigger."
+    }
   },
   {
     "id": "ios-keyboard",
@@ -996,7 +1257,7 @@
     "title": "Custom Keyboard Extension",
     "group": "PLATFORM",
     "short": "Предлагаемая точка входа KnockUI на iOS через пользовательскую клавиатуру.",
-    "description": "В исходной концепции iOS-реализация описана как IME/клавиатура. Этот канал не следует трактовать как глобальный overlay: пользовательская клавиатура действует только в контекстах, где система показывает и допускает соответствующую клавиатуру.",
+    "description": "A Custom Keyboard Extension is a supported iOS extension and can provide KnockUI's gesture surface in text-entry contexts. It is not globally available: secure text fields and phone-pad/name-phone-pad fields use the system keyboard, and host apps may disable third-party keyboards.",
     "purpose": "Дать iOS-пользователю доступ к KnockUI через разрешённый системный интерфейс.",
     "kind": "core",
     "models": [
@@ -1006,7 +1267,7 @@
     "platforms": [
       "ios"
     ],
-    "status": "needs-validation",
+    "status": "concept",
     "inputs": [
       "Вызванная пользовательская клавиатура"
     ],
@@ -1017,19 +1278,34 @@
       "candidate": "Custom Keyboard Extension"
     },
     "constraints": [
-      "Не является глобальным жестом поверх любых приложений",
-      "Зависит от доступности клавиатуры в текущем контексте"
+      "Only available where a third-party keyboard is permitted.",
+      "Secure text fields force the system keyboard.",
+      "phonePad/namePhonePad use the system keyboard.",
+      "A host app may reject third-party keyboard extensions."
     ],
     "open_questions": [
-      "Каков допустимый UX переключения на KnockUI-клавиатуру?",
-      "Какие действия могут быть безопасно инициированы из extension?"
+      "Is a text-entry-only KnockUI experience valuable enough without arbitrary app launch?",
+      "Should the iOS concept move to a different system entry point such as App Intents/Shortcuts rather than keyboard-first?"
     ],
     "tags": [
       "ios",
       "keyboard",
       "extension"
     ],
-    "order": 20
+    "order": 20,
+    "verification": {
+      "state": "verified-constrained",
+      "date": "2026-09-28",
+      "confidence": "high",
+      "summary": "Custom keyboards are supported but not universal; Apple explicitly excludes secure/phone-pad contexts and lets host apps disable them.",
+      "sources": [
+        {
+          "label": "Apple — Configuring a custom keyboard interface",
+          "url": "https://developer.apple.com/documentation/uikit/configuring-a-custom-keyboard-interface"
+        }
+      ],
+      "next_step": "Reassess whether keyboard is the correct iOS entry point after accounting for action restrictions."
+    }
   },
   {
     "id": "ios-graffiti",
@@ -1074,7 +1350,7 @@
     "title": "iOS Action Routing",
     "group": "EXECUTION",
     "short": "Команда XY разрешается в действие, допустимое для iOS-контекста.",
-    "description": "Общий namespace SystemGestures/UserGestures можно сохранить, но доступные действия и способы их запуска требуют отдельной платформенной спецификации.",
+    "description": "The common XY namespace can be resolved inside the extension, and configuration can be shared with the containing app subject to extension/open-access rules. However, routing cannot culminate in arbitrary external app launches from the keyboard extension under App Review rule 4.4.1.",
     "purpose": "Связать общую команду KnockUI с реальным действием iOS.",
     "kind": "core",
     "models": [
@@ -1093,18 +1369,36 @@
     ],
     "parameters": {},
     "constraints": [
-      "Sandbox и extension restrictions",
-      "Ограниченные способы открытия внешних ресурсов"
+      "Keyboard extension cannot launch apps other than Settings under App Review 4.4.1.",
+      "Extension sandbox/shared-container access depends on open-access configuration and user consent.",
+      "Dispatch must be redesigned around keyboard-native outcomes, shared state, or a different iOS entry architecture."
     ],
     "open_questions": [
-      "Нужен ли companion app?",
-      "Как передавать назначение между extension и основным приложением?"
+      "Should iOS KnockUI output text/commands to the current app instead of launching arbitrary apps?",
+      "Should App Intents/Shortcuts or the containing app become the execution layer?"
     ],
     "tags": [
       "ios",
       "routing"
     ],
-    "order": 40
+    "order": 40,
+    "verification": {
+      "state": "blocked-as-specified",
+      "date": "2026-09-28",
+      "confidence": "high",
+      "summary": "XY routing is implementable internally, but the original action-dispatch goal of launching arbitrary apps/deep links from the keyboard conflicts with Apple keyboard-extension rules.",
+      "sources": [
+        {
+          "label": "Apple App Review Guidelines 4.4.1",
+          "url": "https://developer.apple.com/app-store/review/guidelines/#extensions"
+        },
+        {
+          "label": "Apple — Configuring open access for a custom keyboard",
+          "url": "https://developer.apple.com/documentation/uikit/configuring-open-access-for-a-custom-keyboard"
+        }
+      ],
+      "next_step": "Redesign the iOS execution model; do not treat the keyboard as a general app launcher."
+    }
   },
   {
     "id": "ios-actions",
@@ -1113,7 +1407,7 @@
     "title": "iOS Actions",
     "group": "ACTION",
     "short": "Команда выполняется только через действия, разрешённые для iOS-приложения/extension.",
-    "description": "Общий namespace KnockUI сохраняется, но финальный action contract iOS должен учитывать sandbox, возможности keyboard extension, deep links и при необходимости companion app.",
+    "description": "For an App Store keyboard extension, the original KnockUI action model cannot be copied from Android. Apple App Review Guideline 4.4.1 says keyboard extensions must not launch other apps besides Settings. The extension must also remain useful without full network access/full access.",
     "purpose": "Отделить общую семантику команды от реальных возможностей исполнения на iOS.",
     "kind": "core",
     "models": [
@@ -1132,16 +1426,35 @@
     ],
     "parameters": {},
     "constraints": [
-      "Keyboard extension и основное приложение имеют разные возможности."
+      "Arbitrary external app launching from a keyboard extension is prohibited by App Review 4.4.1.",
+      "Keyboard must remain functional without requiring full access.",
+      "Open Access changes network/shared-container capabilities but does not remove the app-launch rule."
     ],
     "open_questions": [
-      "Какие действия доступны напрямую из extension, а какие требуют передачи в companion app?"
+      "Which iOS-native outcomes replace arbitrary app launch: text insertion, Settings, App Intents/Shortcuts initiated elsewhere, or containing-app workflows?"
     ],
     "tags": [
       "ios",
       "action",
       "extension"
-    ]
+    ],
+    "verification": {
+      "state": "blocked-as-specified",
+      "date": "2026-09-28",
+      "confidence": "high",
+      "summary": "The Android-style arbitrary app/deep-link action contract is blocked for a keyboard extension by Apple's explicit review rule.",
+      "sources": [
+        {
+          "label": "Apple App Review Guidelines 4.4.1",
+          "url": "https://developer.apple.com/app-store/review/guidelines/#extensions"
+        },
+        {
+          "label": "Apple — Configuring open access for a custom keyboard",
+          "url": "https://developer.apple.com/documentation/uikit/configuring-open-access-for-a-custom-keyboard"
+        }
+      ],
+      "next_step": "Define a distinct iOS action contract before implementation."
+    }
   },
   {
     "id": "ios-limits",
@@ -1149,7 +1462,7 @@
     "title": "iOS Boundary",
     "group": "LIMITS",
     "short": "iOS-адаптация функционально отличается от Android-глобального режима.",
-    "description": "Документация должна явно разделять общий язык KnockUI и конкретный механизм доступа. На iOS нельзя автоматически переносить предположения Android о глобальном прослушивании касаний и overlay.",
+    "description": "The iOS keyboard adaptation is bounded both by where third-party keyboards can appear and by App Review rules: secure/phone fields may force the system keyboard, host apps can disallow third-party keyboards, and keyboard extensions must not launch apps other than Settings.",
     "purpose": "Не допустить ложного ощущения кроссплатформенной эквивалентности.",
     "kind": "core",
     "models": [
@@ -1166,14 +1479,33 @@
     ],
     "parameters": {},
     "constraints": [
-      "iOS security model"
+      "No global overlay-equivalent behavior.",
+      "Not available in all text fields/apps.",
+      "No arbitrary app launching from the keyboard extension."
     ],
     "open_questions": [],
     "tags": [
       "ios",
       "boundary"
     ],
-    "order": 60
+    "order": 60,
+    "verification": {
+      "state": "verified-supported",
+      "date": "2026-09-28",
+      "confidence": "high",
+      "summary": "The documented iOS limitations are confirmed by Apple developer documentation and App Review Guideline 4.4.1.",
+      "sources": [
+        {
+          "label": "Apple — Configuring a custom keyboard interface",
+          "url": "https://developer.apple.com/documentation/uikit/configuring-a-custom-keyboard-interface"
+        },
+        {
+          "label": "Apple App Review Guidelines 4.4.1",
+          "url": "https://developer.apple.com/app-store/review/guidelines/#extensions"
+        }
+      ],
+      "next_step": "Use this cell as a hard design boundary for the iOS branch."
+    }
   },
   {
     "id": "wechat-mini-program",
@@ -1213,7 +1545,24 @@
       "china",
       "mini-program"
     ],
-    "order": 10
+    "order": 10,
+    "verification": {
+      "state": "verified-supported",
+      "date": "2026-09-28",
+      "confidence": "medium",
+      "summary": "Mini Program is a viable contained runtime for a KnockUI adaptation. This does not provide operating-system-global input.",
+      "sources": [
+        {
+          "label": "Tencent / WeChat Mini Program touch events reference trail",
+          "url": "https://developer.cloud.tencent.com/article/2558990"
+        },
+        {
+          "label": "Tencent Cloud — Mini Program web-view/business domain",
+          "url": "https://cloud.tencent.com/document/product/1301/100434"
+        }
+      ],
+      "next_step": "Validate final implementation in WeChat DevTools and against current official Mini Program docs."
+    }
   },
   {
     "id": "wechat-input",
@@ -1221,7 +1570,7 @@
     "title": "WeChat Input",
     "group": "INPUT",
     "short": "Жестовый или эквивалентный ввод команды внутри интерфейса Mini Program.",
-    "description": "Внутри Mini Program можно сохранить двухсимвольный язык KnockUI, если разрешённый UI/gesture layer обеспечивает достаточную отзывчивость.",
+    "description": "Mini Program UI supports touch events such as touchstart/touchmove/touchend, and WeChat's own MiniProgram gesture library demonstrates gesture recognition inside the Mini Program rendering context. This supports a local Graffiti-like surface, not global OS gestures.",
     "purpose": "Сохранить узнаваемый командный язык в китайском контуре.",
     "kind": "core",
     "models": [
@@ -1231,7 +1580,7 @@
     "platforms": [
       "wechat"
     ],
-    "status": "needs-validation",
+    "status": "concept",
     "inputs": [
       "Пользовательский ввод"
     ],
@@ -1242,16 +1591,34 @@
       "namespace": 1260
     },
     "constraints": [
-      "Жесты ограничены областью Mini Program."
+      "Gesture input is confined to the Mini Program UI.",
+      "Performance and fidelity of the 36-symbol recognizer need a WeChat prototype."
     ],
     "open_questions": [
-      "Нужно ли сохранять Graffiti один к одному или адаптировать жесты под WeChat UX?"
+      "Should the exact Graffiti templates match Android, or be tuned for the Mini Program rendering/event model?"
     ],
     "tags": [
       "wechat",
       "input"
     ],
-    "order": 20
+    "order": 20,
+    "verification": {
+      "state": "verified-constrained",
+      "date": "2026-09-28",
+      "confidence": "medium",
+      "summary": "Touch/gesture input inside a Mini Program is technically feasible; global/system-wide gesture capture is not implied.",
+      "sources": [
+        {
+          "label": "Tencent / WeChat Mini Program touch events reference trail",
+          "url": "https://developer.cloud.tencent.com/article/2558990"
+        },
+        {
+          "label": "WeChat MiniProgram gesture library",
+          "url": "https://github.com/wechat-miniprogram/miniprogram-gesture"
+        }
+      ],
+      "next_step": "Prototype the two-symbol input in WeChat DevTools."
+    }
   },
   {
     "id": "wechat-routing",
@@ -1259,7 +1626,7 @@
     "title": "WeChat Routing",
     "group": "EXECUTION",
     "short": "Команда разрешается в функцию Mini Program, маршрут WeChat или внешнее действие, если оно разрешено.",
-    "description": "SystemGestures/UserGestures остаются логической моделью, но набор исполнимых действий определяется API WeChat.",
+    "description": "Routing XY to functions/pages inside the Mini Program is a normal application concern. Cross-Mini-Program navigation exists but is subject to platform restrictions such as user-trigger and confirmation requirements.",
     "purpose": "Связать командный namespace KnockUI с функциями WeChat-контекста.",
     "kind": "core",
     "models": [
@@ -1269,7 +1636,7 @@
     "platforms": [
       "wechat"
     ],
-    "status": "needs-validation",
+    "status": "concept",
     "inputs": [
       "Команда XY"
     ],
@@ -1278,14 +1645,28 @@
     ],
     "parameters": {},
     "constraints": [
-      "WeChat API и политика Mini Program"
+      "Routing is confined to capabilities exposed by the Mini Program/WeChat platform.",
+      "Cross-Mini-Program navigation may require explicit user interaction and confirmation."
     ],
     "open_questions": [],
     "tags": [
       "wechat",
       "routing"
     ],
-    "order": 30
+    "order": 30,
+    "verification": {
+      "state": "verified-constrained",
+      "date": "2026-09-28",
+      "confidence": "medium",
+      "summary": "Internal command routing is feasible; navigation beyond the current Mini Program is platform-controlled.",
+      "sources": [
+        {
+          "label": "Tencent Cloud — Mini Program navigation restrictions",
+          "url": "https://intl.cloud.tencent.com/ko/document/product/1219/68015"
+        }
+      ],
+      "next_step": "Define a WeChat-specific action registry."
+    }
   },
   {
     "id": "wechat-actions",
@@ -1294,7 +1675,7 @@
     "title": "WeChat Actions",
     "group": "ACTION",
     "short": "Результат команды исполняется в рамках разрешённых возможностей Mini Program и WeChat.",
-    "description": "Действие может вести к функции Mini Program, разрешённому маршруту внутри WeChat или внешнему переходу, если это допускается API и политикой платформы.",
+    "description": "WeChat actions should be modeled as Mini Program functions/routes, permitted navigation, or whitelisted web content. Cross-Mini-Program jumps require user interaction/confirmation in the referenced Tencent documentation; web-view use is subject to business-domain/entity restrictions.",
     "purpose": "Зафиксировать отдельный action contract китайского контура.",
     "kind": "core",
     "models": [
@@ -1304,7 +1685,7 @@
     "platforms": [
       "wechat"
     ],
-    "status": "needs-validation",
+    "status": "concept",
     "inputs": [
       "Resolved WeChat action"
     ],
@@ -1313,15 +1694,34 @@
     ],
     "parameters": {},
     "constraints": [
-      "Набор действий определяется API и политикой Mini Program."
+      "No assumption of arbitrary native-app launch.",
+      "Cross-Mini-Program navigation is user-controlled.",
+      "web-view requires configured business domains and applicable account eligibility."
     ],
     "open_questions": [
-      "Какие внешние переходы и интеграции доступны целевому сценарию?"
+      "Which actions belong to the initial China MVP: internal routes, another Mini Program, or whitelisted web content?"
     ],
     "tags": [
       "wechat",
       "action"
-    ]
+    ],
+    "verification": {
+      "state": "verified-constrained",
+      "date": "2026-09-28",
+      "confidence": "medium",
+      "summary": "Useful action types exist inside the WeChat ecosystem, but they are more constrained than Android intents.",
+      "sources": [
+        {
+          "label": "Tencent Cloud — Mini Program navigation restrictions",
+          "url": "https://intl.cloud.tencent.com/ko/document/product/1219/68015"
+        },
+        {
+          "label": "Tencent Cloud — Mini Program web-view/business domain",
+          "url": "https://cloud.tencent.com/document/product/1301/100434"
+        }
+      ],
+      "next_step": "Confirm exact action APIs in current official WeChat docs/DevTools before implementation."
+    }
   },
   {
     "id": "wechat-distribution",
@@ -1357,7 +1757,15 @@
       "distribution",
       "china"
     ],
-    "order": 50
+    "order": 50,
+    "verification": {
+      "state": "non-technical",
+      "date": "2026-09-28",
+      "confidence": "high",
+      "summary": "The Douyin/Xiaohongshu acquisition thesis is a market/distribution hypothesis, not a platform-API question. It requires separate China market/legal research.",
+      "sources": [],
+      "next_step": "Move this cell to a market-verification workstream."
+    }
   },
   {
     "id": "whatsapp-business",
@@ -1365,7 +1773,7 @@
     "title": "WhatsApp Business",
     "group": "PLATFORM",
     "short": "Индийский контур рассматривается как чатовая адаптация через WhatsApp Business API.",
-    "description": "Это не жестовый системный интерфейс. KnockUI здесь превращается в быстрый командный слой внутри диалога: пользователь отправляет короткую команду, а бизнес-логика разрешает её в действие или ответ.",
+    "description": "WhatsApp Cloud API is Meta's official business messaging API. A KnockUI adaptation can use WhatsApp as a conversational command transport, with inbound messages delivered to the business backend via webhooks.",
     "purpose": "Использовать привычный пользователю мессенджер как транспорт команды.",
     "kind": "core",
     "models": [
@@ -1386,8 +1794,8 @@
       "candidate": "WhatsApp Business API"
     },
     "constraints": [
-      "Нет глобального жеста",
-      "Работа внутри чата и правил Business API"
+      "This is a messaging channel, not an OS-global gesture surface.",
+      "Requires WhatsApp Business Platform setup and backend/webhook infrastructure."
     ],
     "open_questions": [
       "Какие действия допустимы без ухудшения UX из-за чатовой задержки?"
@@ -1397,7 +1805,24 @@
       "india",
       "chatbot"
     ],
-    "order": 10
+    "order": 10,
+    "verification": {
+      "state": "verified-supported",
+      "date": "2026-09-28",
+      "confidence": "high",
+      "summary": "The business messaging transport is officially supported by Meta Cloud API.",
+      "sources": [
+        {
+          "label": "Meta — WhatsApp Business Platform",
+          "url": "https://www.postman.com/meta/whatsapp-business-platform/overview"
+        },
+        {
+          "label": "Meta — WhatsApp Webhooks",
+          "url": "https://www.postman.com/meta/whatsapp-business-platform/folder/lboq68h/webhooks"
+        }
+      ],
+      "next_step": "Implement only after defining the WhatsApp-specific command UX."
+    }
   },
   {
     "id": "whatsapp-command",
@@ -1405,7 +1830,7 @@
     "title": "Chat Command",
     "group": "INPUT",
     "short": "Двухсимвольная команда передаётся как сообщение или структурированный быстрый ввод.",
-    "description": "Общий namespace XY можно сохранить, даже если способ ввода отличается от Graffiti.",
+    "description": "A user can send a short XY text command (or later use a richer interactive control). Meta's webhook payload includes incoming text message bodies, so the backend can parse the two-character namespace.",
     "purpose": "Сохранить единый командный словарь KnockUI в чатовой среде.",
     "kind": "core",
     "models": [
@@ -1436,7 +1861,24 @@
       "whatsapp",
       "input"
     ],
-    "order": 20
+    "order": 20,
+    "verification": {
+      "state": "verified-supported",
+      "date": "2026-09-28",
+      "confidence": "high",
+      "summary": "Inbound customer text is available in official Cloud API webhook payloads, so an XY text-command transport is technically feasible.",
+      "sources": [
+        {
+          "label": "Meta — WhatsApp received text message payload",
+          "url": "https://www.postman.com/meta/whatsapp-business-platform/request/cy6hnq7/received-text-message"
+        },
+        {
+          "label": "Meta — WhatsApp Webhooks",
+          "url": "https://www.postman.com/meta/whatsapp-business-platform/folder/lboq68h/webhooks"
+        }
+      ],
+      "next_step": "Define parsing, error handling and user-facing command discovery."
+    }
   },
   {
     "id": "whatsapp-router",
@@ -1444,7 +1886,7 @@
     "title": "Business Router",
     "group": "EXECUTION",
     "short": "Серверная логика сопоставляет полученную команду с разрешённым действием.",
-    "description": "Маршрутизация может использовать тот же приоритет SystemGestures → UserGestures, но хранение и исполнение происходят на серверной стороне или в связанном сервисе.",
+    "description": "The router lives in the business backend: webhook receives the inbound message, application logic resolves XY against the user's/system registry, and the backend chooses a permitted WhatsApp response/action.",
     "purpose": "Перенести семантику KnockUI в мессенджерный backend.",
     "kind": "core",
     "models": [
@@ -1475,7 +1917,24 @@
       "backend",
       "routing"
     ],
-    "order": 30
+    "order": 30,
+    "verification": {
+      "state": "verified-supported",
+      "date": "2026-09-28",
+      "confidence": "high",
+      "summary": "Webhook-driven backend routing is technically straightforward once Cloud API is configured; it is not a client-side launcher.",
+      "sources": [
+        {
+          "label": "Meta — WhatsApp Webhooks",
+          "url": "https://www.postman.com/meta/whatsapp-business-platform/folder/lboq68h/webhooks"
+        },
+        {
+          "label": "Meta — WhatsApp Business Platform",
+          "url": "https://www.postman.com/meta/whatsapp-business-platform/overview"
+        }
+      ],
+      "next_step": "Specify identity/storage and registry semantics for WhatsApp users."
+    }
   },
   {
     "id": "whatsapp-response",
@@ -1483,7 +1942,7 @@
     "title": "WhatsApp Response",
     "group": "ACTION",
     "short": "Результатом может быть ответ, ссылка, кнопка или разрешённое бизнес-действие.",
-    "description": "Конечный action contract WhatsApp должен быть отдельным от Android/iOS и отражать реальные возможности Business API.",
+    "description": "Cloud API supports programmatic business messaging, and WhatsApp Flows support structured rich interactions. KnockUI results can therefore be returned as messages, links or interactive flows, subject to current WhatsApp Business Platform rules.",
     "purpose": "Исполнить команду в рамках мессенджерной модели.",
     "kind": "core",
     "models": [
@@ -1493,7 +1952,7 @@
     "platforms": [
       "whatsapp"
     ],
-    "status": "needs-validation",
+    "status": "concept",
     "inputs": [
       "Resolved action"
     ],
@@ -1502,14 +1961,34 @@
     ],
     "parameters": {},
     "constraints": [
-      "WhatsApp platform rules"
+      "Result remains within WhatsApp/business messaging semantics unless the user follows a link or platform-provided interaction.",
+      "Current message/template/policy rules must be checked for the exact outbound scenario."
     ],
-    "open_questions": [],
+    "open_questions": [
+      "Which response types are allowed and desirable for user-initiated XY commands?"
+    ],
     "tags": [
       "whatsapp",
       "action"
     ],
-    "order": 40
+    "order": 40,
+    "verification": {
+      "state": "verified-constrained",
+      "date": "2026-09-28",
+      "confidence": "high",
+      "summary": "Programmatic replies and structured Flows are supported. This validates the chat-response model, not arbitrary device app launching.",
+      "sources": [
+        {
+          "label": "Meta — WhatsApp Business Platform",
+          "url": "https://www.postman.com/meta/whatsapp-business-platform/overview"
+        },
+        {
+          "label": "Meta — WhatsApp Flows",
+          "url": "https://www.postman.com/meta/whatsapp-business-platform/request/a1g0zfr/list-flows"
+        }
+      ],
+      "next_step": "Design the response contract around user-initiated business messaging."
+    }
   },
   {
     "id": "strategy-west",
@@ -1614,7 +2093,15 @@
       "strategy",
       "india"
     ],
-    "order": 30
+    "order": 30,
+    "verification": {
+      "state": "non-technical",
+      "date": "2026-09-28",
+      "confidence": "high",
+      "summary": "The claim that India should primarily use WhatsApp is a market/product thesis, not something platform API documentation can validate.",
+      "sources": [],
+      "next_step": "Run separate market research by target segment, use case and acquisition channel."
+    }
   },
   {
     "id": "strategy-economics",
@@ -1653,7 +2140,15 @@
       "strategy",
       "economics"
     ],
-    "order": 40
+    "order": 40,
+    "verification": {
+      "state": "non-technical",
+      "date": "2026-09-28",
+      "confidence": "high",
+      "summary": "Android device-count and iOS ARPU ratios are market metrics; they require sourced market analysis with region, period and methodology.",
+      "sources": [],
+      "next_step": "Run a dated market-data audit with canonical sources."
+    }
   },
   {
     "id": "roadmap-1",
