@@ -211,6 +211,60 @@
     ]
   },
   {
+    "id": "platform-adaptation-model",
+    "section": "product",
+    "order": 37,
+    "title": "Platform Adaptation Model",
+    "group": "ARCHITECTURE",
+    "short": "KnockUI сохраняет общий язык команд и реестров, но точка входа и способ исполнения различаются по платформам.",
+    "description": "Техническая проверка показала, что кроссплатформенность KnockUI нельзя строить как копирование Android-механики. Общими остаются двухсимвольный namespace, SystemGestures/UserGestures и семантика маршрутизации. Android, iOS, WeChat и WhatsApp должны иметь собственные допустимые точки входа и собственные action contracts.",
+    "purpose": "Зафиксировать общий архитектурный принцип после технической проверки платформ.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "shared",
+      "android",
+      "ios",
+      "wechat",
+      "whatsapp"
+    ],
+    "status": "approved",
+    "inputs": [
+      "Общий Command Space",
+      "SystemGestures",
+      "UserGestures",
+      "Ограничения платформ"
+    ],
+    "outputs": [
+      "Platform-specific entry model",
+      "Platform-specific action model"
+    ],
+    "parameters": {
+      "shared": "command namespace + registry semantics",
+      "platform_specific": "activation/input + execution/actions"
+    },
+    "constraints": [
+      "Нельзя считать Android-глобальный жест эталоном, который автоматически переносится на iOS, WeChat или WhatsApp."
+    ],
+    "open_questions": [],
+    "tags": [
+      "architecture",
+      "cross-platform",
+      "verification"
+    ],
+    "verification": {
+      "state": "verified-constrained",
+      "date": "2026-09-28",
+      "confidence": "high",
+      "summary": "Единая семантика KnockUI переносима между платформами, но механизмы входа и исполнения должны проектироваться отдельно с учётом документированных ограничений каждой среды.",
+      "sources": [],
+      "implication": "Архитектура проекта должна разделять shared protocol и platform adapters."
+    }
+  },
+  {
     "id": "system-gestures",
     "section": "product",
     "title": "SystemGestures",
@@ -426,7 +480,7 @@
     "title": "Global Touch Trigger Limitation",
     "group": "PLATFORM LIMIT",
     "short": "Public Android APIs do not provide the passive, non-interfering global raw-touch stream required by the original Quad Tap concept.",
-    "description": "AccessibilityService.onMotionEvent can observe requested MotionEvent sources on API 34+, but events from those requested sources are not sent to the rest of the system. TouchInteractionController requires touch-exploration mode, which changes touchscreen semantics and intercepts interactions before delegation. Therefore the original requirement «observe four taps anywhere while leaving ordinary touches untouched» is not available through these public accessibility paths as specified.",
+    "description": "Начиная с API 34 AccessibilityService.onMotionEvent() может получать MotionEvent от выбранных источников, но события от этих источников после этого не передаются остальной системе. TouchInteractionController работает в режиме touch exploration, который изменяет семантику касаний и требует явного управления/делегирования потока. Поэтому исходное требование «пассивно наблюдать четыре тапа в любом месте и при этом не менять обычную доставку касаний приложению» через эти публичные accessibility-механизмы не реализуется в заявленном виде.",
     "purpose": "Make the main Android feasibility blocker explicit and prevent the conceptual flow from being mistaken for an implemented capability.",
     "kind": "core",
     "models": [
@@ -449,10 +503,11 @@
       "touch_exploration": "changes interaction semantics"
     },
     "constraints": [
-      "A different activation mechanism or materially different interaction model is required unless a compliant public API is found."
+      "Нужен другой механизм активации либо существенно иной interaction model.",
+      "Quad Tap как алгоритм можно сохранить только при появлении допустимого источника событий."
     ],
     "open_questions": [
-      "Which alternative activation mechanism preserves the product's speed with acceptable UX?"
+      "Какой альтернативный механизм активации сохраняет скорость KnockUI и приемлемый UX?"
     ],
     "tags": [
       "android",
@@ -464,7 +519,7 @@
       "state": "blocked-as-specified",
       "date": "2026-09-28",
       "confidence": "high",
-      "summary": "Verified platform limitation: the proposed passive global Quad Tap trigger cannot be implemented with the cited public AccessibilityService raw-touch mechanisms without consuming or altering touch delivery.",
+      "summary": "Главный Android-блокер подтверждён: пассивный глобальный Quad Tap без вмешательства в обычную доставку touch-событий не получается реализовать через рассмотренные публичные AccessibilityService-механизмы.",
       "sources": [
         {
           "label": "Android AccessibilityService API",
@@ -474,7 +529,72 @@
           "label": "Android TouchInteractionController API",
           "url": "https://developer.android.com/reference/android/accessibilityservice/TouchInteractionController"
         }
-      ]
+      ],
+      "next_step": "До реализации Android MVP выбрать и проверить новый механизм активации.",
+      "implication": "Прямая архитектурная цепочка AccessibilityService → пассивный Quad Tap больше не считается допустимой."
+    }
+  },
+  {
+    "id": "android-activation-redesign",
+    "section": "android",
+    "order": 27,
+    "title": "Android Activation Redesign",
+    "group": "ARCHITECTURE DECISION",
+    "short": "Нужно выбрать замену пассивному глобальному источнику событий, сохранив максимально быстрый вход в KnockUI.",
+    "description": "После технической проверки проблема Android локализована: алгоритм четырёх тапов и локальный холст сами по себе реализуемы, но исходный способ пассивного глобального получения касаний не подтверждён. Следующее архитектурное решение должно определить допустимый публичный trigger. Quad Tap может остаться только если новый trigger действительно даёт требуемый поток событий без недопустимого вмешательства в чужой UI.",
+    "purpose": "Сделать главный нерешённый вопрос Android MVP отдельным архитектурным узлом.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "android"
+    ],
+    "status": "needs-validation",
+    "inputs": [
+      "Global Touch Trigger Limitation",
+      "Требование быстрого вызова",
+      "Политики Android/Google Play"
+    ],
+    "outputs": [
+      "Выбранный Android activation contract"
+    ],
+    "parameters": {
+      "decision_status": "TBD"
+    },
+    "constraints": [
+      "Не использовать обходы системных защит.",
+      "Не считать AccessibilityService пассивным глобальным touch listener.",
+      "Решение должно быть проверено на реальных устройствах и на соответствие правилам распространения."
+    ],
+    "open_questions": [
+      "Какие публичные trigger-механизмы сравниваем?",
+      "Можно ли сохранить именно Quad Tap или потребуется другой пользовательский жест/действие?"
+    ],
+    "tags": [
+      "android",
+      "activation",
+      "decision",
+      "mvp"
+    ],
+    "verification": {
+      "state": "requires-prototype",
+      "date": "2026-09-28",
+      "confidence": "high",
+      "summary": "Техническая проверка выявила необходимость перепроектирования точки входа Android; конкретная замена пока не выбрана.",
+      "sources": [
+        {
+          "label": "Android AccessibilityService API",
+          "url": "https://developer.android.com/reference/android/accessibilityservice/AccessibilityService"
+        },
+        {
+          "label": "Android TouchInteractionController API",
+          "url": "https://developer.android.com/reference/android/accessibilityservice/TouchInteractionController"
+        }
+      ],
+      "next_step": "Составить кандидаты Android activation mechanisms и проверить их по API, UX и Play policy.",
+      "implication": "Это решение является главным блокирующим архитектурным решением для Android MVP."
     }
   },
   {
@@ -592,7 +712,8 @@
           "url": "https://developer.android.com/guide/topics/ui/accessibility/views/custom-views"
         }
       ],
-      "next_step": "Treat zone validation as heuristic unless the activation design is changed."
+      "next_step": "Treat zone validation as heuristic unless the activation design is changed.",
+      "implication": "Термин «пустая зона» нельзя использовать как гарантированно определяемое состояние чужого интерфейса; это только эвристика по доступной accessibility-семантике."
     }
   },
   {
@@ -622,10 +743,15 @@
     "parameters": {
       "size": "200×200 dp",
       "feedback": "pulse frame",
-      "scope": "localized overlay"
+      "scope": "localized overlay",
+      "overlay_type": "TYPE_APPLICATION_OVERLAY",
+      "permission": "SYSTEM_ALERT_WINDOW",
+      "non_touchable_flag": "FLAG_NOT_TOUCHABLE — такой overlay сам не получает touch"
     },
     "constraints": [
-      "Размер должен тестироваться на разных плотностях и диагоналях."
+      "Локальный touchable canvas реалистичен только после уже состоявшейся активации.",
+      "FLAG_NOT_TOUCHABLE нельзя использовать для самого жестового canvas, если он должен принимать штрихи.",
+      "Размер 200×200 dp и визуальная рамка требуют UX-тестов на разных плотностях."
     ],
     "open_questions": [],
     "tags": [
@@ -638,7 +764,7 @@
       "state": "verified-constrained",
       "date": "2026-09-28",
       "confidence": "high",
-      "summary": "A localized application overlay is supported with SYSTEM_ALERT_WINDOW. A non-touchable overlay cannot itself collect gestures; the touchable input canvas is appropriate only after activation.",
+      "summary": "TYPE_APPLICATION_OVERLAY и permission flow подтверждены. Не-touchable overlay не может собирать жесты; локальный touchable canvas подходит как post-activation input surface.",
       "sources": [
         {
           "label": "Android WindowManager.LayoutParams",
@@ -649,7 +775,8 @@
           "url": "https://developer.android.com/reference/android/provider/Settings"
         }
       ],
-      "next_step": "Prototype the 200×200 dp canvas after replacing the global trigger."
+      "next_step": "Prototype the 200×200 dp canvas after replacing the global trigger.",
+      "implication": "Overlay решает отображение/локальный ввод после активации, но не создаёт пассивный глобальный trigger."
     }
   },
   {
@@ -776,7 +903,8 @@
           "url": "https://depts.washington.edu/acelab/proj/dollar/index.html"
         }
       ],
-      "next_step": "Build a 36-symbol benchmark with multiple users and finger traces."
+      "next_step": "Build a 36-symbol benchmark with multiple users and finger traces.",
+      "implication": "Нельзя переносить опубликованную точность $1 на KnockUI. Требуется собственная матрица ошибок для 36 символов и пальцевого ввода."
     }
   },
   {
@@ -1019,7 +1147,8 @@
           "url": "https://developer.android.com/guide/components/activities/secure-bal"
         }
       ],
-      "next_step": "Implement an explicit action contract and test on the final target SDK/device matrix."
+      "next_step": "Implement an explicit action contract and test on the final target SDK/device matrix.",
+      "implication": "Android action layer в целом жизнеспособен; обязательны resolver/fallback, App Links для своих HTTPS-доменов и повторная проверка background-start rules на финальном target SDK."
     }
   },
   {
@@ -1080,7 +1209,8 @@
           "url": "https://support.google.com/googleplay/android-developer/answer/10158779"
         }
       ],
-      "next_step": "Prototype package discovery with targeted launcher/intents before considering broad visibility."
+      "next_step": "Prototype package discovery with targeted launcher/intents before considering broad visibility.",
+      "implication": "App picker надо проектировать от минимально достаточной package visibility; QUERY_ALL_PACKAGES не должен быть исходным допущением."
     }
   },
   {
@@ -1143,7 +1273,8 @@
           "url": "https://support.google.com/googleplay/android-developer/answer/16558241"
         }
       ],
-      "next_step": "Re-evaluate policy after the Android trigger architecture is redesigned."
+      "next_step": "Re-evaluate policy after the Android trigger architecture is redesigned.",
+      "implication": "Категория Productivity не является сертификацией или исключением. Если AccessibilityService останется, продукт должен пройти обычную policy/declaration/disclosure/consent процедуру."
     }
   },
   {
@@ -1199,7 +1330,8 @@
           "url": "https://developer.android.com/studio/profile/power-profiler"
         }
       ],
-      "next_step": "Define workload and device matrix, then measure idle and active scenarios."
+      "next_step": "Define workload and device matrix, then measure idle and active scenarios.",
+      "implication": "Показатель <1%/час остаётся целевым KPI, а не свойством продукта, пока не определены нагрузка, устройства и методика измерения."
     }
   },
   {
@@ -1304,7 +1436,8 @@
           "url": "https://developer.apple.com/documentation/uikit/configuring-a-custom-keyboard-interface"
         }
       ],
-      "next_step": "Reassess whether keyboard is the correct iOS entry point after accounting for action restrictions."
+      "next_step": "Reassess whether keyboard is the correct iOS entry point after accounting for action restrictions.",
+      "implication": "Keyboard Extension может быть iOS-поверхностью ввода только в разрешённых text-entry contexts и не является глобальной точкой входа."
     }
   },
   {
@@ -1453,7 +1586,71 @@
           "url": "https://developer.apple.com/documentation/uikit/configuring-open-access-for-a-custom-keyboard"
         }
       ],
-      "next_step": "Define a distinct iOS action contract before implementation."
+      "next_step": "Define a distinct iOS action contract before implementation.",
+      "implication": "Android-style модель «XY → запустить произвольное приложение/deep link» не переносится в App Store keyboard extension."
+    }
+  },
+  {
+    "id": "ios-action-redesign",
+    "section": "ios",
+    "order": 55,
+    "title": "iOS Action Model Redesign",
+    "group": "ARCHITECTURE DECISION",
+    "short": "iOS нужен отдельный action contract, не основанный на запуске произвольных приложений из keyboard extension.",
+    "description": "Техническая проверка подтвердила, что Custom Keyboard Extension может служить ограниченной поверхностью ввода, но App Review Guideline 4.4.1 запрещает клавиатурному extension запускать другие приложения, кроме Settings. Поэтому результат команды XY надо перепроектировать: возможные направления — keyboard-native output, взаимодействие с containing app/shared state либо иной iOS-native механизм. Конкретный вариант ещё не утверждён и должен отдельно проверяться.",
+    "purpose": "Вынести iOS execution blocker и его архитектурное решение в отдельный узел.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "ios"
+    ],
+    "status": "needs-validation",
+    "inputs": [
+      "iOS Action Routing",
+      "iOS Boundary",
+      "App Review 4.4.1"
+    ],
+    "outputs": [
+      "Новый iOS action contract"
+    ],
+    "parameters": {
+      "decision_status": "TBD"
+    },
+    "constraints": [
+      "Keyboard extension не рассматривается как общий launcher приложений.",
+      "Любая альтернатива должна отдельно проверяться по Apple API и App Review rules."
+    ],
+    "open_questions": [
+      "Какие действия остаются внутри keyboard-native UX?",
+      "Нужен ли containing app как execution layer?",
+      "Стоит ли рассматривать отдельную App Intents/Shortcuts архитектуру?"
+    ],
+    "tags": [
+      "ios",
+      "action",
+      "decision",
+      "architecture"
+    ],
+    "verification": {
+      "state": "blocked-as-specified",
+      "date": "2026-09-28",
+      "confidence": "high",
+      "summary": "Исходный Android-style action model для iOS keyboard extension заблокирован правилами Apple; требуется отдельная модель исполнения.",
+      "sources": [
+        {
+          "label": "Apple App Review Guidelines 4.4.1",
+          "url": "https://developer.apple.com/app-store/review/guidelines/#extensions"
+        },
+        {
+          "label": "Apple — Configuring open access for a custom keyboard",
+          "url": "https://developer.apple.com/documentation/uikit/configuring-open-access-for-a-custom-keyboard"
+        }
+      ],
+      "next_step": "Сформировать и проверить варианты iOS-native execution model.",
+      "implication": "iOS должен считаться отдельным platform adapter, а не портом Android dispatcher/actions."
     }
   },
   {
@@ -1561,7 +1758,9 @@
           "url": "https://cloud.tencent.com/document/product/1301/100434"
         }
       ],
-      "next_step": "Validate final implementation in WeChat DevTools and against current official Mini Program docs."
+      "next_step": "Validate final implementation in WeChat DevTools and against current official Mini Program docs.",
+      "source_note": "В этой проверке не удалось получить прямую каноническую страницу developers.weixin.qq.com; выводы опираются на материалы экосистемы Tencent/WeChat и должны быть перепроверены в актуальной официальной документации и WeChat DevTools перед реализацией.",
+      "implication": "WeChat — contained runtime: KnockUI работает внутри Mini Program и не получает OS-global gesture layer."
     }
   },
   {
@@ -1617,7 +1816,8 @@
           "url": "https://github.com/wechat-miniprogram/miniprogram-gesture"
         }
       ],
-      "next_step": "Prototype the two-symbol input in WeChat DevTools."
+      "next_step": "Prototype the two-symbol input in WeChat DevTools.",
+      "source_note": "В этой проверке не удалось получить прямую каноническую страницу developers.weixin.qq.com; выводы опираются на материалы экосистемы Tencent/WeChat и должны быть перепроверены в актуальной официальной документации и WeChat DevTools перед реализацией."
     }
   },
   {
@@ -1665,7 +1865,8 @@
           "url": "https://intl.cloud.tencent.com/ko/document/product/1219/68015"
         }
       ],
-      "next_step": "Define a WeChat-specific action registry."
+      "next_step": "Define a WeChat-specific action registry.",
+      "source_note": "В этой проверке не удалось получить прямую каноническую страницу developers.weixin.qq.com; выводы опираются на материалы экосистемы Tencent/WeChat и должны быть перепроверены в актуальной официальной документации и WeChat DevTools перед реализацией."
     }
   },
   {
@@ -1720,7 +1921,9 @@
           "url": "https://cloud.tencent.com/document/product/1301/100434"
         }
       ],
-      "next_step": "Confirm exact action APIs in current official WeChat docs/DevTools before implementation."
+      "next_step": "Confirm exact action APIs in current official WeChat docs/DevTools before implementation.",
+      "source_note": "В этой проверке не удалось получить прямую каноническую страницу developers.weixin.qq.com; выводы опираются на материалы экосистемы Tencent/WeChat и должны быть перепроверены в актуальной официальной документации и WeChat DevTools перед реализацией.",
+      "implication": "WeChat action contract должен быть отдельным от Android intents и учитывать user-controlled navigation/business-domain restrictions."
     }
   },
   {
@@ -1764,7 +1967,8 @@
       "confidence": "high",
       "summary": "The Douyin/Xiaohongshu acquisition thesis is a market/distribution hypothesis, not a platform-API question. It requires separate China market/legal research.",
       "sources": [],
-      "next_step": "Move this cell to a market-verification workstream."
+      "next_step": "Move this cell to a market-verification workstream.",
+      "implication": "Douyin/Xiaohongshu — отдельная гипотеза acquisition strategy, а не вывод технической проверки WeChat API."
     }
   },
   {
@@ -1821,7 +2025,8 @@
           "url": "https://www.postman.com/meta/whatsapp-business-platform/folder/lboq68h/webhooks"
         }
       ],
-      "next_step": "Implement only after defining the WhatsApp-specific command UX."
+      "next_step": "Implement only after defining the WhatsApp-specific command UX.",
+      "implication": "WhatsApp реализует KnockUI как conversation transport, а не как системный gesture/launcher layer."
     }
   },
   {
@@ -1877,7 +2082,8 @@
           "url": "https://www.postman.com/meta/whatsapp-business-platform/folder/lboq68h/webhooks"
         }
       ],
-      "next_step": "Define parsing, error handling and user-facing command discovery."
+      "next_step": "Define parsing, error handling and user-facing command discovery.",
+      "implication": "XY можно передавать как входящий текст/структурированный ввод и разбирать на backend."
     }
   },
   {
@@ -1933,7 +2139,8 @@
           "url": "https://www.postman.com/meta/whatsapp-business-platform/overview"
         }
       ],
-      "next_step": "Specify identity/storage and registry semantics for WhatsApp users."
+      "next_step": "Specify identity/storage and registry semantics for WhatsApp users.",
+      "implication": "Маршрутизация является серверной: webhook → registry lookup → разрешённый business response/action."
     }
   },
   {
@@ -1987,7 +2194,8 @@
           "url": "https://www.postman.com/meta/whatsapp-business-platform/request/a1g0zfr/list-flows"
         }
       ],
-      "next_step": "Design the response contract around user-initiated business messaging."
+      "next_step": "Design the response contract around user-initiated business messaging.",
+      "implication": "Подтверждены ответы и Flows; произвольный запуск приложений устройства из WhatsApp-модели не считается подтверждённой возможностью."
     }
   },
   {
@@ -2100,7 +2308,8 @@
       "confidence": "high",
       "summary": "The claim that India should primarily use WhatsApp is a market/product thesis, not something platform API documentation can validate.",
       "sources": [],
-      "next_step": "Run separate market research by target segment, use case and acquisition channel."
+      "next_step": "Run separate market research by target segment, use case and acquisition channel.",
+      "implication": "Выбор WhatsApp как основного канала для Индии нельзя считать технически доказанным; нужен отдельный рыночный анализ по сегментам и сценариям."
     }
   },
   {
@@ -2147,7 +2356,8 @@
       "confidence": "high",
       "summary": "Android device-count and iOS ARPU ratios are market metrics; they require sourced market analysis with region, period and methodology.",
       "sources": [],
-      "next_step": "Run a dated market-data audit with canonical sources."
+      "next_step": "Run a dated market-data audit with canonical sources.",
+      "implication": "Числа по Android/iOS нельзя использовать как факт до отдельного market-data audit с регионом, периодом и методикой."
     }
   },
   {
