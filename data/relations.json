@@ -108,12 +108,6 @@
     "type": "branch"
   },
   {
-    "from": "android-local-canvas",
-    "to": "android-gesture-1",
-    "relation": "принимает первый штрих",
-    "type": "flow"
-  },
-  {
     "from": "android-gesture-1",
     "to": "android-recognizer",
     "relation": "распознаётся",
@@ -586,5 +580,29 @@
     "to": "android-activation-redesign",
     "relation": "переходит к OEM/system activation",
     "type": "model"
+  },
+  {
+    "from": "android-local-canvas",
+    "to": "android-drawing-overlay",
+    "relation": "реализуется как touchable overlay",
+    "type": "model"
+  },
+  {
+    "from": "android-drawing-overlay",
+    "to": "android-gesture-1",
+    "relation": "принимает первый штрих",
+    "type": "flow"
+  },
+  {
+    "from": "android-drawing-overlay",
+    "to": "android-failsafe",
+    "relation": "ограничивает область ввода",
+    "type": "branch"
+  },
+  {
+    "from": "android-permissions",
+    "to": "android-drawing-overlay",
+    "relation": "требует overlay permission",
+    "type": "constraint"
   }
 ]
