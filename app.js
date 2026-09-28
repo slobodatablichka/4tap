@@ -269,7 +269,9 @@
         </div>
         <div class="verification-summary">${esc(verification.summary || '')}</div>
         ${verification.confidence ? `<div class="verification-meta">Доверие: ${esc(verification.confidence)} · ${esc(verification.date || '')}</div>` : ''}
+        ${verification.implication ? `<div class="verification-implication"><strong>Архитектурное следствие:</strong> ${esc(verification.implication)}</div>` : ''}
         ${verification.next_step ? `<div class="verification-next"><strong>Следующий шаг:</strong> ${esc(verification.next_step)}</div>` : ''}
+        ${verification.source_note ? `<div class="verification-source-note"><strong>Примечание к источникам:</strong> ${esc(verification.source_note)}</div>` : ''}
         ${verificationSources.length ? `<div class="verification-sources"><strong>Источники</strong>${verificationSources.map(s => `<a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.label || s.url)}</a>`).join('')}</div>` : ''}
       </div>` : `
       <div class="verification-block verify-unverified">
