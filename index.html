@@ -10,11 +10,12 @@
 <body>
   <header class="topbar">
     <div>
-      <div class="eyebrow">INTERACTIVE TECHNICAL DOCUMENTATION · v0.2</div>
+      <div class="eyebrow">INTERACTIVE TECHNICAL DOCUMENTATION · v0.3</div>
       <h1>KnockUI / 4Тап</h1>
       <p class="subtitle">Единая карта продукта: Android · iOS · WeChat · WhatsApp · B2C · B2B</p>
     </div>
     <div class="searchbox">
+      <div id="integrity-badge" class="integrity-badge">Проверка данных…</div>
       <label for="doc-search">Поиск</label>
       <input id="doc-search" type="search" placeholder="Quad Tap, iOS, B2B, Mini Program…">
     </div>
@@ -32,7 +33,8 @@
         <button class="filter-btn" data-filter="b2c" type="button">B2C</button>
         <button class="filter-btn" data-filter="b2b" type="button">B2B</button>
       </div>
-      <div class="status-group">
+      <div class="filter-selects">
+        <div class="status-group">
         <label for="status-filter">Статус</label>
         <select id="status-filter">
           <option value="all">Все статусы</option>
@@ -40,6 +42,15 @@
           <option value="concept">Концепция</option>
           <option value="needs-validation">Требует проверки</option>
         </select>
+        </div>
+        <div class="status-group">
+          <label for="relation-filter">Связи</label>
+          <select id="relation-filter">
+            <option value="all">Все связи</option>
+            <option value="flow">Только поток</option>
+            <option value="focus">Только выбранная ячейка</option>
+          </select>
+        </div>
       </div>
     </section>
 
@@ -47,7 +58,11 @@
       <span><i class="dot approved"></i>утверждено</span>
       <span><i class="dot concept"></i>концепция</span>
       <span><i class="dot validate"></i>требует проверки</span>
-      <span class="legend-note">Клик по ячейке фиксирует выбор и показывает связи.</span>
+      <span class="relation-key"><i class="rel-line flow"></i>поток</span>
+      <span class="relation-key"><i class="rel-line model"></i>модель</span>
+      <span class="relation-key"><i class="rel-line constraint"></i>ограничение</span>
+      <span class="relation-key"><i class="rel-line strategy"></i>стратегия / roadmap</span>
+      <span class="legend-note">Клик по ячейке усиливает её связи и показывает подписи.</span>
     </section>
 
     <section class="workspace">
