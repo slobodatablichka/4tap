@@ -41,6 +41,47 @@
     "order": 10
   },
   {
+    "id": "product-context-continuity",
+    "section": "product",
+    "order": 15,
+    "title": "Context Continuity",
+    "group": "PRODUCT",
+    "short": "KnockUI должен вызываться из текущего пользовательского контекста без обязательного перехода на отдельный домашний экран продукта.",
+    "description": "Ключевое продуктовое обещание — минимизировать разрыв текущей задачи. На Android это предполагается как глобальный вызов поверх другого приложения; на iOS, WeChat и WhatsApp обещание адаптируется к допустимому контексту соответствующей платформы.",
+    "purpose": "Зафиксировать общую цель быстрого вызова без лишней смены контекста.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "shared",
+      "android",
+      "ios",
+      "wechat",
+      "whatsapp"
+    ],
+    "status": "approved",
+    "inputs": [
+      "Текущий пользовательский контекст"
+    ],
+    "outputs": [
+      "Доступ к KnockUI в допустимой форме"
+    ],
+    "parameters": {
+      "principle": "context-preserving invocation"
+    },
+    "constraints": [
+      "Степень «глобальности» различается по платформам."
+    ],
+    "open_questions": [],
+    "tags": [
+      "product",
+      "ux",
+      "context"
+    ]
+  },
+  {
     "id": "product-b2b",
     "section": "product",
     "title": "B2B Transport",
@@ -127,6 +168,47 @@
       "namespace"
     ],
     "order": 30
+  },
+  {
+    "id": "gesture-language",
+    "section": "product",
+    "order": 35,
+    "title": "Graffiti / Unistroke Language",
+    "group": "PROTOCOL",
+    "short": "Жестовые реализации KnockUI используют одноштриховые знаки для максимально быстрого ввода.",
+    "description": "Базовая жестовая философия использует символы, рисуемые одним непрерывным движением без отрыва пальца. Общий алфавит — A–Z и 0–9. Чатовый контур WhatsApp может сохранять командный namespace без буквального жестового ввода.",
+    "purpose": "Сохранить единый быстрый язык ввода там, где платформа позволяет жестовую поверхность.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "shared",
+      "android",
+      "ios",
+      "wechat"
+    ],
+    "status": "approved",
+    "inputs": [
+      "Траектория одного штриха"
+    ],
+    "outputs": [
+      "Кандидат символа"
+    ],
+    "parameters": {
+      "style": "Graffiti / Unistroke",
+      "alphabet": "A–Z + 0–9"
+    },
+    "constraints": [
+      "Конкретные шаблоны и распознаватель требуют платформенной проверки."
+    ],
+    "open_questions": [],
+    "tags": [
+      "gesture",
+      "graffiti",
+      "unistroke"
+    ]
   },
   {
     "id": "system-gestures",
@@ -255,6 +337,47 @@
     "order": 10
   },
   {
+    "id": "android-permissions",
+    "section": "android",
+    "order": 20,
+    "title": "Android Permissions",
+    "group": "PLATFORM",
+    "short": "Разрешения и включение сервисов, без которых глобальный Android-сценарий не должен запускаться.",
+    "description": "Исходная спецификация предусматривает запрос разрешения на overlay через ACTION_MANAGE_OVERLAY_PERMISSION и включение необходимых системных возможностей. Точный набор разрешений зависит от подтверждённой архитектуры интеграции.",
+    "purpose": "Сделать системные предпосылки Android явными и проверяемыми.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "android"
+    ],
+    "status": "needs-validation",
+    "inputs": [
+      "Установка приложения",
+      "Действие пользователя"
+    ],
+    "outputs": [
+      "Разрешённые системные возможности"
+    ],
+    "parameters": {
+      "overlay_request": "ACTION_MANAGE_OVERLAY_PERMISSION"
+    },
+    "constraints": [
+      "Пользователь должен явно выдать необходимые разрешения.",
+      "Набор разрешений должен соответствовать политике распространения."
+    ],
+    "open_questions": [
+      "Какие разрешения действительно необходимы после прототипирования глобального ввода?"
+    ],
+    "tags": [
+      "android",
+      "permissions",
+      "overlay"
+    ]
+  },
+  {
     "id": "android-quad-tap",
     "section": "android",
     "title": "Quad Tap",
@@ -275,7 +398,7 @@
       "Последовательность касаний"
     ],
     "outputs": [
-      "Активация локального холста"
+      "Activation candidate"
     ],
     "parameters": {
       "taps": 4,
@@ -294,7 +417,47 @@
       "android",
       "activation"
     ],
-    "order": 20
+    "order": 30
+  },
+  {
+    "id": "android-zone-validation",
+    "section": "android",
+    "order": 40,
+    "title": "Activation Zone Validation",
+    "group": "ACTIVATION",
+    "short": "После Quad Tap система проверяет, допустима ли точка активации.",
+    "description": "Активация должна отменяться, если финальный тап приходится на системную область или на интерактивный элемент чужого приложения, которому должен остаться приоритет.",
+    "purpose": "Снизить конфликты KnockUI с системным и прикладным интерфейсом.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "android"
+    ],
+    "status": "needs-validation",
+    "inputs": [
+      "Координата 4-го тапа",
+      "Контекст интерфейса"
+    ],
+    "outputs": [
+      "allow / cancel"
+    ],
+    "parameters": {
+      "protected_areas": "status bar, navigation, active controls"
+    },
+    "constraints": [
+      "Надёжное определение активного чужого элемента требует технической проверки."
+    ],
+    "open_questions": [
+      "Каким API определяется «неактивная» зона без перехвата штатного действия приложения?"
+    ],
+    "tags": [
+      "android",
+      "activation",
+      "validation"
+    ]
   },
   {
     "id": "android-local-canvas",
@@ -317,11 +480,13 @@
       "Координата активации"
     ],
     "outputs": [
-      "Поток штриха"
+      "Gesture input surface",
+      "Canvas boundary"
     ],
     "parameters": {
       "size": "200×200 dp",
-      "feedback": "pulse frame + haptic"
+      "feedback": "pulse frame",
+      "scope": "localized overlay"
     },
     "constraints": [
       "Размер должен тестироваться на разных плотностях и диагоналях."
@@ -332,7 +497,46 @@
       "canvas",
       "input"
     ],
-    "order": 30
+    "order": 50
+  },
+  {
+    "id": "android-failsafe",
+    "section": "android",
+    "order": 55,
+    "title": "Canvas Fail-safe",
+    "group": "FAIL-SAFE",
+    "short": "Выход пальца за пределы холста до первого распознанного знака отменяет режим.",
+    "description": "До успешного распознавания первого символа выход за границу локального холста должен немедленно деактивировать режим, дать лёгкий haptic feedback и вернуть систему в ожидание.",
+    "purpose": "Дать пользователю простой физический способ отмены ошибочной активации.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "android"
+    ],
+    "status": "concept",
+    "inputs": [
+      "Pointer leaves canvas before symbol 1"
+    ],
+    "outputs": [
+      "Cancel",
+      "Haptic feedback",
+      "Sleeping state"
+    ],
+    "parameters": {
+      "cancel_before": "first recognized symbol"
+    },
+    "constraints": [
+      "Порог выхода и haptic pattern требуют UX-тестов."
+    ],
+    "open_questions": [],
+    "tags": [
+      "android",
+      "failsafe",
+      "haptic"
+    ]
   },
   {
     "id": "android-gesture-1",
@@ -364,7 +568,87 @@
       "android",
       "graffiti"
     ],
-    "order": 40
+    "order": 60
+  },
+  {
+    "id": "android-recognizer",
+    "section": "android",
+    "title": "Gesture Recognizer",
+    "group": "RECOGNITION",
+    "short": "Распознаёт одноштриховые знаки A–Z и 0–9.",
+    "description": "Для MVP предлагается $1 Recognizer с набором шаблонов Graffiti. Порог уверенности и устойчивость к вариативности почерка должны быть измерены.",
+    "purpose": "Преобразовать траекторию пальца в символ.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "android"
+    ],
+    "status": "needs-validation",
+    "inputs": [
+      "Нормализованный штрих"
+    ],
+    "outputs": [
+      "Recognized symbol + confidence"
+    ],
+    "parameters": {
+      "candidate": "$1 Recognizer",
+      "alphabet": "A–Z + 0–9"
+    },
+    "constraints": [
+      "Ошибки распознавания",
+      "Вариативность почерка"
+    ],
+    "open_questions": [
+      "Какой порог confidence приемлем?",
+      "Нужен ли персональный калибровочный слой?"
+    ],
+    "tags": [
+      "android",
+      "recognition"
+    ],
+    "order": 70
+  },
+  {
+    "id": "android-symbol-feedback",
+    "section": "android",
+    "order": 80,
+    "title": "First Symbol Feedback",
+    "group": "INPUT",
+    "short": "Первый распознанный символ кратко показывается пользователю перед вводом второго.",
+    "description": "После первого распознавания символ отображается в небольшой плашке в верхней части локального холста. Система ждёт до одной секунды либо немедленно принимает начало второго штриха.",
+    "purpose": "Подтвердить пользователю результат первого распознавания и организовать переход ко второму знаку.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "android"
+    ],
+    "status": "concept",
+    "inputs": [
+      "Первый распознанный символ"
+    ],
+    "outputs": [
+      "Visible symbol",
+      "Ready for Gesture 2"
+    ],
+    "parameters": {
+      "wait": "up to 1 s or immediate second stroke",
+      "ui": "micro-badge"
+    },
+    "constraints": [
+      "Время ожидания и визуальная форма требуют UX-тестов."
+    ],
+    "open_questions": [],
+    "tags": [
+      "android",
+      "feedback",
+      "input"
+    ]
   },
   {
     "id": "android-gesture-2",
@@ -389,59 +673,14 @@
     "outputs": [
       "Второй символ"
     ],
-    "parameters": {
-      "concept_wait": "≤1 s"
-    },
-    "constraints": [
-      "Тайминг требует UX-тестов."
-    ],
+    "parameters": {},
+    "constraints": [],
     "open_questions": [],
     "tags": [
       "android",
       "graffiti"
     ],
-    "order": 50
-  },
-  {
-    "id": "android-recognizer",
-    "section": "android",
-    "title": "Gesture Recognizer",
-    "group": "RECOGNITION",
-    "short": "Распознаёт одноштриховые знаки A–Z и 0–9.",
-    "description": "Для MVP предлагается $1 Recognizer с набором шаблонов Graffiti. Порог уверенности и устойчивость к вариативности почерка должны быть измерены.",
-    "purpose": "Преобразовать траекторию пальца в символ.",
-    "kind": "core",
-    "models": [
-      "b2c",
-      "b2b"
-    ],
-    "platforms": [
-      "android"
-    ],
-    "status": "needs-validation",
-    "inputs": [
-      "Нормализованный штрих"
-    ],
-    "outputs": [
-      "Символ + confidence"
-    ],
-    "parameters": {
-      "candidate": "$1 Recognizer",
-      "alphabet": "A–Z + 0–9"
-    },
-    "constraints": [
-      "Ошибки распознавания",
-      "Вариативность почерка"
-    ],
-    "open_questions": [
-      "Какой порог confidence приемлем?",
-      "Нужен ли персональный калибровочный слой?"
-    ],
-    "tags": [
-      "android",
-      "recognition"
-    ],
-    "order": 60
+    "order": 90
   },
   {
     "id": "android-command",
@@ -467,14 +706,59 @@
     "outputs": [
       "Команда XY"
     ],
-    "parameters": {},
+    "parameters": {
+      "requires": "two recognized symbols"
+    },
     "constraints": [],
     "open_questions": [],
     "tags": [
       "android",
       "routing"
     ],
-    "order": 70
+    "order": 100
+  },
+  {
+    "id": "android-registry-storage",
+    "section": "android",
+    "order": 115,
+    "title": "Android Registry Storage",
+    "group": "STORAGE",
+    "short": "Android связывает общие SystemGestures/UserGestures с конкретным способом хранения.",
+    "description": "По исходной архитектуре SystemGestures поставляются как защищённые системные данные приложения/resources, а UserGestures хранятся локально в Room/SQLite. Это платформенная реализация общих реестров KnockUI.",
+    "purpose": "Разделить общий протокол реестров и Android-способ их хранения.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "android"
+    ],
+    "status": "concept",
+    "inputs": [
+      "System assignments",
+      "User assignments"
+    ],
+    "outputs": [
+      "Persistent Android registries"
+    ],
+    "parameters": {
+      "system_store": "code/resources",
+      "user_store": "Room / SQLite"
+    },
+    "constraints": [
+      "Схема обновления SystemGestures ещё не определена."
+    ],
+    "open_questions": [
+      "Нужна ли миграция и версионирование пользовательской БД?",
+      "Как доставлять обновления SystemGestures?"
+    ],
+    "tags": [
+      "android",
+      "storage",
+      "room",
+      "sqlite"
+    ]
   },
   {
     "id": "android-dispatcher",
@@ -482,7 +766,7 @@
     "title": "Action Dispatcher",
     "group": "EXECUTION",
     "short": "Проверяет SystemGestures, затем UserGestures и передаёт действие на исполнение.",
-    "description": "Маршрутизация использует общий приоритет: сначала системный реестр, затем пользовательский.",
+    "description": "Маршрутизация использует общий приоритет: сначала SystemGestures, затем UserGestures. После исполнения локальный overlay должен быть удалён, а система возвращена в ожидающее состояние.",
     "purpose": "Однозначно разрешить команду XY в действие.",
     "kind": "core",
     "models": [
@@ -510,7 +794,7 @@
       "android",
       "dispatcher"
     ],
-    "order": 80
+    "order": 120
   },
   {
     "id": "android-actions",
@@ -547,7 +831,164 @@
       "android",
       "action"
     ],
-    "order": 90
+    "order": 130
+  },
+  {
+    "id": "android-gesture-editor",
+    "section": "android",
+    "order": 140,
+    "title": "Gesture Assignment Editor",
+    "group": "B2C UI",
+    "short": "Пользователь видит пространство комбинаций и назначает свободные пары приложениям или Deep Links.",
+    "description": "Экран конструктора позволяет просматривать комбинации, отличать занятые системные пары от свободных и создавать/редактировать UserGestures. Системные назначения видимы, но заблокированы.",
+    "purpose": "Дать пользователю управляемый интерфейс персонализации KnockUI.",
+    "kind": "b2c",
+    "models": [
+      "b2c"
+    ],
+    "platforms": [
+      "android"
+    ],
+    "status": "concept",
+    "inputs": [
+      "Gesture space",
+      "Installed/available actions"
+    ],
+    "outputs": [
+      "UserGesture assignment"
+    ],
+    "parameters": {
+      "capacity_view": 1260,
+      "system_editable": false,
+      "user_editable": true
+    },
+    "constraints": [
+      "Нужны поиск/фильтрация: буквальная сетка 1260 ячеек не должна быть единственным способом навигации."
+    ],
+    "open_questions": [],
+    "tags": [
+      "android",
+      "ui",
+      "editor",
+      "b2c"
+    ]
+  },
+  {
+    "id": "android-distribution-compliance",
+    "section": "android",
+    "order": 150,
+    "title": "Google Play Compliance",
+    "group": "DISTRIBUTION",
+    "short": "Android-реализация должна пройти допустимый путь публикации и проверки чувствительных возможностей.",
+    "description": "Исходный roadmap упоминал сертификацию как productivity tool. Документация фиксирует это как гипотезу соответствия правилам распространения, а не как обход защит Google Play.",
+    "purpose": "Проверить, что архитектура и описание продукта совместимы с требованиями магазина.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "android"
+    ],
+    "status": "needs-validation",
+    "inputs": [
+      "Android architecture",
+      "Permission usage",
+      "Store policy"
+    ],
+    "outputs": [
+      "Distribution decision"
+    ],
+    "parameters": {
+      "candidate_category": "Productivity"
+    },
+    "constraints": [
+      "Нельзя проектировать публикацию как обход систем защиты или политики магазина."
+    ],
+    "open_questions": [
+      "Допустимы ли выбранные Accessibility/overlay-сценарии для заявленного назначения приложения?"
+    ],
+    "tags": [
+      "android",
+      "distribution",
+      "compliance"
+    ]
+  },
+  {
+    "id": "android-energy-budget",
+    "section": "android",
+    "order": 160,
+    "title": "Energy Budget",
+    "group": "PERFORMANCE",
+    "short": "Фоновая Android-реализация имеет целевой бюджет энергопотребления из roadmap.",
+    "description": "Исходная спецификация задаёт цель менее 1% батареи в час. До появления методики и измерений это только инженерная цель, а не подтверждённая характеристика.",
+    "purpose": "Сделать энергопотребление отдельным измеряемым требованием.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "android"
+    ],
+    "status": "needs-validation",
+    "inputs": [
+      "Background service profile",
+      "Device test matrix"
+    ],
+    "outputs": [
+      "Measured battery drain"
+    ],
+    "parameters": {
+      "target_from_spec": "<1% battery/hour"
+    },
+    "constraints": [
+      "Результат зависит от устройства, версии Android и режима использования."
+    ],
+    "open_questions": [
+      "Какая методика измерения и набор устройств будут каноническими?"
+    ],
+    "tags": [
+      "android",
+      "performance",
+      "battery"
+    ]
+  },
+  {
+    "id": "ios-activation",
+    "section": "ios",
+    "title": "iOS Activation",
+    "group": "ACTIVATION",
+    "short": "Вызов KnockUI через механизм смены клавиатуры, например кнопку Globe.",
+    "description": "Предлагаемый сценарий: пользователь переключается на клавиатуру KnockUI через штатный механизм выбора клавиатуры, после чего получает жестовую поверхность.",
+    "purpose": "Предоставить явную точку входа без попытки имитировать Android-глобальность.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "ios"
+    ],
+    "status": "concept",
+    "inputs": [
+      "Действие пользователя по смене клавиатуры"
+    ],
+    "outputs": [
+      "Активная KnockUI keyboard"
+    ],
+    "parameters": {
+      "candidate_trigger": "Globe / keyboard switch"
+    },
+    "constraints": [
+      "Требует активного текстового контекста или иного поддерживаемого системного сценария."
+    ],
+    "open_questions": [],
+    "tags": [
+      "ios",
+      "activation"
+    ],
+    "order": 10
   },
   {
     "id": "ios-keyboard",
@@ -587,42 +1028,6 @@
       "ios",
       "keyboard",
       "extension"
-    ],
-    "order": 10
-  },
-  {
-    "id": "ios-activation",
-    "section": "ios",
-    "title": "iOS Activation",
-    "group": "ACTIVATION",
-    "short": "Вызов KnockUI через механизм смены клавиатуры, например кнопку Globe.",
-    "description": "Предлагаемый сценарий: пользователь переключается на клавиатуру KnockUI через штатный механизм выбора клавиатуры, после чего получает жестовую поверхность.",
-    "purpose": "Предоставить явную точку входа без попытки имитировать Android-глобальность.",
-    "kind": "core",
-    "models": [
-      "b2c",
-      "b2b"
-    ],
-    "platforms": [
-      "ios"
-    ],
-    "status": "concept",
-    "inputs": [
-      "Действие пользователя по смене клавиатуры"
-    ],
-    "outputs": [
-      "Активная KnockUI keyboard"
-    ],
-    "parameters": {
-      "candidate_trigger": "Globe / keyboard switch"
-    },
-    "constraints": [
-      "Требует активного текстового контекста или иного поддерживаемого системного сценария."
-    ],
-    "open_questions": [],
-    "tags": [
-      "ios",
-      "activation"
     ],
     "order": 20
   },
@@ -702,6 +1107,43 @@
     "order": 40
   },
   {
+    "id": "ios-actions",
+    "section": "ios",
+    "order": 50,
+    "title": "iOS Actions",
+    "group": "ACTION",
+    "short": "Команда выполняется только через действия, разрешённые для iOS-приложения/extension.",
+    "description": "Общий namespace KnockUI сохраняется, но финальный action contract iOS должен учитывать sandbox, возможности keyboard extension, deep links и при необходимости companion app.",
+    "purpose": "Отделить общую семантику команды от реальных возможностей исполнения на iOS.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "ios"
+    ],
+    "status": "needs-validation",
+    "inputs": [
+      "Resolved iOS action"
+    ],
+    "outputs": [
+      "Permitted iOS result"
+    ],
+    "parameters": {},
+    "constraints": [
+      "Keyboard extension и основное приложение имеют разные возможности."
+    ],
+    "open_questions": [
+      "Какие действия доступны напрямую из extension, а какие требуют передачи в companion app?"
+    ],
+    "tags": [
+      "ios",
+      "action",
+      "extension"
+    ]
+  },
+  {
     "id": "ios-limits",
     "section": "ios",
     "title": "iOS Boundary",
@@ -731,7 +1173,7 @@
       "ios",
       "boundary"
     ],
-    "order": 50
+    "order": 60
   },
   {
     "id": "wechat-mini-program",
@@ -846,6 +1288,42 @@
     "order": 30
   },
   {
+    "id": "wechat-actions",
+    "section": "wechat",
+    "order": 40,
+    "title": "WeChat Actions",
+    "group": "ACTION",
+    "short": "Результат команды исполняется в рамках разрешённых возможностей Mini Program и WeChat.",
+    "description": "Действие может вести к функции Mini Program, разрешённому маршруту внутри WeChat или внешнему переходу, если это допускается API и политикой платформы.",
+    "purpose": "Зафиксировать отдельный action contract китайского контура.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "wechat"
+    ],
+    "status": "needs-validation",
+    "inputs": [
+      "Resolved WeChat action"
+    ],
+    "outputs": [
+      "Mini Program / WeChat result"
+    ],
+    "parameters": {},
+    "constraints": [
+      "Набор действий определяется API и политикой Mini Program."
+    ],
+    "open_questions": [
+      "Какие внешние переходы и интеграции доступны целевому сценарию?"
+    ],
+    "tags": [
+      "wechat",
+      "action"
+    ]
+  },
+  {
     "id": "wechat-distribution",
     "section": "wechat",
     "title": "China Distribution",
@@ -879,7 +1357,7 @@
       "distribution",
       "china"
     ],
-    "order": 40
+    "order": 50
   },
   {
     "id": "whatsapp-business",
@@ -1092,7 +1570,8 @@
     ],
     "parameters": {},
     "constraints": [
-      "Требуется отдельная юридическая и продуктовая проверка."
+      "Google Play не является базовым каналом китайского контура в исходной стратегии.",
+      "Требуется отдельная юридическая, продуктовая и платформенная проверка."
     ],
     "open_questions": [],
     "tags": [
@@ -1117,7 +1596,7 @@
     "platforms": [
       "whatsapp"
     ],
-    "status": "concept",
+    "status": "needs-validation",
     "inputs": [
       "India"
     ],
@@ -1125,8 +1604,12 @@
       "WhatsApp strategy"
     ],
     "parameters": {},
-    "constraints": [],
-    "open_questions": [],
+    "constraints": [
+      "Тезис о преимущественной мессенджерной модели рынка требует источников и сегментации."
+    ],
+    "open_questions": [
+      "Для каких именно пользовательских сценариев WhatsApp лучше standalone-приложения?"
+    ],
     "tags": [
       "strategy",
       "india"
@@ -1307,6 +1790,44 @@
       "git"
     ],
     "order": 10
+  },
+  {
+    "id": "governance-repo-recovery",
+    "section": "governance",
+    "order": 15,
+    "title": "Repository-first Recovery",
+    "group": "WORKFLOW",
+    "short": "Состояние проекта восстанавливается из репозитория и текущих документов, а не из памяти чата.",
+    "description": "Перед продолжением существенной работы каноническое состояние читается из GitHub: START/CURRENT-STATE, data-файлы и текущий HEAD. Это снижает риск расхождения между разговорами и фактическим проектом.",
+    "purpose": "Сделать воспроизводимым переход между сессиями и исполнителями.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "shared"
+    ],
+    "status": "approved",
+    "inputs": [
+      "Repository HEAD",
+      "Project documents"
+    ],
+    "outputs": [
+      "Recovered working context"
+    ],
+    "parameters": {
+      "source_of_truth": "Git repository"
+    },
+    "constraints": [
+      "Нельзя считать память чата каноническим состоянием проекта."
+    ],
+    "open_questions": [],
+    "tags": [
+      "workflow",
+      "git",
+      "handoff"
+    ]
   },
   {
     "id": "governance-data-first",
