@@ -176,7 +176,7 @@
     "title": "Graffiti / Unistroke Language",
     "group": "PROTOCOL",
     "short": "Жестовые реализации KnockUI используют одноштриховые знаки для максимально быстрого ввода.",
-    "description": "Базовая жестовая философия использует символы, рисуемые одним непрерывным движением без отрыва пальца. Общий алфавит — A–Z и 0–9. Чатовый контур WhatsApp может сохранять командный namespace без буквального жестового ввода.",
+    "description": "Рекомендуемый жестовый язык KnockUI основан на оригинальном Palm Graffiti: символы рисуются одним непрерывным движением без отрыва пальца, а направление штриха является частью эталона. Общий целевой алфавит — A–Z и 0–9. Чатовый контур WhatsApp может сохранять command namespace без буквального жестового ввода.",
     "purpose": "Сохранить единый быстрый язык ввода там, где платформа позволяет жестовую поверхность.",
     "kind": "core",
     "models": [
@@ -1101,7 +1101,10 @@
     "parameters": {
       "candidate": "$1 Unistroke Recognizer",
       "alphabet": "A–Z + 0–9",
-      "published_role": "rapid prototyping; template matching"
+      "published_role": "rapid prototyping; template matching",
+        "current_prototype_subset": "S, C",
+        "template_reference": "original Palm Graffiti",
+        "direction_sensitive": true
     },
     "constraints": [
       "Ошибки распознавания",
@@ -1128,7 +1131,7 @@
           "url": "https://depts.washington.edu/acelab/proj/dollar/index.html"
         }
       ],
-      "next_step": "Build a 36-symbol benchmark with multiple users and finger traces.",
+      "next_step": "First validate S/C recognition and SC sequencing on real finger input; expand toward the 36-symbol benchmark only after this limited prototype works.",
       "implication": "Нельзя переносить опубликованную точность $1 на KnockUI. Требуется собственная матрица ошибок для 36 символов и пальцевого ввода."
     }
   },
