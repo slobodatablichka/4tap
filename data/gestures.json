@@ -1,0 +1,6 @@
+{
+  "alphabet": "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+  "rule": "two different symbols",
+  "capacity": 1260,
+  "assignments": []
+}

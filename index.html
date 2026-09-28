@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="4Tap / KnockUI — интерактивная техническая документация">
+  <title>4Tap — техническая карта</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <div class="eyebrow">INTERACTIVE TECHNICAL DOCUMENTATION</div>
+      <h1>4Тап / KnockUI</h1>
+      <p class="subtitle">Архитектура, жесты, связи и параметры проекта</p>
+    </div>
+    <div class="top-actions">
+      <button class="mode-btn active" data-mode="all" type="button">Все</button>
+      <button class="mode-btn" data-mode="core" type="button">Core</button>
+      <button class="mode-btn" data-mode="b2c" type="button">B2C</button>
+      <button class="mode-btn" data-mode="b2b" type="button">B2B</button>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="legend" aria-label="Легенда">
+      <span><i class="dot core"></i>ядро</span>
+      <span><i class="dot b2c"></i>B2C</span>
+      <span><i class="dot b2b"></i>B2B</span>
+      <span><i class="dot validate"></i>требует проверки</span>
+    </section>
+
+    <section class="workspace">
+      <div class="map-panel">
+        <div class="panel-heading">
+          <div>
+            <div class="eyebrow">SYSTEM MAP</div>
+            <h2>Путь команды</h2>
+          </div>
+          <div class="hint">Наведите для краткого пояснения. Нажмите для подробностей.</div>
+        </div>
+
+        <div id="system-map" class="system-map" aria-live="polite"></div>
+
+        <div class="gesture-space-callout">
+          <button id="open-gesture-space" class="gesture-space-button" type="button">
+            <span>
+              <strong>GESTURE SPACE</strong>
+              <small>A–Z + 0–9 · 1260 допустимых пар</small>
+            </span>
+            <span class="arrow">→</span>
+          </button>
+        </div>
+      </div>
+
+      <aside id="details-panel" class="details-panel">
+        <div class="eyebrow">DETAILS</div>
+        <h2 id="details-title">Выберите ячейку</h2>
+        <p id="details-short" class="details-short">Здесь появится техническое описание выбранного элемента.</p>
+        <div id="details-body"></div>
+      </aside>
+    </section>
+
+    <section id="gesture-space" class="gesture-space" hidden>
+      <div class="panel-heading">
+        <div>
+          <div class="eyebrow">GESTURE REGISTRY</div>
+          <h2>Матрица двухсимвольных комбинаций</h2>
+        </div>
+        <button id="close-gesture-space" type="button" class="close-btn">Закрыть</button>
+      </div>
+
+      <div class="registry-toolbar">
+        <input id="combo-search" type="search" inputmode="text" maxlength="2" placeholder="Найти, например DR" aria-label="Поиск комбинации">
+        <span id="registry-stats"></span>
+      </div>
+
+      <div class="matrix-wrap">
+        <table id="gesture-matrix" class="gesture-matrix" aria-label="Матрица комбинаций"></table>
+      </div>
+    </section>
+  </main>
+
+  <div id="tooltip" class="tooltip" role="tooltip" hidden></div>
+
+  <script src="./app.js" defer></script>
+</body>
+</html>

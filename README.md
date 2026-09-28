@@ -1,2 +1,23 @@
-# 4tap
-Interactive technical documentation for 4Tap / KnockUI
+# 4Tap / KnockUI
+
+Интерактивная техническая документация проекта 4Tap.
+
+## Что где хранится
+
+- `index.html` — одностраничная оболочка.
+- `styles.css` — визуальная система.
+- `app.js` — интерактивность, связи и матрица комбинаций.
+- `data/cells.json` — смысловые ячейки технической карты.
+- `data/relations.json` — связи между ячейками.
+- `data/gestures.json` — назначенные двухсимвольные комбинации.
+- `START.md` — правила ведения документации.
+
+## Принцип
+
+Канонические данные находятся в `data/`. HTML не должен дублировать технические параметры. Изменяем JSON — сайт автоматически читает новые данные.
+
+## GitHub Pages
+
+После первого коммита включите: Settings → Pages → Deploy from a branch → `main` / `/(root)`.
+
+Ожидаемый адрес: https://slobodatablichka.github.io/4tap/

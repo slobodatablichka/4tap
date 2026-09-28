@@ -1,0 +1,14 @@
+[
+  {"from":"quad-tap","to":"accessibility-layer","relation":"detected-by"},
+  {"from":"quad-tap","to":"local-canvas","relation":"activates"},
+  {"from":"local-canvas","to":"gesture-1","relation":"captures"},
+  {"from":"gesture-1","to":"recognizer","relation":"recognized-by"},
+  {"from":"recognizer","to":"gesture-2","relation":"continues"},
+  {"from":"gesture-2","to":"command","relation":"forms"},
+  {"from":"command","to":"system-gestures","relation":"lookup-1"},
+  {"from":"command","to":"user-gestures","relation":"lookup-2"},
+  {"from":"system-gestures","to":"dispatcher","relation":"routes"},
+  {"from":"user-gestures","to":"dispatcher","relation":"routes"},
+  {"from":"dispatcher","to":"launch-app","relation":"executes"},
+  {"from":"dispatcher","to":"deep-link","relation":"executes"}
+]
