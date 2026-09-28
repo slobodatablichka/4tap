@@ -1066,14 +1066,8 @@
     "outputs": [
       "Первый символ"
     ],
-    "parameters": {
-      "prototype_result": "LEFT SC OK; RIGHT SC OK",
-      "prototype_scope": "in-app Activity; not global/OEM trigger"
-    },
-    "constraints": [
-      "Текущий успешный corner → 4-tap → canvas → S → C → SC prototype работает внутри 4Tap Activity и не подтверждает системный/OEM trigger.",
-      "Post-activation TYPE_APPLICATION_OVERLAY поверх другого приложения требует отдельной real-device проверки."
-    ],
+    "parameters": {},
+    "constraints": [],
     "open_questions": [],
     "tags": [
       "android",
@@ -2885,8 +2879,14 @@
     "outputs": [
       "Android MVP"
     ],
-    "parameters": {},
-    "constraints": [],
+    "parameters": {
+      "prototype_result": "LEFT SC OK; RIGHT SC OK",
+      "prototype_scope": "in-app Activity; not global/OEM trigger"
+    },
+    "constraints": [
+      "Текущий успешный corner → 4-tap → canvas → S → C → SC prototype работает внутри 4Tap Activity и не подтверждает системный/OEM trigger.",
+      "Post-activation TYPE_APPLICATION_OVERLAY поверх другого приложения требует отдельной real-device проверки."
+    ],
     "open_questions": [],
     "tags": [
       "roadmap",
