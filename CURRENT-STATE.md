@@ -171,6 +171,19 @@
 
 Следующий Android-эксперимент — настоящий временный touchable overlay с тем же подтверждённым `S → C → SC`.
 
+
+## Android overlay real-device verification
+
+Подтверждён post-activation drawing на физическом Android-устройстве:
+- настоящий touchable `TYPE_APPLICATION_OVERLAY` создаётся после тестовой in-app активации;
+- overlay остаётся поверх другого foreground-приложения;
+- Palm Graffiti `S → C` распознаётся внутри overlay;
+- команда `SC` формируется корректно;
+- overlay автоматически закрывается после команды;
+- сценарий подтверждён для левой и правой стороны: `LEFT OVERLAY SC OK`, `RIGHT OVERLAY SC OK`.
+
+Это существенно сужает Android-риск: post-activation input surface и двухсимвольное распознавание подтверждены. Неподтверждённым остаётся системный/OEM activation trigger, который должен вызывать уже рабочий overlay без предварительного открытия 4Tap Activity.
+
 ## iOS implementation options
 
 iOS больше не описывается как keyboard-only архитектура. Зафиксированы варианты реализации, окончательный выбор отложен.
