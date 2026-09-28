@@ -79,3 +79,18 @@
 - `ios-action-redesign` — обязательное решение по iOS execution model.
 
 В `verification` соответствующих ячеек теперь фиксируются не только summary/sources/next_step, но и `implication` — архитектурное следствие. Для WeChat также фиксируется `source_note` о необходимости финальной перепроверки по актуальной официальной документации/DevTools.
+
+
+## Android activation decision — OEM reserved zone
+
+Принято новое направление:
+- сценарий Quad Tap в произвольной области экрана временно снят;
+- Quad Tap как фирменный жест сохраняется;
+- основной Android-путь: Android/OEM/SystemUI предоставляет специальную system-owned touch-зону;
+- четыре тапа распознаются только внутри этой зоны;
+- после успешного Quad Tap запускается Local Canvas и далее обычный KnockUI flow;
+- `Activation Zone Validation` исключён из основного flow и оставлен только как deferred-ветвь старого arbitrary-area сценария.
+
+Добавлена ячейка `android-oem-quad-zone`.
+
+Важное техническое уточнение: обычного `systemGestures` inset недостаточно, потому что Android документирует доставку простых taps приложению в gesture insets. Нужен реальный system-owned touch target либо OEM/SystemUI/input-policy integration.
