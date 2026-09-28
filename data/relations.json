@@ -192,12 +192,6 @@
     "type": "model"
   },
   {
-    "from": "ios-activation",
-    "to": "ios-keyboard",
-    "relation": "выбирает клавиатуру KnockUI",
-    "type": "flow"
-  },
-  {
     "from": "ios-keyboard",
     "to": "ios-graffiti",
     "relation": "открывает жестовую поверхность",
@@ -628,5 +622,71 @@
     "to": "android-overlay-over-host-apps",
     "relation": "допускает dual-entry на Android",
     "type": "model"
+  },
+  {
+    "from": "ios-activation",
+    "to": "ios-keyboard",
+    "relation": "вариант: context-specific keyboard",
+    "type": "branch"
+  },
+  {
+    "from": "ios-activation",
+    "to": "ios-back-tap",
+    "relation": "вариант: глобальный Back Tap",
+    "type": "branch"
+  },
+  {
+    "from": "ios-activation",
+    "to": "ios-action-button",
+    "relation": "вариант: физическая Action Button",
+    "type": "branch"
+  },
+  {
+    "from": "ios-activation",
+    "to": "ios-system-controls",
+    "relation": "вариант: Control Center / Lock Screen",
+    "type": "branch"
+  },
+  {
+    "from": "ios-back-tap",
+    "to": "ios-app-intents-shortcuts",
+    "relation": "запускает Shortcut / App Intent",
+    "type": "flow"
+  },
+  {
+    "from": "ios-action-button",
+    "to": "ios-app-intents-shortcuts",
+    "relation": "запускает Shortcut / Control",
+    "type": "flow"
+  },
+  {
+    "from": "ios-system-controls",
+    "to": "ios-app-intents-shortcuts",
+    "relation": "выполняет App Intent",
+    "type": "flow"
+  },
+  {
+    "from": "ios-app-intents-shortcuts",
+    "to": "ios-action-redesign",
+    "relation": "кандидат execution layer",
+    "type": "model"
+  },
+  {
+    "from": "ios-keyboard",
+    "to": "ios-action-redesign",
+    "relation": "кандидат context-specific path",
+    "type": "model"
+  },
+  {
+    "from": "product-context-continuity",
+    "to": "ios-activation",
+    "relation": "требует выбора iOS entry path",
+    "type": "model"
+  },
+  {
+    "from": "roadmap-3",
+    "to": "ios-activation",
+    "relation": "исследует варианты iOS entry",
+    "type": "roadmap"
   }
 ]
