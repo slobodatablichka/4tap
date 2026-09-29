@@ -688,5 +688,119 @@
     "to": "ios-activation",
     "relation": "исследует варианты iOS entry",
     "type": "roadmap"
+  },
+  {
+    "from": "design-canon",
+    "to": "android-drawing-overlay",
+    "relation": "задаёт визуальные и поведенческие правила",
+    "type": "model"
+  },
+  {
+    "from": "design-canon",
+    "to": "android-settings-console",
+    "relation": "задаёт UI-правила",
+    "type": "model"
+  },
+  {
+    "from": "gesture-language",
+    "to": "graffiti-profile",
+    "relation": "является исходной базой для",
+    "type": "model"
+  },
+  {
+    "from": "graffiti-profile",
+    "to": "android-recognizer",
+    "relation": "задаёт эталоны распознавания",
+    "type": "model"
+  },
+  {
+    "from": "graffiti-profile",
+    "to": "android-settings-console",
+    "relation": "задаёт обучающие эталоны",
+    "type": "model"
+  },
+  {
+    "from": "android-default-integration-catalog",
+    "to": "android-settings-console",
+    "relation": "поставляет готовые варианты",
+    "type": "flow"
+  },
+  {
+    "from": "android-default-integration-catalog",
+    "to": "android-dispatcher",
+    "relation": "определяет поддержанные launch/actions",
+    "type": "model"
+  },
+  {
+    "from": "android-settings-console",
+    "to": "android-gesture-editor",
+    "relation": "включает редактор назначений",
+    "type": "model"
+  },
+  {
+    "from": "android-settings-console",
+    "to": "user-gestures",
+    "relation": "создаёт и редактирует",
+    "type": "flow"
+  },
+  {
+    "from": "strategy-russia",
+    "to": "android-default-integration-catalog",
+    "relation": "задаёт рыночный shortlist",
+    "type": "strategy"
+  },
+  {
+    "from": "strategy-russia",
+    "to": "monetization-model",
+    "relation": "задаёт стартовый рынок",
+    "type": "strategy"
+  },
+  {
+    "from": "promotion-strategy",
+    "to": "design-canon",
+    "relation": "использует визуальный канон",
+    "type": "strategy"
+  },
+  {
+    "from": "promotion-strategy",
+    "to": "roadmap-1",
+    "relation": "опирается на подтверждённый demo flow",
+    "type": "roadmap"
+  },
+  {
+    "from": "roadmap-1",
+    "to": "design-canon",
+    "relation": "включает",
+    "type": "roadmap"
+  },
+  {
+    "from": "roadmap-1",
+    "to": "graffiti-profile",
+    "relation": "включает",
+    "type": "roadmap"
+  },
+  {
+    "from": "roadmap-1",
+    "to": "android-settings-console",
+    "relation": "включает",
+    "type": "roadmap"
+  },
+  {
+    "from": "roadmap-1",
+    "to": "android-default-integration-catalog",
+    "relation": "включает",
+    "type": "roadmap"
+  },
+  {
+    "from": "roadmap-1",
+    "to": "strategy-russia",
+    "relation": "готовит запуск на",
+    "type": "roadmap"
+  },
+  {
+    "from": "roadmap-2",
+    "to": "monetization-model",
+    "relation": "развивает",
+    "type": "roadmap"
   }
 ]
