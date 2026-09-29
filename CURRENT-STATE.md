@@ -212,6 +212,21 @@
 Тем самым практически подтверждена граница «внешняя система → 4Tap». Конкретный штатный источник активации ещё не выбран; текущий этап проверяет доступные механизмы Android/OEM без модификации ОС.
 
 
+## Android command action verified
+
+На штатном `LGM-V300L / Android 9` подтверждён следующий рубеж:
+- внешний debug trigger формирует `ActivationRequest`;
+- настоящий `TYPE_APPLICATION_OVERLAY` открывается поверх другой программы;
+- `S → C` формирует `SC`;
+- после завершения команды overlay закрывается;
+- `SC` запускает назначенное тестовое действие `Settings.ACTION_SETTINGS`.
+
+Таким образом, downstream теперь подтверждён до реального Android action execution:
+
+`ActivationRequest → OverlayLauncher → Drawing Overlay → Recognizer → Command → Action`.
+
+Единственный незакрытый риск Stage 1 — штатный Android/LG источник активации без ADB/debug broadcast и без модификации ОС.
+
 ## Android SystemUI Quad Tap zone — deferred concept
 
 Минимальная спецификация reserved zone сохранена:

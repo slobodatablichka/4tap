@@ -657,11 +657,12 @@
     "parameters": {
       "decision_status": "stock-capability-first",
       "primary_path": "stock Android/OEM trigger → ActivationRequest → OverlayLauncher → Drawing Overlay → Recognizer → Command",
-      "downstream_contract": "ActivationRequest → OverlayLauncher → Drawing Overlay → Recognizer → Command",
+      "downstream_contract": "ActivationRequest → OverlayLauncher → Drawing Overlay → Recognizer → Command → Action",
       "downstream_verification": "REFACTOR LEFT SC OK; RIGHT SC OK",
       "external_adapter": "verified",
       "external_adapter_result": "OEM LEFT SC OK; OEM RIGHT SC OK",
-      "systemui_zone_spec": "deferred research branch; 58 × 44 dp baseline retained"
+      "systemui_zone_spec": "deferred research branch; 58 × 44 dp baseline retained",
+      "action_verification": "external test trigger → SC → ACTION_SETTINGS verified on LGM-V300L"
     },
     "constraints": [
       "Passive non-interfering global raw-touch capture remains unavailable to an ordinary APK as originally specified.",
@@ -698,8 +699,8 @@
           "url": "https://source.android.com/docs/compatibility/17/android-17-cdd"
         }
       ],
-      "next_step": "Test stock Android/LG activation mechanisms on the prepared physical device and connect the best candidate to the verified ActivationRequest handoff.",
-      "implication": "Downstream is already verified; current uncertainty is whether stock Android/OEM capabilities provide an acceptable activation source without OS modification."
+      "next_step": "Test stock Android/LG activation mechanisms on LGM-V300L and connect the best candidate to the verified ActivationRequest → overlay → SC → action chain.",
+      "implication": "Post-activation flow through real Android action execution is verified; current uncertainty is the acceptable stock activation source without OS modification."
     }
   },
   {
@@ -1439,7 +1440,7 @@
     "title": "First Live Command — SC",
     "group": "MILESTONE",
     "short": "Первый полный real-device тест: поверх другой программы вызвать 4Tap, ввести SC и запустить назначенное приложение.",
-    "description": "Это ближайший контрольный рубеж Android. Downstream от ActivationRequest до команды SC уже подтверждён отдельными тестами; теперь на LGM-V300L нужно связать штатный trigger, overlay, SC и реальный app launch в одну пользовательскую цепочку.",
+    "description": "Ближайший контрольный рубеж Android. На LGM-V300L уже подтверждена цепочка от внешнего test trigger через настоящий overlay и SC до запуска назначенного Android-действия (`Settings.ACTION_SETTINGS`). Для полного пользовательского рубежа осталось заменить ADB/debug broadcast на штатный Android/LG trigger.",
     "purpose": "Доказать практическую ценность 4Tap одним полностью работающим сценарием до расширения алфавита и настроек.",
     "kind": "b2c",
     "models": [
@@ -1460,15 +1461,15 @@
     "parameters": {
       "command": "SC",
       "device": "LGM-V300L / Android 9",
-      "scope": "first end-to-end real-device milestone"
+      "scope": "first end-to-end real-device milestone",
+      "action_test": "SC → Settings.ACTION_SETTINGS — PASS"
     },
     "constraints": [
       "Штатный trigger ещё не выбран.",
-      "Фактический app launch должен быть проверен на реальном устройстве."
+      "Текущий action mapping является минимальным prototype assignment."
     ],
     "open_questions": [
-      "Какой stock trigger используем для первого полного теста?",
-      "Какое простое приложение назначаем SC?"
+      "Какой stock trigger используем для первого полного теста без ADB/debug broadcast?"
     ],
     "tags": [
       "android",
@@ -1480,10 +1481,10 @@
       "state": "requires-prototype",
       "date": "2026-09-29",
       "confidence": "high",
-      "summary": "Overlay/recognizer/SC downstream verified separately; the complete stock-trigger → SC → app-launch chain has not yet been verified.",
+      "summary": "Physical-device downstream including action execution is verified: external test trigger → overlay → S → C → SC → Settings.ACTION_SETTINGS. The full milestone remains incomplete only because the stock activation source is not yet selected.",
       "sources": [],
-      "next_step": "Install the current 4Tap build on LGM-V300L, verify overlay/SC, select a stock activation source and complete SC → app launch.",
-      "implication": "This is the immediate Android milestone before broadening the alphabet or user configuration."
+      "next_step": "Select and connect a stock Android/LG activation source, then repeat the same chain without ADB/debug broadcast.",
+      "implication": "SC action execution is no longer the blocker; stock activation is the remaining Stage 1 risk."
     }
   },
   {
@@ -1511,7 +1512,8 @@
     ],
     "parameters": {
       "examples": "app activity, deep link, verified App Link, settings intent",
-      "background_start": "constrained; SAW is a documented exception"
+      "background_start": "constrained; SAW is a documented exception",
+      "prototype_verification": "SC → Settings.ACTION_SETTINGS verified on LGM-V300L / Android 9"
     },
     "constraints": [
       "A URI may resolve to a browser, chooser, different app, or no handler.",
@@ -1530,7 +1532,7 @@
       "state": "verified-constrained",
       "date": "2026-09-28",
       "confidence": "high",
-      "summary": "App/deep-link execution is supported by Android, subject to intent resolution and background-start/security rules.",
+      "summary": "Android action execution is supported in the prototype: SC successfully launched Settings.ACTION_SETTINGS on the physical LGM-V300L after overlay recognition. Broader app/deep-link handling remains subject to intent resolution and background-start/security rules.",
       "sources": [
         {
           "label": "Android deep links",
@@ -1541,7 +1543,7 @@
           "url": "https://developer.android.com/guide/components/activities/secure-bal"
         }
       ],
-      "next_step": "Implement an explicit action contract and test on the final target SDK/device matrix.",
+      "next_step": "Keep the verified action handoff stable while selecting the stock activation source; later generalize assignment/resolver behavior.",
       "implication": "Android action layer в целом жизнеспособен; обязательны resolver/fallback, App Links для своих HTTPS-доменов и повторная проверка background-start rules на финальном target SDK."
     }
   },
@@ -3263,7 +3265,7 @@
     "title": "Stage 1 — Android End-to-End",
     "group": "ROADMAP",
     "short": "Получить на штатном LG полную цепочку: другая программа → 4Tap → SC → запуск назначенной программы.",
-    "description": "Текущий этап заканчивается только после реального physical-device подтверждения цепочки «другая программа → штатная активация 4Tap → KnockUI overlay → S → C → SC → запуск назначенного приложения». Touch, S/C, SC, overlay и внешний test handoff уже подтверждены; нерешёнными остаются stock activation и финальный app-launch test.",
+    "description": "Текущий этап заканчивается после physical-device подтверждения цепочки «другая программа → штатная активация 4Tap → KnockUI overlay → S → C → SC → запуск назначенного приложения». Touch, S/C, SC, overlay, внешний test handoff и `SC → Settings.ACTION_SETTINGS` уже подтверждены на LGM-V300L; нерешённым остаётся stock activation.",
     "purpose": "Подтвердить основной пользовательский цикл 4Tap на штатном Android без модификации ОС.",
     "kind": "b2c",
     "models": [
@@ -3279,10 +3281,11 @@
     ],
     "parameters": {
       "device": "LGM-V300L / Android 9",
-      "verified_downstream": "ActivationRequest → OverlayLauncher → Drawing Overlay → Recognizer → Command",
+      "verified_downstream": "ActivationRequest → OverlayLauncher → Drawing Overlay → Recognizer → Command → Action",
       "first_command": "SC",
-      "first_action": "launch assigned test app",
-      "current_activation_priority": "stock Android/LG mechanisms"
+      "first_action": "Settings.ACTION_SETTINGS — verified prototype assignment",
+      "current_activation_priority": "stock Android/LG mechanisms",
+      "remaining_blocker": "stock Android/LG activation source"
     },
     "constraints": [
       "Root, bootloader unlock, custom ROM and SystemUI modification are outside this stage without a separate decision."
