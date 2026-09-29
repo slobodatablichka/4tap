@@ -469,7 +469,7 @@
       "activation_policy": "system-owned lower-left/right corner",
       "tap_thresholds": "3 or 4 sequential taps",
       "visual_layer": "foreground app may visually cover the corner",
-      "pre_activation_delivery": "individual taps may also reach foreground app",
+      "pre_activation_delivery": "not part of product contract",
       "post_activation_surface": "TYPE_APPLICATION_OVERLAY — verified"
     },
     "constraints": [
@@ -637,7 +637,7 @@
     "title": "System Corner Activation Architecture",
     "group": "ARCHITECTURE DECISION",
     "short": "Канонический Android-entry: system-owned нижний левый/правый угол → 3/4 taps → ActivationRequest.",
-    "description": "После снятия сценария arbitrary-area passive raw touch архитектура возвращается к принятой угловой модели: два system/OEM-owned пространства в нижних углах, которые распознают 3 или 4 последовательных тапа. Пространство может быть визуально закрыто foreground-приложением; отдельные pre-activation taps могут доходить приложению. После достижения активного порога системный слой формирует уже подтверждённый ActivationRequest. Строгая SystemUI reserved zone с полным поглощением касаний остаётся отдельным prototype variant.",
+    "description": "После снятия сценария arbitrary-area passive raw touch архитектура возвращается к принятой угловой модели: два system/OEM-owned пространства в нижних углах, которые распознают 3 или 4 последовательных тапа. Пространство может быть визуально закрыто foreground-приложением; системные тапы принадлежат system/OEM input layer. После достижения активного порога системный слой формирует уже подтверждённый ActivationRequest. Строгая SystemUI reserved zone с полным поглощением касаний остаётся отдельным prototype variant.",
     "purpose": "Зафиксировать каноническую точку входа Android и отделить её от частного строгого SystemUI-прототипа.",
     "kind": "core",
     "models": [
@@ -659,19 +659,19 @@
       "decision_status": "canonical-system-corner",
       "primary_path": "system lower-left/right corner → 3/4 taps → ActivationRequest → Drawing Overlay → Recognizer → Command → Action",
       "tap_thresholds": "3 or 4",
-      "pre_activation_taps": "may reach foreground app",
+      "pre_activation_taps": "not part of product contract",
       "strict_reserved_zone": "separate prototype variant",
       "downstream_verification": "external trigger → overlay → SC → ACTION_SETTINGS verified on LGM-V300L"
     },
     "constraints": [
       "Do not replace the tap-based system corner with buttons or Accessibility shortcuts.",
       "App-owned TYPE_APPLICATION_OVERLAY is post-activation only.",
-      "Foreground app/system interception of the tap sequence must be measured on real contexts.",
+      "Foreground-app delivery is outside the activation contract.",
       "Root, bootloader unlock, custom ROM and SystemUI modification remain outside the current physical-device stage without a separate decision."
     ],
     "open_questions": [
       "Can stock LG/Android expose the canonical system-owned corner sequence on LGM-V300L?",
-      "Which contexts intercept the sequence before the system detector can recognize it?",
+      "Which Android-level hook counts taps inside the system-owned area?",
       "Which threshold is active by default: 3 or 4 taps?"
     ],
     "tags": [
@@ -711,7 +711,7 @@
     "title": "Strict OEM Reserved Zone — Prototype Variant",
     "group": "SYSTEM INPUT",
     "short": "Строгий SystemUI-вариант: зона полностью принадлежит системе, фиксированные 4 taps, без passthrough/replay; это не каноническая модель.",
-    "description": "Отдельный экспериментальный OEM/SystemUI вариант. SystemUI полностью владеет небольшой угловой зоной и всей touch sequence: события не передаются foreground-приложению, незавершённые 1/2/3 taps сбрасываются, activation происходит на 4-м tap. Этот вариант полезен для проверки максимально детерминированной OEM-интеграции, но не заменяет каноническую модель 4Tap, где поддерживаются 3/4 taps и отдельные pre-activation taps могут доходить приложению.",
+    "description": "Отдельный экспериментальный OEM/SystemUI вариант. SystemUI полностью владеет небольшой угловой зоной и всей touch sequence: события не передаются foreground-приложению, незавершённые 1/2/3 taps сбрасываются, activation происходит на 4-м tap. Этот вариант полезен для проверки максимально детерминированной OEM-интеграции, но не заменяет каноническую модель 4Tap, где поддерживаются 3/4 taps и системные тапы принадлежат system/OEM input layer.",
     "purpose": "Проверить строгий fully-reserved вариант OEM/SystemUI как отдельную техническую ветвь.",
     "kind": "core",
     "models": [
@@ -731,7 +731,7 @@
     "parameters": {
       "owner": "Android/OEM/SystemUI",
       "variant": "strict fully-reserved prototype",
-      "canonical_model": "system corner, 3 or 4 taps, pre-activation taps may reach foreground app",
+      "canonical_model": "system corner, 3 or 4 taps, taps belong to system area",
       "geometry_baseline": "58 × 44 dp",
       "geometry_candidates": "52×40; 58×44; 64×48 dp",
       "tap_count": 4,
@@ -742,11 +742,11 @@
     "constraints": [
       "This strict behavior is not the canonical 4Tap activation semantics.",
       "Requires OEM/SystemUI/input-policy integration.",
-      "Do not infer from this variant that canonical 3/4-tap corner input must absorb all pre-activation taps."
+      "Foreground-app delivery is not part of the activation contract."
     ],
     "open_questions": [
       "Нужен ли strict fully-reserved вариант после проверки канонической модели?",
-      "Как его UX сравнивается с моделью, где pre-activation taps доходят foreground-приложению?"
+      "Как strict prototype соотносится с Android-generic system-area implementation?"
     ],
     "tags": [
       "android",
@@ -784,7 +784,7 @@
     "title": "System Corner Tap Sequence",
     "group": "ACTIVATION",
     "short": "В системном нижнем левом или правом углу 4Tap активируется последовательностью из 3 или 4 тапов.",
-    "description": "Канонический tap-trigger привязан к system/OEM-owned пространству нижнего левого или правого угла. Активный порог может быть 3 или 4 последовательных тапа; это параметр продукта, а не жёсткая константа архитектуры. Foreground-приложение может визуально занимать угол. До достижения порога отдельные тапы могут доходить приложению, пока системный detector способен наблюдать последовательность. Если приложение или системный компонент перехватывает события и системный detector их не получает, activation может не состояться — это предмет real-device проверки.",
+    "description": "Канонический tap-trigger привязан к system/OEM-owned пространству нижнего левого или правого угла. Активный порог может быть 3 или 4 последовательных тапа; это параметр продукта, а не жёсткая константа архитектуры. Foreground-приложение может визуально занимать угол. Тапы выполняются непосредственно по system-owned области и обрабатываются системным/OEM input layer. Foreground-приложение не является адресатом этих системных тапов.",
     "purpose": "Активировать 4Tap фирменной короткой последовательностью тапов в предсказуемом системном углу.",
     "kind": "core",
     "models": [
@@ -807,7 +807,7 @@
       "corners": "LEFT / RIGHT independent",
       "prototype_timing": "45–700 ms inter-tap; 280 ms max tap duration; 20 dp max movement",
       "current_proof": "in-app 4-tap LEFT SC OK; RIGHT SC OK",
-      "pre_activation_delivery": "may reach foreground app"
+      "pre_activation_delivery": "not part of product contract"
     },
     "constraints": [
       "System/OEM input layer must receive enough events to recognize the selected threshold.",
@@ -1478,7 +1478,7 @@
     },
     "constraints": [
       "Канонический system-corner trigger ещё не подтверждён на stock LG.",
-      "Foreground app/system interception of the sequence must be tested.",
+      "Foreground-app delivery is not part of the activation contract.",
       "Текущий action mapping является минимальным prototype assignment."
     ],
     "open_questions": [
@@ -3278,7 +3278,7 @@
     "title": "Stage 1 — Android End-to-End",
     "group": "ROADMAP",
     "short": "Получить на штатном LG полную цепочку: другая программа → 4Tap → SC → запуск назначенной программы.",
-    "description": "Stage 1 завершается после physical-device подтверждения цепочки «другая программа → system-owned нижний угол → 3/4 taps → KnockUI overlay → S → C → SC → назначенное действие». Touch, S/C, SC, overlay, внешний test handoff и `SC → Settings.ACTION_SETTINGS` уже подтверждены на LGM-V300L; нерешённой остаётся системная угловая активация и поведение при перехвате тапов foreground-приложением.",
+    "description": "Stage 1 завершается после physical-device подтверждения цепочки «другая программа → system-owned нижний угол → 3/4 taps → KnockUI overlay → S → C → SC → назначенное действие». Touch, S/C, SC, overlay, внешний test handoff и `SC → Settings.ACTION_SETTINGS` уже подтверждены на LGM-V300L; нерешённой остаётся Android-level обработка 3/4 тапов внутри system-owned области.",
     "purpose": "Подтвердить основной пользовательский цикл 4Tap на штатном Android без модификации ОС.",
     "kind": "b2c",
     "models": [
