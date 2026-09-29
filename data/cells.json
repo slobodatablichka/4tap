@@ -3592,5 +3592,101 @@
       "modularity"
     ],
     "order": 30
+  },
+  {
+    "id": "android-runtime-constraints",
+    "section": "android",
+    "order": 22,
+    "title": "Android Runtime Constraints",
+    "group": "PLATFORM LIMITS",
+    "short": "Штатные ограничения Android для KnockUI overlay, запуска чужих приложений и Settings Console.",
+    "description": "4Tap работает как обычное Android-приложение. KnockUI использует TYPE_APPLICATION_OVERLAY с SYSTEM_ALERT_WINDOW; чувствительный foreground-экран на Android 12+ может скрыть сторонний overlay. После команды запуск выполняется через обычные Intent/startActivity с учётом background activity launch restrictions, доступности exported Activity/deep link и resolver. Settings Console учитывает package visibility Android 11+. Ограничение конкретного контекста не меняет архитектуру 4Tap.",
+    "purpose": "Зафиксировать реальные runtime-границы Android без превращения их в повод перепроектировать продукт.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "android"
+    ],
+    "status": "approved",
+    "inputs": [
+      "KnockUI overlay",
+      "Resolved action",
+      "Installed-app discovery"
+    ],
+    "outputs": [
+      "Runtime availability / controlled failure"
+    ],
+    "parameters": {
+      "overlay": "TYPE_APPLICATION_OVERLAY + SYSTEM_ALERT_WINDOW",
+      "overlay_blocking": "Android 12+ app may hide third-party overlays",
+      "touch_mode": "touchable overlay; pass-through not required",
+      "app_launch": "Intent / startActivity",
+      "background_launch": "version/target-SDK constrained",
+      "package_visibility": "Android 11+ filtered queries",
+      "foreground_service": "Android 15+ SAW background-start exemption requires visible overlay when applicable"
+    },
+    "constraints": [
+      "Overlay permission may be denied or revoked.",
+      "Sensitive screens may hide TYPE_APPLICATION_OVERLAY.",
+      "Internal app screens require supported exported Activity / intent / deep link.",
+      "Package discovery must use minimal required <queries>.",
+      "A blocked overlay or unavailable action is a local runtime limitation, not an architecture change."
+    ],
+    "open_questions": [
+      "Which current Android versions/target SDKs must be included in the release compatibility matrix?"
+    ],
+    "tags": [
+      "android",
+      "runtime",
+      "overlay",
+      "intent",
+      "package-visibility",
+      "constraints"
+    ],
+    "verification": {
+      "state": "verified-constrained",
+      "date": "2026-09-29",
+      "confidence": "high",
+      "summary": "Official Android documentation confirms overlay permission/visibility limits, background-launch restrictions, package visibility filtering, and newer foreground-service constraints. The existing 4Tap overlay and SC→Settings prototype remain valid within these platform boundaries.",
+      "sources": [
+        {
+          "label": "SYSTEM_ALERT_WINDOW",
+          "url": "https://developer.android.com/reference/android/Manifest.permission"
+        },
+        {
+          "label": "Android 12 — hide overlay windows",
+          "url": "https://developer.android.com/about/versions/12/features"
+        },
+        {
+          "label": "Android 12 — untrusted touch events",
+          "url": "https://developer.android.com/about/versions/12/behavior-changes-all"
+        },
+        {
+          "label": "Android 10 — background activity launches",
+          "url": "https://developer.android.com/about/versions/10/privacy/changes"
+        },
+        {
+          "label": "Android 14 — background activity launch changes",
+          "url": "https://developer.android.com/about/versions/14/behavior-changes-14"
+        },
+        {
+          "label": "Android 15 behavior changes",
+          "url": "https://developer.android.com/about/versions/15/behavior-changes-15"
+        },
+        {
+          "label": "Package visibility",
+          "url": "https://developer.android.com/training/package-visibility/declaring"
+        },
+        {
+          "label": "Automatic package visibility / startActivity",
+          "url": "https://developer.android.com/training/package-visibility/automatic"
+        }
+      ],
+      "next_step": "Apply these constraints when implementing overlay lifecycle, Action Dispatcher and Settings Console; do not change the activation roadmap because of them.",
+      "implication": "Android runtime restrictions are handled locally with permission checks, resolver/fallback and controlled failure."
+    }
   }
 ]
