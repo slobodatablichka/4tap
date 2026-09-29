@@ -385,4 +385,4 @@ Entry candidates:
 
 2026-09-29 на `LGM-V300L / Android 9` подтверждена полная цепочка при выключенном системном доступе «Поверх других приложений»: `4 taps → AccessibilityService → TYPE_ACCESSIBILITY_OVERLAY KnockUI → S → C → SC → Settings`.
 
-Это подтверждает, что выданный `SYSTEM_ALERT_WINDOW` текущему рабочему пути не требуется. Его декларация пока остаётся в AndroidManifest как legacy baseline; следующий контрольный шаг — удалить permission из manifest и повторить full-chain test.
+`SYSTEM_ALERT_WINDOW` затем полностью удалён из `AndroidManifest.xml`, сборка переустановлена и та же цепочка повторно прошла — PASS. Текущий Android-кандидат требует одного пользовательского системного включения: `4Tap corner activation` в Accessibility.
