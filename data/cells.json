@@ -176,7 +176,7 @@
     "title": "4Tap Design Canon",
     "group": "UX SYSTEM",
     "short": "Единый визуальный и поведенческий канон для KnockUI, состояний ввода, обратной связи и пользовательских экранов.",
-    "description": "Design Canon должен предшествовать существенной переработке overlay. v0.1 задаёт визуальный характер 4Tap, геометрию KnockUI, типографику, состояния ожидание/ввод/распознано/ошибка/выполнено, анимацию, звук/вибрацию и правила Settings Console. v0.2 уточняется после первой полной real-device цепочки; v1.0 — перед публичной beta.",
+    "description": "Текущая активная продуктовая задача. Первый рабочий Design Canon задаёт визуальный и поведенческий язык 4Tap: KnockUI, экран состояния 4Tap, Команды, Команда, Приложения, Алфавит и Настройки; типографику, геометрию, состояния, feedback, motion, звук/вибрацию и правила пользовательских экранов. После канона следующим отдельным шагом проектируется one-step Accessibility onboarding.",
     "purpose": "Не допустить расхождения интерфейсов и закрепить узнаваемую механику продукта.",
     "kind": "core",
     "models": [
@@ -190,25 +190,33 @@
     ],
     "status": "approved",
     "inputs": [
-      "Рабочий KnockUI prototype",
-      "Product UX decisions"
+      "Verified Android end-to-end prototype",
+      "Product UX decisions",
+      "KnockUI recognition behavior"
     ],
     "outputs": [
       "Design rules",
-      "Overlay states",
+      "KnockUI states",
+      "Core screen rules",
       "Settings UI rules"
     ],
     "parameters": {
-      "v0_1": "before overlay redesign",
-      "v0_2": "after first full real-device chain",
-      "v1_0": "before public beta"
+      "current_working_version": "v0.1",
+      "core_surfaces": "KnockUI; 4Tap; Команды; Команда; Приложения; Алфавит; Настройки",
+      "immediate_next": "one-step Accessibility onboarding",
+      "next_revision": "v0.2 after first canon-driven implementation/usability pass",
+      "public_beta": "v1.0 before public beta"
     },
     "constraints": [
-      "Канон должен сохранять скорость и минимальное вмешательство в текущий контекст пользователя."
+      "Канон должен сохранять скорость и минимальное вмешательство в текущий контекст пользователя.",
+      "Неназначенная распознанная комбинация не является ошибкой.",
+      "При неуверенном распознавании KnockUI может предлагать близкие варианты с учётом реально назначенного пользовательского словаря.",
+      "Хорошо распознанная свободная комбинация не должна насильно подменяться существующей командой."
     ],
     "open_questions": [
       "Финальная типографика и motion language",
-      "Визуальная степень заметности KnockUI"
+      "Визуальная степень заметности KnockUI",
+      "Точная геометрия и состояния основных поверхностей"
     ],
     "tags": [
       "design",
@@ -862,8 +870,8 @@
     "section": "android",
     "title": "Local Canvas",
     "group": "INPUT",
-    "short": "Временная локальная поверхность ввода KnockUI, появляющаяся после ActivationRequest.",
-    "description": "После успешной активации 4Tap создаёт локализованную touchable overlay-поверхность для ввода двух знаков. Сам post-activation overlay уже подтверждён поверх другого foreground-приложения; окончательные размер, позиция и визуальная форма будут определяться Design Canon.",
+    "short": "Временная локальная поверхность KnockUI для ввода двух знаков через Accessibility overlay.",
+    "description": "После успешной navigation-bar активации тот же AccessibilityService создаёт локализованную touchable TYPE_ACCESSIBILITY_OVERLAY поверхность KnockUI для ввода двух знаков. На текущем prototype эта поверхность подтверждена поверх другого foreground-приложения. Окончательные размер, позиция и визуальная форма определяются Design Canon.",
     "purpose": "Ограничить жестовый ввод небольшой областью и не перекрывать весь экран.",
     "kind": "core",
     "models": [
@@ -882,15 +890,16 @@
       "Canvas boundary"
     ],
     "parameters": {
-      "prototype_size": "200×200 dp",
+      "prototype_size": "320×390 dp",
       "final_geometry": "TBD by Design Canon",
       "scope": "localized touchable overlay",
-      "overlay_type": "TYPE_APPLICATION_OVERLAY",
-      "permission": "SYSTEM_ALERT_WINDOW",
+      "overlay_type": "TYPE_ACCESSIBILITY_OVERLAY",
+      "permission": "user-enabled AccessibilityService",
+      "system_alert_window": "not declared / not required",
       "pass_through_required": false
     },
     "constraints": [
-      "Canvas появляется только после активации 4Tap.",
+      "Canvas появляется только после явной активации 4Tap.",
       "Касания внутри canvas во время ввода принадлежат 4Tap.",
       "Окончательные геометрия и feedback не считаются утверждёнными до Design Canon."
     ],
@@ -905,19 +914,19 @@
       "state": "verified-supported",
       "date": "2026-09-29",
       "confidence": "high",
-      "summary": "The local KnockUI canvas has now been verified as a real touchable Android overlay above another foreground app, with successful S → C → SC input.",
+      "summary": "The local KnockUI canvas is verified as a touchable TYPE_ACCESSIBILITY_OVERLAY above another foreground app, with successful S → C → SC input in a clean build without SYSTEM_ALERT_WINDOW.",
       "sources": [
+        {
+          "label": "Android AccessibilityService API",
+          "url": "https://developer.android.com/reference/android/accessibilityservice/AccessibilityService"
+        },
         {
           "label": "Android WindowManager.LayoutParams",
           "url": "https://developer.android.com/reference/android/view/WindowManager.LayoutParams"
-        },
-        {
-          "label": "Android Settings / overlay permission",
-          "url": "https://developer.android.com/reference/android/provider/Settings"
         }
       ],
-      "next_step": "Keep the verified overlay input behavior stable while redesigning geometry/feedback under Design Canon.",
-      "implication": "Local Canvas is no longer only an architectural direction; the post-activation input surface is verified on a physical Android device."
+      "next_step": "Redesign geometry, states and feedback under the active 4Tap Design Canon task.",
+      "implication": "The post-activation input surface is technically verified; its remaining work is product/UX design and cross-version validation."
     }
   },
   {
@@ -926,9 +935,9 @@
     "order": 52,
     "title": "Drawing Overlay Surface",
     "group": "INPUT",
-    "short": "После активации KnockUI может открыть небольшой touchable overlay поверх текущего приложения и принимать в нём рисование двух знаков.",
-    "description": "Ограничение глобального passive touch capture не мешает самому рисованию после активации. KnockUI может создать локальное окно TYPE_APPLICATION_OVERLAY с разрешением SYSTEM_ALERT_WINDOW. Если окно touchable, касания внутри его границ получает KnockUI, поэтому пользователь может рисовать первый и второй знак поверх видимого текущего приложения. Нижележащее приложение в пределах этого временного canvas во время ввода реагировать на эти касания не должно. Pass-through для gesture canvas не требуется.",
-    "purpose": "Отделить технически рабочий post-activation ввод жестов от сложной задачи первоначального глобального вызова KnockUI.",
+    "short": "После активации AccessibilityService показывает touchable KnockUI поверх текущего приложения и принимает два штриха.",
+    "description": "Текущий Android-кандидат создаёт Drawing Overlay Surface как TYPE_ACCESSIBILITY_OVERLAY из уже включённого AccessibilityService. Окно touchable: касания внутри его границ получает KnockUI, поэтому пользователь рисует первый и второй знак поверх видимого текущего приложения. Нижележащему приложению передавать эти касания не требуется.",
+    "purpose": "Обеспечить временную поверхность ввода KnockUI поверх текущего пользовательского контекста.",
     "kind": "core",
     "models": [
       "b2c",
@@ -947,23 +956,24 @@
       "Stroke 2"
     ],
     "parameters": {
-      "window_type": "TYPE_APPLICATION_OVERLAY",
-      "permission": "SYSTEM_ALERT_WINDOW",
+      "window_type": "TYPE_ACCESSIBILITY_OVERLAY",
+      "permission": "user-enabled AccessibilityService",
+      "system_alert_window": "not declared / not required",
       "touch_mode": "touchable",
       "pass_through_required": false,
       "lifecycle": "temporary; shown only during KnockUI command input",
-      "prototype_result": "LEFT OVERLAY SC OK; RIGHT OVERLAY SC OK",
+      "prototype_result": "navigation-bar 4 taps → Accessibility KnockUI → S → C → SC → Settings — PASS",
       "prototype_scope": "real-device overlay over another foreground app"
     },
     "constraints": [
-      "Пользователь должен выдать разрешение на отображение поверх других приложений, если используется TYPE_APPLICATION_OVERLAY.",
+      "AccessibilityService включается пользователем.",
       "Touchable overlay забирает касания внутри своей области на время ввода.",
-      "Ограничения Android 12 на untrusted pass-through относятся к попыткам пропускать touch через overlay; для gesture canvas такой pass-through не нужен.",
-      "Размер, положение и визуальная обратная связь canvas требуют UX-тестов."
+      "Pass-through для gesture canvas не требуется.",
+      "Размер, положение, состояния и визуальная обратная связь определяются Design Canon."
     ],
     "open_questions": [
-      "Должен ли canvas быть полностью невидимым или иметь краткую рамку/подсветку?",
-      "Какой размер и позиционирование дают лучший blind-use после системной активации?"
+      "Какую степень видимости должна иметь поверхность KnockUI в состояниях ожидания/ввода/распознавания?",
+      "Какие геометрия и позиционирование лучше всего поддерживают быстрый blind-use?"
     ],
     "tags": [
       "android",
@@ -976,23 +986,19 @@
       "state": "verified-supported",
       "date": "2026-09-29",
       "confidence": "high",
-      "summary": "A real-device prototype confirms that a touchable TYPE_APPLICATION_OVERLAY can remain above another foreground app, accept Palm Graffiti S → C, produce SC, and dismiss cleanly.",
+      "summary": "A clean real-device build confirms TYPE_ACCESSIBILITY_OVERLAY can show KnockUI above another foreground app, accept S → C, produce SC and launch the assigned Settings action without SYSTEM_ALERT_WINDOW.",
       "sources": [
         {
-          "label": "Android WindowManager.LayoutParams — TYPE_APPLICATION_OVERLAY",
+          "label": "Android AccessibilityService API",
+          "url": "https://developer.android.com/reference/android/accessibilityservice/AccessibilityService"
+        },
+        {
+          "label": "Android WindowManager.LayoutParams — TYPE_ACCESSIBILITY_OVERLAY",
           "url": "https://developer.android.com/reference/android/view/WindowManager.LayoutParams"
-        },
-        {
-          "label": "Android Settings — ACTION_MANAGE_OVERLAY_PERMISSION / canDrawOverlays",
-          "url": "https://developer.android.com/reference/android/provider/Settings"
-        },
-        {
-          "label": "Android 12 — untrusted touch events / overlay pass-through restrictions",
-          "url": "https://developer.android.com/about/versions/12/behavior-changes-all"
         }
       ],
-      "next_step": "Keep the verified overlay/recognizer/command chain stable while attaching the ordinary-app lower-corner ActivationRequest source.",
-      "implication": "Post-activation drawing is now a confirmed Android capability in the 4Tap prototype. The remaining primary Android risk is activation, not the overlay drawing surface."
+      "next_step": "Apply the active Design Canon to geometry, visual states and feedback, then retest.",
+      "implication": "Post-activation drawing is no longer an Android feasibility risk; current work is UX canon and compatibility."
     }
   },
   {
@@ -1001,8 +1007,8 @@
     "order": 53,
     "title": "Overlay over Host Apps",
     "group": "CROSS-APP CONTEXT",
-    "short": "После успешной Android-активации KnockUI может открыть временный touchable overlay поверх текущего приложения, включая WeChat и WhatsApp.",
-    "description": "На Android после успешной активации 4Tap Drawing Overlay Surface не зависит от того, какое пользовательское приложение находится на переднем плане. Поэтому тот же Android-контур может работать поверх WeChat, WhatsApp или другого приложения: текущее приложение остаётся видимым снизу, а KnockUI принимает штрихи внутри своего временного overlay. Это отдельный путь от собственных KnockUI-интеграций внутри WeChat и WhatsApp.",
+    "short": "После Android-активации Accessibility KnockUI работает поверх текущего foreground-приложения, включая обычные host apps.",
+    "description": "На Android после успешной активации тот же AccessibilityService показывает KnockUI как TYPE_ACCESSIBILITY_OVERLAY поверх текущего foreground app. Текущее приложение остаётся видимым снизу, а KnockUI принимает штрихи внутри своей временной поверхности. WeChat, WhatsApp и другие приложения в этом сценарии являются обычными host apps; их собственные platform-native KnockUI-интеграции остаются отдельными путями.",
     "purpose": "Зафиксировать двухконтурную модель: Android overlay поверх приложения и самостоятельная platform-native интеграция внутри самого WeChat/WhatsApp.",
     "kind": "core",
     "models": [
@@ -1023,14 +1029,15 @@
       "KnockUI drawing surface above current Android app"
     ],
     "parameters": {
-      "android_host_apps": "WeChat, WhatsApp, other foreground apps",
-      "overlay_path": "ordinary-app corner trigger → KnockUI overlay",
+      "android_host_apps": "WeChat, WhatsApp, Ozon, other foreground apps",
+      "overlay_path": "navigation-bar corner trigger → AccessibilityService → TYPE_ACCESSIBILITY_OVERLAY KnockUI",
       "native_paths": "WeChat Mini Program / WhatsApp Business remain separate",
       "ios_scope": "not covered by this decision"
     },
     "constraints": [
-      "Положение относится именно к Android-устройствам.",
-      "Overlay требует подтверждённого Android permission/integration path.",
+      "Положение относится к Android-устройствам.",
+      "Текущий внешний KnockUI path требует user-enabled AccessibilityService.",
+      "SYSTEM_ALERT_WINDOW не требуется.",
       "Наличие Android overlay не заменяет и не отменяет самостоятельные WeChat/WhatsApp-интеграции."
     ],
     "open_questions": [],
@@ -1044,25 +1051,21 @@
     ],
     "verification": {
       "state": "verified-constrained",
-      "date": "2026-09-28",
+      "date": "2026-09-29",
       "confidence": "high",
-      "summary": "После Android-активации touchable application overlay может находиться поверх текущего foreground app; WeChat и WhatsApp для этого являются обычными host apps. Их собственные KnockUI-контуры остаются независимыми альтернативными путями.",
+      "summary": "The Accessibility KnockUI path is physically verified above Ozon on LGM-V300L / Android 9. Other host apps use the same Android overlay model but still require compatibility testing where relevant.",
       "sources": [
         {
-          "label": "Android WindowManager.LayoutParams — TYPE_APPLICATION_OVERLAY",
+          "label": "Android AccessibilityService API",
+          "url": "https://developer.android.com/reference/android/accessibilityservice/AccessibilityService"
+        },
+        {
+          "label": "Android WindowManager.LayoutParams — TYPE_ACCESSIBILITY_OVERLAY",
           "url": "https://developer.android.com/reference/android/view/WindowManager.LayoutParams"
-        },
-        {
-          "label": "Android Settings — ACTION_MANAGE_OVERLAY_PERMISSION / canDrawOverlays",
-          "url": "https://developer.android.com/reference/android/provider/Settings"
-        },
-        {
-          "label": "Android 12 — untrusted touch events / overlay pass-through restrictions",
-          "url": "https://developer.android.com/about/versions/12/behavior-changes-all"
         }
       ],
-      "next_step": "Сохранить два независимых entry paths в архитектуре и проверять их отдельно.",
-      "implication": "На Android WeChat/WhatsApp получают одновременно внешний KnockUI-overlay path и собственный внутренний platform-native path."
+      "next_step": "Retest the same host-app model on newer stock Android and representative foreground apps.",
+      "implication": "Android host-app context is preserved by the verified Accessibility overlay path; native WeChat/WhatsApp paths remain independent."
     }
   },
   {
@@ -1461,7 +1464,7 @@
     "title": "Android Actions",
     "group": "ACTION",
     "short": "Запуск приложения, deep link, URL или поддерживаемого системного действия.",
-    "description": "Android supports deep links through intents, and ordinary deep linking is available across Android versions. Launching activities from the background is restricted, but current Android documentation lists user-granted SYSTEM_ALERT_WINDOW as one allowed background-start condition. Final behavior still depends on target SDK, resolver state, target app availability and link verification.",
+    "description": "После распознавания команды 4Tap выполняет поддерживаемое Android-действие через Intent/startActivity: запуск Activity, deep link, verified App Link, URL или системный Settings intent. `SC → Settings.ACTION_SETTINGS` подтверждён на LGM-V300L / Android 9 из текущего Accessibility KnockUI path. Для новых Android и финального target SDK остаются ограничения background activity launch, resolver state, exported activities и link verification.",
     "purpose": "Исполнить разрешённое действие после маршрутизации команды.",
     "kind": "b2c",
     "models": [
@@ -1471,7 +1474,7 @@
     "platforms": [
       "android"
     ],
-    "status": "concept",
+    "status": "needs-validation",
     "inputs": [
       "Resolved action"
     ],
@@ -1479,14 +1482,16 @@
       "Запущенное действие"
     ],
     "parameters": {
-      "examples": "app activity, deep link, verified App Link, settings intent",
-      "background_start": "constrained; SAW is a documented exception",
-      "prototype_verification": "SC → Settings.ACTION_SETTINGS verified on LGM-V300L / Android 9"
+      "examples": "app activity, deep link, verified App Link, URL, settings intent",
+      "execution": "Intent / startActivity",
+      "background_start": "version- and target-SDK-constrained; no SYSTEM_ALERT_WINDOW dependency assumed",
+      "prototype_verification": "SC → Settings.ACTION_SETTINGS verified on LGM-V300L / Android 9 from Accessibility KnockUI"
     },
     "constraints": [
       "A URI may resolve to a browser, chooser, different app, or no handler.",
       "Verified App Links are preferred for owned HTTPS domains.",
-      "Background activity launch rules must be retested for the final target SDK."
+      "Background activity launch rules must be retested for the final target SDK and representative actions.",
+      "Current product architecture does not depend on SYSTEM_ALERT_WINDOW."
     ],
     "open_questions": [
       "Which action types are part of MVP versus later extensions?"
@@ -1498,9 +1503,9 @@
     "order": 130,
     "verification": {
       "state": "verified-constrained",
-      "date": "2026-09-28",
+      "date": "2026-09-29",
       "confidence": "high",
-      "summary": "Android action execution is supported in the prototype: SC successfully launched Settings.ACTION_SETTINGS on the physical LGM-V300L after overlay recognition. Broader app/deep-link handling remains subject to intent resolution and background-start/security rules.",
+      "summary": "SC successfully launches Settings.ACTION_SETTINGS from the clean Accessibility-only prototype on LGM-V300L / Android 9. General app/deep-link action coverage remains version- and resolver-dependent.",
       "sources": [
         {
           "label": "Android deep links",
@@ -1511,8 +1516,8 @@
           "url": "https://developer.android.com/guide/components/activities/secure-bal"
         }
       ],
-      "next_step": "Keep the verified action handoff stable while selecting the stock activation source; later generalize assignment/resolver behavior.",
-      "implication": "Android action layer в целом жизнеспособен; обязательны resolver/fallback, App Links для своих HTTPS-доменов и повторная проверка background-start rules на финальном target SDK."
+      "next_step": "Validate representative app-launch and deep-link assignments on newer stock Android before defining the release action matrix.",
+      "implication": "The action layer is viable, but broad action compatibility remains a separate validation task."
     }
   },
   {
@@ -3240,8 +3245,8 @@
     "section": "roadmap",
     "title": "Stage 1 — Android End-to-End",
     "group": "ROADMAP",
-    "short": "Получить полную цепочку: другая программа → 3/4 угловых тапа → 4Tap → SC → действие.",
-    "description": "Stage 1 завершается после physical-device подтверждения цепочки «нижний LEFT/RIGHT угол → 3/4 быстрых тапа → KnockUI overlay → S → C → SC → назначенное действие». Touch, S/C, SC, overlay, внешний test handoff и `SC → Settings.ACTION_SETTINGS` уже подтверждены. Нерешённой остаётся только ordinary-app угловая активация без ADB/debug broadcast.",
+    "short": "PASS: полная Android-цепочка подтверждена на штатном устройстве без модификации ОС.",
+    "description": "Stage 1 завершён на LGM-V300L / Android 9. Подтверждена цепочка: другое foreground-приложение → 4 быстрых тапа в LEFT/RIGHT области navigation bar → AccessibilityService → TYPE_ACCESSIBILITY_OVERLAY KnockUI → S → C → SC → Settings.ACTION_SETTINGS. SYSTEM_ALERT_WINDOW удалён из manifest; повторный clean regression test — PASS.",
     "purpose": "Подтвердить основной пользовательский цикл 4Tap на штатном Android без модификации ОС.",
     "kind": "b2c",
     "models": [
@@ -3256,32 +3261,44 @@
       "Verified Android end-to-end command flow"
     ],
     "parameters": {
+      "stage_status": "PASS / complete",
       "device_fixture": "LGM-V300L / Android 9",
-      "verified_downstream": "ActivationRequest → OverlayLauncher → Drawing Overlay → Recognizer → Command → Action",
-      "canonical_activation": "ordinary app; lower-left/right corner → 3 or 4 taps",
+      "verified_chain": "other app → nav-bar 4 taps → Accessibility KnockUI → S → C → SC → Settings",
+      "canonical_activation": "ordinary app; lower-left/right navigation-bar area → 3 or 4 taps; current prototype = 4",
       "first_command": "SC",
-      "first_action": "Settings.ACTION_SETTINGS — verified prototype assignment",
-      "remaining_blocker": "ordinary-app lower-corner 3/4-tap activation"
+      "first_action": "Settings.ACTION_SETTINGS — verified",
+      "user_system_steps": 1,
+      "required_user_enablement": "4Tap corner activation / AccessibilityService",
+      "remaining_blocker": "none for Stage 1"
     },
     "constraints": [
-      "4Tap must remain an ordinary user app on stock Android.",
-      "Missed/consumed tap → reset/no activation; no system-level workaround is required.",
-      "SystemUI/AOSP/root/privileged/OEM-only paths are excluded."
+      "4Tap remains an ordinary user app on stock Android.",
+      "SystemUI/AOSP/root/privileged/OEM-only paths are excluded.",
+      "Cross-version Android compatibility is subsequent productization work, not a Stage 1 feasibility blocker."
     ],
     "open_questions": [],
     "tags": [
       "roadmap",
       "mvp"
     ],
-    "order": 10
+    "order": 10,
+    "verification": {
+      "state": "verified-supported",
+      "date": "2026-09-29",
+      "confidence": "high",
+      "summary": "Android Stage 1 end-to-end flow is complete and repeatable on the physical LG V30 test fixture with one user-enabled AccessibilityService and no SYSTEM_ALERT_WINDOW.",
+      "sources": [],
+      "next_step": "Stage 2 is active: form the Design Canon; one-step Accessibility onboarding follows immediately after the canon.",
+      "implication": "The project has moved from Android feasibility to product canon and productization."
+    }
   },
   {
     "id": "roadmap-2",
     "section": "roadmap",
     "title": "Stage 2 — Product Canon",
     "group": "ROADMAP",
-    "short": "Зафиксировать Design Canon v0.1 и 4Tap Graffiti Profile, затем привести KnockUI к канону.",
-    "description": "Этап формирует единый дизайн-канон и нормативный жестовый профиль. Design Canon v0.1 может начинаться параллельно Stage 1; после первой полной real-device цепочки уточняется v0.2. Palm Graffiti остаётся baseline, но формы 4Tap могут сознательно отличаться, включая переработку X.",
+    "short": "Текущий этап: сформировать 4Tap Design Canon; сразу после него — one-step Accessibility onboarding.",
+    "description": "Stage 2 активен после завершения Android Stage 1. Текущая задача — сформировать первый рабочий Design Canon для KnockUI и основных экранов 4Tap. После утверждения канона следующей задачей является нормальный одношаговый Accessibility onboarding. Затем продолжается формирование 4Tap Graffiti Profile и приведение распознавателя/UI к утверждённым нормам.",
     "purpose": "Стабилизировать визуальный язык и жестовые эталоны до масштабирования продукта.",
     "kind": "core",
     "models": [
@@ -3293,7 +3310,7 @@
       "android",
       "ios"
     ],
-    "status": "concept",
+    "status": "approved",
     "inputs": [
       "Stage 1 results",
       "Palm Graffiti baseline"
@@ -3303,16 +3320,22 @@
       "4Tap Graffiti Profile"
     ],
     "parameters": {
-      "design": "v0.1 → v0.2 after E2E → v1.0 before public beta",
-      "graffiti": "A–Z + 0–9 canonical 4Tap profile"
+      "stage_status": "active",
+      "current_task": "4Tap Design Canon",
+      "immediate_next": "one-step Accessibility onboarding",
+      "subsequent": "4Tap Graffiti Profile and canon-driven UI/recognizer work",
+      "graffiti": "A–Z + 0–9 canonical 4Tap profile",
+      "public_beta_gate": "Design Canon v1.0 before public beta"
     },
     "constraints": [
-      "Не масштабировать recognizer и UI хаотично до фиксации соответствующих канонов."
+      "Не масштабировать recognizer и UI хаотично до фиксации соответствующих канонов.",
+      "Onboarding проектируется после Design Canon и использует его элементы."
     ],
     "open_questions": [],
     "tags": [
       "roadmap",
-      "b2b"
+      "ux",
+      "canon"
     ],
     "order": 20
   },
