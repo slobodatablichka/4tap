@@ -488,13 +488,13 @@
   {
     "from": "android-oem-quad-zone",
     "to": "android-quad-tap",
-    "relation": "передаёт системные taps",
-    "type": "flow"
+    "relation": "строгий 4-tap вариант системного угла",
+    "type": "branch"
   },
   {
     "from": "android-quad-tap",
     "to": "android-local-canvas",
-    "relation": "при 4 taps активирует",
+    "relation": "при 3/4 taps формирует активацию",
     "type": "flow"
   },
   {
@@ -698,13 +698,13 @@
   {
     "from": "android-activation-redesign",
     "to": "android-oem-quad-zone",
-    "relation": "сохраняет как отложенную OEM-ветвь",
+    "relation": "отделяет строгий reserved-zone prototype",
     "type": "branch"
   },
   {
     "from": "roadmap-1",
     "to": "android-oem-quad-zone",
-    "relation": "оставляет как deferred research branch",
+    "relation": "сохраняет как strict deferred variant",
     "type": "roadmap"
   },
   {

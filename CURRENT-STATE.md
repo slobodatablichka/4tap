@@ -70,7 +70,7 @@
 
 1. Android downstream chain и внешний activation adapter считать подтверждёнными.
 2. In-app 4-tap и debug broadcast сохранять только как test harness.
-3. На штатном Android-устройстве сначала определить доступный без модификации ОС механизм активации и связать его с уже подтверждённым `ActivationRequest`.
+3. На штатном Android-устройстве проверить канонический system-owned нижний LEFT/RIGHT угол: 3/4 последовательных тапа, доступность событий системному detector и перехват последовательности foreground-приложениями; затем связать подтверждённый путь с `ActivationRequest`.
 4. OEM/SystemUI reserved Quad Tap zone сохранить как отдельную отложенную исследовательскую ветвь, а не как текущий следующий шаг.
 5. Отдельно продолжать iOS action model и другие платформенные адаптации.
 
@@ -226,6 +226,20 @@
 `ActivationRequest → OverlayLauncher → Drawing Overlay → Recognizer → Command → Action`.
 
 Единственный незакрытый риск Stage 1 — штатный Android/LG источник активации без ADB/debug broadcast и без модификации ОС.
+
+## Android system corner activation — restored canon
+
+В публичной карте восстановлена каноническая модель углового вызова 4Tap:
+
+- два системных пространства: нижний LEFT и RIGHT;
+- пространство принадлежит system/OEM input layer и может быть визуально полностью закрыто foreground-приложением;
+- активация выполняется последовательностью из **3 или 4 тапов**; точный активный порог является параметром продукта;
+- отдельные pre-activation taps могут доходить foreground-приложению;
+- если приложение или системный компонент перехватывает события так, что system detector не получает последовательность, activation может не состояться; это проверяется экспериментально;
+- после достижения порога формируется уже подтверждённый `ActivationRequest`;
+- `TYPE_APPLICATION_OVERLAY` используется только после активации как Drawing Overlay.
+
+Поздняя схема «SystemUI полностью владеет зоной, fixed 4 taps, no passthrough/replay» сохранена только как **Strict OEM Reserved Zone — Prototype Variant** и больше не считается каноническим поведением 4Tap.
 
 ## Android SystemUI Quad Tap zone — deferred concept
 
