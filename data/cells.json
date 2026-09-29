@@ -667,11 +667,11 @@
       "Do not replace the tap-based system corner with buttons or Accessibility shortcuts.",
       "App-owned TYPE_APPLICATION_OVERLAY is post-activation only.",
       "Foreground-app delivery is outside the activation contract.",
-      "Root, bootloader unlock, custom ROM and SystemUI modification remain outside the current physical-device stage without a separate decision."
+      "4Tap must remain an ordinary user app; root, bootloader unlock, custom ROM, firmware/SystemUI modification, privileged/system app and mandatory OEM integration are outside the active product architecture."
     ],
     "open_questions": [
       "Can stock LG/Android expose the canonical system-owned corner sequence on LGM-V300L?",
-      "Which Android-level hook counts taps inside the system-owned area?",
+      "Which stock-app-accessible Android mechanism counts taps inside the system-owned area?",
       "Which threshold is active by default: 3 or 4 taps?"
     ],
     "tags": [
@@ -737,11 +737,11 @@
       "tap_count": 4,
       "incomplete_sequence": "reset; no passthrough/replay",
       "touch_ownership": "SystemUI owns full sequence starting inside zone",
-      "status": "deferred prototype variant"
+      "status": "archived closed experiment"
     },
     "constraints": [
       "This strict behavior is not the canonical 4Tap activation semantics.",
-      "Requires OEM/SystemUI/input-policy integration.",
+      "Not an active implementation path.",
       "Foreground-app delivery is not part of the activation contract."
     ],
     "open_questions": [
@@ -3301,7 +3301,7 @@
       "remaining_blocker": "system corner event path + interception behavior"
     },
     "constraints": [
-      "Root, bootloader unlock, custom ROM and SystemUI modification are outside this stage without a separate decision."
+      "4Tap must remain an ordinary user app on stock Android; system modification paths are excluded."
     ],
     "open_questions": [],
     "tags": [
