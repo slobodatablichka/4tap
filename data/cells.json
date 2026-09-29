@@ -447,9 +447,9 @@
     "section": "android",
     "title": "Android Integration",
     "group": "PLATFORM",
-    "short": "Системное пространство в нижнем левом/правом углу даёт целевой 3/4-tap вход 4Tap; downstream overlay уже подтверждён.",
-    "description": "Канонический Android-вход 4Tap — system/OEM-owned пространство в нижнем левом или правом углу. Оно не обязано быть видимым поверх foreground-приложения: приложение может визуально занимать угол полностью. Системный слой распознаёт последовательность из 3 или 4 тапов и формирует ActivationRequest. TYPE_APPLICATION_OVERLAY используется только после активации для Drawing Overlay. Сценарий пассивного raw-touch «где угодно на экране» остаётся отдельным заблокированным вариантом и не определяет угловую модель.",
-    "purpose": "Получить системный угловой вход 4Tap поверх текущего пользовательского контекста.",
+    "short": "Обычное Android-приложение ловит 3/4 быстрых тапа в нижнем LEFT/RIGHT углу; post-activation overlay уже подтверждён.",
+    "description": "Канонический Android-вход 4Tap — 3 или 4 быстрых тапа в выбранном нижнем левом или правом системном углу. 4Tap остаётся обычным пользовательским приложением и пытается получить полную последовательность штатными средствами. Если один из тапов не получен из-за активности приложения, системы или другого обработчика, серия сбрасывается и активация не происходит. TYPE_APPLICATION_OVERLAY используется только после успешной активации для Drawing Overlay.",
+    "purpose": "Получить быстрый угловой вызов 4Tap без изменения Android.",
     "kind": "core",
     "models": [
       "b2c",
@@ -460,26 +460,25 @@
     ],
     "status": "needs-validation",
     "inputs": [
-      "System/OEM corner touch events"
+      "Lower-corner 3/4-tap sequence"
     ],
     "outputs": [
       "ActivationRequest"
     ],
     "parameters": {
-      "activation_policy": "system-owned lower-left/right corner",
+      "activation_policy": "ordinary app; lower-left/right corner",
       "tap_thresholds": "3 or 4 sequential taps",
-      "visual_layer": "foreground app may visually cover the corner",
-      "pre_activation_delivery": "not part of product contract",
+      "failure_policy": "missing/consumed tap → reset; no activation",
       "post_activation_surface": "TYPE_APPLICATION_OVERLAY — verified"
     },
     "constraints": [
-      "System/OEM layer must be able to observe the required corner tap sequence.",
-      "Foreground app or system interception may prevent recognition on some contexts and must be tested.",
-      "App-owned overlay is not the activation zone."
+      "4Tap remains an ordinary user-installed app on stock Android.",
+      "No firmware/SystemUI modification, root, privileged/system app or mandatory OEM integration.",
+      "No ownership/passthrough/replay guarantee is required.",
+      "App-owned overlay is post-activation only."
     ],
     "open_questions": [
-      "Какие штатные Android/LG input paths позволяют system-owned corner detector на LGM-V300L?",
-      "В каких foreground-приложениях последовательность перехватывается и не доступна системному detector?"
+      "Получает ли обычный 4Tap APK полную 3/4-tap sequence в целевом нижнем углу и вызывает ли ActivationRequest?"
     ],
     "tags": [
       "android",
@@ -506,7 +505,7 @@
           "url": "https://developer.android.com/reference/android/view/WindowManager.LayoutParams"
         }
       ],
-      "next_step": "Test the canonical lower-corner 3/4-tap model on LGM-V300L, including foreground-app interception behavior."
+      "next_step": "Run the real-device ordinary-app lower-corner 3/4-tap activation test and connect a successful sequence to ActivationRequest."
     }
   },
   {
@@ -576,9 +575,9 @@
     "order": 25,
     "title": "Arbitrary-area Global Tap Limitation",
     "group": "PLATFORM LIMIT",
-    "short": "Ограничение относится к пассивным тапам «где угодно», а не к каноническому system-owned угловому пространству 4Tap.",
-    "description": "Техническая проверка снимает только вариант «наблюдать тапы в произвольной области всего экрана обычным APK и гарантированно не менять доставку касаний». Канонический 4Tap использует отдельное system/OEM-owned пространство в нижнем левом или правом углу с последовательностью 3/4 taps. Возможность такого системного corner detector проверяется отдельно.",
-    "purpose": "Make the main Android feasibility blocker explicit and prevent the conceptual flow from being mistaken for an implemented capability.",
+    "short": "Ограничение пассивного raw-touch «где угодно» не определяет текущий угловой trigger 4Tap.",
+    "description": "Ранее проверялся другой сценарий: пассивно наблюдать raw taps в произвольной области всего экрана обычным APK. Он не является текущей моделью 4Tap. Текущий trigger — конкретная 3/4-tap sequence в нижнем LEFT/RIGHT углу; если часть последовательности недоступна в конкретном контексте, активация просто не происходит.",
+    "purpose": "Не переносить выводы старого arbitrary-area эксперимента на текущий угловой trigger.",
     "kind": "core",
     "models": [
       "b2c",
@@ -600,9 +599,9 @@
       "touch_exploration": "changes interaction semantics"
     },
     "constraints": [
-      "Arbitrary-area passive global raw-touch remains unavailable to an ordinary APK as originally specified.",
-      "This limitation does not by itself invalidate a system/OEM-owned lower-corner detector.",
-      "App-owned transparent overlay is not a substitute for the system corner."
+      "Do not generalize the arbitrary-area limitation into a requirement for SystemUI/OEM integration.",
+      "Current work tests the corner sequence directly as an ordinary app.",
+      "A failed sequence in a particular context is an accepted activation failure."
     ],
     "open_questions": [],
     "tags": [
@@ -615,7 +614,7 @@
       "state": "blocked-as-specified",
       "date": "2026-09-28",
       "confidence": "high",
-      "summary": "Заблокирован именно arbitrary-area passive global Quad Tap для обычного приложения; OEM/system-owned touch region остаётся отдельным допустимым направлением исследования.",
+      "summary": "The old arbitrary-area passive-global-touch scenario is constrained; it is not the active lower-corner 3/4-tap model.",
       "sources": [
         {
           "label": "Android AccessibilityService API",
@@ -626,19 +625,19 @@
           "url": "https://developer.android.com/reference/android/accessibilityservice/TouchInteractionController"
         }
       ],
-      "next_step": "Keep arbitrary-area capture out of the main flow and validate the system-owned lower-corner model separately.",
-      "implication": "Главный Android flow должен быть привязан к системному угловому пространству, а не к наблюдению тапов по всему экрану."
+      "next_step": "Keep this limitation out of the active corner-trigger implementation unless a concrete failure makes it relevant.",
+      "implication": "No architecture redesign follows from this old limitation."
     }
   },
   {
     "id": "android-activation-redesign",
     "section": "android",
     "order": 27,
-    "title": "System Corner Activation Architecture",
+    "title": "Corner Activation Architecture",
     "group": "ARCHITECTURE DECISION",
-    "short": "Канонический Android-entry: system-owned нижний левый/правый угол → 3/4 taps → ActivationRequest.",
-    "description": "После снятия сценария arbitrary-area passive raw touch архитектура возвращается к принятой угловой модели: два system/OEM-owned пространства в нижних углах, которые распознают 3 или 4 последовательных тапа. Пространство может быть визуально закрыто foreground-приложением; системные тапы принадлежат system/OEM input layer. После достижения активного порога системный слой формирует уже подтверждённый ActivationRequest. Строгая SystemUI reserved zone с полным поглощением касаний остаётся отдельным prototype variant.",
-    "purpose": "Зафиксировать каноническую точку входа Android и отделить её от частного строгого SystemUI-прототипа.",
+    "short": "Канон: обычный APK → нижний LEFT/RIGHT угол → 3/4 taps → ActivationRequest.",
+    "description": "4Tap не резервирует системную территорию и не требует системного detector. Обычное приложение пытается получить 3 или 4 быстрых тапа в нижнем углу. Полная последовательность формирует ActivationRequest; потерянный или занятый тап сбрасывает серию и означает неудачную активацию. Это принимается без отдельного ownership/passthrough/replay-механизма.",
+    "purpose": "Зафиксировать простой ordinary-app вход и не возвращаться к SystemUI/OEM архитектуре.",
     "kind": "core",
     "models": [
       "b2c",
@@ -649,30 +648,29 @@
     ],
     "status": "concept",
     "inputs": [
-      "System-owned corner touch sequence",
+      "Lower-corner tap sequence",
       "Требование быстрого вызова"
     ],
     "outputs": [
       "ActivationRequest"
     ],
     "parameters": {
-      "decision_status": "canonical-system-corner",
-      "primary_path": "system lower-left/right corner → 3/4 taps → ActivationRequest → Drawing Overlay → Recognizer → Command → Action",
+      "decision_status": "canonical-ordinary-app-corner",
+      "primary_path": "lower-left/right corner → 3/4 taps → ActivationRequest → Drawing Overlay → Recognizer → Command → Action",
       "tap_thresholds": "3 or 4",
-      "pre_activation_taps": "not part of product contract",
-      "strict_reserved_zone": "separate prototype variant",
-      "downstream_verification": "external trigger → overlay → SC → ACTION_SETTINGS verified on LGM-V300L"
+      "failed_sequence": "reset; no activation",
+      "ownership_model": "not part of product requirements",
+      "downstream_verification": "external debug trigger → overlay → SC → ACTION_SETTINGS verified on LGM-V300L"
     },
     "constraints": [
-      "Do not replace the tap-based system corner with buttons or Accessibility shortcuts.",
-      "App-owned TYPE_APPLICATION_OVERLAY is post-activation only.",
-      "Foreground-app delivery is outside the activation contract.",
-      "4Tap must remain an ordinary user app; root, bootloader unlock, custom ROM, firmware/SystemUI modification, privileged/system app and mandatory OEM integration are outside the active product architecture."
+      "Ordinary user app on stock Android only.",
+      "No SystemUI/firmware/root/privileged/OEM-only implementation path.",
+      "Do not replace the tap trigger with buttons or Accessibility shortcuts.",
+      "TYPE_APPLICATION_OVERLAY is post-activation only."
     ],
     "open_questions": [
-      "Can stock LG/Android expose the canonical system-owned corner sequence on LGM-V300L?",
-      "Which stock-app-accessible Android mechanism counts taps inside the system-owned area?",
-      "Which threshold is active by default: 3 or 4 taps?"
+      "Срабатывает ли ordinary-app 3/4-tap detector в целевом нижнем углу на физическом устройстве?",
+      "Какой порог используется по умолчанию: 3 или 4 тапа?"
     ],
     "tags": [
       "android",
@@ -685,7 +683,7 @@
       "state": "verified-constrained",
       "date": "2026-09-28",
       "confidence": "high",
-      "summary": "Android имеет системные gesture/touch regions с приоритетом системы, но обычное приложение не может создать новый mandatory system gesture. Для Quad Tap нужен OEM/SystemUI-owned region или изменение input policy.",
+      "summary": "Current architecture is an ordinary-app lower-corner tap sequence. No system-owned detector is required by the product model.",
       "sources": [
         {
           "label": "Android — WindowInsets.Type.systemGestures / mandatorySystemGestures",
@@ -700,19 +698,19 @@
           "url": "https://source.android.com/docs/compatibility/17/android-17-cdd"
         }
       ],
-      "next_step": "Test the canonical 3/4-tap lower-corner model on the prepared LG V30 and connect a confirmed system event path to ActivationRequest.",
-      "implication": "Downstream through real Android action execution is verified; the remaining Stage 1 question is the system-owned lower-corner input path and interception behavior."
+      "next_step": "Test the ordinary-app lower-corner 3/4-tap sequence on LGM-V300L and route a successful sequence to ActivationRequest.",
+      "implication": "Failure to receive a tap means no activation in that context, not a switch to SystemUI/OEM implementation."
     }
   },
   {
     "id": "android-oem-quad-zone",
     "section": "android",
     "order": 28,
-    "title": "Strict OEM Reserved Zone — Prototype Variant",
-    "group": "SYSTEM INPUT",
-    "short": "Строгий SystemUI-вариант: зона полностью принадлежит системе, фиксированные 4 taps, без passthrough/replay; это не каноническая модель.",
-    "description": "Отдельный экспериментальный OEM/SystemUI вариант. SystemUI полностью владеет небольшой угловой зоной и всей touch sequence: события не передаются foreground-приложению, незавершённые 1/2/3 taps сбрасываются, activation происходит на 4-м tap. Этот вариант полезен для проверки максимально детерминированной OEM-интеграции, но не заменяет каноническую модель 4Tap, где поддерживаются 3/4 taps и системные тапы принадлежат system/OEM input layer.",
-    "purpose": "Проверить строгий fully-reserved вариант OEM/SystemUI как отдельную техническую ветвь.",
+    "title": "Archived SystemUI Reserved Zone Experiment",
+    "group": "ARCHIVE",
+    "short": "Закрытый исторический эксперимент; не входит в архитектуру или roadmap пользовательского 4Tap.",
+    "description": "Ранее исследовалась отдельная SystemUI/AOSP reserved zone для Quad Tap. Этот путь закрыт: Android-версия 4Tap должна быть обычным пользовательским приложением на штатной ОС.",
+    "purpose": "Сохранить историю исследования без влияния на текущую архитектуру.",
     "kind": "core",
     "models": [
       "b2c",
@@ -722,32 +720,18 @@
       "android"
     ],
     "status": "concept",
-    "inputs": [
-      "Touch events inside OEM-owned zone"
-    ],
-    "outputs": [
-      "Quad Tap event / KnockUI activation"
-    ],
+    "inputs": [],
+    "outputs": [],
     "parameters": {
-      "owner": "Android/OEM/SystemUI",
-      "variant": "strict fully-reserved prototype",
-      "canonical_model": "system corner, 3 or 4 taps, taps belong to system area",
-      "geometry_baseline": "58 × 44 dp",
-      "geometry_candidates": "52×40; 58×44; 64×48 dp",
-      "tap_count": 4,
-      "incomplete_sequence": "reset; no passthrough/replay",
-      "touch_ownership": "SystemUI owns full sequence starting inside zone",
-      "status": "archived closed experiment"
+      "status": "archived closed experiment",
+      "product_relevance": "none",
+      "canonical_model": "ordinary app; lower-left/right corner; 3 or 4 taps"
     },
     "constraints": [
-      "This strict behavior is not the canonical 4Tap activation semantics.",
-      "Not an active implementation path.",
-      "Foreground-app delivery is not part of the activation contract."
+      "Do not use this experiment as an implementation option or next step.",
+      "No firmware/SystemUI modification, root, privileged/system app or mandatory OEM integration."
     ],
-    "open_questions": [
-      "Нужен ли strict fully-reserved вариант после проверки канонической модели?",
-      "Как strict prototype соотносится с Android-generic system-area implementation?"
-    ],
+    "open_questions": [],
     "tags": [
       "android",
       "oem",
@@ -759,7 +743,7 @@
       "state": "requires-prototype",
       "date": "2026-09-29",
       "confidence": "high",
-      "summary": "The external handoff into 4Tap is verified. This cell now describes only the strict fully-reserved 4-tap SystemUI prototype variant; it is not the canonical corner semantics.",
+      "summary": "Archived historical experiment only.",
       "sources": [
         {
           "label": "Android — WindowInsets.Type.systemGestures / mandatorySystemGestures",
@@ -774,18 +758,18 @@
           "url": "https://source.android.com/docs/compatibility/17/android-17-cdd"
         }
       ],
-      "next_step": "Deferred until the canonical system-corner 3/4-tap model has been tested on the physical device.",
-      "implication": "Strict touch ownership remains an OEM option, not a product-level requirement."
+      "next_step": "None. Use the ordinary-app corner activation model.",
+      "implication": "No active product dependency or roadmap branch."
     }
   },
   {
     "id": "android-quad-tap",
     "section": "android",
-    "title": "System Corner Tap Sequence",
+    "title": "Corner Tap Sequence",
     "group": "ACTIVATION",
-    "short": "В системном нижнем левом или правом углу 4Tap активируется последовательностью из 3 или 4 тапов.",
-    "description": "Канонический tap-trigger привязан к system/OEM-owned пространству нижнего левого или правого угла. Активный порог может быть 3 или 4 последовательных тапа; это параметр продукта, а не жёсткая константа архитектуры. Foreground-приложение может визуально занимать угол. Тапы выполняются непосредственно по system-owned области и обрабатываются системным/OEM input layer. Foreground-приложение не является адресатом этих системных тапов.",
-    "purpose": "Активировать 4Tap фирменной короткой последовательностью тапов в предсказуемом системном углу.",
+    "short": "В нижнем LEFT/RIGHT углу 4Tap активируется последовательностью из 3 или 4 быстрых тапов.",
+    "description": "Обычный 4Tap APK пытается получить 3 или 4 коротких последовательных тапа в выбранном нижнем углу. Если последовательность получена полностью, формируется ActivationRequest. Если один из тапов не получен из-за текущего приложения, системы или другого обработчика, состояние сбрасывается и активация не происходит. Отдельная модель ownership/passthrough/replay не требуется.",
+    "purpose": "Активировать 4Tap короткой угловой последовательностью.",
     "kind": "core",
     "models": [
       "b2c",
@@ -796,7 +780,7 @@
     ],
     "status": "needs-validation",
     "inputs": [
-      "System corner tap sequence"
+      "Lower-corner tap sequence"
     ],
     "outputs": [
       "ActivationRequest / KnockUI activation"
@@ -806,17 +790,18 @@
       "exact_threshold": "product parameter",
       "corners": "LEFT / RIGHT independent",
       "prototype_timing": "45–700 ms inter-tap; 280 ms max tap duration; 20 dp max movement",
-      "current_proof": "in-app 4-tap LEFT SC OK; RIGHT SC OK",
-      "pre_activation_delivery": "not part of product contract"
+      "failure_policy": "missing/consumed tap → reset; no activation",
+      "current_proof": "in-app 4-tap LEFT SC OK; RIGHT SC OK"
     },
     "constraints": [
-      "System/OEM input layer must receive enough events to recognize the selected threshold.",
-      "Foreground app/system interception may block activation in some contexts.",
-      "App-owned overlay and non-tap shortcuts are not equivalent activation mechanisms."
+      "Ordinary app only.",
+      "A sequence may fail in contexts where a tap is not received.",
+      "No ownership/passthrough/replay guarantee.",
+      "App-owned overlay and non-tap shortcuts are not equivalent triggers."
     ],
     "open_questions": [
       "Какой порог используется по умолчанию: 3 или 4?",
-      "Какие приложения/системные поверхности перехватывают последовательность на LG V30?"
+      "Проходит ли реальная lower-corner sequence до ActivationRequest на физическом устройстве?"
     ],
     "tags": [
       "android",
@@ -829,7 +814,7 @@
       "state": "requires-prototype",
       "date": "2026-09-28",
       "confidence": "high",
-      "summary": "The tap-sequence detector is straightforward and the in-app 4-tap harness is verified. The canonical product model now explicitly supports 3 or 4 taps in a system-owned lower corner; the unresolved part is system event availability and interception behavior.",
+      "summary": "In-app 4-tap detection is verified. Remaining work is the same sequence as an ordinary-app lower-corner trigger outside the 4Tap Activity.",
       "sources": [
         {
           "label": "Android AccessibilityService API",
@@ -840,8 +825,8 @@
           "url": "https://developer.android.com/reference/android/accessibilityservice/TouchInteractionController"
         }
       ],
-      "next_step": "Prototype/measure the system-owned lower-corner sequence on LGM-V300L for both 3-tap and 4-tap thresholds.",
-      "implication": "Tap count is not the main technical risk; system corner event ownership/visibility is."
+      "next_step": "Run the physical lower-corner 3/4-tap activation test.",
+      "implication": "A missed tap yields no activation; no system-level workaround is implied."
     }
   },
   {
@@ -1435,7 +1420,7 @@
     "title": "First Live Command — SC",
     "group": "MILESTONE",
     "short": "Первый полный real-device тест: поверх другой программы вызвать 4Tap, ввести SC и запустить назначенное приложение.",
-    "description": "Ближайший контрольный рубеж Android. На LGM-V300L уже подтверждена цепочка от внешнего test trigger через настоящий overlay и SC до запуска `Settings.ACTION_SETTINGS`. Для полного пользовательского рубежа осталось заменить debug broadcast канонической активацией: системный нижний левый/правый угол → 3/4 последовательных тапа → ActivationRequest.",
+    "description": "Ближайший контрольный рубеж Android. На LGM-V300L уже подтверждена downstream-цепочка от ActivationRequest через настоящий overlay и SC до запуска `Settings.ACTION_SETTINGS`. Для полного пользовательского рубежа осталось заменить debug broadcast обычной угловой активацией: нижний LEFT/RIGHT угол → 3/4 быстрых тапа → ActivationRequest.",
     "purpose": "Доказать практическую ценность 4Tap одним полностью работающим сценарием до расширения алфавита и настроек.",
     "kind": "b2c",
     "models": [
@@ -1446,7 +1431,7 @@
     ],
     "status": "needs-validation",
     "inputs": [
-      "System corner 3/4-tap ActivationRequest",
+      "Lower-corner 3/4-tap ActivationRequest",
       "Recognized SC",
       "Test app assignment"
     ],
@@ -1464,25 +1449,24 @@
       "override_density_dpi": 560,
       "navigation_bar_frame_px": "[0,2733][1440,2880]",
       "navigation_bar_height_px": 147,
-      "geometry_role": "baseline for LEFT/RIGHT system-corner activation tests",
+      "geometry_role": "LG diagnostic baseline only; not product trigger geometry",
       "touch_device": "/dev/input/event1",
       "touch_name": "touch_dev",
       "touch_direct": true,
       "touch_x_raw": "0..1439",
       "touch_y_raw": "0..2879",
       "touch_mapping": "1:1 with physical 1440 × 2880 display",
-      "ownership_test_navbar_inside": "raw LEFT (133,2827), RIGHT (1363,2859): touchscreen yes, MainActivity no",
-      "ownership_test_app_above": "raw LEFT (224,2584), RIGHT (1337,2560): MainActivity yes",
       "activity_raw_y_offset_px": 84,
-      "navbar_top_raw_y": 2733
+      "navbar_top_raw_y": 2733,
+      "touch_observation_note": "raw touch coordinates recorded; early empty Logcat cannot be used as ownership evidence because diagnostic APK was not installed"
     },
     "constraints": [
-      "Канонический system-corner trigger ещё не подтверждён на stock LG.",
-      "Foreground-app delivery is not part of the activation contract.",
+      "Ordinary-app lower-corner trigger ещё не подтверждён end-to-end.",
+      "A missed tap may simply cause activation failure in that context.",
       "Текущий action mapping является минимальным prototype assignment."
     ],
     "open_questions": [
-      "Какой system/OEM path на LG V30 даёт канонический 3/4-tap corner trigger без debug broadcast?"
+      "Срабатывает ли ordinary-app lower-corner 3/4-tap trigger без ADB/debug broadcast?"
     ],
     "tags": [
       "android",
@@ -1494,10 +1478,10 @@
       "state": "requires-prototype",
       "date": "2026-09-29",
       "confidence": "high",
-      "summary": "Physical-device downstream including action execution is verified. The remaining milestone is the canonical system-corner 3/4-tap activation source, including interception behavior.",
+      "summary": "Physical-device downstream including action execution is verified. Remaining milestone: ordinary-app 3/4-tap lower-corner activation.",
       "sources": [],
-      "next_step": "Confirm the system-owned lower-corner 3/4-tap path, then repeat the complete chain without ADB/debug broadcast.",
-      "implication": "System ownership of the lower NavigationBar versus ordinary app content is physically demonstrated on LGM-V300L; exact boundary/hook for 3/4-tap activation remains to be tested."
+      "next_step": "Run the lower-corner 3/4-tap trigger and repeat the complete chain without ADB/debug broadcast.",
+      "implication": "LG geometry/raw-touch data are diagnostic only; no ownership conclusion is part of the milestone."
     }
   },
   {
@@ -3277,8 +3261,8 @@
     "section": "roadmap",
     "title": "Stage 1 — Android End-to-End",
     "group": "ROADMAP",
-    "short": "Получить на штатном LG полную цепочку: другая программа → 4Tap → SC → запуск назначенной программы.",
-    "description": "Stage 1 завершается после physical-device подтверждения цепочки «другая программа → system-owned нижний угол → 3/4 taps → KnockUI overlay → S → C → SC → назначенное действие». Touch, S/C, SC, overlay, внешний test handoff и `SC → Settings.ACTION_SETTINGS` уже подтверждены на LGM-V300L; нерешённой остаётся Android-level обработка 3/4 тапов внутри system-owned области.",
+    "short": "Получить полную цепочку: другая программа → 3/4 угловых тапа → 4Tap → SC → действие.",
+    "description": "Stage 1 завершается после physical-device подтверждения цепочки «нижний LEFT/RIGHT угол → 3/4 быстрых тапа → KnockUI overlay → S → C → SC → назначенное действие». Touch, S/C, SC, overlay, внешний test handoff и `SC → Settings.ACTION_SETTINGS` уже подтверждены. Нерешённой остаётся только ordinary-app угловая активация без ADB/debug broadcast.",
     "purpose": "Подтвердить основной пользовательский цикл 4Tap на штатном Android без модификации ОС.",
     "kind": "b2c",
     "models": [
@@ -3293,15 +3277,17 @@
       "Verified Android end-to-end command flow"
     ],
     "parameters": {
-      "device": "LGM-V300L / Android 9",
+      "device_fixture": "LGM-V300L / Android 9",
       "verified_downstream": "ActivationRequest → OverlayLauncher → Drawing Overlay → Recognizer → Command → Action",
-      "canonical_activation": "system-owned lower-left/right corner → 3 or 4 taps",
+      "canonical_activation": "ordinary app; lower-left/right corner → 3 or 4 taps",
       "first_command": "SC",
       "first_action": "Settings.ACTION_SETTINGS — verified prototype assignment",
-      "remaining_blocker": "system corner event path + interception behavior"
+      "remaining_blocker": "ordinary-app lower-corner 3/4-tap activation"
     },
     "constraints": [
-      "4Tap must remain an ordinary user app on stock Android; system modification paths are excluded."
+      "4Tap must remain an ordinary user app on stock Android.",
+      "Missed/consumed tap → reset/no activation; no system-level workaround is required.",
+      "SystemUI/AOSP/root/privileged/OEM-only paths are excluded."
     ],
     "open_questions": [],
     "tags": [
