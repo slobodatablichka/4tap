@@ -1457,7 +1457,14 @@
       "command": "SC",
       "device": "LGM-V300L / Android 9",
       "scope": "first end-to-end real-device milestone",
-      "action_test": "SC → Settings.ACTION_SETTINGS — PASS"
+      "action_test": "SC → Settings.ACTION_SETTINGS — PASS",
+      "test_device": "LGM-V300L / Android 9 / V300L30p",
+      "display_px": "1440 × 2880",
+      "physical_density_dpi": 640,
+      "override_density_dpi": 560,
+      "navigation_bar_frame_px": "[0,2733][1440,2880]",
+      "navigation_bar_height_px": 147,
+      "geometry_role": "baseline for LEFT/RIGHT system-corner activation tests"
     },
     "constraints": [
       "Канонический system-corner trigger ещё не подтверждён на stock LG.",

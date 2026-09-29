@@ -227,6 +227,18 @@
 
 Единственный незакрытый риск Stage 1 — штатный Android/LG источник активации без ADB/debug broadcast и без модификации ОС.
 
+## LG V30 test geometry baseline
+
+Для основной физической Android-площадки `LGM-V300L / Android 9 / V300L30p` зафиксирована текущая геометрия:
+
+- display: `1440 × 2880 px`;
+- physical density: `640 dpi`;
+- override density: `560 dpi`;
+- `NavigationBar`: `[0,2733][1440,2880]`;
+- высота нижней системной панели: `147 px`.
+
+Эти значения используются как reference при экспериментах с системным LEFT/RIGHT corner space и требуют повторного измерения при изменении density, navigation mode или firmware.
+
 ## Android system corner activation — restored canon
 
 В публичной карте восстановлена каноническая модель углового вызова 4Tap:
