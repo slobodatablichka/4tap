@@ -170,13 +170,60 @@
     "order": 30
   },
   {
+    "id": "design-canon",
+    "section": "product",
+    "order": 32,
+    "title": "4Tap Design Canon",
+    "group": "UX SYSTEM",
+    "short": "Единый визуальный и поведенческий канон для KnockUI, состояний ввода, обратной связи и пользовательских экранов.",
+    "description": "Design Canon должен предшествовать существенной переработке overlay. v0.1 задаёт визуальный характер 4Tap, геометрию KnockUI, типографику, состояния ожидание/ввод/распознано/ошибка/выполнено, анимацию, звук/вибрацию и правила Settings Console. v0.2 уточняется после первой полной real-device цепочки; v1.0 — перед публичной beta.",
+    "purpose": "Не допустить расхождения интерфейсов и закрепить узнаваемую механику продукта.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "shared",
+      "android",
+      "ios"
+    ],
+    "status": "approved",
+    "inputs": [
+      "Рабочий KnockUI prototype",
+      "Product UX decisions"
+    ],
+    "outputs": [
+      "Design rules",
+      "Overlay states",
+      "Settings UI rules"
+    ],
+    "parameters": {
+      "v0_1": "before overlay redesign",
+      "v0_2": "after first full real-device chain",
+      "v1_0": "before public beta"
+    },
+    "constraints": [
+      "Канон должен сохранять скорость и минимальное вмешательство в текущий контекст пользователя."
+    ],
+    "open_questions": [
+      "Финальная типографика и motion language",
+      "Визуальная степень заметности KnockUI"
+    ],
+    "tags": [
+      "design",
+      "ux",
+      "canon"
+    ]
+  },
+  {
     "id": "gesture-language",
     "section": "product",
     "order": 35,
     "title": "Graffiti / Unistroke Language",
     "group": "PROTOCOL",
-    "short": "Жестовые реализации KnockUI используют одноштриховые знаки для максимально быстрого ввода.",
-    "description": "Рекомендуемый жестовый язык KnockUI основан на оригинальном Palm Graffiti: символы рисуются одним непрерывным движением без отрыва пальца, а направление штриха является частью эталона. Общий целевой алфавит — A–Z и 0–9. Чатовый контур WhatsApp может сохранять command namespace без буквального жестового ввода.",
+    "short": "Жестовый язык 4Tap опирается на оригинальный Palm Graffiti, но конечные эталоны оформляются как собственный 4Tap Graffiti Profile.",
+    "description": "Palm Graffiti используется как исходная система одноштрихового письма: символы рисуются одним непрерывным движением, направление штриха учитывается. При этом 4Tap не обязан буквально копировать каждый исторический знак: неудобные символы могут быть осознанно переработаны и зафиксированы в 4Tap Graffiti Profile. Общий целевой алфавит — A–Z и 0–9.",
     "purpose": "Сохранить единый быстрый язык ввода там, где платформа позволяет жестовую поверхность.",
     "kind": "core",
     "models": [
@@ -197,17 +244,63 @@
       "Кандидат символа"
     ],
     "parameters": {
-      "style": "Graffiti / Unistroke",
+      "style": "Palm Graffiti baseline → 4Tap Graffiti Profile",
       "alphabet": "A–Z + 0–9"
     },
     "constraints": [
-      "Конкретные шаблоны и распознаватель требуют платформенной проверки."
+      "Конкретные эталоны и допустимые варианты должны быть утверждены до масштабирования распознавателя на полный алфавит."
     ],
     "open_questions": [],
     "tags": [
       "gesture",
       "graffiti",
       "unistroke"
+    ]
+  },
+  {
+    "id": "graffiti-profile",
+    "section": "product",
+    "order": 36,
+    "title": "4Tap Graffiti Profile",
+    "group": "GESTURE LANGUAGE",
+    "short": "Собственный нормативный набор одноштриховых знаков 4Tap, основанный на Palm Graffiti, но допускающий осознанные коррекции.",
+    "description": "Для каждого символа A–Z и 0–9 профиль фиксирует каноническую траекторию, направление, старт/финиш, допустимые отклонения, возможные альтернативы и конфликтующие знаки. Исторический Palm Graffiti используется как baseline, но неудобные формы могут меняться; символ X уже отмечен как кандидат на переработку.",
+    "purpose": "Получить обучаемый и технически однозначный алфавит для пальцевого ввода 4Tap.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "shared",
+      "android",
+      "ios"
+    ],
+    "status": "concept",
+    "inputs": [
+      "Palm Graffiti baseline",
+      "Real-device handwriting tests"
+    ],
+    "outputs": [
+      "Canonical 4Tap stroke signatures"
+    ],
+    "parameters": {
+      "alphabet": "A–Z + 0–9",
+      "direction_sensitive": true,
+      "known_review": "X"
+    },
+    "constraints": [
+      "Нельзя расширять распознаватель на полный алфавит до утверждения эталонов и конфликтных пар."
+    ],
+    "open_questions": [
+      "Какие исторические знаки требуют изменения?",
+      "Нужны ли несколько допустимых вариантов для отдельных символов?"
+    ],
+    "tags": [
+      "graffiti",
+      "gesture",
+      "profile",
+      "recognizer"
     ]
   },
   {
@@ -1398,13 +1491,58 @@
     }
   },
   {
+    "id": "android-default-integration-catalog",
+    "section": "android",
+    "order": 135,
+    "title": "Default Integration Catalog — Russia",
+    "group": "INTEGRATIONS",
+    "short": "Подобранный российский набор приложений и действий, которые 4Tap умеет предлагать и подключать по умолчанию.",
+    "description": "Каталог содержит проверенные сведения об Android-приложениях: package identity, возможность обычного запуска и, где это устойчиво и документировано, deep links/actions. Первый слой — надёжный launch; второй — более глубокие действия. Конкретный shortlist формируется отдельно по критериям распространённости, стабильности и полезности.",
+    "purpose": "Сократить настройку 4Tap для российского пользователя и дать полезные назначения сразу после установки.",
+    "kind": "b2c",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "android"
+    ],
+    "status": "concept",
+    "inputs": [
+      "Российский shortlist приложений",
+      "Package/intent/deep-link contracts"
+    ],
+    "outputs": [
+      "Verified default integrations"
+    ],
+    "parameters": {
+      "phase_1": "app launch",
+      "phase_2": "documented deep links/actions",
+      "market": "Russia"
+    },
+    "constraints": [
+      "Нельзя считать undocumented deep links стабильным контрактом.",
+      "Package visibility должна быть минимально необходимой."
+    ],
+    "open_questions": [
+      "Какие приложения входят в стартовый shortlist?",
+      "Какие действия кроме launch достаточно стабильны для default catalog?"
+    ],
+    "tags": [
+      "android",
+      "integration",
+      "russia",
+      "catalog"
+    ]
+  },
+  {
     "id": "android-gesture-editor",
     "section": "android",
     "order": 140,
     "title": "Gesture Assignment Editor",
     "group": "B2C UI",
-    "short": "Пользователь видит пространство комбинаций и назначает свободные пары приложениям или Deep Links.",
-    "description": "Экран конструктора позволяет просматривать комбинации, отличать занятые системные пары от свободных и создавать/редактировать UserGestures. Системные назначения видимы, но заблокированы.",
+    "short": "Подкомпонент Settings Console для назначения свободных двухсимвольных команд приложениям и действиям.",
+    "description": "Редактор назначений работает внутри общего окна настройки 4Tap: показывает занятые и свободные комбинации, создаёт/изменяет UserGestures и связывает их с приложением, deep link или другим поддержанным действием. Системные назначения видимы, но не редактируются.",
     "purpose": "Дать пользователю управляемый интерфейс персонализации KnockUI.",
     "kind": "b2c",
     "models": [
@@ -1458,6 +1596,58 @@
       "next_step": "Prototype package discovery with targeted launcher/intents before considering broad visibility.",
       "implication": "App picker надо проектировать от минимально достаточной package visibility; QUERY_ALL_PACKAGES не должен быть исходным допущением."
     }
+  },
+  {
+    "id": "android-settings-console",
+    "section": "android",
+    "order": 145,
+    "title": "4Tap Settings Console",
+    "group": "B2C UI",
+    "short": "Главное пользовательское окно настройки: приложения, default-привязки, обучение Graffiti и персональные назначения команд.",
+    "description": "Settings Console объединяет обнаруженные доступные приложения, привязки по умолчанию, справочник написания знаков, пользовательский редактор сокращений и привязку двухсимвольной команды к приложению или действию. Также должна поддерживаться отдельная приватная группа из 40 сокращений основателя; содержимое этой группы не является публичными данными проекта.",
+    "purpose": "Сделать 4Tap программируемым самим пользователем без ручной работы с системными настройками.",
+    "kind": "b2c",
+    "models": [
+      "b2c"
+    ],
+    "platforms": [
+      "android"
+    ],
+    "status": "concept",
+    "inputs": [
+      "Installed/available apps",
+      "Default Integration Catalog",
+      "4Tap Graffiti Profile",
+      "SystemGestures",
+      "UserGestures"
+    ],
+    "outputs": [
+      "UserGesture assignments",
+      "Training/reference view",
+      "Configured 4Tap profile"
+    ],
+    "parameters": {
+      "installed_apps": true,
+      "default_bindings": true,
+      "founder_private_profile_count": 40,
+      "writing_guide": true,
+      "user_assignment": true
+    },
+    "constraints": [
+      "Содержимое Founder 40 приватно и не должно публиковаться без отдельного решения.",
+      "Installed-app discovery подчиняется Android package visibility и privacy policy."
+    ],
+    "open_questions": [
+      "Как организовать первый onboarding?",
+      "Как визуально совместить каталог приложений, команды и обучение без перегрузки?"
+    ],
+    "tags": [
+      "android",
+      "settings",
+      "ui",
+      "editor",
+      "onboarding"
+    ]
   },
   {
     "id": "android-distribution-compliance",
@@ -2716,6 +2906,47 @@
     }
   },
   {
+    "id": "strategy-russia",
+    "section": "strategy",
+    "order": 5,
+    "title": "Russia — Android First",
+    "group": "REGIONAL STRATEGY",
+    "short": "Первичный российский запуск строится вокруг Android, RuStore и локального каталога популярных приложений.",
+    "description": "Российский контур 4Tap рассматривается как первый практический рынок Android-продукта. RuStore принимается как основной канал, другие Android-магазины и Google Play — как дополнительные каналы с учётом актуальной доступности публикации и платежей.",
+    "purpose": "Связать технический Android MVP с конкретным рынком, дистрибуцией и набором интеграций.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "android"
+    ],
+    "status": "concept",
+    "inputs": [
+      "Android MVP",
+      "Russian app ecosystem"
+    ],
+    "outputs": [
+      "Russia launch plan"
+    ],
+    "parameters": {
+      "primary_store": "RuStore",
+      "secondary_channels": "other Android stores + Google Play where applicable"
+    },
+    "constraints": [
+      "Условия магазинов и платежей должны проверяться перед релизом."
+    ],
+    "open_questions": [
+      "Какие дополнительные магазины реально дают полезный охват?"
+    ],
+    "tags": [
+      "strategy",
+      "russia",
+      "distribution"
+    ]
+  },
+  {
     "id": "strategy-west",
     "section": "strategy",
     "title": "West: iOS + Android",
@@ -2878,12 +3109,104 @@
     }
   },
   {
+    "id": "monetization-model",
+    "section": "strategy",
+    "order": 45,
+    "title": "Monetization Model",
+    "group": "BUSINESS MODEL",
+    "short": "Базовая гипотеза: полезный Free + Pro, подписка только за постоянный сервис, отдельный B2B/OEM-контур.",
+    "description": "Монетизация не должна ухудшать главный быстрый UX. На старте рассматриваются Free и Pro; подписка оправдана только при наличии продолжающейся услуги вроде синхронизации/облачного сервиса. B2B/OEM-интеграции рассматриваются отдельно. Реклама не должна вмешиваться в KnockUI-flow.",
+    "purpose": "Создать доходную модель, не разрушая ключевое обещание скорости.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "shared",
+      "android",
+      "ios"
+    ],
+    "status": "concept",
+    "inputs": [
+      "Product value",
+      "Store capabilities",
+      "B2B opportunities"
+    ],
+    "outputs": [
+      "Pricing/entitlement model"
+    ],
+    "parameters": {
+      "baseline": "Free + Pro",
+      "subscription": "only for ongoing service",
+      "b2b": "separate",
+      "intrusive_ads": false
+    },
+    "constraints": [
+      "Конкретные цены и состав Pro требуют проверки спроса."
+    ],
+    "open_questions": [
+      "Какие функции входят в Free/Pro?",
+      "Разовая покупка или иной Pro entitlement на старте?"
+    ],
+    "tags": [
+      "strategy",
+      "monetization",
+      "business"
+    ]
+  },
+  {
+    "id": "promotion-strategy",
+    "section": "strategy",
+    "order": 50,
+    "title": "Promotion Strategy",
+    "group": "GO TO MARKET",
+    "short": "4Tap должен объясняться прежде всего короткой демонстрацией реального действия, а не длинным описанием.",
+    "description": "Основной рекламный образ — пользователь остаётся в текущем приложении, вызывает 4Tap, пишет два знака и получает нужное действие. Конкретные каналы продвижения и креативы проектируются после подтверждения полной real-device цепочки.",
+    "purpose": "Сделать ценность 4Tap мгновенно понятной потенциальному пользователю.",
+    "kind": "b2c",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "shared",
+      "android",
+      "ios"
+    ],
+    "status": "concept",
+    "inputs": [
+      "Working end-to-end demo",
+      "Design Canon"
+    ],
+    "outputs": [
+      "Demo-first marketing assets",
+      "Launch messaging"
+    ],
+    "parameters": {
+      "format": "short action demo",
+      "dependency": "working end-to-end chain"
+    },
+    "constraints": [
+      "Не обещать платформенные возможности, которые не подтверждены реальным устройством."
+    ],
+    "open_questions": [
+      "Какие каналы дают лучший первый охват в России?",
+      "Какие сценарии демонстрации наиболее понятны без объяснений?"
+    ],
+    "tags": [
+      "strategy",
+      "promotion",
+      "marketing"
+    ]
+  },
+  {
     "id": "roadmap-1",
     "section": "roadmap",
     "title": "Stage 1 — Android MVP",
     "group": "ROADMAP",
-    "short": "Android B2C: активация, распознавание, локальный холст и пользовательские назначения.",
-    "description": "Первый этап включает Android activation path, Quad Tap, распознавание Graffiti, Local Canvas и дальнейшую маршрутизацию команд. In-app 4-tap, настоящий overlay и downstream-контракт `ActivationRequest → OverlayLauncher → Drawing Overlay → Recognizer → Command` подтверждены на физическом устройстве; системный/OEM trigger остаётся отдельным незавершённым контуром.",
+    "short": "Android MVP: штатная активация, KnockUI, SC→app launch, затем продуктовый канон и пользовательская настройка.",
+    "description": "Первый этап доводит реальный Android-путь до цепочки «другая программа → штатная активация 4Tap → KnockUI → S → C → SC → запуск назначенной программы». Параллельно формируются Design Canon v0.1, 4Tap Graffiti Profile, Settings Console и российский каталог интеграций. SystemUI/AOSP-модификация остаётся отложенной ветвью.",
     "purpose": "Проверить основной пользовательский цикл KnockUI на Android.",
     "kind": "b2c",
     "models": [
@@ -2907,10 +3230,11 @@
       "external_activation_result": "OEM LEFT SC OK; OEM RIGHT SC OK",
       "systemui_zone_baseline": "58 × 44 dp (deferred concept)",
       "systemui_environment": "deferred: AOSP/Cuttlefish x86_64 userdebug",
-      "current_activation_priority": "stock Android/LG mechanisms on LGM-V300L / Android 9"
+      "current_activation_priority": "stock Android/LG mechanisms on LGM-V300L / Android 9",
+      "current_product_workstreams": "Design Canon v0.1; 4Tap Graffiti Profile; Settings Console; Russia default integrations"
     },
     "constraints": [
-      "Внешний system-like activation handoff подтверждён; реальная SystemUI/input-policy reserved Quad Tap zone ещё не реализована."
+      "Текущий activation path должен использовать возможности штатной ОС; модификация SystemUI/root/bootloader не входит в этап без отдельного решения."
     ],
     "open_questions": [],
     "tags": [
