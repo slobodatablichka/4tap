@@ -51,7 +51,7 @@ Android 4Tap — обычное пользовательское приложе�
 
 Текущее состояние карты:
 - 73 ячейки;
-- 153 связи;
+- 155 связей;
 - roadmap развёрнут в шесть этапов: Android end-to-end → Product Canon → User Configuration → Integration Catalog → Launch/Monetization+B2B → Cross-platform;
 - Android-поток дополнен разрешениями, валидацией зоны, fail-safe, обратной связью первого символа, хранилищем, редактором назначений, compliance и energy budget;
 - iOS и WeChat имеют явные action-узлы;
