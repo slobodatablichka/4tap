@@ -1464,7 +1464,13 @@
       "override_density_dpi": 560,
       "navigation_bar_frame_px": "[0,2733][1440,2880]",
       "navigation_bar_height_px": 147,
-      "geometry_role": "baseline for LEFT/RIGHT system-corner activation tests"
+      "geometry_role": "baseline for LEFT/RIGHT system-corner activation tests",
+      "touch_device": "/dev/input/event1",
+      "touch_name": "touch_dev",
+      "touch_direct": true,
+      "touch_x_raw": "0..1439",
+      "touch_y_raw": "0..2879",
+      "touch_mapping": "1:1 with physical 1440 × 2880 display"
     },
     "constraints": [
       "Канонический system-corner trigger ещё не подтверждён на stock LG.",

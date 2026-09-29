@@ -227,6 +227,18 @@
 
 Единственный незакрытый риск Stage 1 — штатный Android/LG источник активации без ADB/debug broadcast и без модификации ОС.
 
+## LG V30 raw touch baseline
+
+Для основной опытной площадки определён touchscreen input-device:
+
+- node: `/dev/input/event1`;
+- name: `touch_dev`;
+- property: `INPUT_PROP_DIRECT`;
+- raw X: `0..1439`;
+- raw Y: `0..2879`.
+
+Raw coordinate space совпадает с physical display `1440 × 2880` один-к-одному. Поэтому дальнейшие system-corner tests можно фиксировать непосредственно в физических координатах экрана.
+
 ## LG V30 test geometry baseline
 
 Для основной физической Android-площадки `LGM-V300L / Android 9 / V300L30p` зафиксирована текущая геометрия:
