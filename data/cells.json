@@ -1470,7 +1470,11 @@
       "touch_direct": true,
       "touch_x_raw": "0..1439",
       "touch_y_raw": "0..2879",
-      "touch_mapping": "1:1 with physical 1440 × 2880 display"
+      "touch_mapping": "1:1 with physical 1440 × 2880 display",
+      "ownership_test_navbar_inside": "raw LEFT (133,2827), RIGHT (1363,2859): touchscreen yes, MainActivity no",
+      "ownership_test_app_above": "raw LEFT (224,2584), RIGHT (1337,2560): MainActivity yes",
+      "activity_raw_y_offset_px": 84,
+      "navbar_top_raw_y": 2733
     },
     "constraints": [
       "Канонический system-corner trigger ещё не подтверждён на stock LG.",
@@ -1493,7 +1497,7 @@
       "summary": "Physical-device downstream including action execution is verified. The remaining milestone is the canonical system-corner 3/4-tap activation source, including interception behavior.",
       "sources": [],
       "next_step": "Confirm the system-owned lower-corner 3/4-tap path, then repeat the complete chain without ADB/debug broadcast.",
-      "implication": "SC/action execution is no longer the blocker; system corner activation is."
+      "implication": "System ownership of the lower NavigationBar versus ordinary app content is physically demonstrated on LGM-V300L; exact boundary/hook for 3/4-tap activation remains to be tested."
     }
   },
   {
