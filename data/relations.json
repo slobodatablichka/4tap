@@ -486,12 +486,6 @@
     "type": "constraint"
   },
   {
-    "from": "android-oem-quad-zone",
-    "to": "android-quad-tap",
-    "relation": "строгий 4-tap вариант системного угла",
-    "type": "branch"
-  },
-  {
     "from": "android-quad-tap",
     "to": "android-local-canvas",
     "relation": "при 3/4 taps формирует активацию",
@@ -696,18 +690,6 @@
     "type": "model"
   },
   {
-    "from": "android-activation-redesign",
-    "to": "android-oem-quad-zone",
-    "relation": "отделяет строгий reserved-zone prototype",
-    "type": "branch"
-  },
-  {
-    "from": "roadmap-1",
-    "to": "android-oem-quad-zone",
-    "relation": "сохраняет как strict deferred variant",
-    "type": "roadmap"
-  },
-  {
     "from": "roadmap-1",
     "to": "android-first-live-command",
     "relation": "завершается подтверждением",
@@ -892,5 +874,11 @@
     "to": "android-actions",
     "relation": "поставляет проверенные action templates",
     "type": "model"
+  },
+  {
+    "from": "android-oem-quad-zone",
+    "to": "android-activation-redesign",
+    "relation": "архив закрытого SystemUI/AOSP эксперимента",
+    "type": "governance"
   }
 ]
