@@ -448,7 +448,7 @@
     "title": "Android Integration",
     "group": "PLATFORM",
     "short": "Обычное Android-приложение стабильно активируется 4 тапами в LEFT/RIGHT области navigation bar; полный SC→action flow подтверждён.",
-    "description": "Канонический Android-вход 4Tap — 3 или 4 быстрых тапа в выбранной нижней LEFT/RIGHT области navigation bar. На LGM-V300L / Android 9 подтверждён current implementation candidate: AccessibilityService размещает две небольшие touchable TYPE_ACCESSIBILITY_OVERLAY зоны непосредственно в navigation bar; 4 тапа формируют ActivationRequest. После этого подтверждённый TYPE_APPLICATION_OVERLAY показывает KnockUI поверх текущего приложения.",
+    "description": "Канонический Android-вход 4Tap — 3 или 4 быстрых тапа в нижней LEFT/RIGHT области navigation bar. На LGM-V300L / Android 9 подтверждён current candidate: AccessibilityService создаёт TYPE_ACCESSIBILITY_OVERLAY trigger-зоны и после активации показывает KnockUI тем же типом окна.",
     "purpose": "Получить быстрый угловой вызов 4Tap без изменения Android.",
     "kind": "core",
     "models": [
@@ -470,16 +470,16 @@
       "activation_surface": "AccessibilityService + TYPE_ACCESSIBILITY_OVERLAY — verified on LGM-V300L / Android 9",
       "tap_thresholds": "3 or 4 sequential taps; current prototype = 4",
       "rearm": "automatic after successful activation",
-      "post_activation_surface": "TYPE_APPLICATION_OVERLAY — verified"
+      "post_activation_surface": "TYPE_ACCESSIBILITY_OVERLAY — verified"
     },
     "constraints": [
       "4Tap remains an ordinary user-installed app on stock Android.",
       "No firmware/SystemUI modification, root, privileged/system app or mandatory OEM integration.",
-      "Current prototype requires user-enabled AccessibilityService and SYSTEM_ALERT_WINDOW.",
+      "Current target candidate requires one user-enabled AccessibilityService.",
+      "SYSTEM_ALERT_WINDOW is not declared or required.",
       "LG-specific geometry is diagnostic only and must not become a product dependency."
     ],
     "open_questions": [
-      "Можно ли сохранить подтверждённую механику с одним пользовательским разрешением?",
       "Как механизм ведёт себя на актуальных stock Android-устройствах?"
     ],
     "tags": [
@@ -492,9 +492,9 @@
       "state": "verified-constrained",
       "date": "2026-09-29",
       "confidence": "high",
-      "summary": "On LGM-V300L / Android 9 the navigation-bar 4-tap trigger is stable and routes without ADB/debug broadcast through ActivationRequest → KnockUI → S → C → SC → Settings. Automatic re-arm is also confirmed.",
+      "summary": "Full chain verified after removing SYSTEM_ALERT_WINDOW: navigation-bar 4 taps → Accessibility KnockUI → S → C → SC → Settings.",
       "sources": [],
-      "next_step": "Productize permission onboarding, evaluate one-permission alternatives and repeat the trigger on newer stock Android devices.",
+      "next_step": "Productize one-step Accessibility onboarding and repeat on newer stock Android.",
       "implication": "The first Android end-to-end milestone is passed; remaining risk is product/distribution suitability rather than basic trigger feasibility."
     }
   },
@@ -504,8 +504,8 @@
     "order": 20,
     "title": "Android Permissions",
     "group": "PLATFORM",
-    "short": "Текущий рабочий Android prototype требует Accessibility для navigation-bar trigger и «Поверх других приложений» для KnockUI.",
-    "description": "Подтверждённый prototype использует два отдельных user-granted system capabilities: AccessibilityService + TYPE_ACCESSIBILITY_OVERLAY для LEFT/RIGHT navigation-bar trigger и SYSTEM_ALERT_WINDOW + TYPE_APPLICATION_OVERLAY для post-activation KnockUI. Приложение может открыть соответствующие settings screens, но не может само выдать себе эти разрешения.",
+    "short": "Текущий Android-кандидат требует одного пользовательского включения Accessibility.",
+    "description": "Navigation-bar trigger и KnockUI подтверждены через один AccessibilityService + TYPE_ACCESSIBILITY_OVERLAY. SYSTEM_ALERT_WINDOW удалён из AndroidManifest.xml; после удаления полный flow повторно прошёл — PASS.",
     "purpose": "Сделать системные предпосылки Android явными и проверяемыми.",
     "kind": "core",
     "models": [
@@ -515,7 +515,7 @@
     "platforms": [
       "android"
     ],
-    "status": "needs-validation",
+    "status": "approved",
     "inputs": [
       "Установка приложения",
       "Действие пользователя"
@@ -526,20 +526,18 @@
     "parameters": {
       "trigger_permission": "user-enabled AccessibilityService",
       "trigger_window": "TYPE_ACCESSIBILITY_OVERLAY",
-      "overlay_permission": "SYSTEM_ALERT_WINDOW",
-      "overlay_settings_action": "ACTION_MANAGE_OVERLAY_PERMISSION",
-      "overlay_check": "Settings.canDrawOverlays()",
-      "current_user_steps": 2
+      "knockui_window": "TYPE_ACCESSIBILITY_OVERLAY",
+      "current_user_steps": 1,
+      "system_alert_window": "not declared / not required"
     },
     "constraints": [
-      "Оба системных допуска выдаются только пользователем.",
+      "AccessibilityService включается только пользователем.",
       "Текущий AccessibilityService использует canRetrieveWindowContent=false.",
       "Google Play требует declaration, prominent disclosure and affirmative consent for non-accessibility-tool AccessibilityService use.",
-      "Итоговый permission set должен быть минимально достаточным."
+      "Cross-version validation on newer stock Android remains required."
     ],
     "open_questions": [
-      "Можно ли сократить onboarding до одного пользовательского разрешения без потери функции?",
-      "Насколько приемлем двухшаговый permission onboarding для массового пользователя?"
+      "Насколько стабилен one-permission flow на новых Android и разных navigation modes?"
     ],
     "tags": [
       "android",
@@ -551,7 +549,7 @@
       "state": "verified-constrained",
       "date": "2026-09-29",
       "confidence": "high",
-      "summary": "Both required prototype capabilities are now empirically known: AccessibilityService enables the verified navigation-bar trigger and SYSTEM_ALERT_WINDOW enables the verified KnockUI Drawing Overlay. Final product permission set is still open.",
+      "summary": "Clean one-permission flow physically verified on LGM-V300L / Android 9 after removing SYSTEM_ALERT_WINDOW from manifest.",
       "sources": [
         {
           "label": "Google Play AccessibilityService policy",
@@ -566,7 +564,7 @@
           "url": "https://developer.android.com/reference/android/provider/Settings"
         }
       ],
-      "next_step": "Design the two-step onboarding and test whether one permission can serve both activation and KnockUI without unacceptable policy/product cost.",
+      "next_step": "Build one-step Accessibility onboarding and retest on newer stock Android.",
       "implication": "Permissions are now a product/compliance problem, not an unknown technical prerequisite."
     }
   },
@@ -1435,17 +1433,16 @@
       "navbar_top_raw_y": 2733,
       "touch_observation_note": "raw touch coordinates recorded; early empty Logcat cannot be used as ownership evidence because diagnostic APK was not installed",
       "trigger_test": "AccessibilityService + TYPE_ACCESSIBILITY_OVERLAY navigation-bar 4-tap — PASS",
-      "full_chain": "other app → nav-bar 4 taps → KnockUI → S → C → SC → Settings — PASS",
+      "full_chain": "other app → nav-bar 4 taps → Accessibility KnockUI → S → C → SC → Settings — PASS after SYSTEM_ALERT_WINDOW removal",
       "automatic_rearm": "PASS; 700 ms"
     },
     "constraints": [
       "Текущий action mapping является минимальным prototype assignment.",
-      "Текущий trigger proof относится к LGM-V300L / Android 9; cross-version validation remains.",
-      "Current prototype requires Accessibility and SYSTEM_ALERT_WINDOW user grants."
+      "Текущий proof относится к LGM-V300L / Android 9; cross-version validation remains.",
+      "Current path requires one user-enabled AccessibilityService."
     ],
     "open_questions": [
-      "Как воспроизводится полный flow на актуальных stock Android versions?",
-      "Можно ли уменьшить permission burden до одного user grant?"
+      "Как воспроизводится полный flow на актуальных stock Android versions?"
     ],
     "tags": [
       "android",
@@ -1457,7 +1454,7 @@
       "state": "verified-constrained",
       "date": "2026-09-29",
       "confidence": "high",
-      "summary": "The first complete real-device 4Tap flow is passed without ADB/debug activation: navigation-bar 4-tap → KnockUI → S → C → SC → Android Settings, with stable automatic re-arm.",
+      "summary": "The complete real-device flow passes in a clean build without SYSTEM_ALERT_WINDOW.",
       "sources": [],
       "next_step": "Move from feasibility to productization: permission onboarding, Play review preparation and newer-device compatibility.",
       "implication": "Android Stage 1 end-to-end milestone is complete."
@@ -1689,7 +1686,7 @@
     "title": "Android Distribution & Compliance",
     "group": "DISTRIBUTION",
     "short": "RuStore — основной российский канал; Google Play и другие Android-магазины рассматриваются как дополнительные с собственными требованиями.",
-    "description": "Российский запуск планируется Android-first с RuStore как основным каналом. Google Play и другие Android-магазины остаются дополнительными каналами. Текущий verified trigger использует AccessibilityService, поэтому для Google Play теперь актуальны Accessibility declaration, prominent in-app disclosure, affirmative consent, demo video и review preparation. SYSTEM_ALERT_WINDOW должен объясняться как часть core functionality KnockUI.",
+    "description": "Российский запуск планируется Android-first с RuStore как основным каналом. Текущий candidate использует AccessibilityService и для trigger, и для KnockUI. SYSTEM_ALERT_WINDOW больше не входит в current Android path; Google Play review narrative должен описывать одну core Accessibility-функцию.",
     "purpose": "Подготовить допустимую многоканальную публикацию и не строить продукт вокруг разрешений, которые ему фактически не нужны.",
     "kind": "core",
     "models": [
@@ -1712,7 +1709,7 @@
       "russia_primary_store": "RuStore",
       "secondary_channels": "Google Play + other Android stores where applicable",
       "accessibility_policy": "current verified trigger uses AccessibilityService; declaration/review required for Google Play",
-      "overlay_policy": "SYSTEM_ALERT_WINDOW supports core post-activation KnockUI",
+      "overlay_policy": "SYSTEM_ALERT_WINDOW not declared / not required",
       "advance_notice": "Google Play App Review accepts advance notice for apps using AccessibilityService",
       "store_matrix": "required before release"
     },
@@ -1751,7 +1748,7 @@
           "url": "https://support.google.com/googleplay/android-developer/answer/16558241"
         }
       ],
-      "next_step": "Prepare the actual disclosure/declaration/video narrative around the verified navigation-bar trigger and KnockUI overlay; audit RuStore separately.",
+      "next_step": "Prepare Accessibility disclosure/declaration/video around the verified one-permission flow; audit RuStore separately.",
       "implication": "Accessibility is a review/compliance requirement to manage, not a categorical Google Play prohibition.",
       "source_note": "Current cited verification covers Google Play; other stores require separate current-policy checks."
     }
@@ -3626,7 +3623,7 @@
     "title": "Android Runtime Constraints",
     "group": "PLATFORM LIMITS",
     "short": "Штатные ограничения Android для Accessibility trigger, KnockUI overlay, запуска действий и Settings Console.",
-    "description": "4Tap работает как обычное Android-приложение. Текущий trigger использует user-enabled AccessibilityService + TYPE_ACCESSIBILITY_OVERLAY в navigation bar. KnockUI использует TYPE_APPLICATION_OVERLAY + SYSTEM_ALERT_WINDOW. После команды запуск выполняется через обычные Intent/startActivity с учётом background activity launch restrictions, exported Activity/deep link и package visibility. Ограничение конкретного контекста не требует системного обхода.",
+    "description": "4Tap работает как обычное Android-приложение. Текущий candidate использует user-enabled AccessibilityService + TYPE_ACCESSIBILITY_OVERLAY и для navigation-bar trigger, и для KnockUI. SYSTEM_ALERT_WINDOW удалён из manifest. После команды запуск выполняется через Intent/startActivity с учётом platform restrictions.",
     "purpose": "Зафиксировать реальные runtime-границы Android без превращения их в повод перепроектировать продукт.",
     "kind": "core",
     "models": [
@@ -3648,17 +3645,14 @@
     "parameters": {
       "trigger": "AccessibilityService + TYPE_ACCESSIBILITY_OVERLAY",
       "accessibility_window_content": "canRetrieveWindowContent=false in current prototype",
-      "overlay": "TYPE_APPLICATION_OVERLAY + SYSTEM_ALERT_WINDOW",
-      "overlay_blocking": "Android 12+ app may hide third-party overlays",
+      "overlay": "TYPE_ACCESSIBILITY_OVERLAY for KnockUI — verified",
       "app_launch": "Intent / startActivity",
       "background_launch": "version/target-SDK constrained",
-      "package_visibility": "Android 11+ filtered queries",
-      "foreground_service": "Android 15+ SAW background-start constraints when applicable"
+      "package_visibility": "Android 11+ filtered queries"
     },
     "constraints": [
-      "AccessibilityService and overlay special access are user-controlled.",
+      "AccessibilityService is user-controlled.",
       "Google Play policy applies to current AccessibilityService use.",
-      "Sensitive screens may hide TYPE_APPLICATION_OVERLAY.",
       "Internal app screens require supported exported Activity / intent / deep link.",
       "Package discovery must use minimal required <queries>."
     ],
@@ -3677,7 +3671,7 @@
       "state": "verified-constrained",
       "date": "2026-09-29",
       "confidence": "high",
-      "summary": "The physical prototype confirms the Accessibility navigation-bar trigger and the application overlay/action downstream on Android 9. Official Android/Google Play documentation defines the remaining permission, overlay, background-launch and distribution constraints.",
+      "summary": "Physical Android 9 prototype confirms one AccessibilityService can provide both navigation-bar trigger and KnockUI without SYSTEM_ALERT_WINDOW.",
       "sources": [
         {
           "label": "SYSTEM_ALERT_WINDOW",
@@ -3712,7 +3706,7 @@
           "url": "https://developer.android.com/training/package-visibility/automatic"
         }
       ],
-      "next_step": "Keep the verified baseline stable while validating permission onboarding and behavior on newer Android versions.",
+      "next_step": "Validate current path on newer Android versions and navigation modes.",
       "implication": "Current Android risk has shifted from basic trigger feasibility to permissions, compatibility and store review."
     }
   }
