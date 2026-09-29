@@ -447,9 +447,9 @@
     "section": "android",
     "title": "Android Integration",
     "group": "PLATFORM",
-    "short": "Системная интеграция, необходимая для глобального сценария Android.",
-    "description": "AccessibilityService remains useful for accessibility/window context, and Android overlays are supported with the proper permission. However, the originally proposed AccessibilityService route does not provide a passive screen-wide raw-touch observer that leaves all underlying touch delivery unchanged. Global Quad Tap therefore needs a different activation design.",
-    "purpose": "Обеспечить точку входа KnockUI поверх других приложений Android.",
+    "short": "Точка входа 4Tap на штатном Android и переход к уже подтверждённому overlay-контру.",
+    "description": "Текущий Android-подход — сначала использовать возможности штатной ОС/OEM без root, разблокировки загрузчика и изменения SystemUI. Исходный AccessibilityService-вариант пассивного глобального raw-touch не подходит для Quad Tap «где угодно», но настоящий TYPE_APPLICATION_OVERLAY после активации уже подтверждён. Нерешённая часть — штатный источник активации, который формирует ActivationRequest.",
+    "purpose": "Найти допустимую штатную точку входа 4Tap поверх текущего приложения.",
     "kind": "core",
     "models": [
       "b2c",
@@ -466,8 +466,9 @@
       "Сигнал возможной активации"
     ],
     "parameters": {
-      "candidate_service": "AccessibilityService",
-      "candidate_overlay": "TYPE_APPLICATION_OVERLAY"
+      "activation_policy": "stock OS first",
+      "historical_candidate": "AccessibilityService — insufficient for passive arbitrary-area raw touch",
+      "post_activation_surface": "TYPE_APPLICATION_OVERLAY — verified"
     },
     "constraints": [
       "Passive non-interfering global raw-touch capture is blocked by public AccessibilityService semantics as currently specified.",
@@ -475,8 +476,8 @@
       "Overlay capability is separately permission-gated."
     ],
     "open_questions": [
-      "Which compliant public activation mechanism should replace passive global Quad Tap?",
-      "Is AccessibilityService still necessary after the activation redesign?"
+      "Какой штатный механизм Android/LG даёт наиболее быстрый и надёжный вызов 4Tap поверх другой программы?",
+      "Можно ли сохранить целевой Quad Tap без модификации ОС?"
     ],
     "tags": [
       "android",
@@ -503,7 +504,7 @@
           "url": "https://developer.android.com/reference/android/view/WindowManager.LayoutParams"
         }
       ],
-      "next_step": "Redesign the activation entry point before Android MVP implementation."
+      "next_step": "Test stock Android/LG activation mechanisms on LGM-V300L and connect the best candidate to the verified ActivationRequest handoff."
     }
   },
   {
@@ -512,8 +513,8 @@
     "order": 20,
     "title": "Android Permissions",
     "group": "PLATFORM",
-    "short": "Разрешения и включение сервисов, без которых глобальный Android-сценарий не должен запускаться.",
-    "description": "TYPE_APPLICATION_OVERLAY requires SYSTEM_ALERT_WINDOW and explicit user approval; Android exposes ACTION_MANAGE_OVERLAY_PERMISSION and Settings.canDrawOverlays(). AccessibilityService enablement is a separate user-controlled setting if that service remains part of the final architecture.",
+    "short": "Разрешения, необходимые фактическому штатному trigger и подтверждённому Drawing Overlay.",
+    "description": "SYSTEM_ALERT_WINDOW и явное пользовательское разрешение нужны подтверждённому TYPE_APPLICATION_OVERLAY. Остальной набор разрешений определяется только после выбора штатного механизма активации; AccessibilityService не считается обязательным компонентом.",
     "purpose": "Сделать системные предпосылки Android явными и проверяемыми.",
     "kind": "core",
     "models": [
@@ -538,11 +539,11 @@
     },
     "constraints": [
       "Overlay permission is special access explicitly granted by the user.",
-      "AccessibilityService must not be treated as implicitly available.",
-      "Exact permission set depends on the redesigned activation mechanism."
+      "Не запрашивать AccessibilityService или иные чувствительные возможности без фактической необходимости.",
+      "Итоговый permission set должен быть минимально достаточным для выбранного stock activation path."
     ],
     "open_questions": [
-      "Какие разрешения действительно необходимы после прототипирования глобального ввода?"
+      "Какие дополнительные разрешения действительно потребуются выбранному штатному trigger?"
     ],
     "tags": [
       "android",
@@ -564,7 +565,7 @@
           "url": "https://developer.android.com/reference/android/view/WindowManager.LayoutParams"
         }
       ],
-      "next_step": "Finalize permissions after selecting the replacement Android trigger."
+      "next_step": "Finalize the minimal permission set after the stock activation mechanism is selected."
     }
   },
   {
@@ -574,7 +575,7 @@
     "title": "Arbitrary-area Global Tap Limitation",
     "group": "PLATFORM LIMIT",
     "short": "Заблокирован не Quad Tap как жест, а сценарий пассивного распознавания четырёх тапов в произвольной области поверх чужого приложения.",
-    "description": "Техническая проверка снимает только исходный вариант «четыре тапа где угодно на экране при сохранении обычной доставки всех касаний приложению». Публичные AccessibilityService-механизмы не дают такого пассивного глобального raw-touch потока без изменения/перехвата доставки событий. Это не запрещает Quad Tap как системный жест, если Android/OEM заранее выделяет системно управляемую область и обрабатывает касания на уровне SystemUI/input policy.",
+    "description": "Техническая проверка снимает исходный вариант «четыре тапа где угодно на экране при сохранении обычной доставки всех касаний приложению». Публичные AccessibilityService-механизмы не дают такого пассивного глобального raw-touch потока без изменения/перехвата доставки событий. Это ограничение не предписывает немедленно менять SystemUI: текущий этап сначала проверяет штатные Android/OEM точки активации; OEM reserved zone сохранена только как будущая ветвь.",
     "purpose": "Make the main Android feasibility blocker explicit and prevent the conceptual flow from being mistaken for an implemented capability.",
     "kind": "core",
     "models": [
@@ -597,9 +598,9 @@
       "touch_exploration": "changes interaction semantics"
     },
     "constraints": [
-      "Сценарий произвольной области отложен.",
-      "Обычный APK не может сам объявить новую глобальную системную touch-зону.",
-      "Для системной зоны требуется Android/OEM/SystemUI integration."
+      "Сценарий произвольной области остаётся заблокированным для обычного APK в исходной формулировке.",
+      "Текущий этап сначала проверяет штатные Android/OEM механизмы без модификации ОС.",
+      "OEM/SystemUI reserved zone возможна только как отдельная будущая интеграция."
     ],
     "open_questions": [],
     "tags": [
@@ -623,8 +624,8 @@
           "url": "https://developer.android.com/reference/android/accessibilityservice/TouchInteractionController"
         }
       ],
-      "next_step": "Проектировать системно выделенную область Quad Tap совместно с Android/OEM.",
-      "implication": "Не удалять Quad Tap из продукта; перенести его из «где угодно» в OEM/SystemUI-owned reserved zone."
+      "next_step": "Evaluate stock Android/LG activation sources before considering any OEM/SystemUI integration.",
+      "implication": "Ограничение arbitrary-area raw touch сохраняется, но оно не делает модификацию SystemUI текущим обязательным путём."
     }
   },
   {
@@ -791,8 +792,8 @@
     "title": "Quad Tap",
     "group": "ACTIVATION",
     "short": "Quad Tap остаётся целевым фирменным жестом Android; текущая проверка ищет штатный источник событий без модификации ОС.",
-    "description": "Quad Tap сохраняется как фирменный механизм активации Android, но основной сценарий теперь ограничен специальной системной зоной. SystemUI/input policy получает события этой зоны, проверяет четыре тапа с временными/пространственными условиями и при успехе вызывает KnockUI.",
-    "purpose": "Активировать KnockUI четырьмя тапами в зарезервированной Android/OEM области.",
+    "description": "Quad Tap сохраняется как целевой фирменный UX-вызов 4Tap. Текущий этап проверяет, можно ли получить требуемое событие штатными средствами Android/LG без модификации ОС. In-app 4-tap уже подтверждён как test harness; глобальный stock-trigger ещё не подтверждён. OEM/SystemUI reserved zone остаётся отдельной отложенной ветвью.",
+    "purpose": "Сохранить фирменную четырёхтаповую активацию там, где платформа позволяет реализовать её штатно и надёжно.",
     "kind": "core",
     "models": [
       "b2c",
@@ -803,23 +804,25 @@
     ],
     "status": "needs-validation",
     "inputs": [
-      "Touch sequence from OEM Reserved Quad Tap Zone"
+      "Candidate stock/OEM activation event source"
     ],
     "outputs": [
-      "KnockUI activation"
+      "ActivationRequest / KnockUI activation"
     ],
     "parameters": {
       "taps": 4,
-      "radius_px": "≈50",
-      "interval_ms": "300–400"
+      "prototype_timing": "45–700 ms inter-tap; 280 ms max tap duration; 20 dp max movement",
+      "current_proof": "in-app LEFT SC OK; RIGHT SC OK",
+      "stock_global_trigger": "not yet verified"
     },
     "constraints": [
-      "Работает только после появления OEM/SystemUI-owned zone.",
-      "≈50 px и 300–400 ms остаются стартовыми UX-гипотезами, а не утверждёнными параметрами."
+      "Штатный Android может не предоставлять обычному APK нужный глобальный raw-touch source — это проверяется на реальном устройстве.",
+      "Если Quad Tap нельзя получить штатно, временный альтернативный trigger может использоваться для проверки остального продукта.",
+      "OEM/SystemUI reserved zone не является текущим обязательным путём."
     ],
     "open_questions": [
-      "Какие timing/radius параметры оптимальны именно внутри выбранной системной зоны?",
-      "Нужно ли требовать четыре тапа в одной точке или допускается небольшое перемещение?"
+      "Какой stock Android/LG event source может реализовать или приблизить Quad Tap?",
+      "Нужен ли временный альтернативный trigger для первой полной SC→app launch цепочки?"
     ],
     "tags": [
       "android",
@@ -910,8 +913,8 @@
     "section": "android",
     "title": "Local Canvas",
     "group": "INPUT",
-    "short": "Локальная невидимая область ввода вокруг последнего тапа.",
-    "description": "После успешной системной активации KnockUI создаёт локализованную область для ввода. Эта область реализуется как временный touchable overlay поверх текущего приложения. Вопрос глобального распознавания касаний к Local Canvas не относится: canvas появляется только после активации и сам получает штрихи пользователя.",
+    "short": "Временная локальная поверхность ввода KnockUI, появляющаяся после ActivationRequest.",
+    "description": "После успешной активации 4Tap создаёт локализованную touchable overlay-поверхность для ввода двух знаков. Сам post-activation overlay уже подтверждён поверх другого foreground-приложения; окончательные размер, позиция и визуальная форма будут определяться Design Canon.",
     "purpose": "Ограничить жестовый ввод небольшой областью и не перекрывать весь экран.",
     "kind": "core",
     "models": [
@@ -923,26 +926,24 @@
     ],
     "status": "approved",
     "inputs": [
-      "KnockUI activation from system Quad Tap"
+      "ActivationRequest"
     ],
     "outputs": [
       "Drawing Overlay Surface",
       "Canvas boundary"
     ],
     "parameters": {
-      "size": "200×200 dp",
-      "feedback": "pulse frame",
-      "scope": "localized overlay",
+      "prototype_size": "200×200 dp",
+      "final_geometry": "TBD by Design Canon",
+      "scope": "localized touchable overlay",
       "overlay_type": "TYPE_APPLICATION_OVERLAY",
       "permission": "SYSTEM_ALERT_WINDOW",
-      "non_touchable_flag": "FLAG_NOT_TOUCHABLE — такой overlay сам не получает touch",
       "pass_through_required": false
     },
     "constraints": [
-      "Canvas появляется только после активации KnockUI.",
-      "Для ввода штрихов overlay должен быть touchable.",
-      "Касания внутри canvas во время ввода принадлежат KnockUI, а не нижележащему приложению.",
-      "Размер 200×200 dp и визуальная рамка остаются стартовыми параметрами для UX-тестов."
+      "Canvas появляется только после активации 4Tap.",
+      "Касания внутри canvas во время ввода принадлежат 4Tap.",
+      "Окончательные геометрия и feedback не считаются утверждёнными до Design Canon."
     ],
     "open_questions": [],
     "tags": [
@@ -966,7 +967,7 @@
           "url": "https://developer.android.com/reference/android/provider/Settings"
         }
       ],
-      "next_step": "Keep canvas behavior stable while decoupling it from the current in-app activation harness.",
+      "next_step": "Keep the verified overlay input behavior stable while redesigning geometry/feedback under Design Canon.",
       "implication": "Local Canvas is no longer only an architectural direction; the post-activation input surface is verified on a physical Android device."
     }
   },
@@ -1432,6 +1433,60 @@
     "order": 120
   },
   {
+    "id": "android-first-live-command",
+    "section": "android",
+    "order": 125,
+    "title": "First Live Command — SC",
+    "group": "MILESTONE",
+    "short": "Первый полный real-device тест: поверх другой программы вызвать 4Tap, ввести SC и запустить назначенное приложение.",
+    "description": "Это ближайший контрольный рубеж Android. Downstream от ActivationRequest до команды SC уже подтверждён отдельными тестами; теперь на LGM-V300L нужно связать штатный trigger, overlay, SC и реальный app launch в одну пользовательскую цепочку.",
+    "purpose": "Доказать практическую ценность 4Tap одним полностью работающим сценарием до расширения алфавита и настроек.",
+    "kind": "b2c",
+    "models": [
+      "b2c"
+    ],
+    "platforms": [
+      "android"
+    ],
+    "status": "needs-validation",
+    "inputs": [
+      "Stock ActivationRequest",
+      "Recognized SC",
+      "Test app assignment"
+    ],
+    "outputs": [
+      "Assigned Android app launched"
+    ],
+    "parameters": {
+      "command": "SC",
+      "device": "LGM-V300L / Android 9",
+      "scope": "first end-to-end real-device milestone"
+    },
+    "constraints": [
+      "Штатный trigger ещё не выбран.",
+      "Фактический app launch должен быть проверен на реальном устройстве."
+    ],
+    "open_questions": [
+      "Какой stock trigger используем для первого полного теста?",
+      "Какое простое приложение назначаем SC?"
+    ],
+    "tags": [
+      "android",
+      "milestone",
+      "sc",
+      "app-launch"
+    ],
+    "verification": {
+      "state": "requires-prototype",
+      "date": "2026-09-29",
+      "confidence": "high",
+      "summary": "Overlay/recognizer/SC downstream verified separately; the complete stock-trigger → SC → app-launch chain has not yet been verified.",
+      "sources": [],
+      "next_step": "Install the current 4Tap build on LGM-V300L, verify overlay/SC, select a stock activation source and complete SC → app launch.",
+      "implication": "This is the immediate Android milestone before broadening the alphabet or user configuration."
+    }
+  },
+  {
     "id": "android-actions",
     "section": "android",
     "title": "Android Actions",
@@ -1653,11 +1708,11 @@
     "id": "android-distribution-compliance",
     "section": "android",
     "order": 150,
-    "title": "Google Play Compliance",
+    "title": "Android Distribution & Compliance",
     "group": "DISTRIBUTION",
-    "short": "Android-реализация должна пройти допустимый путь публикации и проверки чувствительных возможностей.",
-    "description": "Google Play allows AccessibilityService in a range of apps, but non-disability-primary apps may not claim isAccessibilityTool=true. They must complete the relevant declaration and provide prominent in-app disclosure and affirmative consent. A «Productivity» category is not a policy exemption or certification path.",
-    "purpose": "Проверить, что архитектура и описание продукта совместимы с требованиями магазина.",
+    "short": "RuStore — основной российский канал; Google Play и другие Android-магазины рассматриваются как дополнительные с собственными требованиями.",
+    "description": "Российский запуск планируется Android-first с RuStore как основным каналом. Google Play и другие Android-магазины остаются дополнительными каналами. Compliance проверяется отдельно для каждого магазина и для реально используемых чувствительных Android-возможностей; AccessibilityService не должен считаться частью финальной архитектуры без необходимости.",
+    "purpose": "Подготовить допустимую многоканальную публикацию и не строить продукт вокруг разрешений, которые ему фактически не нужны.",
     "kind": "core",
     "models": [
       "b2c",
@@ -1676,18 +1731,19 @@
       "Distribution decision"
     ],
     "parameters": {
-      "accessibility_tool_flag": "Only if disability support is the app's primary purpose",
-      "non_accessibility_tool": "declaration + disclosure + affirmative consent",
-      "candidate_store_category": "does not create policy exemption"
+      "russia_primary_store": "RuStore",
+      "secondary_channels": "Google Play + other Android stores where applicable",
+      "accessibility_policy": "relevant only if AccessibilityService remains in final architecture",
+      "store_matrix": "required before release"
     },
     "constraints": [
-      "Accessibility API use must be the declared, policy-compliant use; narrower APIs should be used where possible.",
-      "Store approval cannot be guaranteed in documentation.",
-      "Do not describe compliance as bypassing Play Protect or policy."
+      "Требования магазинов проверяются по фактической архитектуре и актуальным правилам перед релизом.",
+      "Google Play AccessibilityService rules применимы только если сервис действительно останется в продукте.",
+      "Нельзя считать одобрение любого магазина гарантированным."
     ],
     "open_questions": [
-      "Will AccessibilityService remain in the architecture after the trigger redesign?",
-      "If yes, can its remaining use be justified under Play policy with a narrower API unavailable?"
+      "Какие дополнительные Android-магазины войдут в стартовую матрицу распространения?",
+      "Какие store-specific billing и privacy требования влияют на Free/Pro модель?"
     ],
     "tags": [
       "android",
@@ -1709,8 +1765,9 @@
           "url": "https://support.google.com/googleplay/android-developer/answer/16558241"
         }
       ],
-      "next_step": "Re-evaluate policy after the Android trigger architecture is redesigned.",
-      "implication": "Категория Productivity не является сертификацией или исключением. Если AccessibilityService останется, продукт должен пройти обычную policy/declaration/disclosure/consent процедуру."
+      "next_step": "Build a store/compliance matrix for RuStore, Google Play and selected secondary Android stores before public release.",
+      "implication": "Distribution is a multi-store product task, not a Google-Play-only compliance task.",
+      "source_note": "Current cited verification covers Google Play policy; RuStore and other store rules require a separate release-time audit."
     }
   },
   {
@@ -3203,11 +3260,11 @@
   {
     "id": "roadmap-1",
     "section": "roadmap",
-    "title": "Stage 1 — Android MVP",
+    "title": "Stage 1 — Android End-to-End",
     "group": "ROADMAP",
-    "short": "Android MVP: штатная активация, KnockUI, SC→app launch, затем продуктовый канон и пользовательская настройка.",
-    "description": "Первый этап доводит реальный Android-путь до цепочки «другая программа → штатная активация 4Tap → KnockUI → S → C → SC → запуск назначенной программы». Параллельно формируются Design Canon v0.1, 4Tap Graffiti Profile, Settings Console и российский каталог интеграций. SystemUI/AOSP-модификация остаётся отложенной ветвью.",
-    "purpose": "Проверить основной пользовательский цикл KnockUI на Android.",
+    "short": "Получить на штатном LG полную цепочку: другая программа → 4Tap → SC → запуск назначенной программы.",
+    "description": "Текущий этап заканчивается только после реального physical-device подтверждения цепочки «другая программа → штатная активация 4Tap → KnockUI overlay → S → C → SC → запуск назначенного приложения». Touch, S/C, SC, overlay и внешний test handoff уже подтверждены; нерешёнными остаются stock activation и финальный app-launch test.",
+    "purpose": "Подтвердить основной пользовательский цикл 4Tap на штатном Android без модификации ОС.",
     "kind": "b2c",
     "models": [
       "b2c"
@@ -3218,23 +3275,17 @@
     "status": "approved",
     "inputs": [],
     "outputs": [
-      "Android MVP"
+      "Verified Android end-to-end command flow"
     ],
     "parameters": {
-      "prototype_result": "LEFT SC OK; RIGHT SC OK",
-      "prototype_scope": "in-app Activity; not global/OEM trigger",
-      "overlay_result": "LEFT OVERLAY SC OK; RIGHT OVERLAY SC OK",
-      "activation_contract": "verified",
-      "activation_contract_result": "REFACTOR LEFT SC OK; RIGHT SC OK",
-      "external_activation_adapter": "verified",
-      "external_activation_result": "OEM LEFT SC OK; OEM RIGHT SC OK",
-      "systemui_zone_baseline": "58 × 44 dp (deferred concept)",
-      "systemui_environment": "deferred: AOSP/Cuttlefish x86_64 userdebug",
-      "current_activation_priority": "stock Android/LG mechanisms on LGM-V300L / Android 9",
-      "current_product_workstreams": "Design Canon v0.1; 4Tap Graffiti Profile; Settings Console; Russia default integrations"
+      "device": "LGM-V300L / Android 9",
+      "verified_downstream": "ActivationRequest → OverlayLauncher → Drawing Overlay → Recognizer → Command",
+      "first_command": "SC",
+      "first_action": "launch assigned test app",
+      "current_activation_priority": "stock Android/LG mechanisms"
     },
     "constraints": [
-      "Текущий activation path должен использовать возможности штатной ОС; модификация SystemUI/root/bootloader не входит в этап без отдельного решения."
+      "Root, bootloader unlock, custom ROM and SystemUI modification are outside this stage without a separate decision."
     ],
     "open_questions": [],
     "tags": [
@@ -3246,31 +3297,36 @@
   {
     "id": "roadmap-2",
     "section": "roadmap",
-    "title": "Stage 2 — Optimization + B2B",
+    "title": "Stage 2 — Product Canon",
     "group": "ROADMAP",
-    "short": "Оптимизация Android и внедрение SystemGestures.",
-    "description": "Второй этап включает работу с ограничениями распространения, энергопотреблением и B2B-слоем зарезервированных комбинаций.",
-    "purpose": "Подготовить продукт к масштабированию и партнёрским интеграциям.",
-    "kind": "b2b",
+    "short": "Зафиксировать Design Canon v0.1 и 4Tap Graffiti Profile, затем привести KnockUI к канону.",
+    "description": "Этап формирует единый дизайн-канон и нормативный жестовый профиль. Design Canon v0.1 может начинаться параллельно Stage 1; после первой полной real-device цепочки уточняется v0.2. Palm Graffiti остаётся baseline, но формы 4Tap могут сознательно отличаться, включая переработку X.",
+    "purpose": "Стабилизировать визуальный язык и жестовые эталоны до масштабирования продукта.",
+    "kind": "core",
     "models": [
-      "b2b",
-      "b2c"
+      "b2c",
+      "b2b"
     ],
     "platforms": [
-      "android"
+      "shared",
+      "android",
+      "ios"
     ],
     "status": "concept",
     "inputs": [
-      "Результаты MVP"
+      "Stage 1 results",
+      "Palm Graffiti baseline"
     ],
     "outputs": [
-      "Optimized Android + B2B layer"
+      "Design Canon",
+      "4Tap Graffiti Profile"
     ],
     "parameters": {
-      "battery_target_from_spec": "<1%/hour"
+      "design": "v0.1 → v0.2 after E2E → v1.0 before public beta",
+      "graffiti": "A–Z + 0–9 canonical 4Tap profile"
     },
     "constraints": [
-      "Цель энергопотребления требует измерений."
+      "Не масштабировать recognizer и UI хаотично до фиксации соответствующих канонов."
     ],
     "open_questions": [],
     "tags": [
@@ -3282,11 +3338,134 @@
   {
     "id": "roadmap-3",
     "section": "roadmap",
-    "title": "Stage 3 — Cross-platform",
+    "title": "Stage 3 — User Configuration",
     "group": "ROADMAP",
-    "short": "iOS keyboard, WeChat Mini Program и другие платформенные адаптации.",
-    "description": "Кроссплатформенность строится не на идентичном системном API, а на сохранении командной семантики KnockUI при разных точках входа.",
-    "purpose": "Расширить общий язык KnockUI на дополнительные платформы.",
+    "short": "Создать Settings Console: приложения, default-привязки, обучение, Founder 40 и пользовательские команды.",
+    "description": "Главное окно настройки 4Tap объединяет доступные приложения, назначения по умолчанию, справочник написания символов, UserGestures и привязку команды к приложению/deep link/действию. Приватный профиль Founder 40 поддерживается как отдельная группа без публикации самих сокращений.",
+    "purpose": "Сделать 4Tap программируемым пользователем.",
+    "kind": "b2c",
+    "models": [
+      "b2c"
+    ],
+    "platforms": [
+      "android"
+    ],
+    "status": "concept",
+    "inputs": [
+      "Design Canon",
+      "4Tap Graffiti Profile",
+      "Installed/available apps"
+    ],
+    "outputs": [
+      "Configured user profile",
+      "UserGesture assignments"
+    ],
+    "parameters": {
+      "founder_private_profile_count": 40
+    },
+    "constraints": [
+      "Founder 40 remains private.",
+      "Package visibility must be minimal and policy-compliant."
+    ],
+    "open_questions": [],
+    "tags": [
+      "roadmap",
+      "cross-platform"
+    ],
+    "order": 30
+  },
+  {
+    "id": "roadmap-4",
+    "section": "roadmap",
+    "order": 40,
+    "title": "Stage 4 — Integration Catalog",
+    "group": "ROADMAP",
+    "short": "Сформировать российский Default Integration Catalog: сначала app launch, затем проверенные deep links/actions.",
+    "description": "После базовой пользовательской настройки 4Tap получает curated-набор массовых Android-приложений российского рынка. Первый слой — надёжный запуск приложения; второй — только устойчивые документированные глубокие действия.",
+    "purpose": "Сократить настройку и дать полезные сценарии сразу после установки.",
+    "kind": "b2c",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "android"
+    ],
+    "status": "concept",
+    "inputs": [
+      "Settings Console",
+      "Russian app shortlist"
+    ],
+    "outputs": [
+      "Verified default integrations"
+    ],
+    "parameters": {
+      "phase_1": "app launch",
+      "phase_2": "documented deep links/actions"
+    },
+    "constraints": [
+      "Не использовать undocumented integration contracts как default."
+    ],
+    "open_questions": [],
+    "tags": [
+      "roadmap",
+      "integrations",
+      "russia"
+    ]
+  },
+  {
+    "id": "roadmap-5",
+    "section": "roadmap",
+    "order": 50,
+    "title": "Stage 5 — Launch, Monetization + B2B",
+    "group": "ROADMAP",
+    "short": "Подготовить российский релиз, Free/Pro монетизацию, demo-first продвижение и отдельный B2B/OEM-контур.",
+    "description": "Этап объединяет store/compliance matrix, RuStore-first запуск, дополнительные Android-магазины, Free + Pro, подписку только при постоянной услуге, demo-first продвижение и развитие SystemGestures/B2B/OEM.",
+    "purpose": "Превратить подтверждённый продукт в распространяемый и монетизируемый сервис.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "android",
+      "shared"
+    ],
+    "status": "concept",
+    "inputs": [
+      "Validated Android product",
+      "Integration Catalog"
+    ],
+    "outputs": [
+      "Public Android launch",
+      "Commercial model",
+      "B2B/OEM path"
+    ],
+    "parameters": {
+      "primary_russia_store": "RuStore",
+      "baseline_monetization": "Free + Pro",
+      "promotion": "demo-first"
+    },
+    "constraints": [
+      "Цены, billing и store policies требуют отдельной актуальной проверки перед релизом."
+    ],
+    "open_questions": [],
+    "tags": [
+      "roadmap",
+      "launch",
+      "monetization",
+      "b2b"
+    ]
+  },
+  {
+    "id": "roadmap-6",
+    "section": "roadmap",
+    "order": 60,
+    "title": "Stage 6 — Cross-platform",
+    "group": "ROADMAP",
+    "short": "Перенести общий язык 4Tap на iOS, WeChat, WhatsApp и другие допустимые платформенные адаптации.",
+    "description": "Кроссплатформенность строится не на копировании Android-механики, а на сохранении command namespace, gesture/profile semantics и реестров при разных platform entry/action contracts.",
+    "purpose": "Расширить 4Tap после стабилизации Android-продукта.",
     "kind": "core",
     "models": [
       "b2c",
@@ -3306,14 +3485,13 @@
     ],
     "parameters": {},
     "constraints": [
-      "Механика активации различается по платформам."
+      "Точки входа и исполнения различаются по платформам."
     ],
     "open_questions": [],
     "tags": [
       "roadmap",
       "cross-platform"
-    ],
-    "order": 30
+    ]
   },
   {
     "id": "governance-repo",
