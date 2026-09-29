@@ -558,10 +558,6 @@
         {
           "label": "Android WindowManager.LayoutParams",
           "url": "https://developer.android.com/reference/android/view/WindowManager.LayoutParams"
-        },
-        {
-          "label": "Android Settings / overlay permission",
-          "url": "https://developer.android.com/reference/android/provider/Settings"
         }
       ],
       "next_step": "Build one-step Accessibility onboarding and retest on newer stock Android.",
@@ -634,7 +630,7 @@
     "order": 27,
     "title": "Corner Activation Architecture",
     "group": "ARCHITECTURE DECISION",
-    "short": "Подтверждённый baseline: обычный APK → Accessibility navigation-bar zones → 4 taps → ActivationRequest.",
+    "short": "Подтверждённый baseline: обычный APK → Accessibility navigation-bar zones → 4 taps → Accessibility KnockUI.",
     "description": "4Tap остаётся обычным приложением на штатном Android. На LGM-V300L / Android 9 рабочий trigger реализован через AccessibilityService и две TYPE_ACCESSIBILITY_OVERLAY зоны внутри navigation bar. Полная 4-tap sequence формирует ActivationRequest; после успешного вызова зоны автоматически перевооружаются. SystemUI/OEM архитектура не требуется.",
     "purpose": "Зафиксировать простой ordinary-app вход и не возвращаться к SystemUI/OEM архитектуре.",
     "kind": "core",
@@ -655,21 +651,20 @@
     ],
     "parameters": {
       "decision_status": "verified-current-baseline",
-      "primary_path": "navigation-bar LEFT/RIGHT → 4 taps → ActivationRequest → Drawing Overlay → Recognizer → Command → Action",
+      "primary_path": "navigation-bar LEFT/RIGHT → 4 taps → ActivationRequest → TYPE_ACCESSIBILITY_OVERLAY KnockUI → Recognizer → Command → Action",
       "product_threshold": "3 or 4 taps; current prototype = 4",
       "trigger_surface": "AccessibilityService + TYPE_ACCESSIBILITY_OVERLAY",
       "rearm_delay_ms": 700,
-      "downstream_verification": "navigation-bar trigger → overlay → SC → ACTION_SETTINGS verified on LGM-V300L"
+      "downstream_verification": "navigation-bar trigger → Accessibility KnockUI → SC → ACTION_SETTINGS verified without SYSTEM_ALERT_WINDOW"
     },
     "constraints": [
       "Ordinary user app on stock Android only.",
       "No SystemUI/firmware/root/privileged/OEM-only implementation path.",
       "Accessibility shortcut is not the 4Tap trigger.",
-      "Current baseline is technically verified but still subject to permission UX and Google Play review."
+      "Current baseline requires one user-enabled AccessibilityService and remains subject to Google Play review and cross-version validation."
     ],
     "open_questions": [
-      "Какой порог используется по умолчанию: 3 или 4 тапа?",
-      "Останется ли двухразрешительная схема финальной архитектурой?"
+      "Какой порог используется по умолчанию: 3 или 4 тапа?"
     ],
     "tags": [
       "android",
@@ -682,9 +677,9 @@
       "state": "verified-constrained",
       "date": "2026-09-29",
       "confidence": "high",
-      "summary": "The current ordinary-app navigation-bar activation architecture is physically verified and stable on LGM-V300L / Android 9, including automatic re-arm.",
+      "summary": "The ordinary-app navigation-bar activation architecture and Accessibility KnockUI are physically verified on LGM-V300L / Android 9; clean build works without SYSTEM_ALERT_WINDOW.",
       "sources": [],
-      "next_step": "Preserve this baseline while evaluating permission onboarding, Play policy and newer Android compatibility.",
+      "next_step": "Productize one-step Accessibility onboarding and validate newer Android compatibility.",
       "implication": "Activation feasibility is no longer the Stage 1 blocker."
     }
   },
@@ -3622,7 +3617,7 @@
     "order": 22,
     "title": "Android Runtime Constraints",
     "group": "PLATFORM LIMITS",
-    "short": "Штатные ограничения Android для Accessibility trigger, KnockUI overlay, запуска действий и Settings Console.",
+    "short": "Штатные ограничения Android для Accessibility trigger/KnockUI, запуска действий и Settings Console.",
     "description": "4Tap работает как обычное Android-приложение. Текущий candidate использует user-enabled AccessibilityService + TYPE_ACCESSIBILITY_OVERLAY и для navigation-bar trigger, и для KnockUI. SYSTEM_ALERT_WINDOW удалён из manifest. После команды запуск выполняется через Intent/startActivity с учётом platform restrictions.",
     "purpose": "Зафиксировать реальные runtime-границы Android без превращения их в повод перепроектировать продукт.",
     "kind": "core",
@@ -3645,7 +3640,7 @@
     "parameters": {
       "trigger": "AccessibilityService + TYPE_ACCESSIBILITY_OVERLAY",
       "accessibility_window_content": "canRetrieveWindowContent=false in current prototype",
-      "overlay": "TYPE_ACCESSIBILITY_OVERLAY for KnockUI — verified",
+      "knockui": "TYPE_ACCESSIBILITY_OVERLAY — verified",
       "app_launch": "Intent / startActivity",
       "background_launch": "version/target-SDK constrained",
       "package_visibility": "Android 11+ filtered queries"
@@ -3674,16 +3669,8 @@
       "summary": "Physical Android 9 prototype confirms one AccessibilityService can provide both navigation-bar trigger and KnockUI without SYSTEM_ALERT_WINDOW.",
       "sources": [
         {
-          "label": "SYSTEM_ALERT_WINDOW",
-          "url": "https://developer.android.com/reference/android/Manifest.permission"
-        },
-        {
-          "label": "Android 12 — hide overlay windows",
-          "url": "https://developer.android.com/about/versions/12/features"
-        },
-        {
-          "label": "Android 12 — untrusted touch events",
-          "url": "https://developer.android.com/about/versions/12/behavior-changes-all"
+          "label": "Android AccessibilityService API",
+          "url": "https://developer.android.com/reference/android/accessibilityservice/AccessibilityService"
         },
         {
           "label": "Android 10 — background activity launches",
