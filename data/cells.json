@@ -447,8 +447,8 @@
     "section": "android",
     "title": "Android Integration",
     "group": "PLATFORM",
-    "short": "Обычное Android-приложение ловит 3/4 быстрых тапа в нижнем LEFT/RIGHT углу; post-activation overlay уже подтверждён.",
-    "description": "Канонический Android-вход 4Tap — 3 или 4 быстрых тапа в выбранном нижнем левом или правом системном углу. 4Tap остаётся обычным пользовательским приложением и пытается получить полную последовательность штатными средствами. Если один из тапов не получен из-за активности приложения, системы или другого обработчика, серия сбрасывается и активация не происходит. TYPE_APPLICATION_OVERLAY используется только после успешной активации для Drawing Overlay.",
+    "short": "Обычное Android-приложение стабильно активируется 4 тапами в LEFT/RIGHT области navigation bar; полный SC→action flow подтверждён.",
+    "description": "Канонический Android-вход 4Tap — 3 или 4 быстрых тапа в выбранной нижней LEFT/RIGHT области navigation bar. На LGM-V300L / Android 9 подтверждён current implementation candidate: AccessibilityService размещает две небольшие touchable TYPE_ACCESSIBILITY_OVERLAY зоны непосредственно в navigation bar; 4 тапа формируют ActivationRequest. После этого подтверждённый TYPE_APPLICATION_OVERLAY показывает KnockUI поверх текущего приложения.",
     "purpose": "Получить быстрый угловой вызов 4Tap без изменения Android.",
     "kind": "core",
     "models": [
@@ -458,27 +458,29 @@
     "platforms": [
       "android"
     ],
-    "status": "needs-validation",
+    "status": "approved",
     "inputs": [
-      "Lower-corner 3/4-tap sequence"
+      "Navigation-bar LEFT/RIGHT 3/4-tap sequence"
     ],
     "outputs": [
       "ActivationRequest"
     ],
     "parameters": {
-      "activation_policy": "ordinary app; lower-left/right corner",
-      "tap_thresholds": "3 or 4 sequential taps",
-      "failure_policy": "missing/consumed tap → reset; no activation",
+      "activation_policy": "ordinary app; navigation-bar LEFT/RIGHT corner zones",
+      "activation_surface": "AccessibilityService + TYPE_ACCESSIBILITY_OVERLAY — verified on LGM-V300L / Android 9",
+      "tap_thresholds": "3 or 4 sequential taps; current prototype = 4",
+      "rearm": "automatic after successful activation",
       "post_activation_surface": "TYPE_APPLICATION_OVERLAY — verified"
     },
     "constraints": [
       "4Tap remains an ordinary user-installed app on stock Android.",
       "No firmware/SystemUI modification, root, privileged/system app or mandatory OEM integration.",
-      "No ownership/passthrough/replay guarantee is required.",
-      "App-owned overlay is post-activation only."
+      "Current prototype requires user-enabled AccessibilityService and SYSTEM_ALERT_WINDOW.",
+      "LG-specific geometry is diagnostic only and must not become a product dependency."
     ],
     "open_questions": [
-      "Получает ли обычный 4Tap APK полную 3/4-tap sequence в целевом нижнем углу и вызывает ли ActivationRequest?"
+      "Можно ли сохранить подтверждённую механику с одним пользовательским разрешением?",
+      "Как механизм ведёт себя на актуальных stock Android-устройствах?"
     ],
     "tags": [
       "android",
@@ -487,12 +489,13 @@
     ],
     "order": 10,
     "verification": {
-      "state": "requires-prototype",
+      "state": "verified-constrained",
       "date": "2026-09-29",
       "confidence": "high",
-      "summary": "Downstream overlay/recognizer/action path is verified; the ordinary-app lower-corner 3/4-tap trigger still requires the direct real-device test.",
+      "summary": "On LGM-V300L / Android 9 the navigation-bar 4-tap trigger is stable and routes without ADB/debug broadcast through ActivationRequest → KnockUI → S → C → SC → Settings. Automatic re-arm is also confirmed.",
       "sources": [],
-      "next_step": "Run the ordinary-app lower-corner 3/4-tap trigger test on LGM-V300L."
+      "next_step": "Productize permission onboarding, evaluate one-permission alternatives and repeat the trigger on newer stock Android devices.",
+      "implication": "The first Android end-to-end milestone is passed; remaining risk is product/distribution suitability rather than basic trigger feasibility."
     }
   },
   {
@@ -501,8 +504,8 @@
     "order": 20,
     "title": "Android Permissions",
     "group": "PLATFORM",
-    "short": "Разрешения, необходимые фактическому штатному trigger и подтверждённому Drawing Overlay.",
-    "description": "SYSTEM_ALERT_WINDOW и явное пользовательское разрешение нужны подтверждённому TYPE_APPLICATION_OVERLAY. Остальной набор разрешений определяется только после выбора штатного механизма активации; AccessibilityService не считается обязательным компонентом.",
+    "short": "Текущий рабочий Android prototype требует Accessibility для navigation-bar trigger и «Поверх других приложений» для KnockUI.",
+    "description": "Подтверждённый prototype использует два отдельных user-granted system capabilities: AccessibilityService + TYPE_ACCESSIBILITY_OVERLAY для LEFT/RIGHT navigation-bar trigger и SYSTEM_ALERT_WINDOW + TYPE_APPLICATION_OVERLAY для post-activation KnockUI. Приложение может открыть соответствующие settings screens, но не может само выдать себе эти разрешения.",
     "purpose": "Сделать системные предпосылки Android явными и проверяемыми.",
     "kind": "core",
     "models": [
@@ -521,39 +524,50 @@
       "Разрешённые системные возможности"
     ],
     "parameters": {
+      "trigger_permission": "user-enabled AccessibilityService",
+      "trigger_window": "TYPE_ACCESSIBILITY_OVERLAY",
       "overlay_permission": "SYSTEM_ALERT_WINDOW",
       "overlay_settings_action": "ACTION_MANAGE_OVERLAY_PERMISSION",
-      "check": "Settings.canDrawOverlays()"
+      "overlay_check": "Settings.canDrawOverlays()",
+      "current_user_steps": 2
     },
     "constraints": [
-      "Overlay permission is special access explicitly granted by the user.",
-      "Не запрашивать AccessibilityService или иные чувствительные возможности без фактической необходимости.",
-      "Итоговый permission set должен быть минимально достаточным для выбранного stock activation path."
+      "Оба системных допуска выдаются только пользователем.",
+      "Текущий AccessibilityService использует canRetrieveWindowContent=false.",
+      "Google Play требует declaration, prominent disclosure and affirmative consent for non-accessibility-tool AccessibilityService use.",
+      "Итоговый permission set должен быть минимально достаточным."
     ],
     "open_questions": [
-      "Какие дополнительные разрешения действительно потребуются выбранному штатному trigger?"
+      "Можно ли сократить onboarding до одного пользовательского разрешения без потери функции?",
+      "Насколько приемлем двухшаговый permission onboarding для массового пользователя?"
     ],
     "tags": [
       "android",
       "permissions",
-      "overlay"
+      "overlay",
+      "accessibility"
     ],
     "verification": {
       "state": "verified-constrained",
-      "date": "2026-09-28",
+      "date": "2026-09-29",
       "confidence": "high",
-      "summary": "The overlay permission flow is confirmed. The complete permission set cannot be finalized until the global activation architecture is redesigned.",
+      "summary": "Both required prototype capabilities are now empirically known: AccessibilityService enables the verified navigation-bar trigger and SYSTEM_ALERT_WINDOW enables the verified KnockUI Drawing Overlay. Final product permission set is still open.",
       "sources": [
         {
-          "label": "Android Settings / overlay permission",
-          "url": "https://developer.android.com/reference/android/provider/Settings"
+          "label": "Google Play AccessibilityService policy",
+          "url": "https://support.google.com/googleplay/android-developer/answer/10964491"
         },
         {
           "label": "Android WindowManager.LayoutParams",
           "url": "https://developer.android.com/reference/android/view/WindowManager.LayoutParams"
+        },
+        {
+          "label": "Android Settings / overlay permission",
+          "url": "https://developer.android.com/reference/android/provider/Settings"
         }
       ],
-      "next_step": "Finalize the minimal permission set after the stock activation mechanism is selected."
+      "next_step": "Design the two-step onboarding and test whether one permission can serve both activation and KnockUI without unacceptable policy/product cost.",
+      "implication": "Permissions are now a product/compliance problem, not an unknown technical prerequisite."
     }
   },
   {
@@ -622,8 +636,8 @@
     "order": 27,
     "title": "Corner Activation Architecture",
     "group": "ARCHITECTURE DECISION",
-    "short": "Канон: обычный APK → нижний LEFT/RIGHT угол → 3/4 taps → ActivationRequest.",
-    "description": "4Tap не резервирует системную территорию и не требует системного detector. Обычное приложение пытается получить 3 или 4 быстрых тапа в нижнем углу. Полная последовательность формирует ActivationRequest; потерянный или занятый тап сбрасывает серию и означает неудачную активацию. Это принимается без отдельного ownership/passthrough/replay-механизма.",
+    "short": "Подтверждённый baseline: обычный APK → Accessibility navigation-bar zones → 4 taps → ActivationRequest.",
+    "description": "4Tap остаётся обычным приложением на штатном Android. На LGM-V300L / Android 9 рабочий trigger реализован через AccessibilityService и две TYPE_ACCESSIBILITY_OVERLAY зоны внутри navigation bar. Полная 4-tap sequence формирует ActivationRequest; после успешного вызова зоны автоматически перевооружаются. SystemUI/OEM архитектура не требуется.",
     "purpose": "Зафиксировать простой ordinary-app вход и не возвращаться к SystemUI/OEM архитектуре.",
     "kind": "core",
     "models": [
@@ -633,7 +647,7 @@
     "platforms": [
       "android"
     ],
-    "status": "concept",
+    "status": "approved",
     "inputs": [
       "Lower-corner tap sequence",
       "Требование быстрого вызова"
@@ -642,22 +656,22 @@
       "ActivationRequest"
     ],
     "parameters": {
-      "decision_status": "canonical-ordinary-app-corner",
-      "primary_path": "lower-left/right corner → 3/4 taps → ActivationRequest → Drawing Overlay → Recognizer → Command → Action",
-      "tap_thresholds": "3 or 4",
-      "failed_sequence": "reset; no activation",
-      "ownership_model": "not part of product requirements",
-      "downstream_verification": "external debug trigger → overlay → SC → ACTION_SETTINGS verified on LGM-V300L"
+      "decision_status": "verified-current-baseline",
+      "primary_path": "navigation-bar LEFT/RIGHT → 4 taps → ActivationRequest → Drawing Overlay → Recognizer → Command → Action",
+      "product_threshold": "3 or 4 taps; current prototype = 4",
+      "trigger_surface": "AccessibilityService + TYPE_ACCESSIBILITY_OVERLAY",
+      "rearm_delay_ms": 700,
+      "downstream_verification": "navigation-bar trigger → overlay → SC → ACTION_SETTINGS verified on LGM-V300L"
     },
     "constraints": [
       "Ordinary user app on stock Android only.",
       "No SystemUI/firmware/root/privileged/OEM-only implementation path.",
-      "Do not replace the tap trigger with buttons or Accessibility shortcuts.",
-      "TYPE_APPLICATION_OVERLAY is post-activation only."
+      "Accessibility shortcut is not the 4Tap trigger.",
+      "Current baseline is technically verified but still subject to permission UX and Google Play review."
     ],
     "open_questions": [
-      "Срабатывает ли ordinary-app 3/4-tap detector в целевом нижнем углу на физическом устройстве?",
-      "Какой порог используется по умолчанию: 3 или 4 тапа?"
+      "Какой порог используется по умолчанию: 3 или 4 тапа?",
+      "Останется ли двухразрешительная схема финальной архитектурой?"
     ],
     "tags": [
       "android",
@@ -667,13 +681,13 @@
       "mvp"
     ],
     "verification": {
-      "state": "requires-prototype",
+      "state": "verified-constrained",
       "date": "2026-09-29",
       "confidence": "high",
-      "summary": "Current architecture is the ordinary-app lower-corner 3/4-tap sequence; the direct real-device trigger test remains to be completed.",
+      "summary": "The current ordinary-app navigation-bar activation architecture is physically verified and stable on LGM-V300L / Android 9, including automatic re-arm.",
       "sources": [],
-      "next_step": "Test the ordinary-app lower-corner 3/4-tap sequence on LGM-V300L and route a successful sequence to ActivationRequest.",
-      "implication": "Failure to receive a tap means no activation in that context, not a switch to SystemUI/OEM implementation."
+      "next_step": "Preserve this baseline while evaluating permission onboarding, Play policy and newer Android compatibility.",
+      "implication": "Activation feasibility is no longer the Stage 1 blocker."
     }
   },
   {
@@ -728,8 +742,8 @@
     "section": "android",
     "title": "Corner Tap Sequence",
     "group": "ACTIVATION",
-    "short": "В нижнем LEFT/RIGHT углу 4Tap активируется последовательностью из 3 или 4 быстрых тапов.",
-    "description": "Обычный 4Tap APK пытается получить 3 или 4 коротких последовательных тапа в выбранном нижнем углу. Если последовательность получена полностью, формируется ActivationRequest. Если один из тапов не получен из-за текущего приложения, системы или другого обработчика, состояние сбрасывается и активация не происходит. Отдельная модель ownership/passthrough/replay не требуется.",
+    "short": "В LEFT/RIGHT области navigation bar 4Tap стабильно активируется последовательностью из 4 быстрых тапов; продуктовый порог остаётся 3/4.",
+    "description": "Текущий physical-device prototype получает тапы через две небольшие TYPE_ACCESSIBILITY_OVERLAY зоны, размещённые AccessibilityService внутри navigation bar. Четыре валидных тапа формируют ActivationRequest. LEFT и RIGHT работают независимо; после активации зоны автоматически перевооружаются.",
     "purpose": "Активировать 4Tap короткой угловой последовательностью.",
     "kind": "core",
     "models": [
@@ -739,7 +753,7 @@
     "platforms": [
       "android"
     ],
-    "status": "needs-validation",
+    "status": "approved",
     "inputs": [
       "Lower-corner tap sequence"
     ],
@@ -748,21 +762,21 @@
     ],
     "parameters": {
       "tap_thresholds": "3 or 4",
-      "exact_threshold": "product parameter",
+      "exact_threshold": "product parameter; current prototype = 4",
       "corners": "LEFT / RIGHT independent",
       "prototype_timing": "45–700 ms inter-tap; 280 ms max tap duration; 20 dp max movement",
-      "failure_policy": "missing/consumed tap → reset; no activation",
-      "current_proof": "in-app 4-tap LEFT SC OK; RIGHT SC OK"
+      "trigger_surface": "TYPE_ACCESSIBILITY_OVERLAY",
+      "current_proof": "navigation-bar 4-tap → KnockUI stable on LGM-V300L / Android 9",
+      "rearm_ms": 700
     },
     "constraints": [
-      "Ordinary app only.",
-      "A sequence may fail in contexts where a tap is not received.",
-      "No ownership/passthrough/replay guarantee.",
-      "App-owned overlay and non-tap shortcuts are not equivalent triggers."
+      "Current proof is Android 9 / LGM-V300L and must be repeated on newer stock Android.",
+      "Zone geometry is computed per device; LG pixel values are not product constants.",
+      "User must enable the AccessibilityService in the current prototype."
     ],
     "open_questions": [
       "Какой порог используется по умолчанию: 3 или 4?",
-      "Проходит ли реальная lower-corner sequence до ActivationRequest на физическом устройстве?"
+      "Какая минимальная/оптимальная геометрия зон нужна на разных navigation modes?"
     ],
     "tags": [
       "android",
@@ -772,22 +786,22 @@
     ],
     "order": 30,
     "verification": {
-      "state": "requires-prototype",
-      "date": "2026-09-28",
+      "state": "verified-constrained",
+      "date": "2026-09-29",
       "confidence": "high",
-      "summary": "In-app 4-tap detection is verified. Remaining work is the same sequence as an ordinary-app lower-corner trigger outside the 4Tap Activity.",
+      "summary": "Navigation-bar 4-tap activation is stable on the physical LG V30 and no longer depends on 4Tap Activity, ADB or debug broadcast.",
       "sources": [
         {
           "label": "Android AccessibilityService API",
           "url": "https://developer.android.com/reference/android/accessibilityservice/AccessibilityService"
         },
         {
-          "label": "Android TouchInteractionController API",
-          "url": "https://developer.android.com/reference/android/accessibilityservice/TouchInteractionController"
+          "label": "Android WindowManager.LayoutParams",
+          "url": "https://developer.android.com/reference/android/view/WindowManager.LayoutParams"
         }
       ],
-      "next_step": "Run the physical lower-corner 3/4-tap activation test.",
-      "implication": "A missed tap yields no activation; no system-level workaround is implied."
+      "next_step": "Retest on newer stock Android and compare 3-tap versus 4-tap product thresholds.",
+      "implication": "The tap sequence is now a verified activation mechanism candidate, not only an in-app harness."
     }
   },
   {
@@ -1380,8 +1394,8 @@
     "order": 125,
     "title": "First Live Command — SC",
     "group": "MILESTONE",
-    "short": "Первый полный real-device тест: поверх другой программы вызвать 4Tap, ввести SC и запустить назначенное приложение.",
-    "description": "Ближайший контрольный рубеж Android. На LGM-V300L уже подтверждена downstream-цепочка от ActivationRequest через настоящий overlay и SC до запуска `Settings.ACTION_SETTINGS`. Для полного пользовательского рубежа осталось заменить debug broadcast обычной угловой активацией: нижний LEFT/RIGHT угол → 3/4 быстрых тапа → ActivationRequest.",
+    "short": "Первый полный real-device milestone пройден: navigation-bar taps → KnockUI → SC → Android Settings.",
+    "description": "На LGM-V300L / Android 9 подтверждена полная пользовательская цепочка без ADB/debug broadcast: другое foreground-приложение → 4 быстрых тапа в LEFT/RIGHT области navigation bar → ActivationRequest → настоящий KnockUI overlay → Palm Graffiti S → C → SC → Settings.ACTION_SETTINGS. Повторные активации стабильны благодаря automatic re-arm.",
     "purpose": "Доказать практическую ценность 4Tap одним полностью работающим сценарием до расширения алфавита и настроек.",
     "kind": "b2c",
     "models": [
@@ -1390,7 +1404,7 @@
     "platforms": [
       "android"
     ],
-    "status": "needs-validation",
+    "status": "approved",
     "inputs": [
       "Lower-corner 3/4-tap ActivationRequest",
       "Recognized SC",
@@ -1419,15 +1433,19 @@
       "touch_mapping": "1:1 with physical 1440 × 2880 display",
       "activity_raw_y_offset_px": 84,
       "navbar_top_raw_y": 2733,
-      "touch_observation_note": "raw touch coordinates recorded; early empty Logcat cannot be used as ownership evidence because diagnostic APK was not installed"
+      "touch_observation_note": "raw touch coordinates recorded; early empty Logcat cannot be used as ownership evidence because diagnostic APK was not installed",
+      "trigger_test": "AccessibilityService + TYPE_ACCESSIBILITY_OVERLAY navigation-bar 4-tap — PASS",
+      "full_chain": "other app → nav-bar 4 taps → KnockUI → S → C → SC → Settings — PASS",
+      "automatic_rearm": "PASS; 700 ms"
     },
     "constraints": [
-      "Ordinary-app lower-corner trigger ещё не подтверждён end-to-end.",
-      "A missed tap may simply cause activation failure in that context.",
-      "Текущий action mapping является минимальным prototype assignment."
+      "Текущий action mapping является минимальным prototype assignment.",
+      "Текущий trigger proof относится к LGM-V300L / Android 9; cross-version validation remains.",
+      "Current prototype requires Accessibility and SYSTEM_ALERT_WINDOW user grants."
     ],
     "open_questions": [
-      "Срабатывает ли ordinary-app lower-corner 3/4-tap trigger без ADB/debug broadcast?"
+      "Как воспроизводится полный flow на актуальных stock Android versions?",
+      "Можно ли уменьшить permission burden до одного user grant?"
     ],
     "tags": [
       "android",
@@ -1436,13 +1454,13 @@
       "app-launch"
     ],
     "verification": {
-      "state": "requires-prototype",
+      "state": "verified-constrained",
       "date": "2026-09-29",
       "confidence": "high",
-      "summary": "Physical-device downstream including action execution is verified. Remaining milestone: ordinary-app 3/4-tap lower-corner activation.",
+      "summary": "The first complete real-device 4Tap flow is passed without ADB/debug activation: navigation-bar 4-tap → KnockUI → S → C → SC → Android Settings, with stable automatic re-arm.",
       "sources": [],
-      "next_step": "Run the lower-corner 3/4-tap trigger and repeat the complete chain without ADB/debug broadcast.",
-      "implication": "LG geometry/raw-touch data are diagnostic only; no ownership conclusion is part of the milestone."
+      "next_step": "Move from feasibility to productization: permission onboarding, Play review preparation and newer-device compatibility.",
+      "implication": "Android Stage 1 end-to-end milestone is complete."
     }
   },
   {
@@ -1671,7 +1689,7 @@
     "title": "Android Distribution & Compliance",
     "group": "DISTRIBUTION",
     "short": "RuStore — основной российский канал; Google Play и другие Android-магазины рассматриваются как дополнительные с собственными требованиями.",
-    "description": "Российский запуск планируется Android-first с RuStore как основным каналом. Google Play и другие Android-магазины остаются дополнительными каналами. Compliance проверяется отдельно для каждого магазина и для реально используемых чувствительных Android-возможностей; AccessibilityService не должен считаться частью финальной архитектуры без необходимости.",
+    "description": "Российский запуск планируется Android-first с RuStore как основным каналом. Google Play и другие Android-магазины остаются дополнительными каналами. Текущий verified trigger использует AccessibilityService, поэтому для Google Play теперь актуальны Accessibility declaration, prominent in-app disclosure, affirmative consent, demo video и review preparation. SYSTEM_ALERT_WINDOW должен объясняться как часть core functionality KnockUI.",
     "purpose": "Подготовить допустимую многоканальную публикацию и не строить продукт вокруг разрешений, которые ему фактически не нужны.",
     "kind": "core",
     "models": [
@@ -1693,17 +1711,21 @@
     "parameters": {
       "russia_primary_store": "RuStore",
       "secondary_channels": "Google Play + other Android stores where applicable",
-      "accessibility_policy": "relevant only if AccessibilityService remains in final architecture",
+      "accessibility_policy": "current verified trigger uses AccessibilityService; declaration/review required for Google Play",
+      "overlay_policy": "SYSTEM_ALERT_WINDOW supports core post-activation KnockUI",
+      "advance_notice": "Google Play App Review accepts advance notice for apps using AccessibilityService",
       "store_matrix": "required before release"
     },
     "constraints": [
-      "Требования магазинов проверяются по фактической архитектуре и актуальным правилам перед релизом.",
-      "Google Play AccessibilityService rules применимы только если сервис действительно останется в продукте.",
-      "Нельзя считать одобрение любого магазина гарантированным."
+      "4Tap is not declared as isAccessibilityTool unless its product purpose materially changes.",
+      "Google Play requires accurate declaration/disclosure/consent for current AccessibilityService use.",
+      "No store approval is guaranteed before actual review.",
+      "RuStore and other store policies require their own release-time audit."
     ],
     "open_questions": [
-      "Какие дополнительные Android-магазины войдут в стартовую матрицу распространения?",
-      "Какие store-specific billing и privacy требования влияют на Free/Pro модель?"
+      "Можно ли получить useful advance feedback from Google Play App Review before public release?",
+      "Останется ли AccessibilityService в финальной Android architecture?",
+      "Какие дополнительные Android-магазины войдут в стартовую матрицу?"
     ],
     "tags": [
       "android",
@@ -1712,22 +1734,26 @@
     ],
     "verification": {
       "state": "verified-constrained",
-      "date": "2026-09-28",
+      "date": "2026-09-29",
       "confidence": "high",
-      "summary": "Google Play does not categorically ban non-accessibility-tool AccessibilityService use, but it imposes declaration/disclosure/consent requirements and does not offer a simple «Productivity certification» exemption.",
+      "summary": "Google Play explicitly permits AccessibilityService use outside accessibility tools subject to declaration, prominent disclosure and affirmative consent; advance notice to App Review is accepted for apps using an accessibility service. Final approval remains release-review dependent.",
       "sources": [
         {
           "label": "Google Play AccessibilityService policy",
           "url": "https://support.google.com/googleplay/android-developer/answer/10964491"
         },
         {
+          "label": "Google Play advance notice to App Review",
+          "url": "https://support.google.com/googleplay/android-developer/answer/6320428"
+        },
+        {
           "label": "Google Play sensitive permissions/APIs policy",
           "url": "https://support.google.com/googleplay/android-developer/answer/16558241"
         }
       ],
-      "next_step": "Build a store/compliance matrix for RuStore, Google Play and selected secondary Android stores before public release.",
-      "implication": "Distribution is a multi-store product task, not a Google-Play-only compliance task.",
-      "source_note": "Current cited verification covers Google Play policy; RuStore and other store rules require a separate release-time audit."
+      "next_step": "Prepare the actual disclosure/declaration/video narrative around the verified navigation-bar trigger and KnockUI overlay; audit RuStore separately.",
+      "implication": "Accessibility is a review/compliance requirement to manage, not a categorical Google Play prohibition.",
+      "source_note": "Current cited verification covers Google Play; other stores require separate current-policy checks."
     }
   },
   {
@@ -3599,8 +3625,8 @@
     "order": 22,
     "title": "Android Runtime Constraints",
     "group": "PLATFORM LIMITS",
-    "short": "Штатные ограничения Android для KnockUI overlay, запуска чужих приложений и Settings Console.",
-    "description": "4Tap работает как обычное Android-приложение. KnockUI использует TYPE_APPLICATION_OVERLAY с SYSTEM_ALERT_WINDOW; чувствительный foreground-экран на Android 12+ может скрыть сторонний overlay. После команды запуск выполняется через обычные Intent/startActivity с учётом background activity launch restrictions, доступности exported Activity/deep link и resolver. Settings Console учитывает package visibility Android 11+. Ограничение конкретного контекста не меняет архитектуру 4Tap.",
+    "short": "Штатные ограничения Android для Accessibility trigger, KnockUI overlay, запуска действий и Settings Console.",
+    "description": "4Tap работает как обычное Android-приложение. Текущий trigger использует user-enabled AccessibilityService + TYPE_ACCESSIBILITY_OVERLAY в navigation bar. KnockUI использует TYPE_APPLICATION_OVERLAY + SYSTEM_ALERT_WINDOW. После команды запуск выполняется через обычные Intent/startActivity с учётом background activity launch restrictions, exported Activity/deep link и package visibility. Ограничение конкретного контекста не требует системного обхода.",
     "purpose": "Зафиксировать реальные runtime-границы Android без превращения их в повод перепроектировать продукт.",
     "kind": "core",
     "models": [
@@ -3620,20 +3646,21 @@
       "Runtime availability / controlled failure"
     ],
     "parameters": {
+      "trigger": "AccessibilityService + TYPE_ACCESSIBILITY_OVERLAY",
+      "accessibility_window_content": "canRetrieveWindowContent=false in current prototype",
       "overlay": "TYPE_APPLICATION_OVERLAY + SYSTEM_ALERT_WINDOW",
       "overlay_blocking": "Android 12+ app may hide third-party overlays",
-      "touch_mode": "touchable overlay; pass-through not required",
       "app_launch": "Intent / startActivity",
       "background_launch": "version/target-SDK constrained",
       "package_visibility": "Android 11+ filtered queries",
-      "foreground_service": "Android 15+ SAW background-start exemption requires visible overlay when applicable"
+      "foreground_service": "Android 15+ SAW background-start constraints when applicable"
     },
     "constraints": [
-      "Overlay permission may be denied or revoked.",
+      "AccessibilityService and overlay special access are user-controlled.",
+      "Google Play policy applies to current AccessibilityService use.",
       "Sensitive screens may hide TYPE_APPLICATION_OVERLAY.",
       "Internal app screens require supported exported Activity / intent / deep link.",
-      "Package discovery must use minimal required <queries>.",
-      "A blocked overlay or unavailable action is a local runtime limitation, not an architecture change."
+      "Package discovery must use minimal required <queries>."
     ],
     "open_questions": [
       "Which current Android versions/target SDKs must be included in the release compatibility matrix?"
@@ -3650,7 +3677,7 @@
       "state": "verified-constrained",
       "date": "2026-09-29",
       "confidence": "high",
-      "summary": "Official Android documentation confirms overlay permission/visibility limits, background-launch restrictions, package visibility filtering, and newer foreground-service constraints. The existing 4Tap overlay and SC→Settings prototype remain valid within these platform boundaries.",
+      "summary": "The physical prototype confirms the Accessibility navigation-bar trigger and the application overlay/action downstream on Android 9. Official Android/Google Play documentation defines the remaining permission, overlay, background-launch and distribution constraints.",
       "sources": [
         {
           "label": "SYSTEM_ALERT_WINDOW",
@@ -3685,8 +3712,8 @@
           "url": "https://developer.android.com/training/package-visibility/automatic"
         }
       ],
-      "next_step": "Apply these constraints when implementing overlay lifecycle, Action Dispatcher and Settings Console; do not change the activation roadmap because of them.",
-      "implication": "Android runtime restrictions are handled locally with permission checks, resolver/fallback and controlled failure."
+      "next_step": "Keep the verified baseline stable while validating permission onboarding and behavior on newer Android versions.",
+      "implication": "Current Android risk has shifted from basic trigger feasibility to permissions, compatibility and store review."
     }
   }
 ]
