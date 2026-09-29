@@ -4,7 +4,7 @@
 
 ## Текущая версия
 
-Интерактивная документация v0.4.
+Интерактивная документация v0.5.
 
 ## Реализовано
 
@@ -35,9 +35,14 @@
 
 Структурный аудит выполнен. Результаты и исправления зафиксированы в `AUDIT-2026-09-28.md`.
 
-Текущее состояние после аудита:
+Состояние на момент аудита 2026-09-28:
 - 50 ячеек;
 - 79 связей;
+
+Текущее состояние карты:
+- 72 ячейки;
+- 149 связей;
+- roadmap развёрнут в шесть этапов: Android end-to-end → Product Canon → User Configuration → Integration Catalog → Launch/Monetization+B2B → Cross-platform;
 - Android-поток дополнен разрешениями, валидацией зоны, fail-safe, обратной связью первого символа, хранилищем, редактором назначений, compliance и energy budget;
 - iOS и WeChat имеют явные action-узлы;
 - общие продуктовые принципы связаны с платформенными адаптациями;
@@ -232,6 +237,18 @@ AOSP/Cuttlefish заготовки также сохранены, но этот 
 - продвижение — demo-first: короткая реальная цепочка «текущий контекст → 4Tap → два знака → действие».
 
 Эти направления зафиксированы отдельными связанными ячейками карты и входят в roadmap, а не считаются пост-MVP неопределённостями.
+
+## Current public-map alignment
+
+Публичная карта синхронизирована с текущим рабочим планом `4tap-app`:
+
+- ближайший Android milestone вынесен отдельной ячейкой `First Live Command — SC`: другая программа → stock activation → KnockUI overlay → S → C → SC → запуск назначенного приложения;
+- Android activation описан как `stock OS first`; OEM/SystemUI reserved zone сохранена только как deferred branch;
+- Local Canvas отвязан от обязательного «последнего тапа» и привязан к общему `ActivationRequest`;
+- Design Canon, 4Tap Graffiti Profile, Settings Console, Founder 40 privacy rule и Russia Integration Catalog встроены в связный roadmap;
+- Android distribution больше не описывается как Google-Play-only: RuStore зафиксирован как primary Russia channel, Google Play и другие магазины — дополнительные;
+- monetization и promotion выделены как отдельные продуктовые узлы;
+- cross-platform этап больше не описывается как iOS-keyboard-only.
 
 ## iOS implementation options
 
