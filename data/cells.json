@@ -540,8 +540,8 @@
     "order": 27,
     "title": "Android Activation Architecture",
     "group": "ARCHITECTURE DECISION",
-    "short": "Основной Android-путь меняется: Quad Tap сохраняется, но переносится в специальную системную область, предоставленную Android/OEM.",
-    "description": "Решение проекта после технической проверки: сценарий четырёх тапов в произвольной области временно снимается. Целевой вариант — Android/OEM предоставляет системно управляемую touch-зону, в которой четыре тапа распознаются SystemUI/input policy и запускают KnockUI. Это принципиально отличается от попытки обычного APK пассивно слушать весь экран.",
+    "short": "Текущий Android-путь начинается с проверки штатных OEM/Android механизмов активации; модификация SystemUI отложена.",
+    "description": "После технической проверки пассивного глобального touch capture проект сначала исследует механизмы, которые реальное штатное Android/OEM-устройство предоставляет без root, bootloader unlock, custom ROM или изменения SystemUI. Цель — получить допустимый системный trigger и преобразовать его в уже подтверждённый ActivationRequest. OEM/SystemUI reserved Quad Tap zone сохраняется как возможная будущая интеграция, но не является текущим обязательным путём.",
     "purpose": "Сделать главный нерешённый вопрос Android MVP отдельным архитектурным узлом.",
     "kind": "core",
     "models": [
@@ -561,23 +561,23 @@
       "Выбранный Android activation contract"
     ],
     "parameters": {
-      "decision_status": "accepted direction",
-      "primary_path": "OEM/SystemUI reserved touch zone → Quad Tap → KnockUI",
+      "decision_status": "stock-capability-first",
+      "primary_path": "stock Android/OEM trigger → ActivationRequest → OverlayLauncher → Drawing Overlay → Recognizer → Command",
       "downstream_contract": "ActivationRequest → OverlayLauncher → Drawing Overlay → Recognizer → Command",
       "downstream_verification": "REFACTOR LEFT SC OK; RIGHT SC OK",
       "external_adapter": "verified",
       "external_adapter_result": "OEM LEFT SC OK; OEM RIGHT SC OK",
-      "systemui_zone_spec": "baseline 58 × 44 dp; AOSP/Cuttlefish prototype"
+      "systemui_zone_spec": "deferred research branch; 58 × 44 dp baseline retained"
     },
     "constraints": [
-      "Требуется OEM/system integration.",
-      "Конкретная геометрия зоны ещё не выбрана.",
-      "Нельзя считать обычный systemGestures inset достаточным сам по себе: Android документирует, что простые taps в gesture insets обычно всё равно доходят приложению; зона должна реально принадлежать системному touch target/input policy."
+      "Passive non-interfering global raw-touch capture remains unavailable to an ordinary APK as originally specified.",
+      "Current phase must not require root, bootloader unlock, custom ROM, cross-flash or SystemUI modification.",
+      "A stock trigger may differ from the ideal Quad Tap UX and must be evaluated experimentally."
     ],
     "open_questions": [
-      "Где именно расположить системную область?",
-      "Должна ли область быть визуально обозначена или оставаться невидимой?",
-      "Как система ведёт себя после 1/2/3 тапов, если 4-й не состоялся?"
+      "Which stock Android/LG mechanism can provide the fastest reliable activation entry point?",
+      "Can Quad Tap be approximated or composed from a stock mechanism without modifying the OS?",
+      "If stock mechanisms are insufficient, is a separate OEM/SystemUI integration worth pursuing later?"
     ],
     "tags": [
       "android",
@@ -604,8 +604,8 @@
           "url": "https://source.android.com/docs/compatibility/17/android-17-cdd"
         }
       ],
-      "next_step": "Implement the reserved Quad Tap zone in SystemUI on AOSP/Cuttlefish and emit the already verified ActivationRequest handoff.",
-      "implication": "The external system-to-4Tap interface is verified. The remaining activation uncertainty is the system-owned touch zone and Quad Tap recognition itself."
+      "next_step": "Test stock Android/LG activation mechanisms on the prepared physical device and connect the best candidate to the verified ActivationRequest handoff.",
+      "implication": "Downstream is already verified; current uncertainty is whether stock Android/OEM capabilities provide an acceptable activation source without OS modification."
     }
   },
   {
@@ -614,8 +614,8 @@
     "order": 28,
     "title": "OEM Reserved Quad Tap Zone",
     "group": "SYSTEM INPUT",
-    "short": "Специальная системная touch-зона Android/OEM, зарезервированная для четырёх тапов KnockUI.",
-    "description": "Целевая модель: Android/OEM/SystemUI владеет небольшой областью экрана и получает касания в ней с системным приоритетом. В этой области SystemUI/input policy считает последовательность из четырёх тапов и при успехе запускает KnockUI. В отличие от прежней модели, KnockUI не пытается пассивно наблюдать весь экран.",
+    "short": "Возможная будущая OEM/SystemUI touch-зона для Quad Tap; концепт сохранён, но текущий этап сначала проверяет штатные механизмы ОС.",
+    "description": "Отложенная OEM-интеграция: Android/OEM/SystemUI может владеть небольшой областью экрана и распознавать четыре тапа с системным приоритетом. Спецификация сохранена как возможный будущий путь, если штатные механизмы Android/OEM окажутся недостаточными. Текущий этап не предусматривает изменение SystemUI реального устройства.",
     "purpose": "Сохранить фирменный вызов «тап-тап-тап-тап», устранив конфликт с произвольными касаниями чужих приложений.",
     "kind": "core",
     "models": [
@@ -649,13 +649,13 @@
       "max_tap_move_dp": 20,
       "incomplete_sequence": "reset; no passthrough/replay",
       "touch_ownership": "SystemUI owns full sequence starting inside zone",
-      "prototype_environment": "AOSP android-latest-release + Cuttlefish x86_64 userdebug"
+      "prototype_environment": "deferred: AOSP android-latest-release + Cuttlefish x86_64 userdebug",
+      "current_priority": "stock Android/OEM mechanisms on physical test device"
     },
     "constraints": [
       "Обычный сторонний APK не может сам превратить произвольную область в mandatory system touch zone.",
-      "Просто объявить область systemGestures недостаточно для taps: официальная документация указывает, что простые taps в system gesture insets обычно доставляются окну.",
-      "Нужен реальный system-owned touch target или OEM input-policy handling.",
-      "Совместимость с Home/Back/Quick Switch и требованиями Android CDD должна быть проверена для выбранного расположения."
+      "Текущий этап не допускает root, bootloader unlock, custom ROM или изменение SystemUI без отдельного решения.",
+      "Reserved zone требует отдельной OEM/SystemUI/input-policy интеграции и потому рассматривается как будущая ветвь."
     ],
     "open_questions": [
       "Какой размер зоны обеспечивает быстрый blind-use без ложных срабатываний?",
@@ -688,8 +688,8 @@
           "url": "https://source.android.com/docs/compatibility/17/android-17-cdd"
         }
       ],
-      "next_step": "Build the first real SystemUI zone controller in AOSP/Cuttlefish using the 58 × 44 dp baseline, then compare 52×40 and 64×48.",
-      "implication": "Geometry and tap semantics are now specified; the remaining proof is an actual SystemUI/input-policy implementation and navigation-conflict testing."
+      "next_step": "Deferred. First evaluate stock Android/OEM activation mechanisms on the physical test device.",
+      "implication": "The reserved-zone design remains available, but it is no longer the next implementation step."
     }
   },
   {
