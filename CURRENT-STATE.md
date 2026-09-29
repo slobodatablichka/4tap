@@ -1,3 +1,17 @@
+## Ordinary-app constraint
+
+Android 4Tap is an ordinary user-installed application on stock Android.
+
+Excluded from active architecture and roadmap:
+- firmware/SystemUI modification;
+- root or bootloader unlock;
+- custom ROM / cross-flash;
+- privileged/system app;
+- mandatory OEM integration;
+- AOSP/Cuttlefish as a product implementation path.
+
+Historical SystemUI/AOSP work is archive-only and must not be proposed as the next step unless the user explicitly reopens it.
+
 # CURRENT STATE
 
 Дата: 2026-09-29
@@ -93,7 +107,7 @@
 - сначала проверяются механизмы, которые штатный Android/OEM предоставляет без root, bootloader unlock, custom ROM и изменения SystemUI;
 - выбранный штатный trigger должен формировать уже подтверждённый `ActivationRequest`;
 - Quad Tap остаётся целевым фирменным жестом, но конкретный системный способ его получения пока не считается решённым;
-- OEM/SystemUI reserved zone сохраняется как возможная будущая интеграция, а не как текущий обязательный путь.
+- archived SystemUI experiment сохраняется как возможная будущая интеграция, а не как текущий обязательный путь.
 
 Для этой проверки подготовлено отдельное физическое устройство `LGM-V300L / Android 9`. Подробности восстановления и техническое состояние ведутся в рабочем репозитории `4tap-app`, без дублирования в публичной карте.
 
@@ -296,7 +310,7 @@ AOSP/Cuttlefish заготовки также сохранены, но этот 
 Публичная карта синхронизирована с текущим рабочим планом `4tap-app`:
 
 - ближайший Android milestone вынесен отдельной ячейкой `First Live Command — SC`: другая программа → stock activation → KnockUI overlay → S → C → SC → запуск назначенного приложения;
-- Android activation описан как `stock OS first`; OEM/SystemUI reserved zone сохранена только как deferred branch;
+- Android activation описан как `stock OS first`; archived SystemUI experiment сохранена только как deferred branch;
 - Local Canvas отвязан от обязательного «последнего тапа» и привязан к общему `ActivationRequest`;
 - Design Canon, 4Tap Graffiti Profile, Settings Console, Founder 40 privacy rule и Russia Integration Catalog встроены в связный roadmap;
 - Android distribution больше не описывается как Google-Play-only: RuStore зафиксирован как primary Russia channel, Google Play и другие магазины — дополнительные;
