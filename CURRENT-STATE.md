@@ -1,20 +1,16 @@
 ## Ordinary-app constraint
 
-Android 4Tap is an ordinary user-installed application on stock Android.
+Android 4Tap — обычное пользовательское приложение на штатном Android.
 
-Excluded from active architecture and roadmap:
-- firmware/SystemUI modification;
-- root or bootloader unlock;
+Из активной архитектуры и roadmap исключены:
+- изменение firmware/SystemUI;
+- root и bootloader unlock;
 - custom ROM / cross-flash;
 - privileged/system app;
-- mandatory OEM integration;
-- AOSP/Cuttlefish as a product implementation path.
+- обязательная OEM-интеграция;
+- AOSP/Cuttlefish как путь реализации продукта.
 
-Historical SystemUI/AOSP work is archive-only and must not be proposed as the next step unless the user explicitly reopens it.
-
-# CURRENT STATE
-
-Дата: 2026-09-29
+Историческая SystemUI/AOSP ветвь хранится только как архив и не является вариантом следующего шага.
 
 ## Текущая версия
 
@@ -82,12 +78,11 @@ Historical SystemUI/AOSP work is archive-only and must not be proposed as the ne
 
 ## Следующий этап
 
-1. Android downstream chain и внешний activation adapter считать подтверждёнными.
+1. Android downstream chain и внешний debug activation adapter считать подтверждёнными.
 2. In-app 4-tap и debug broadcast сохранять только как test harness.
-3. Проверить Android-level обработку 3/4 последовательных тапов непосредственно внутри system-owned нижней LEFT/RIGHT области и связать системную последовательность с `ActivationRequest`.
-4. OEM/SystemUI reserved Quad Tap zone сохранить как отдельную отложенную исследовательскую ветвь, а не как текущий следующий шаг.
-5. Отдельно продолжать iOS action model и другие платформенные адаптации.
-
+3. На штатном Android проверить целевую ordinary-app последовательность: нижний LEFT/RIGHT угол → 3/4 быстрых тапа → `ActivationRequest`.
+4. Если один из тапов в конкретном контексте не получен, серия сбрасывается и активация не происходит; отдельный системный обход не строится.
+5. После успешной угловой активации повторить полную цепочку до `SC → action` без ADB/debug broadcast.
 
 ## Полнота технических выводов
 
@@ -101,15 +96,19 @@ Historical SystemUI/AOSP work is archive-only and must not be proposed as the ne
 В `verification` соответствующих ячеек теперь фиксируются не только summary/sources/next_step, но и `implication` — архитектурное следствие. Для WeChat также фиксируется `source_note` о необходимости финальной перепроверки по актуальной официальной документации/DevTools.
 
 
-## Android activation strategy — stock OS first
+## Android activation strategy — ordinary app
 
-Текущий порядок изменён:
-- сначала проверяются механизмы, которые штатный Android/OEM предоставляет без root, bootloader unlock, custom ROM и изменения SystemUI;
-- выбранный штатный trigger должен формировать уже подтверждённый `ActivationRequest`;
-- Quad Tap остаётся целевым фирменным жестом, но конкретный системный способ его получения пока не считается решённым;
-- archived SystemUI experiment сохраняется как возможная будущая интеграция, а не как текущий обязательный путь.
+Текущая модель:
 
-Для этой проверки подготовлено отдельное физическое устройство `LGM-V300L / Android 9`. Подробности восстановления и техническое состояние ведутся в рабочем репозитории `4tap-app`, без дублирования в публичной карте.
+- 4Tap остаётся обычным приложением на штатном Android;
+- пользователь выполняет 3 или 4 быстрых тапа в нижнем LEFT/RIGHT системном углу;
+- 4Tap пытается получить полную последовательность;
+- полная последовательность формирует уже подтверждённый `ActivationRequest`;
+- потерянный или занятый тап означает reset и неудачную активацию;
+- ownership, passthrough/replay и гарантированная работа во всех foreground-контекстах не являются отдельными требованиями;
+- SystemUI/AOSP и другие системные модификации исключены.
+
+LG V30 используется только как первый физический стенд.
 
 ## Android post-activation drawing
 
@@ -127,7 +126,7 @@ Historical SystemUI/AOSP work is archive-only and must not be proposed as the ne
 ## Android overlay over WeChat / WhatsApp
 
 Зафиксирована двухконтурная модель:
-- на Android системный/OEM-вызов KnockUI может открыть временный Drawing Overlay Surface поверх текущего foreground app, в том числе поверх WeChat и WhatsApp;
+- на Android после успешной активации 4Tap может открыть временный Drawing Overlay Surface поверх текущего foreground app, в том числе поверх WeChat и WhatsApp;
 - одновременно сохраняются собственные внутренние KnockUI-пути: WeChat Mini Program и WhatsApp Business/chat transport;
 - эти пути независимы и не заменяют друг друга;
 - данное решение относится к Android; iOS рассматривается отдельно.
@@ -211,20 +210,21 @@ Historical SystemUI/AOSP work is archive-only and must not be proposed as the ne
 
 Контрольный результат: `REFACTOR LEFT SC OK`, `RIGHT SC OK`.
 
-Это подтверждает, что источник активации можно менять независимо от overlay/recognizer/command. Текущий in-app 4-tap остаётся test harness. Неподтверждённым остаётся только системный/OEM trigger, который должен подать тот же `ActivationRequest`.
+Это подтверждает, что источник активации можно менять независимо от overlay/recognizer/command. Текущий in-app 4-tap остаётся test harness. Неподтверждённым остаётся ordinary-app lower-corner trigger, который должен подать тот же `ActivationRequest`.
 
 
 ## Android external activation adapter verified
 
-Подтверждён внешний activation adapter на физическом Android-устройстве без предварительного открытия 4Tap Activity:
-- внешний explicit broadcast используется как тестовый аналог SystemUI;
-- receiver формирует `ActivationRequest(source = OEM_SYSTEMUI_TEST)`;
+Подтверждён внешний debug activation adapter на физическом Android-устройстве без предварительного открытия 4Tap Activity:
+
+- explicit broadcast формирует тестовый `ActivationRequest`;
 - уже проверенный `OverlayLauncher` открывает настоящий Drawing Overlay поверх другого foreground-приложения;
 - `S → C → SC` завершается корректно;
 - подтверждены обе стороны: `OEM LEFT SC OK`, `OEM RIGHT SC OK`.
 
-Тем самым практически подтверждена граница «внешняя система → 4Tap». Конкретный штатный источник активации ещё не выбран; текущий этап проверяет доступные механизмы Android/OEM без модификации ОС.
+Несмотря на историческое имя `OEM_SYSTEMUI_TEST`, этот adapter является только test harness. Он не задаёт production-архитектуру и не означает зависимость от OEM/SystemUI.
 
+Конкретный production trigger — ordinary-app 3/4-tap sequence в нижнем углу — ещё требует end-to-end проверки.
 
 ## Android command action verified
 
@@ -239,7 +239,7 @@ Historical SystemUI/AOSP work is archive-only and must not be proposed as the ne
 
 `ActivationRequest → OverlayLauncher → Drawing Overlay → Recognizer → Command → Action`.
 
-Единственный незакрытый риск Stage 1 — штатный Android/LG источник активации без ADB/debug broadcast и без модификации ОС.
+Единственный незакрытый риск Stage 1 — ordinary-app lower-corner 3/4-tap activation без ADB/debug broadcast.
 
 ## LG V30 raw touch baseline
 
@@ -255,40 +255,42 @@ Raw coordinate space совпадает с physical display `1440 × 2880` од�
 
 ## LG V30 test geometry baseline
 
-Для основной физической Android-площадки `LGM-V300L / Android 9 / V300L30p` зафиксирована текущая геометрия:
+Для первой физической Android-площадки `LGM-V300L / Android 9 / V300L30p` зафиксирована текущая геометрия:
 
 - display: `1440 × 2880 px`;
 - physical density: `640 dpi`;
 - override density: `560 dpi`;
 - `NavigationBar`: `[0,2733][1440,2880]`;
-- высота нижней системной панели: `147 px`.
+- высота панели: `147 px`.
 
-Эти значения используются как reference при экспериментах с системным LEFT/RIGHT corner space и требуют повторного измерения при изменении density, navigation mode или firmware.
+Это диагностический baseline конкретного LG. Эти значения не задают product trigger geometry и не используются как доказательство ownership.
 
-## Android system corner activation — restored canon
+## Android lower-corner activation — canon
 
-В публичной карте восстановлена каноническая модель углового вызова 4Tap:
+Каноническая модель:
 
-- два системных пространства: нижний LEFT и RIGHT;
-- пространство принадлежит system/OEM input layer и может быть визуально полностью закрыто foreground-приложением;
-- активация выполняется последовательностью из **3 или 4 тапов**; точный активный порог является параметром продукта;
-- системные тапы выполняются по самой system-owned области и обрабатываются system/OEM input layer; foreground-приложение не является их адресатом;
-- если приложение или системный компонент перехватывает события так, что system detector не получает последовательность, activation может не состояться; это проверяется экспериментально;
-- после достижения порога формируется уже подтверждённый `ActivationRequest`;
+- 4Tap — ordinary user app;
+- нижний LEFT и RIGHT угол дают целевую область вызова;
+- активация — **3 или 4 быстрых тапа**;
+- если 4Tap получает всю последовательность, формируется `ActivationRequest`;
+- если один или несколько тапов не получены из-за активности приложения, системы или другого обработчика, серия сбрасывается и активация не происходит;
+- такой отказ считается естественным ограничением конкретного контекста;
+- не требуется отдельная модель ownership/passthrough/replay;
 - `TYPE_APPLICATION_OVERLAY` используется только после активации как Drawing Overlay.
 
-Поздняя схема «SystemUI полностью владеет зоной, fixed 4 taps, no passthrough/replay» сохранена только как **Strict OEM Reserved Zone — Prototype Variant** и больше не считается каноническим поведением 4Tap.
+Текущая задача — проверить именно эту последовательность на физическом устройстве, а не исследовать SystemUI или точную границу NavigationBar.
 
-## Android SystemUI Quad Tap zone — deferred concept
+## Android SystemUI Quad Tap zone — archived
 
-Минимальная спецификация reserved zone сохранена:
-- две system-owned зоны в нижних углах;
-- baseline: `58 × 44 dp`;
-- UX comparison: `52×40`, `58×44`, `64×48`;
-- 4 taps с ранее проверенными таймингами;
-- downstream после `ActivationRequest` остаётся неизменным.
+Ранее исследованная reserved-zone/SystemUI/AOSP ветвь закрыта и сохранена только в истории проекта.
 
-AOSP/Cuttlefish заготовки также сохранены, но этот путь отложен. Текущий этап не предусматривает модификацию SystemUI или системных разделов реального устройства без отдельного решения.
+Она не является:
+- текущей архитектурой;
+- запасным implementation path;
+- roadmap branch;
+- способом исправлять неудачные угловые активации.
+
+Пользовательский 4Tap должен оставаться обычным приложением на штатном Android.
 
 ## Product / UX plan update
 
@@ -307,15 +309,16 @@ AOSP/Cuttlefish заготовки также сохранены, но этот 
 
 ## Current public-map alignment
 
-Публичная карта синхронизирована с текущим рабочим планом `4tap-app`:
+Публичная карта синхронизирована с рабочим планом `4tap-app`:
 
-- ближайший Android milestone вынесен отдельной ячейкой `First Live Command — SC`: другая программа → stock activation → KnockUI overlay → S → C → SC → запуск назначенного приложения;
-- Android activation описан как `stock OS first`; archived SystemUI experiment сохранена только как deferred branch;
-- Local Canvas отвязан от обязательного «последнего тапа» и привязан к общему `ActivationRequest`;
-- Design Canon, 4Tap Graffiti Profile, Settings Console, Founder 40 privacy rule и Russia Integration Catalog встроены в связный roadmap;
-- Android distribution больше не описывается как Google-Play-only: RuStore зафиксирован как primary Russia channel, Google Play и другие магазины — дополнительные;
-- monetization и promotion выделены как отдельные продуктовые узлы;
-- cross-platform этап больше не описывается как iOS-keyboard-only.
+- ближайший Android milestone: другая программа → 3/4 быстрых угловых тапа → KnockUI → `S → C → SC` → действие;
+- Android activation описан как ordinary-app lower-corner sequence;
+- неудачная/неполная tap sequence означает reset, а не переход к системной модификации;
+- SystemUI/AOSP ветвь помечена архивной и удалена из активного roadmap-графа;
+- Local Canvas связан с общим `ActivationRequest`;
+- Design Canon, 4Tap Graffiti Profile, Settings Console, Founder 40 privacy rule и Russia Integration Catalog остаются в roadmap;
+- RuStore остаётся primary Russia channel, Google Play и другие магазины — дополнительными;
+- monetization и promotion сохранены отдельными продуктными узлами.
 
 ## iOS implementation options
 
