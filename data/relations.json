@@ -336,21 +336,9 @@
     "type": "roadmap"
   },
   {
-    "from": "roadmap-2",
-    "to": "roadmap-3",
-    "relation": "следующий этап",
-    "type": "roadmap"
-  },
-  {
     "from": "product-b2c",
     "to": "roadmap-1",
     "relation": "первично реализуется в",
-    "type": "roadmap"
-  },
-  {
-    "from": "product-b2b",
-    "to": "roadmap-2",
-    "relation": "разворачивается в",
     "type": "roadmap"
   },
   {
@@ -381,42 +369,6 @@
     "from": "roadmap-1",
     "to": "android-gesture-editor",
     "relation": "включает",
-    "type": "roadmap"
-  },
-  {
-    "from": "roadmap-2",
-    "to": "android-distribution-compliance",
-    "relation": "проверяет",
-    "type": "roadmap"
-  },
-  {
-    "from": "roadmap-2",
-    "to": "android-energy-budget",
-    "relation": "оптимизирует",
-    "type": "roadmap"
-  },
-  {
-    "from": "roadmap-2",
-    "to": "system-gestures",
-    "relation": "вводит B2B-слой",
-    "type": "roadmap"
-  },
-  {
-    "from": "roadmap-3",
-    "to": "ios-keyboard",
-    "relation": "портирует на",
-    "type": "roadmap"
-  },
-  {
-    "from": "roadmap-3",
-    "to": "wechat-mini-program",
-    "relation": "портирует на",
-    "type": "roadmap"
-  },
-  {
-    "from": "roadmap-3",
-    "to": "whatsapp-business",
-    "relation": "расширяет на",
     "type": "roadmap"
   },
   {
@@ -528,22 +480,10 @@
     "type": "constraint"
   },
   {
-    "from": "roadmap-3",
-    "to": "ios-action-redesign",
-    "relation": "требует решения для iOS",
-    "type": "roadmap"
-  },
-  {
     "from": "android-global-trigger-limitation",
     "to": "android-activation-redesign",
     "relation": "снимает сценарий «где угодно»",
     "type": "constraint"
-  },
-  {
-    "from": "android-activation-redesign",
-    "to": "android-oem-quad-zone",
-    "relation": "выбирает системную зону как основной путь",
-    "type": "model"
   },
   {
     "from": "android-oem-quad-zone",
@@ -562,18 +502,6 @@
     "to": "android-zone-validation",
     "relation": "оставляет только как deferred arbitrary-area branch",
     "type": "constraint"
-  },
-  {
-    "from": "roadmap-1",
-    "to": "android-oem-quad-zone",
-    "relation": "требует OEM/SystemUI integration",
-    "type": "roadmap"
-  },
-  {
-    "from": "android-integration",
-    "to": "android-activation-redesign",
-    "relation": "переходит к OEM/system activation",
-    "type": "model"
   },
   {
     "from": "android-local-canvas",
@@ -684,12 +612,6 @@
     "type": "model"
   },
   {
-    "from": "roadmap-3",
-    "to": "ios-activation",
-    "relation": "исследует варианты iOS entry",
-    "type": "roadmap"
-  },
-  {
     "from": "design-canon",
     "to": "android-drawing-overlay",
     "relation": "задаёт визуальные и поведенческие правила",
@@ -768,39 +690,207 @@
     "type": "roadmap"
   },
   {
+    "from": "android-integration",
+    "to": "android-activation-redesign",
+    "relation": "переходит к stock-capability-first activation",
+    "type": "model"
+  },
+  {
+    "from": "android-activation-redesign",
+    "to": "android-oem-quad-zone",
+    "relation": "сохраняет как отложенную OEM-ветвь",
+    "type": "branch"
+  },
+  {
     "from": "roadmap-1",
-    "to": "design-canon",
-    "relation": "включает",
+    "to": "android-oem-quad-zone",
+    "relation": "оставляет как deferred research branch",
     "type": "roadmap"
   },
   {
     "from": "roadmap-1",
-    "to": "graffiti-profile",
-    "relation": "включает",
+    "to": "android-first-live-command",
+    "relation": "завершается подтверждением",
     "type": "roadmap"
   },
   {
-    "from": "roadmap-1",
-    "to": "android-settings-console",
-    "relation": "включает",
-    "type": "roadmap"
+    "from": "android-activation-redesign",
+    "to": "android-first-live-command",
+    "relation": "поставляет штатный trigger",
+    "type": "model"
+  },
+  {
+    "from": "android-drawing-overlay",
+    "to": "android-first-live-command",
+    "relation": "используется в полном тесте",
+    "type": "model"
+  },
+  {
+    "from": "android-actions",
+    "to": "android-first-live-command",
+    "relation": "проверяется реальным app launch",
+    "type": "model"
   },
   {
     "from": "roadmap-1",
-    "to": "android-default-integration-catalog",
-    "relation": "включает",
-    "type": "roadmap"
-  },
-  {
-    "from": "roadmap-1",
-    "to": "strategy-russia",
-    "relation": "готовит запуск на",
+    "to": "roadmap-2",
+    "relation": "следующий / частично параллельный этап",
     "type": "roadmap"
   },
   {
     "from": "roadmap-2",
-    "to": "monetization-model",
-    "relation": "развивает",
+    "to": "roadmap-3",
+    "relation": "следующий этап",
     "type": "roadmap"
+  },
+  {
+    "from": "roadmap-3",
+    "to": "roadmap-4",
+    "relation": "следующий этап",
+    "type": "roadmap"
+  },
+  {
+    "from": "roadmap-4",
+    "to": "roadmap-5",
+    "relation": "следующий этап",
+    "type": "roadmap"
+  },
+  {
+    "from": "roadmap-5",
+    "to": "roadmap-6",
+    "relation": "следующий этап",
+    "type": "roadmap"
+  },
+  {
+    "from": "roadmap-2",
+    "to": "design-canon",
+    "relation": "формирует",
+    "type": "roadmap"
+  },
+  {
+    "from": "roadmap-2",
+    "to": "graffiti-profile",
+    "relation": "формирует",
+    "type": "roadmap"
+  },
+  {
+    "from": "roadmap-2",
+    "to": "android-drawing-overlay",
+    "relation": "приводит к Design Canon",
+    "type": "roadmap"
+  },
+  {
+    "from": "roadmap-2",
+    "to": "android-recognizer",
+    "relation": "масштабирует после утверждения профиля",
+    "type": "roadmap"
+  },
+  {
+    "from": "roadmap-3",
+    "to": "android-settings-console",
+    "relation": "реализует",
+    "type": "roadmap"
+  },
+  {
+    "from": "roadmap-3",
+    "to": "android-gesture-editor",
+    "relation": "включает",
+    "type": "roadmap"
+  },
+  {
+    "from": "roadmap-3",
+    "to": "user-gestures",
+    "relation": "даёт пользовательское управление",
+    "type": "roadmap"
+  },
+  {
+    "from": "roadmap-4",
+    "to": "android-default-integration-catalog",
+    "relation": "формирует",
+    "type": "roadmap"
+  },
+  {
+    "from": "roadmap-4",
+    "to": "android-actions",
+    "relation": "расширяет проверенными действиями",
+    "type": "roadmap"
+  },
+  {
+    "from": "roadmap-5",
+    "to": "strategy-russia",
+    "relation": "реализует российский запуск",
+    "type": "roadmap"
+  },
+  {
+    "from": "roadmap-5",
+    "to": "android-distribution-compliance",
+    "relation": "готовит магазины и compliance",
+    "type": "roadmap"
+  },
+  {
+    "from": "roadmap-5",
+    "to": "monetization-model",
+    "relation": "реализует",
+    "type": "roadmap"
+  },
+  {
+    "from": "roadmap-5",
+    "to": "promotion-strategy",
+    "relation": "реализует",
+    "type": "roadmap"
+  },
+  {
+    "from": "roadmap-5",
+    "to": "android-energy-budget",
+    "relation": "проверяет перед релизом",
+    "type": "roadmap"
+  },
+  {
+    "from": "roadmap-5",
+    "to": "system-gestures",
+    "relation": "развивает B2B-слой",
+    "type": "roadmap"
+  },
+  {
+    "from": "product-b2b",
+    "to": "roadmap-5",
+    "relation": "разворачивается в",
+    "type": "roadmap"
+  },
+  {
+    "from": "roadmap-6",
+    "to": "ios-activation",
+    "relation": "исследует варианты iOS entry",
+    "type": "roadmap"
+  },
+  {
+    "from": "roadmap-6",
+    "to": "ios-action-redesign",
+    "relation": "требует iOS action model",
+    "type": "roadmap"
+  },
+  {
+    "from": "roadmap-6",
+    "to": "wechat-mini-program",
+    "relation": "расширяет на",
+    "type": "roadmap"
+  },
+  {
+    "from": "roadmap-6",
+    "to": "whatsapp-business",
+    "relation": "расширяет на",
+    "type": "roadmap"
+  },
+  {
+    "from": "strategy-russia",
+    "to": "android-distribution-compliance",
+    "relation": "задаёт каналы распространения",
+    "type": "strategy"
+  },
+  {
+    "from": "android-default-integration-catalog",
+    "to": "android-actions",
+    "relation": "поставляет проверенные action templates",
+    "type": "model"
   }
 ]
