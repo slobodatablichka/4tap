@@ -487,25 +487,12 @@
     ],
     "order": 10,
     "verification": {
-      "state": "blocked-as-specified",
-      "date": "2026-09-28",
+      "state": "requires-prototype",
+      "date": "2026-09-29",
       "confidence": "high",
-      "summary": "AccessibilityService/overlay are real Android capabilities, but the specific passive-global-touch architecture is not supported as specified.",
-      "sources": [
-        {
-          "label": "Android AccessibilityService API",
-          "url": "https://developer.android.com/reference/android/accessibilityservice/AccessibilityService"
-        },
-        {
-          "label": "Android TouchInteractionController API",
-          "url": "https://developer.android.com/reference/android/accessibilityservice/TouchInteractionController"
-        },
-        {
-          "label": "Android WindowManager.LayoutParams",
-          "url": "https://developer.android.com/reference/android/view/WindowManager.LayoutParams"
-        }
-      ],
-      "next_step": "Run the real-device ordinary-app lower-corner 3/4-tap activation test and connect a successful sequence to ActivationRequest."
+      "summary": "Downstream overlay/recognizer/action path is verified; the ordinary-app lower-corner 3/4-tap trigger still requires the direct real-device test.",
+      "sources": [],
+      "next_step": "Run the ordinary-app lower-corner 3/4-tap trigger test on LGM-V300L."
     }
   },
   {
@@ -680,24 +667,11 @@
       "mvp"
     ],
     "verification": {
-      "state": "verified-constrained",
-      "date": "2026-09-28",
+      "state": "requires-prototype",
+      "date": "2026-09-29",
       "confidence": "high",
       "summary": "Current architecture is an ordinary-app lower-corner tap sequence. No system-owned detector is required by the product model.",
-      "sources": [
-        {
-          "label": "Android — WindowInsets.Type.systemGestures / mandatorySystemGestures",
-          "url": "https://developer.android.com/reference/android/view/WindowInsets.Type"
-        },
-        {
-          "label": "Android — Gesture navigation compatibility",
-          "url": "https://developer.android.com/develop/ui/views/touch-and-input/gestures/gesturenav"
-        },
-        {
-          "label": "AOSP — Android Compatibility Definition (system gesture handling)",
-          "url": "https://source.android.com/docs/compatibility/17/android-17-cdd"
-        }
-      ],
+      "sources": [],
       "next_step": "Test the ordinary-app lower-corner 3/4-tap sequence on LGM-V300L and route a successful sequence to ActivationRequest.",
       "implication": "Failure to receive a tap means no activation in that context, not a switch to SystemUI/OEM implementation."
     }
@@ -740,24 +714,11 @@
       "reserved-zone"
     ],
     "verification": {
-      "state": "requires-prototype",
+      "state": "verified-constrained",
       "date": "2026-09-29",
       "confidence": "high",
       "summary": "Archived historical experiment only.",
-      "sources": [
-        {
-          "label": "Android — WindowInsets.Type.systemGestures / mandatorySystemGestures",
-          "url": "https://developer.android.com/reference/android/view/WindowInsets.Type"
-        },
-        {
-          "label": "Android — Gesture navigation compatibility",
-          "url": "https://developer.android.com/develop/ui/views/touch-and-input/gestures/gesturenav"
-        },
-        {
-          "label": "AOSP — Android Compatibility Definition (system gesture handling)",
-          "url": "https://source.android.com/docs/compatibility/17/android-17-cdd"
-        }
-      ],
+      "sources": [],
       "next_step": "None. Use the ordinary-app corner activation model.",
       "implication": "No active product dependency or roadmap branch."
     }
@@ -1023,7 +984,7 @@
           "url": "https://developer.android.com/about/versions/12/behavior-changes-all"
         }
       ],
-      "next_step": "Keep the verified overlay/recognizer/command chain stable while attaching a future OEM/SystemUI ActivationRequest source.",
+      "next_step": "Keep the verified overlay/recognizer/command chain stable while attaching the ordinary-app lower-corner ActivationRequest source.",
       "implication": "Post-activation drawing is now a confirmed Android capability in the 4Tap prototype. The remaining primary Android risk is activation, not the overlay drawing surface."
     }
   },
@@ -1033,9 +994,9 @@
     "order": 53,
     "title": "Overlay over Host Apps",
     "group": "CROSS-APP CONTEXT",
-    "short": "После системной активации Android-версия KnockUI может открыть свой временный touchable overlay поверх текущего приложения, включая WeChat и WhatsApp.",
-    "description": "На Android системный/OEM-вызов KnockUI и последующий Drawing Overlay Surface не зависят от того, какое пользовательское приложение находится на переднем плане. Поэтому тот же Android-контур может работать поверх WeChat, WhatsApp или другого приложения: текущее приложение остаётся видимым снизу, а KnockUI принимает штрихи внутри своего временного overlay. Это отдельный путь от собственных KnockUI-интеграций внутри WeChat и WhatsApp.",
-    "purpose": "Зафиксировать двухконтурную модель: Android system overlay поверх приложения и самостоятельная platform-native интеграция внутри самого WeChat/WhatsApp.",
+    "short": "После успешной Android-активации KnockUI может открыть временный touchable overlay поверх текущего приложения, включая WeChat и WhatsApp.",
+    "description": "На Android после успешной активации 4Tap Drawing Overlay Surface не зависит от того, какое пользовательское приложение находится на переднем плане. Поэтому тот же Android-контур может работать поверх WeChat, WhatsApp или другого приложения: текущее приложение остаётся видимым снизу, а KnockUI принимает штрихи внутри своего временного overlay. Это отдельный путь от собственных KnockUI-интеграций внутри WeChat и WhatsApp.",
+    "purpose": "Зафиксировать двухконтурную модель: Android overlay поверх приложения и самостоятельная platform-native интеграция внутри самого WeChat/WhatsApp.",
     "kind": "core",
     "models": [
       "b2c",
@@ -1048,7 +1009,7 @@
     ],
     "status": "approved",
     "inputs": [
-      "Android system/OEM KnockUI activation",
+      "Successful 4Tap activation",
       "Current foreground app"
     ],
     "outputs": [
@@ -1056,7 +1017,7 @@
     ],
     "parameters": {
       "android_host_apps": "WeChat, WhatsApp, other foreground apps",
-      "overlay_path": "Android system trigger → KnockUI overlay",
+      "overlay_path": "ordinary-app corner trigger → KnockUI overlay",
       "native_paths": "WeChat Mini Program / WhatsApp Business remain separate",
       "ios_scope": "not covered by this decision"
     },
