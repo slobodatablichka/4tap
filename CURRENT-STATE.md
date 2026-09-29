@@ -380,3 +380,9 @@ Entry candidates:
 - конкретная комбинация entry/action paths пока не утверждена.
 
 Добавлены ячейки `ios-back-tap`, `ios-action-button`, `ios-system-controls`, `ios-app-intents-shortcuts`. Ячейка `ios-activation` преобразована в общий узел вариантов.
+
+## Accessibility-only KnockUI — PASS
+
+2026-09-29 на `LGM-V300L / Android 9` подтверждена полная цепочка при выключенном системном доступе «Поверх других приложений»: `4 taps → AccessibilityService → TYPE_ACCESSIBILITY_OVERLAY KnockUI → S → C → SC → Settings`.
+
+Это подтверждает, что выданный `SYSTEM_ALERT_WINDOW` текущему рабочему пути не требуется. Его декларация пока остаётся в AndroidManifest как legacy baseline; следующий контрольный шаг — удалить permission из manifest и повторить full-chain test.
