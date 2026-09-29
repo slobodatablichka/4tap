@@ -670,7 +670,7 @@
       "state": "requires-prototype",
       "date": "2026-09-29",
       "confidence": "high",
-      "summary": "Current architecture is an ordinary-app lower-corner tap sequence. No system-owned detector is required by the product model.",
+      "summary": "Current architecture is the ordinary-app lower-corner 3/4-tap sequence; the direct real-device trigger test remains to be completed.",
       "sources": [],
       "next_step": "Test the ordinary-app lower-corner 3/4-tap sequence on LGM-V300L and route a successful sequence to ActivationRequest.",
       "implication": "Failure to receive a tap means no activation in that context, not a switch to SystemUI/OEM implementation."
