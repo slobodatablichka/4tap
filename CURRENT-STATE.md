@@ -65,8 +65,9 @@
 
 1. Android downstream chain и внешний activation adapter считать подтверждёнными.
 2. In-app 4-tap и debug broadcast сохранять только как test harness.
-3. Следующий Android-риск — сама SystemUI/input-policy reserved Quad Tap zone, которая должна формировать уже подтверждённый `ActivationRequest`.
-4. Отдельно продолжать iOS action model и другие платформенные адаптации.
+3. На штатном Android-устройстве сначала определить доступный без модификации ОС механизм активации и связать его с уже подтверждённым `ActivationRequest`.
+4. OEM/SystemUI reserved Quad Tap zone сохранить как отдельную отложенную исследовательскую ветвь, а не как текущий следующий шаг.
+5. Отдельно продолжать iOS action model и другие платформенные адаптации.
 
 
 ## Полнота технических выводов
@@ -81,20 +82,15 @@
 В `verification` соответствующих ячеек теперь фиксируются не только summary/sources/next_step, но и `implication` — архитектурное следствие. Для WeChat также фиксируется `source_note` о необходимости финальной перепроверки по актуальной официальной документации/DevTools.
 
 
-## Android activation decision — OEM reserved zone
+## Android activation strategy — stock OS first
 
-Принято новое направление:
-- сценарий Quad Tap в произвольной области экрана временно снят;
-- Quad Tap как фирменный жест сохраняется;
-- основной Android-путь: Android/OEM/SystemUI предоставляет специальную system-owned touch-зону;
-- четыре тапа распознаются только внутри этой зоны;
-- после успешного Quad Tap запускается Local Canvas и далее обычный KnockUI flow;
-- `Activation Zone Validation` исключён из основного flow и оставлен только как deferred-ветвь старого arbitrary-area сценария.
+Текущий порядок изменён:
+- сначала проверяются механизмы, которые штатный Android/OEM предоставляет без root, bootloader unlock, custom ROM и изменения SystemUI;
+- выбранный штатный trigger должен формировать уже подтверждённый `ActivationRequest`;
+- Quad Tap остаётся целевым фирменным жестом, но конкретный системный способ его получения пока не считается решённым;
+- OEM/SystemUI reserved zone сохраняется как возможная будущая интеграция, а не как текущий обязательный путь.
 
-Добавлена ячейка `android-oem-quad-zone`.
-
-Важное техническое уточнение: обычного `systemGestures` inset недостаточно, потому что Android документирует доставку простых taps приложению в gesture insets. Нужен реальный system-owned touch target либо OEM/SystemUI/input-policy integration.
-
+Для этой проверки подготовлено отдельное физическое устройство `LGM-V300L / Android 9`. Подробности восстановления и техническое состояние ведутся в рабочем репозитории `4tap-app`, без дублирования в публичной карте.
 
 ## Android post-activation drawing
 
@@ -211,19 +207,16 @@
 Тем самым практически подтверждена граница «внешняя система → 4Tap». Это всё ещё не является реализацией системной reserved touch-zone или Quad Tap в SystemUI/input policy. Именно эта зона теперь остаётся основным незакрытым Android activation-контуром.
 
 
-## Android SystemUI Quad Tap zone design
+## Android SystemUI Quad Tap zone — deferred concept
 
-Утверждена минимальная спецификация первого настоящего системного prototype:
+Минимальная спецификация reserved zone сохранена:
 - две system-owned зоны в нижних углах;
 - baseline: `58 × 44 dp`;
 - UX comparison: `52×40`, `58×44`, `64×48`;
-- touch sequence внутри зоны полностью принадлежит SystemUI;
-- 1/2/3 незавершённых taps по timeout сбрасываются и не replay-ятся нижележащему приложению;
-- первый prototype сохраняет уже проверенные параметры Quad Tap: 4 taps, 45–700 ms inter-tap, 280 ms max tap duration, 20 dp movement;
-- LEFT/RIGHT независимы;
-- first pass: portrait only.
+- 4 taps с ранее проверенными таймингами;
+- downstream после `ActivationRequest` остаётся неизменным.
 
-Среда первого системного prototype выбрана: AOSP `android-latest-release` + Cuttlefish x86_64 userdebug на отдельном Linux host. Downstream после `ActivationRequest` остаётся неизменным и уже подтверждён.
+AOSP/Cuttlefish заготовки также сохранены, но этот путь отложен. Текущий этап не предусматривает модификацию SystemUI или системных разделов реального устройства без отдельного решения.
 
 ## iOS implementation options
 
