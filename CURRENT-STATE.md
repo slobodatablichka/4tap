@@ -50,8 +50,8 @@ Android 4Tap — обычное пользовательское приложе�
 - 79 связей;
 
 Текущее состояние карты:
-- 72 ячейки;
-- 149 связей;
+- 73 ячейки;
+- 153 связи;
 - roadmap развёрнут в шесть этапов: Android end-to-end → Product Canon → User Configuration → Integration Catalog → Launch/Monetization+B2B → Cross-platform;
 - Android-поток дополнен разрешениями, валидацией зоны, fail-safe, обратной связью первого символа, хранилищем, редактором назначений, compliance и energy budget;
 - iOS и WeChat имеют явные action-узлы;
@@ -63,7 +63,7 @@ Android 4Tap — обычное пользовательское приложе�
 Выполнена первая платформенная техническая проверка. Полный результат: `TECH-VERIFICATION-2026-09-28.md`.
 
 Ключевые результаты:
-- подтверждён главный Android-блокер: публичные AccessibilityService touch-механизмы не дают требуемый пассивный глобальный Quad Tap без изменения/перехвата доставки касаний;
+- вывод проверки 2026-09-28 о пассивном raw-touch «где угодно» сохраняется только для того сценария; 2026-09-29 конкретный navigation-bar trigger через `AccessibilityService + TYPE_ACCESSIBILITY_OVERLAY` подтверждён на физическом устройстве и снимает его как blocker текущего 4Tap flow;
 - `TYPE_APPLICATION_OVERLAY` и permission flow подтверждены как рабочая технология для локального overlay после активации;
 - универсальное определение «пустой/неактивной» точки в чужом приложении не может считаться гарантированным;
 - Android intents/deep links подтверждены с ограничениями background activity launch и resolver;
@@ -78,11 +78,18 @@ Android 4Tap — обычное пользовательское приложе�
 
 ## Следующий этап
 
-1. Android downstream chain и внешний debug activation adapter считать подтверждёнными.
-2. In-app 4-tap и debug broadcast сохранять только как test harness.
-3. На штатном Android проверить целевую ordinary-app последовательность: нижний LEFT/RIGHT угол → 3/4 быстрых тапа → `ActivationRequest`.
-4. Если один из тапов в конкретном контексте не получен, серия сбрасывается и активация не происходит; отдельный системный обход не строится.
-5. После успешной угловой активации повторить полную цепочку до `SC → action` без ADB/debug broadcast.
+Первый Android end-to-end рубеж пройден на `LGM-V300L / Android 9`:
+
+`другое приложение → 4 тапа в LEFT/RIGHT области navigation bar → KnockUI → S → C → SC → Android Settings`.
+
+Текущий trigger использует `AccessibilityService + TYPE_ACCESSIBILITY_OVERLAY`; после успешной активации зоны автоматически перевооружаются. ADB/debug broadcast для пользовательской цепочки не требуется.
+
+Ближайшие задачи:
+1. сохранить этот рабочий механизм как baseline;
+2. спроектировать понятный onboarding для двух текущих user grants: Accessibility и «Поверх других приложений»;
+3. проверить возможность сократить onboarding до одного разрешения;
+4. подготовить Google Play Accessibility declaration / prominent disclosure / consent / review video и advance notice;
+5. повторить механизм на более новых stock Android-устройствах.
 
 ## Полнота технических выводов
 
@@ -98,31 +105,50 @@ Android 4Tap — обычное пользовательское приложе�
 
 ## Android activation strategy — ordinary app
 
-Текущая модель:
+Подтверждённая текущая модель:
 
 - 4Tap остаётся обычным приложением на штатном Android;
-- пользователь выполняет 3 или 4 быстрых тапа в нижнем LEFT/RIGHT системном углу;
-- 4Tap пытается получить полную последовательность;
-- полная последовательность формирует уже подтверждённый `ActivationRequest`;
-- потерянный или занятый тап означает reset и неудачную активацию;
-- ownership, passthrough/replay и гарантированная работа во всех foreground-контекстах не являются отдельными требованиями;
-- SystemUI/AOSP и другие системные модификации исключены.
+- пользователь выполняет 4 быстрых тапа в LEFT/RIGHT области navigation bar; продуктовый порог по-прежнему рассматривается как 3/4;
+- `AccessibilityService` размещает две небольшие touchable `TYPE_ACCESSIBILITY_OVERLAY` зоны в navigation bar;
+- полная последовательность формирует `ActivationRequest`;
+- после запуска KnockUI trigger-зоны автоматически перевооружаются;
+- SystemUI/AOSP/root/privileged/OEM-only пути исключены;
+- Accessibility shortcut не используется.
 
-LG V30 используется только как первый физический стенд.
+На LG V30 механизм работает стабильно; LG-specific geometry остаётся только диагностическим baseline.
 
 ## Android runtime constraints
 
-В публичную карту добавлен узел `android-runtime-constraints`.
+В публичной карте обновлён узел `android-runtime-constraints`.
 
-Зафиксированы ограничения штатного Android:
-- KnockUI overlay требует `SYSTEM_ALERT_WINDOW`; permission может быть не выдан или отозван;
-- Android 12+ позволяет чувствительному foreground-экрану скрывать сторонний `TYPE_APPLICATION_OVERLAY`;
-- Drawing Overlay touchable, поэтому pass-through жестов KnockUI не требуется;
-- запуск назначений выполняется через `Intent/startActivity()` с учётом background activity launch restrictions и доступности exported Activity/deep link;
-- Settings Console учитывает package visibility Android 11+;
-- Android 15+ отдельно ограничивает background start foreground service при `SYSTEM_ALERT_WINDOW`.
+Текущий prototype использует два user-granted capability:
+- `AccessibilityService + TYPE_ACCESSIBILITY_OVERLAY` — navigation-bar trigger;
+- `SYSTEM_ALERT_WINDOW + TYPE_APPLICATION_OVERLAY` — KnockUI поверх текущего приложения.
 
-Эти ограничения обрабатываются локально permission-check/fallback/reset-логикой и не меняют архитектуру 4Tap или текущий activation roadmap.
+AccessibilityService в текущем prototype использует `canRetrieveWindowContent=false` и не читает содержимое экранов.
+
+Google Play допускает AccessibilityService и для приложений, не являющихся accessibility tools, но требует declaration, prominent in-app disclosure, affirmative consent и review. Для приложения с AccessibilityService доступен advance notice App Review.
+
+Два системных подтверждения — текущий UX/compliance риск, а не технический blocker. Отдельно проверяется возможность сократить onboarding до одного user grant.
+
+Остальные runtime-ограничения сохраняются: чувствительные экраны могут скрывать application overlay; запуск действий зависит от background-launch rules и intent/deep-link contracts; Settings Console учитывает package visibility.
+
+## Android navigation-bar activation — PASS 2026-09-29
+
+На физическом `LGM-V300L / Android 9` устойчиво подтверждено:
+
+- Accessibility service `4Tap corner activation` включён пользователем;
+- real display `1440×2880`, usable `1440×2733`, navigation bar height `147 px`;
+- LEFT zone `(0,2712)`, RIGHT zone `(1104,2712)`, size `336×168 px`;
+- обе зоны перекрывают navigation bar `Y=2733…2880`;
+- 4 быстрых тапа LEFT/RIGHT стабильно запускают KnockUI;
+- `S → C → SC` открывает Android Settings;
+- после успешного запуска trigger-зоны автоматически re-arm через 700 ms;
+- повторные циклы работают без перевключения AccessibilityService.
+
+Предшествующий `ACTION_OUTSIDE` watcher признан непригодным для угловой фильтрации на LG: события приходили, но координаты тапа были `(0,0)`.
+
+Текущий результат закрывает Stage 1 feasibility, но не утверждает финальную permission architecture.
 
 ## Android post-activation drawing
 
