@@ -697,7 +697,7 @@
     "section": "android",
     "title": "Quad Tap",
     "group": "ACTIVATION",
-    "short": "Четыре последовательных тапа в системно выделенной OEM-зоне инициируют KnockUI.",
+    "short": "Quad Tap остаётся целевым фирменным жестом Android; текущая проверка ищет штатный источник событий без модификации ОС.",
     "description": "Quad Tap сохраняется как фирменный механизм активации Android, но основной сценарий теперь ограничен специальной системной зоной. SystemUI/input policy получает события этой зоны, проверяет четыре тапа с временными/пространственными условиями и при успехе вызывает KnockUI.",
     "purpose": "Активировать KnockUI четырьмя тапами в зарезервированной Android/OEM области.",
     "kind": "core",
@@ -748,8 +748,8 @@
           "url": "https://developer.android.com/reference/android/accessibilityservice/TouchInteractionController"
         }
       ],
-      "next_step": "После выбора зоны реализовать системный prototype 4-tap detector.",
-      "implication": "Quad Tap больше не рассматривается как глобальный anywhere-listener; он является жестом специальной системной зоны."
+      "next_step": "Evaluate whether a stock Android/LG mechanism can provide or approximate the required activation sequence, then feed the verified ActivationRequest.",
+      "implication": "The 4-tap recognizer is not the main risk; the unresolved issue is a suitable stock event source."
     }
   },
   {
@@ -2905,8 +2905,9 @@
       "activation_contract_result": "REFACTOR LEFT SC OK; RIGHT SC OK",
       "external_activation_adapter": "verified",
       "external_activation_result": "OEM LEFT SC OK; OEM RIGHT SC OK",
-      "systemui_zone_baseline": "58 × 44 dp",
-      "systemui_environment": "AOSP/Cuttlefish x86_64 userdebug"
+      "systemui_zone_baseline": "58 × 44 dp (deferred concept)",
+      "systemui_environment": "deferred: AOSP/Cuttlefish x86_64 userdebug",
+      "current_activation_priority": "stock Android/LG mechanisms on LGM-V300L / Android 9"
     },
     "constraints": [
       "Внешний system-like activation handoff подтверждён; реальная SystemUI/input-policy reserved Quad Tap zone ещё не реализована."
