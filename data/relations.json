@@ -404,7 +404,7 @@
   {
     "from": "android-distribution-compliance",
     "to": "android-integration",
-    "relation": "ограничивает допустимое использование AccessibilityService",
+    "relation": "задаёт требования к Accessibility/overlay публикации",
     "type": "constraint"
   },
   {
@@ -464,7 +464,7 @@
   {
     "from": "roadmap-1",
     "to": "android-activation-redesign",
-    "relation": "блокирует MVP до решения",
+    "relation": "включает подтверждённый trigger baseline",
     "type": "roadmap"
   },
   {
@@ -686,7 +686,7 @@
   {
     "from": "android-integration",
     "to": "android-activation-redesign",
-    "relation": "переходит к stock-capability-first activation",
+    "relation": "реализует navigation-bar activation",
     "type": "model"
   },
   {
@@ -698,7 +698,7 @@
   {
     "from": "android-activation-redesign",
     "to": "android-first-live-command",
-    "relation": "поставляет штатный trigger",
+    "relation": "поставляет подтверждённый штатный trigger",
     "type": "model"
   },
   {
@@ -903,6 +903,30 @@
     "from": "android-runtime-constraints",
     "to": "android-settings-console",
     "relation": "задаёт package visibility границы",
+    "type": "constraint"
+  },
+  {
+    "from": "android-integration",
+    "to": "android-quad-tap",
+    "relation": "получает navigation-bar tap sequence",
+    "type": "flow"
+  },
+  {
+    "from": "android-permissions",
+    "to": "android-quad-tap",
+    "relation": "включает AccessibilityService trigger",
+    "type": "constraint"
+  },
+  {
+    "from": "android-distribution-compliance",
+    "to": "android-permissions",
+    "relation": "требует declaration/disclosure для чувствительных возможностей",
+    "type": "constraint"
+  },
+  {
+    "from": "android-runtime-constraints",
+    "to": "android-quad-tap",
+    "relation": "задаёт runtime-границы trigger",
     "type": "constraint"
   }
 ]
