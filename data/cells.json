@@ -502,7 +502,7 @@
       "confidence": "high",
       "summary": "Full chain verified after removing SYSTEM_ALERT_WINDOW: navigation-bar 4 taps → Accessibility KnockUI → S → C → SC → Settings.",
       "sources": [],
-      "next_step": "Productize one-step Accessibility onboarding and repeat on newer stock Android.",
+      "next_step": "Current project task: form the 4Tap Design Canon. Immediately after it, productize the one-step Accessibility onboarding; newer stock Android validation follows.",
       "implication": "The first Android end-to-end milestone is passed; remaining risk is product/distribution suitability rather than basic trigger feasibility."
     }
   },
@@ -568,7 +568,7 @@
           "url": "https://developer.android.com/reference/android/view/WindowManager.LayoutParams"
         }
       ],
-      "next_step": "Build one-step Accessibility onboarding and retest on newer stock Android.",
+      "next_step": "Current project task: Design Canon. Then build the one-step Accessibility onboarding around the single required Accessibility enablement.",
       "implication": "Permissions are now a product/compliance problem, not an unknown technical prerequisite."
     }
   },
@@ -687,7 +687,7 @@
       "confidence": "high",
       "summary": "The ordinary-app navigation-bar activation architecture and Accessibility KnockUI are physically verified on LGM-V300L / Android 9; clean build works without SYSTEM_ALERT_WINDOW.",
       "sources": [],
-      "next_step": "Productize one-step Accessibility onboarding and validate newer Android compatibility.",
+      "next_step": "Preserve the verified activation baseline while the Design Canon is formed; then implement one-step Accessibility onboarding and validate newer Android compatibility.",
       "implication": "Activation feasibility is no longer the Stage 1 blocker."
     }
   },
@@ -1454,7 +1454,7 @@
       "confidence": "high",
       "summary": "The complete real-device flow passes in a clean build without SYSTEM_ALERT_WINDOW.",
       "sources": [],
-      "next_step": "Move from feasibility to productization: permission onboarding, Play review preparation and newer-device compatibility.",
+      "next_step": "Stage 2 is active: form the Design Canon; one-step Accessibility onboarding follows immediately after the canon, then newer-device compatibility.",
       "implication": "Android Stage 1 end-to-end milestone is complete."
     }
   },
