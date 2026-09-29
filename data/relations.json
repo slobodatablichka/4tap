@@ -880,5 +880,29 @@
     "to": "android-activation-redesign",
     "relation": "архив закрытого SystemUI/AOSP эксперимента",
     "type": "governance"
+  },
+  {
+    "from": "android-runtime-constraints",
+    "to": "android-drawing-overlay",
+    "relation": "ограничивает runtime-поведение overlay",
+    "type": "constraint"
+  },
+  {
+    "from": "android-runtime-constraints",
+    "to": "android-dispatcher",
+    "relation": "ограничивает исполнение действий",
+    "type": "constraint"
+  },
+  {
+    "from": "android-runtime-constraints",
+    "to": "android-actions",
+    "relation": "задаёт Intent/BAL границы",
+    "type": "constraint"
+  },
+  {
+    "from": "android-runtime-constraints",
+    "to": "android-settings-console",
+    "relation": "задаёт package visibility границы",
+    "type": "constraint"
   }
 ]
