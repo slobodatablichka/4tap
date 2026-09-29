@@ -110,6 +110,20 @@ Android 4Tap — обычное пользовательское приложе�
 
 LG V30 используется только как первый физический стенд.
 
+## Android runtime constraints
+
+В публичную карту добавлен узел `android-runtime-constraints`.
+
+Зафиксированы ограничения штатного Android:
+- KnockUI overlay требует `SYSTEM_ALERT_WINDOW`; permission может быть не выдан или отозван;
+- Android 12+ позволяет чувствительному foreground-экрану скрывать сторонний `TYPE_APPLICATION_OVERLAY`;
+- Drawing Overlay touchable, поэтому pass-through жестов KnockUI не требуется;
+- запуск назначений выполняется через `Intent/startActivity()` с учётом background activity launch restrictions и доступности exported Activity/deep link;
+- Settings Console учитывает package visibility Android 11+;
+- Android 15+ отдельно ограничивает background start foreground service при `SYSTEM_ALERT_WINDOW`.
+
+Эти ограничения обрабатываются локально permission-check/fallback/reset-логикой и не меняют архитектуру 4Tap или текущий activation roadmap.
+
 ## Android post-activation drawing
 
 Зафиксировано отдельное техническое положение:
