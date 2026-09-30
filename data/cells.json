@@ -214,7 +214,8 @@
       "common_assignment_text": "18 sp / 800; one line; end ellipsis",
       "common_graffiti_pair": "white; ~76×44 dp area; ~38–40 dp trajectory height",
       "commands_screen": "approved structural block; detailed population later",
-      "command_screen": "approved + first Android code implementation"
+      "command_screen": "approved + first Android code implementation",
+      "destination_surface": "approved; categories Apps / System / WEB"
     },
     "constraints": [
       "Канон должен сохранять скорость и минимальное вмешательство в текущий контекст пользователя.",
@@ -3350,12 +3351,12 @@
     ],
     "parameters": {
       "stage_status": "active",
-      "current_task": "Continue 4Tap Design Canon surface by surface",
+      "current_task": "Detail Destination surface, then continue Design Canon surface by surface",
       "graffiti": "4Tap Graffiti Profile v1 — approved",
       "immediate_next": "one-step Accessibility onboarding",
       "subsequent": "canon-driven UI, recognizer validation and teaching",
       "public_beta_gate": "Design Canon v1.0 before public beta",
-      "approved_blocks": "KnockUI two-panel model; Commands structural canon; Command structural canon + first Android implementation; brand teal #159B92",
+      "approved_blocks": "KnockUI two-panel model; Commands structural canon; Command structural canon + first Android implementation; Destination base model; brand teal #159B92",
       "content_detailing": "separate follow-up per screen"
     },
     "constraints": [
@@ -3939,7 +3940,7 @@
     "title": "Command Screen",
     "group": "UX SYSTEM",
     "short": "Экран одной команды: редактируемая комбинация XY, действие, статус и сохранение изменений.",
-    "description": "Command / Команда открывается из Commands и управляет одной пользовательской двухзнаковой командой. Крупная область показывает реальные Graffiti-траектории текущей пары. COMMAND открывает режим рисования/ввода внутри Command; ACTION ведёт к поверхности Приложения; STATUS переключается ACTIVE ↔ INACTIVE без Android-switch. Back запрашивает сохранение только при реально изменённых данных.",
+    "description": "Command / Команда открывается из Commands и управляет одной пользовательской двухзнаковой командой. Крупная область показывает реальные Graffiti-траектории текущей пары. COMMAND открывает режим рисования/ввода внутри Command; ВЕДЕТ В открывает Destination; STATUS переключается ACTIVE ↔ INACTIVE без Android-switch. Back запрашивает сохранение только при реально изменённых данных.",
     "purpose": "Дать единый редактор одной команды, сохраняя визуальную связь между Graffiti, XY, назначением и состоянием.",
     "kind": "core",
     "models": [
@@ -3975,20 +3976,21 @@
       "bottom_actions": "DELETE | SAVE; fixed 56 dp",
       "command_xy": "editable",
       "command_edit": "drawing/input mode inside Command",
-      "action_edit": "opens Applications surface",
       "status_toggle": "ACTIVE ↔ INACTIVE; no Android switch",
       "dirty_back": "confirm only when data changed",
-      "android_code": "implemented first pass in 4tap-app"
+      "android_code": "implemented first pass in 4tap-app",
+      "destination_row": "ВЕДЕТ В",
+      "destination_edit": "opens Destination surface",
+      "destination_model": "Command XY → Destination"
     },
     "constraints": [
       "COMMAND input sub-surface is not to be fully designed or expanded before its separate Design Canon pass.",
-      "Applications surface is implemented only after its own detailed Design Canon.",
+      "Destination surface is detailed and implemented through its own Design Canon.",
       "Real Graffiti geometry comes from approved v1 SVG sources.",
       "User-facing strings remain localizable."
     ],
     "open_questions": [
       "Detailed Command drawing/input surface.",
-      "Detailed Applications surface.",
       "Final delete confirmation behavior."
     ],
     "tags": [
@@ -3998,6 +4000,71 @@
       "graffiti",
       "canon",
       "implemented"
+    ]
+  },
+  {
+    "id": "destination-surface",
+    "section": "product",
+    "order": 37,
+    "title": "Destination / ВЕДЕТ В",
+    "group": "UX SYSTEM",
+    "short": "Поверхность выбора назначения команды: Приложения / Система / WEB.",
+    "description": "Destination / ВЕДЕТ В открывается из строки ВЕДЕТ В экрана Command. Она выбирает, куда ведёт двухзнаковая команда. Утверждённая модель: Command XY → Destination. Базовые категории назначения: ПРИЛОЖЕНИЯ, СИСТЕМА, WEB.",
+    "purpose": "Отделить саму двухзнаковую команду от типа её назначения и позволить одной модели поддерживать приложения, системные действия и интернет-страницы.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "shared",
+      "android",
+      "ios"
+    ],
+    "status": "approved",
+    "inputs": [
+      "Current destination",
+      "Applications",
+      "System destinations",
+      "WEB destinations"
+    ],
+    "outputs": [
+      "Selected destination returned to Command"
+    ],
+    "parameters": {
+      "ui_ru": "ВЕДЕТ В",
+      "semantic_name": "Destination",
+      "model": "Command XY → Destination",
+      "categories": [
+        "ПРИЛОЖЕНИЯ",
+        "СИСТЕМА",
+        "WEB"
+      ],
+      "entry": "tap whole ВЕДЕТ В row in Command",
+      "back_without_selection": "return to Command unchanged",
+      "selection": "return selected destination to Command",
+      "persistence": "final save happens on Command"
+    },
+    "constraints": [
+      "Categories describe destination type, not command type.",
+      "Detailed category contents are not yet canon.",
+      "WEB is a first-class destination category, not a special command type.",
+      "User-facing strings are localizable."
+    ],
+    "open_questions": [
+      "Exact category switcher/tabs.",
+      "Application row/icon layout and search.",
+      "Supported system destinations.",
+      "URL entry/storage/history behavior.",
+      "Whether deep links become a later destination subtype."
+    ],
+    "tags": [
+      "design",
+      "destination",
+      "apps",
+      "system",
+      "web",
+      "canon"
     ]
   }
 ]
