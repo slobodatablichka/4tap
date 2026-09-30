@@ -215,7 +215,7 @@
       "common_graffiti_pair": "white; ~76×44 dp area; ~38–40 dp trajectory height",
       "commands_screen": "approved structural block; detailed population later",
       "command_screen": "accepted on real Android device; future changes are refinement",
-      "destination_surface": "approved; categories Apps / System / WEB",
+      "destination_surface": "approved v0.1; Apps / System / WEB; WEB URL model; history/share reserved",
       "command_input": "approved project scheme; recommendations/tracing remain ideas"
     },
     "constraints": [
@@ -3352,12 +3352,12 @@
     ],
     "parameters": {
       "stage_status": "active",
-      "current_task": "Detail Destination surface, then continue Design Canon surface by surface",
+      "current_task": "Continue Design Canon after approved Destination v0.1",
       "graffiti": "4Tap Graffiti Profile v1 — approved",
       "immediate_next": "one-step Accessibility onboarding",
       "subsequent": "canon-driven UI, recognizer validation and teaching",
       "public_beta_gate": "Design Canon v1.0 before public beta",
-      "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Command Input base scheme; Destination base model; brand teal #159B92",
+      "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Command Input base scheme; Destination v0.1; brand teal #159B92",
       "content_detailing": "separate follow-up per screen"
     },
     "constraints": [
@@ -4011,8 +4011,8 @@
     "order": 37,
     "title": "Destination / ВЕДЕТ В",
     "group": "UX SYSTEM",
-    "short": "Поверхность выбора назначения команды: Приложения / Система / WEB.",
-    "description": "Destination / ВЕДЕТ В открывается из строки ВЕДЕТ В экрана Command. Она выбирает, куда ведёт двухзнаковая команда. Утверждённая модель: Command XY → Destination. Базовые категории назначения: ПРИЛОЖЕНИЯ, СИСТЕМА, WEB.",
+    "short": "Утверждённая поверхность выбора назначения: Приложения / Система / WEB.",
+    "description": "Destination / ВЕДЕТ В — единая поверхность выбора назначения команды. Под шапкой расположен трёхпозиционный переключатель ПРИЛОЖЕНИЯ / СИСТЕМА / WEB. APP запускает выбранное приложение, SYSTEM содержит только явно поддержанные системные назначения, WEB хранит URL независимо от браузера.",
     "purpose": "Отделить саму двухзнаковую команду от типа её назначения и позволить одной модели поддерживать приложения, системные действия и интернет-страницы.",
     "kind": "core",
     "models": [
@@ -4046,20 +4046,42 @@
       "entry": "tap whole ВЕДЕТ В row in Command",
       "back_without_selection": "return to Command unchanged",
       "selection": "return selected destination to Command",
-      "persistence": "final save happens on Command"
+      "persistence": "final save happens on Command",
+      "version": "Design Canon v0.1",
+      "layout": "Back + ВЕДЕТ В; full-width 3-way switch; one scrollable work area",
+      "category_on_entry": "open category matching current destination",
+      "apps": "launch-capable apps only; icon + display name; 64 dp rows; alphabetical; compact/reveal search; no package name in UI",
+      "system": "curated verified destinations only",
+      "web": "URL is first-class destination; store full URL independent of browser; show short normalized value/domain in Command",
+      "destination_types": [
+        "APP",
+        "SYSTEM",
+        "WEB"
+      ],
+      "web_history": "architecturally anticipated; not in first UI canon",
+      "browser_share": "future browser → Share → 4Tap input path reserved; no UI/implementation in v0.1",
+      "deep_link": "no separate DEEP_LINK type in v0.1"
     },
     "constraints": [
       "Categories describe destination type, not command type.",
-      "Detailed category contents are not yet canon.",
-      "WEB is a first-class destination category, not a special command type.",
+      "Selection returns to Command; final persistence happens on Command.",
+      "Applications category does not expose technical package names.",
+      "System category contains only technically verified supported destinations.",
+      "WEB stores URL, not browser + URL.",
+      "WEB history is anticipated but excluded from first UI canon.",
+      "Browser Share → 4Tap is architecturally reserved but not implemented in v0.1.",
       "User-facing strings are localizable."
     ],
     "open_questions": [
-      "Exact category switcher/tabs.",
-      "Application row/icon layout and search.",
-      "Supported system destinations.",
-      "URL entry/storage/history behavior.",
-      "Whether deep links become a later destination subtype."
+      "Initial category for a new command without destination.",
+      "Exact visual geometry/state treatment of the three-way category switch.",
+      "Exact search icon/interaction.",
+      "Supported system destinations catalog.",
+      "URL validation/normalization rules.",
+      "Optional custom WEB labels.",
+      "Future WEB history UI.",
+      "Future Share → 4Tap UI.",
+      "Whether a separate deep-link model is ever needed."
     ],
     "tags": [
       "design",
@@ -4067,7 +4089,10 @@
       "apps",
       "system",
       "web",
-      "canon"
+      "canon",
+      "v0.1",
+      "share",
+      "url"
     ]
   },
   {
