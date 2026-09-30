@@ -176,7 +176,7 @@
     "title": "4Tap Design Canon",
     "group": "UX SYSTEM",
     "short": "Единый визуальный и поведенческий канон для KnockUI, состояний ввода, обратной связи и пользовательских экранов.",
-    "description": "Текущая активная продуктовая задача. Первый рабочий Design Canon задаёт визуальный и поведенческий язык 4Tap: KnockUI, экран состояния 4Tap, Команды, Команда, Приложения, Алфавит и Настройки; типографику, геометрию, состояния, feedback, motion, звук/вибрацию и правила пользовательских экранов. После канона следующим отдельным шагом проектируется one-step Accessibility onboarding.",
+    "description": "Текущая активная продуктовая задача. Первый рабочий Design Canon задаёт визуальный и поведенческий язык 4Tap: KnockUI, экран состояния 4Tap, Команды, Команда, Destination / ВЕДЕТ В, Алфавит и Настройки; типографику, геометрию, состояния, feedback, motion, звук/вибрацию и правила пользовательских экранов. После канона следующим отдельным шагом проектируется one-step Accessibility onboarding.",
     "purpose": "Не допустить расхождения интерфейсов и закрепить узнаваемую механику продукта.",
     "kind": "core",
     "models": [
@@ -203,7 +203,7 @@
     ],
     "parameters": {
       "current_working_version": "v0.1",
-      "core_surfaces": "KnockUI; 4Tap; Команды; Команда; Приложения; Алфавит; Настройки",
+      "core_surfaces": "KnockUI; 4Tap; Команды; Команда; Destination / ВЕДЕТ В; Алфавит; Настройки",
       "immediate_next": "one-step Accessibility onboarding",
       "next_revision": "v0.2 after first canon-driven implementation/usability pass",
       "public_beta": "v1.0 before public beta",
@@ -214,8 +214,9 @@
       "common_assignment_text": "18 sp / 800; one line; end ellipsis",
       "common_graffiti_pair": "white; ~76×44 dp area; ~38–40 dp trajectory height",
       "commands_screen": "approved structural block; detailed population later",
-      "command_screen": "approved + first Android code implementation",
-      "destination_surface": "approved; categories Apps / System / WEB"
+      "command_screen": "accepted on real Android device; future changes are refinement",
+      "destination_surface": "approved; categories Apps / System / WEB",
+      "command_input": "approved project scheme; recommendations/tracing remain ideas"
     },
     "constraints": [
       "Канон должен сохранять скорость и минимальное вмешательство в текущий контекст пользователя.",
@@ -3328,7 +3329,7 @@
     "title": "Stage 2 — Product Canon",
     "group": "ROADMAP",
     "short": "Текущий этап: сформировать 4Tap Design Canon; сразу после него — one-step Accessibility onboarding.",
-    "description": "Stage 2 активен после завершения Android Stage 1. 4Tap Graffiti Profile v1 принят. В Design Canon уже утверждены двухпанельная модель KnockUI и каркас Commands, включая фирменный teal #159B92 и общие правила строк, типографики, Graffiti и состояний. Следующая работа идёт последовательно по остальным поверхностям; наполнение каждого экрана детализируется отдельно. После формирования канона следующей задачей является нормальный одношаговый Accessibility onboarding.",
+    "description": "Stage 2 активен после завершения Android Stage 1. 4Tap Graffiti Profile v1 принят. Утверждены двухпанельная модель KnockUI, Commands, рабочая поверхность Command после real-device review, проектная схема Command Input и базовая модель Destination. Следующая работа — детализировать Destination и затем продолжать остальные поверхности.",
     "purpose": "Стабилизировать визуальный язык и жестовые эталоны до масштабирования продукта.",
     "kind": "core",
     "models": [
@@ -3356,7 +3357,7 @@
       "immediate_next": "one-step Accessibility onboarding",
       "subsequent": "canon-driven UI, recognizer validation and teaching",
       "public_beta_gate": "Design Canon v1.0 before public beta",
-      "approved_blocks": "KnockUI two-panel model; Commands structural canon; Command structural canon + first Android implementation; Destination base model; brand teal #159B92",
+      "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Command Input base scheme; Destination base model; brand teal #159B92",
       "content_detailing": "separate follow-up per screen"
     },
     "constraints": [
@@ -3939,8 +3940,8 @@
     "order": 36,
     "title": "Command Screen",
     "group": "UX SYSTEM",
-    "short": "Экран одной команды: редактируемая комбинация XY, действие, статус и сохранение изменений.",
-    "description": "Command / Команда открывается из Commands и управляет одной пользовательской двухзнаковой командой. Крупная область показывает реальные Graffiti-траектории текущей пары. COMMAND открывает режим рисования/ввода внутри Command; ВЕДЕТ В открывает Destination; STATUS переключается ACTIVE ↔ INACTIVE без Android-switch. Back запрашивает сохранение только при реально изменённых данных.",
+    "short": "Принятая рабочая поверхность одной команды: редактируемая комбинация XY, назначение Destination, статус и сохранение.",
+    "description": "Command / Команда открывается из Commands и управляет одной пользовательской двухзнаковой командой. Первая Android-реализация собрана и просмотрена на физическом устройстве; поверхность принята как рабочая, дальнейшие изменения — refinement деталей. COMMAND открывает режим ввода XY; ВЕДЕТ В открывает Destination; STATUS переключается ACTIVE ↔ INACTIVE; dirty Back предлагает сохранить изменения.",
     "purpose": "Дать единый редактор одной команды, сохраняя визуальную связь между Graffiti, XY, назначением и состоянием.",
     "kind": "core",
     "models": [
@@ -3956,18 +3957,18 @@
     "inputs": [
       "Selected command",
       "4Tap Graffiti Profile v1",
-      "Action assignment"
+      "Destination assignment"
     ],
     "outputs": [
       "Edited command draft",
       "Save/Delete result",
       "Request command input",
-      "Request action picker"
+      "Request destination picker"
     ],
     "parameters": {
       "header": "72 dp; #3A3A3A; Back + COMMAND",
       "background": "#171717",
-      "rows": "COMMAND / ACTION / STATUS; 64 dp",
+      "rows": "COMMAND / ВЕДЕТ В / STATUS; 64 dp",
       "row_surface": "#159B92",
       "row_pressed": "#0F8F88",
       "inactive_surface": "#365C58",
@@ -3981,16 +3982,18 @@
       "android_code": "implemented first pass in 4tap-app",
       "destination_row": "ВЕДЕТ В",
       "destination_edit": "opens Destination surface",
-      "destination_model": "Command XY → Destination"
+      "destination_model": "Command XY → Destination",
+      "real_device_review": "accepted working surface; future changes are refinement",
+      "graffiti_area_future_correction": "same size as KnockUI working field",
+      "scale_review": "current implementation feels somewhat large; review during refinement"
     },
     "constraints": [
-      "COMMAND input sub-surface is not to be fully designed or expanded before its separate Design Canon pass.",
       "Destination surface is detailed and implemented through its own Design Canon.",
       "Real Graffiti geometry comes from approved v1 SVG sources.",
-      "User-facing strings remain localizable."
+      "User-facing strings remain localizable.",
+      "Command base structure is accepted; future visual changes are refinement, not a reset of the surface model."
     ],
     "open_questions": [
-      "Detailed Command drawing/input surface.",
       "Final delete confirmation behavior."
     ],
     "tags": [
@@ -4064,6 +4067,74 @@
       "apps",
       "system",
       "web",
+      "canon"
+    ]
+  },
+  {
+    "id": "command-input-mode",
+    "section": "product",
+    "order": 36.5,
+    "title": "Command Input / XY",
+    "group": "UX SYSTEM",
+    "short": "Утверждённая проектная схема ввода двухзнаковой команды внутри Command.",
+    "description": "Режим открывается внутри Command. Пользователь видит доступные знаки A–Z + 0–9, рисует один из них, recognizer определяет знак; процесс повторяется для второго символа, после чего формируется XY и комбинация проверяется на допустимость и занятость.",
+    "purpose": "Редактировать XY через тот же жестовый язык, которым пользователь затем вызывает команды.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "shared",
+      "android",
+      "ios"
+    ],
+    "status": "approved",
+    "inputs": [
+      "A–Z + 0–9",
+      "Finger stroke",
+      "4Tap Graffiti Profile v1"
+    ],
+    "outputs": [
+      "Recognized first symbol",
+      "Recognized second symbol",
+      "XY candidate"
+    ],
+    "parameters": {
+      "container": "submode inside Command",
+      "sequence": [
+        "show A–Z + 0–9",
+        "user draws one visible sign",
+        "recognize sign",
+        "repeat for second sign",
+        "form XY",
+        "validate availability/occupancy",
+        "return result to Command"
+      ],
+      "project_ideas_not_canon": [
+        "recommend correct trajectory/direction/start point",
+        "offer tracing of canonical template after recognition"
+      ]
+    },
+    "constraints": [
+      "Recommendations and canonical-template tracing are project ideas only, not approved behavior.",
+      "The mode remains inside Command rather than becoming a top-level navigation surface.",
+      "Detailed visual mechanics are still to be designed."
+    ],
+    "open_questions": [
+      "Exact layout of 36 signs.",
+      "Drawing-area geometry.",
+      "Recognition feedback and multi-candidate behavior.",
+      "Retry rules and transition between first/second sign.",
+      "Exact occupied/free-combination feedback.",
+      "Whether and how recommendations/tracing are later adopted."
+    ],
+    "tags": [
+      "design",
+      "command",
+      "input",
+      "graffiti",
+      "recognition",
       "canon"
     ]
   }
