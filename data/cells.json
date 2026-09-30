@@ -192,7 +192,8 @@
     "inputs": [
       "Verified Android end-to-end prototype",
       "Product UX decisions",
-      "KnockUI recognition behavior"
+      "KnockUI recognition behavior",
+      "Approved KnockUI two-panel model"
     ],
     "outputs": [
       "Design rules",
@@ -205,7 +206,8 @@
       "core_surfaces": "KnockUI; 4Tap; Команды; Команда; Приложения; Алфавит; Настройки",
       "immediate_next": "one-step Accessibility onboarding",
       "next_revision": "v0.2 after first canon-driven implementation/usability pass",
-      "public_beta": "v1.0 before public beta"
+      "public_beta": "v1.0 before public beta",
+      "knockui_panel_model": "approved: quick_shortcuts / drawing_canvas; remember last active panel"
     },
     "constraints": [
       "Канон должен сохранять скорость и минимальное вмешательство в текущий контекст пользователя.",
@@ -3784,6 +3786,62 @@
       "i18n",
       "ux",
       "settings"
+    ]
+  },
+  {
+    "id": "knockui-panels",
+    "section": "product",
+    "order": 34,
+    "title": "KnockUI Panels",
+    "group": "UX SYSTEM",
+    "short": "KnockUI имеет две взаимоисключающие рабочие панели: «Ярлыки» и «Рисование».",
+    "description": "В одном компактном окне KnockUI используются две панели, занимающие одну рабочую область и вызываемые переключателем. «Ярлыки» (`quick_shortcuts`) содержит обычные ярлыки-пиктограммы программ для прямого запуска. «Рисование» (`drawing_canvas`) содержит поле пальцевого ввода двухзнаковых команд 4Tap. Панели не показываются одновременно. KnockUI запоминает последнюю активную панель и восстанавливает её при следующем вызове.",
+    "purpose": "Дать пользователю два быстрых способа действия — визуальный запуск по ярлыку и моторный запуск по двухзнаковой команде — без увеличения размера KnockUI одновременным показом обеих поверхностей.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "shared",
+      "android",
+      "ios"
+    ],
+    "status": "approved",
+    "inputs": [
+      "KnockUI activation",
+      "Last active panel state"
+    ],
+    "outputs": [
+      "quick_shortcuts panel",
+      "drawing_canvas panel"
+    ],
+    "parameters": {
+      "panels": "quick_shortcuts; drawing_canvas",
+      "ui_names": "Ярлыки; Рисование",
+      "simultaneous_display": false,
+      "switcher": true,
+      "remember_last_panel": true,
+      "first_launch_panel": "TBD",
+      "icon_sources": "4tap-app/design/knockui/icons/"
+    },
+    "constraints": [
+      "Обе панели занимают одну рабочую область KnockUI и не показываются рядом одновременно.",
+      "При следующем вызове восстанавливается последняя активная панель.",
+      "Количество и раскладка быстрых ярлыков пока не утверждены.",
+      "Переключение свайпом пока не утверждено.",
+      "Начальная панель первого запуска пока не утверждена."
+    ],
+    "open_questions": [
+      "Какая панель открывается при самом первом запуске?",
+      "Сколько быстрых ярлыков показывать и как их располагать?"
+    ],
+    "tags": [
+      "knockui",
+      "shortcuts",
+      "drawing",
+      "ux",
+      "canon"
     ]
   }
 ]
