@@ -269,10 +269,10 @@
     "id": "graffiti-profile",
     "section": "product",
     "order": 36,
-    "title": "4Tap Graffiti Profile",
+    "title": "4Tap Graffiti Profile v1",
     "group": "GESTURE LANGUAGE",
-    "short": "Собственный нормативный набор одноштриховых знаков 4Tap, основанный на Palm Graffiti, но допускающий осознанные коррекции.",
-    "description": "Для каждого символа A–Z и 0–9 профиль фиксирует каноническую траекторию, направление, старт/финиш, допустимые отклонения, возможные альтернативы и конфликтующие знаки. Исторический Palm Graffiti используется как baseline, но неудобные формы могут меняться; символ X уже отмечен как кандидат на переработку.",
+    "short": "Утверждённый продуктовый набор из 36 одноштриховых знаков 4Tap: A–Z и 0–9.",
+    "description": "Продуктовый набор v1 зафиксирован ручными SVG с явными началом и направлением штриха. Базовое правило: все знаки начинаются сверху, кроме A, M и N. Набор считается принятым продуктовым состоянием, а не черновиком. Пары S/5, I/1 и Z/2 требуют повышенной различимости при письме и отдельного внимания распознавателя, но не являются основанием менять общий принцип письма или переводить цифры на старт снизу.",
     "purpose": "Получить обучаемый и технически однозначный алфавит для пальцевого ввода 4Tap.",
     "kind": "core",
     "models": [
@@ -284,32 +284,43 @@
       "android",
       "ios"
     ],
-    "status": "concept",
+    "status": "approved",
     "inputs": [
-      "Palm Graffiti baseline",
-      "Real-device handwriting tests"
+      "Hand-drawn 4Tap Graffiti Set v1"
     ],
     "outputs": [
-      "Canonical 4Tap stroke signatures"
+      "Canonical 4Tap stroke signatures",
+      "Teaching reference for A–Z + 0–9"
     ],
     "parameters": {
       "alphabet": "A–Z + 0–9",
+      "product_version": "v1",
+      "source": "4tap-app/design/graffiti/v1",
       "direction_sensitive": true,
-      "known_review": "X"
+      "start_rule": "all signs start at the top except A, M, N",
+      "attention_pairs": "S/5; I/1; Z/2"
     },
     "constraints": [
-      "Нельзя расширять распознаватель на полный алфавит до утверждения эталонов и конфликтных пар."
+      "Не менять утверждённый набор только ради упрощения классификатора; распознаватель адаптируется к продуктовому языку.",
+      "Для S/5, I/1 и Z/2 пользователь должен достаточно выражать различительные элементы формы.",
+      "Нормализация и шаблоны распознавателя хранятся отдельно от продуктовых SVG-исходников."
     ],
-    "open_questions": [
-      "Какие исторические знаки требуют изменения?",
-      "Нужны ли несколько допустимых вариантов для отдельных символов?"
-    ],
+    "open_questions": [],
     "tags": [
       "graffiti",
       "gesture",
       "profile",
       "recognizer"
-    ]
+    ],
+    "verification": {
+      "state": "non-technical",
+      "date": "2026-09-30",
+      "confidence": "high",
+      "summary": "4Tap Graffiti Set v1 принят как продуктовое состояние. Алфавит и правило направления письма зафиксированы; дальнейшая работа относится к распознаванию, обучению и Design Canon.",
+      "sources": [],
+      "next_step": "Использовать v1 как исходный алфавит при проектировании обучения и при проверке recognizer confusion matrix.",
+      "implication": "Статус набора не зависит от того, остаются ли отдельные близкие пары сложными для классификации."
+    }
   },
   {
     "id": "platform-adaptation-model",
@@ -1144,7 +1155,7 @@
     "section": "android",
     "title": "Gesture Recognizer",
     "group": "RECOGNITION",
-    "short": "Распознаёт одноштриховые знаки A–Z и 0–9.",
+    "short": "Распознаёт утверждённые одноштриховые знаки 4Tap A–Z и 0–9.",
     "description": "$1 is a real, lightweight unistroke template matcher designed for rapid UI prototyping. Published work reports strong accuracy on its evaluated gesture sets, but those results do not validate a 36-symbol KnockUI Graffiti alphabet, finger input, or the chosen confidence threshold.",
     "purpose": "Преобразовать траекторию пальца в символ.",
     "kind": "core",
@@ -1167,12 +1178,16 @@
       "alphabet": "A–Z + 0–9",
       "published_role": "rapid prototyping; template matching",
       "current_prototype_subset": "S, C",
-      "template_reference": "original Palm Graffiti",
-      "direction_sensitive": true
+      "direction_sensitive": true,
+      "product_reference": "4Tap Graffiti Profile v1",
+      "source": "4tap-app/design/graffiti/v1",
+      "attention_pairs": "S/5; I/1; Z/2",
+      "start_rule": "all signs start at the top except A, M, N"
     },
     "constraints": [
-      "Ошибки распознавания",
-      "Вариативность почерка"
+      "Ошибки распознавания и вариативность почерка должны измеряться на реальном вводе.",
+      "Особо контролировать S/5, I/1 и Z/2.",
+      "Не перепроектировать утверждённый продуктовый алфавит только ради удобства классификатора."
     ],
     "open_questions": [
       "What confusion matrix is obtained for the actual 36 KnockUI symbols?",
@@ -3298,7 +3313,7 @@
     "title": "Stage 2 — Product Canon",
     "group": "ROADMAP",
     "short": "Текущий этап: сформировать 4Tap Design Canon; сразу после него — one-step Accessibility onboarding.",
-    "description": "Stage 2 активен после завершения Android Stage 1. Текущая задача — сформировать первый рабочий Design Canon для KnockUI и основных экранов 4Tap. После утверждения канона следующей задачей является нормальный одношаговый Accessibility onboarding. Затем продолжается формирование 4Tap Graffiti Profile и приведение распознавателя/UI к утверждённым нормам.",
+    "description": "Stage 2 активен после завершения Android Stage 1. 4Tap Graffiti Profile v1 уже принят как продуктовый набор: A–Z + 0–9, с общим правилом начала сверху кроме A, M и N. Текущая задача — сформировать первый рабочий Design Canon для KnockUI и основных экранов 4Tap. После утверждения канона следующей задачей является нормальный одношаговый Accessibility onboarding; затем recognizer и обучение приводятся к утверждённому профилю v1.",
     "purpose": "Стабилизировать визуальный язык и жестовые эталоны до масштабирования продукта.",
     "kind": "core",
     "models": [
@@ -3322,9 +3337,9 @@
     "parameters": {
       "stage_status": "active",
       "current_task": "4Tap Design Canon",
+      "graffiti": "4Tap Graffiti Profile v1 — approved",
       "immediate_next": "one-step Accessibility onboarding",
-      "subsequent": "4Tap Graffiti Profile and canon-driven UI/recognizer work",
-      "graffiti": "A–Z + 0–9 canonical 4Tap profile",
+      "subsequent": "canon-driven UI, recognizer validation and teaching",
       "public_beta_gate": "Design Canon v1.0 before public beta"
     },
     "constraints": [
