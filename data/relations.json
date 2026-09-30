@@ -970,5 +970,29 @@
     "to": "knockui-panels",
     "relation": "настраивает быстрые ярлыки",
     "type": "model"
+  },
+  {
+    "from": "design-canon",
+    "to": "commands-screen",
+    "relation": "задаёт общие визуальные и поведенческие правила",
+    "type": "model"
+  },
+  {
+    "from": "graffiti-profile",
+    "to": "commands-screen",
+    "relation": "даёт реальные траектории для левой колонки",
+    "type": "model"
+  },
+  {
+    "from": "commands-screen",
+    "to": "command-space",
+    "relation": "визуализирует и управляет двухзнаковыми командами",
+    "type": "model"
+  },
+  {
+    "from": "product-localization",
+    "to": "commands-screen",
+    "relation": "локализует названия и интерфейсные строки",
+    "type": "constraint"
   }
 ]
