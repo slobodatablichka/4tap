@@ -928,5 +928,23 @@
     "to": "android-quad-tap",
     "relation": "задаёт runtime-границы trigger",
     "type": "constraint"
+  },
+  {
+    "from": "design-canon",
+    "to": "product-localization",
+    "relation": "учитывает правила локализации",
+    "type": "model"
+  },
+  {
+    "from": "product-localization",
+    "to": "android-settings-console",
+    "relation": "добавляет выбор языка интерфейса",
+    "type": "model"
+  },
+  {
+    "from": "product-localization",
+    "to": "command-space",
+    "relation": "не изменяет язык команд",
+    "type": "constraint"
   }
 ]
