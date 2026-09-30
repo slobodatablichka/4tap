@@ -946,5 +946,29 @@
     "to": "command-space",
     "relation": "не изменяет язык команд",
     "type": "constraint"
+  },
+  {
+    "from": "design-canon",
+    "to": "knockui-panels",
+    "relation": "детализирует и оформляет",
+    "type": "model"
+  },
+  {
+    "from": "knockui-panels",
+    "to": "android-local-canvas",
+    "relation": "задаёт продуктовую структуру поверхности",
+    "type": "model"
+  },
+  {
+    "from": "graffiti-profile",
+    "to": "knockui-panels",
+    "relation": "задаёт язык панели Рисование",
+    "type": "model"
+  },
+  {
+    "from": "android-settings-console",
+    "to": "knockui-panels",
+    "relation": "настраивает быстрые ярлыки",
+    "type": "model"
   }
 ]
