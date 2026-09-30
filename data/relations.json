@@ -1066,5 +1066,17 @@
     "to": "command-input-mode",
     "relation": "фиксирует утверждённую проектную схему и границу неутверждённых идей",
     "type": "model"
+  },
+  {
+    "from": "destination-surface",
+    "to": "android-actions",
+    "relation": "SYSTEM uses only verified supported Android system destinations",
+    "type": "constraint"
+  },
+  {
+    "from": "destination-surface",
+    "to": "android-integration",
+    "relation": "APP and WEB execution depend on platform launch/intent handling",
+    "type": "model"
   }
 ]
