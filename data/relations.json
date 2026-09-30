@@ -1018,5 +1018,29 @@
     "to": "command-screen",
     "relation": "локализует пользовательские строки",
     "type": "constraint"
+  },
+  {
+    "from": "command-screen",
+    "to": "destination-surface",
+    "relation": "строка ВЕДЕТ В открывает выбор назначения",
+    "type": "flow"
+  },
+  {
+    "from": "destination-surface",
+    "to": "android-actions",
+    "relation": "категория СИСТЕМА использует поддерживаемые системные назначения",
+    "type": "model"
+  },
+  {
+    "from": "destination-surface",
+    "to": "android-default-integration-catalog",
+    "relation": "категория ПРИЛОЖЕНИЯ использует каталог интеграций",
+    "type": "model"
+  },
+  {
+    "from": "product-localization",
+    "to": "destination-surface",
+    "relation": "локализует категории и пользовательские строки",
+    "type": "constraint"
   }
 ]
