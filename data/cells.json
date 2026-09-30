@@ -211,7 +211,8 @@
       "Канон должен сохранять скорость и минимальное вмешательство в текущий контекст пользователя.",
       "Неназначенная распознанная комбинация не является ошибкой.",
       "При неуверенном распознавании KnockUI может предлагать близкие варианты с учётом реально назначенного пользовательского словаря.",
-      "Хорошо распознанная свободная комбинация не должна насильно подменяться существующей командой."
+      "Хорошо распознанная свободная комбинация не должна насильно подменяться существующей командой.",
+      "Макеты и компоненты должны поддерживать локализуемые пользовательские строки."
     ],
     "open_questions": [
       "Финальная типографика и motion language",
@@ -1664,7 +1665,8 @@
       "Default Integration Catalog",
       "4Tap Graffiti Profile",
       "SystemGestures",
-      "UserGestures"
+      "UserGestures",
+      "Interface language preference"
     ],
     "outputs": [
       "UserGesture assignments",
@@ -1676,7 +1678,8 @@
       "default_bindings": true,
       "founder_private_profile_count": 40,
       "writing_guide": true,
-      "user_assignment": true
+      "user_assignment": true,
+      "interface_language": "system default + manual override"
     },
     "constraints": [
       "Содержимое Founder 40 приватно и не должно публиковаться без отдельного решения.",
@@ -3734,5 +3737,53 @@
       "next_step": "Validate current path on newer Android versions and navigation modes.",
       "implication": "Current Android risk has shifted from basic trigger feasibility to permissions, compatibility and store review."
     }
+  },
+  {
+    "id": "product-localization",
+    "section": "product",
+    "order": 33,
+    "title": "Localization",
+    "group": "UX SYSTEM",
+    "short": "4Tap является многоязычным продуктом; язык интерфейса выбирается по системе либо вручную.",
+    "description": "4Tap является многоязычным продуктом. Язык интерфейса выбирается автоматически по системе либо вручную в настройках. Все пользовательские строки локализуемы. Командное пространство A–Z + 0–9 и назначения команд не зависят от языка интерфейса.",
+    "purpose": "Отделить локализацию пользовательского интерфейса от языка жестовых команд и сделать смену языка штатной частью продукта.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "shared",
+      "android",
+      "ios"
+    ],
+    "status": "approved",
+    "inputs": [
+      "System locale",
+      "User-selected interface language"
+    ],
+    "outputs": [
+      "Selected interface locale",
+      "Localized UI strings"
+    ],
+    "parameters": {
+      "default_language_mode": "system",
+      "manual_override": true,
+      "all_user_visible_strings": "localizable",
+      "command_space": "A–Z + 0–9; language-independent",
+      "assignments": "language-independent"
+    },
+    "constraints": [
+      "Язык интерфейса не изменяет командное пространство A–Z + 0–9.",
+      "Смена языка интерфейса не изменяет пользовательские назначения команд.",
+      "Пользовательские строки не должны быть жёстко зашиты в код."
+    ],
+    "open_questions": [],
+    "tags": [
+      "localization",
+      "i18n",
+      "ux",
+      "settings"
+    ]
   }
 ]
