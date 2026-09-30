@@ -994,5 +994,29 @@
     "to": "commands-screen",
     "relation": "локализует названия и интерфейсные строки",
     "type": "constraint"
+  },
+  {
+    "from": "commands-screen",
+    "to": "command-screen",
+    "relation": "открывает редактор выбранной команды",
+    "type": "flow"
+  },
+  {
+    "from": "graffiti-profile",
+    "to": "command-screen",
+    "relation": "даёт реальные траектории текущей комбинации",
+    "type": "model"
+  },
+  {
+    "from": "command-screen",
+    "to": "command-space",
+    "relation": "редактирует комбинацию XY",
+    "type": "model"
+  },
+  {
+    "from": "product-localization",
+    "to": "command-screen",
+    "relation": "локализует пользовательские строки",
+    "type": "constraint"
   }
 ]
