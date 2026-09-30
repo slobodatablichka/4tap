@@ -213,7 +213,8 @@
       "common_header": "72 dp; Roboto Slab 28 sp / 800",
       "common_assignment_text": "18 sp / 800; one line; end ellipsis",
       "common_graffiti_pair": "white; ~76×44 dp area; ~38–40 dp trajectory height",
-      "commands_screen": "approved structural block; detailed population later"
+      "commands_screen": "approved structural block; detailed population later",
+      "command_screen": "approved + first Android code implementation"
     },
     "constraints": [
       "Канон должен сохранять скорость и минимальное вмешательство в текущий контекст пользователя.",
@@ -3354,7 +3355,7 @@
       "immediate_next": "one-step Accessibility onboarding",
       "subsequent": "canon-driven UI, recognizer validation and teaching",
       "public_beta_gate": "Design Canon v1.0 before public beta",
-      "approved_blocks": "KnockUI two-panel model; Commands structural canon; brand teal #159B92",
+      "approved_blocks": "KnockUI two-panel model; Commands structural canon; Command structural canon + first Android implementation; brand teal #159B92",
       "content_detailing": "separate follow-up per screen"
     },
     "constraints": [
@@ -3929,6 +3930,74 @@
       "graffiti",
       "list",
       "canon"
+    ]
+  },
+  {
+    "id": "command-screen",
+    "section": "product",
+    "order": 36,
+    "title": "Command Screen",
+    "group": "UX SYSTEM",
+    "short": "Экран одной команды: редактируемая комбинация XY, действие, статус и сохранение изменений.",
+    "description": "Command / Команда открывается из Commands и управляет одной пользовательской двухзнаковой командой. Крупная область показывает реальные Graffiti-траектории текущей пары. COMMAND открывает режим рисования/ввода внутри Command; ACTION ведёт к поверхности Приложения; STATUS переключается ACTIVE ↔ INACTIVE без Android-switch. Back запрашивает сохранение только при реально изменённых данных.",
+    "purpose": "Дать единый редактор одной команды, сохраняя визуальную связь между Graffiti, XY, назначением и состоянием.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "shared",
+      "android",
+      "ios"
+    ],
+    "status": "approved",
+    "inputs": [
+      "Selected command",
+      "4Tap Graffiti Profile v1",
+      "Action assignment"
+    ],
+    "outputs": [
+      "Edited command draft",
+      "Save/Delete result",
+      "Request command input",
+      "Request action picker"
+    ],
+    "parameters": {
+      "header": "72 dp; #3A3A3A; Back + COMMAND",
+      "background": "#171717",
+      "rows": "COMMAND / ACTION / STATUS; 64 dp",
+      "row_surface": "#159B92",
+      "row_pressed": "#0F8F88",
+      "inactive_surface": "#365C58",
+      "title": "Roboto Slab 28 sp / 800",
+      "row_text": "Roboto Slab 18 sp / 800",
+      "bottom_actions": "DELETE | SAVE; fixed 56 dp",
+      "command_xy": "editable",
+      "command_edit": "drawing/input mode inside Command",
+      "action_edit": "opens Applications surface",
+      "status_toggle": "ACTIVE ↔ INACTIVE; no Android switch",
+      "dirty_back": "confirm only when data changed",
+      "android_code": "implemented first pass in 4tap-app"
+    },
+    "constraints": [
+      "COMMAND input sub-surface is not to be fully designed or expanded before its separate Design Canon pass.",
+      "Applications surface is implemented only after its own detailed Design Canon.",
+      "Real Graffiti geometry comes from approved v1 SVG sources.",
+      "User-facing strings remain localizable."
+    ],
+    "open_questions": [
+      "Detailed Command drawing/input surface.",
+      "Detailed Applications surface.",
+      "Final delete confirmation behavior."
+    ],
+    "tags": [
+      "design",
+      "command",
+      "editor",
+      "graffiti",
+      "canon",
+      "implemented"
     ]
   }
 ]
