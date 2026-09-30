@@ -207,14 +207,22 @@
       "immediate_next": "one-step Accessibility onboarding",
       "next_revision": "v0.2 after first canon-driven implementation/usability pass",
       "public_beta": "v1.0 before public beta",
-      "knockui_panel_model": "approved: quick_shortcuts / drawing_canvas; remember last active panel"
+      "knockui_panel_model": "approved: quick_shortcuts / drawing_canvas; remember last active panel",
+      "brand_teal": "#159B92",
+      "common_list_row": "64 dp; 8 dp vertical padding; 1 dp separator",
+      "common_header": "72 dp; Roboto Slab 28 sp / 800",
+      "common_assignment_text": "18 sp / 800; one line; end ellipsis",
+      "common_graffiti_pair": "white; ~76×44 dp area; ~38–40 dp trajectory height",
+      "commands_screen": "approved structural block; detailed population later"
     },
     "constraints": [
       "Канон должен сохранять скорость и минимальное вмешательство в текущий контекст пользователя.",
       "Неназначенная распознанная комбинация не является ошибкой.",
       "При неуверенном распознавании KnockUI может предлагать близкие варианты с учётом реально назначенного пользовательского словаря.",
       "Хорошо распознанная свободная комбинация не должна насильно подменяться существующей командой.",
-      "Макеты и компоненты должны поддерживать локализуемые пользовательские строки."
+      "Макеты и компоненты должны поддерживать локализуемые пользовательские строки.",
+      "Фирменный teal всего приложения — #159B92.",
+      "Утверждённые правила строк, размеров шрифтов, Graffiti и состояний применяются к структурно аналогичным ситуациям, если отдельная поверхность не задаёт исключение."
     ],
     "open_questions": [
       "Финальная типографика и motion language",
@@ -3318,7 +3326,7 @@
     "title": "Stage 2 — Product Canon",
     "group": "ROADMAP",
     "short": "Текущий этап: сформировать 4Tap Design Canon; сразу после него — one-step Accessibility onboarding.",
-    "description": "Stage 2 активен после завершения Android Stage 1. 4Tap Graffiti Profile v1 уже принят как продуктовый набор: A–Z + 0–9, с общим правилом начала сверху кроме A, M и N. Текущая задача — сформировать первый рабочий Design Canon для KnockUI и основных экранов 4Tap. После утверждения канона следующей задачей является нормальный одношаговый Accessibility onboarding; затем recognizer и обучение приводятся к утверждённому профилю v1.",
+    "description": "Stage 2 активен после завершения Android Stage 1. 4Tap Graffiti Profile v1 принят. В Design Canon уже утверждены двухпанельная модель KnockUI и каркас Commands, включая фирменный teal #159B92 и общие правила строк, типографики, Graffiti и состояний. Следующая работа идёт последовательно по остальным поверхностям; наполнение каждого экрана детализируется отдельно. После формирования канона следующей задачей является нормальный одношаговый Accessibility onboarding.",
     "purpose": "Стабилизировать визуальный язык и жестовые эталоны до масштабирования продукта.",
     "kind": "core",
     "models": [
@@ -3341,11 +3349,13 @@
     ],
     "parameters": {
       "stage_status": "active",
-      "current_task": "4Tap Design Canon",
+      "current_task": "Continue 4Tap Design Canon surface by surface",
       "graffiti": "4Tap Graffiti Profile v1 — approved",
       "immediate_next": "one-step Accessibility onboarding",
       "subsequent": "canon-driven UI, recognizer validation and teaching",
-      "public_beta_gate": "Design Canon v1.0 before public beta"
+      "public_beta_gate": "Design Canon v1.0 before public beta",
+      "approved_blocks": "KnockUI two-panel model; Commands structural canon; brand teal #159B92",
+      "content_detailing": "separate follow-up per screen"
     },
     "constraints": [
       "Не масштабировать recognizer и UI хаотично до фиксации соответствующих канонов.",
@@ -3841,6 +3851,83 @@
       "shortcuts",
       "drawing",
       "ux",
+      "canon"
+    ]
+  },
+  {
+    "id": "commands-screen",
+    "section": "product",
+    "order": 35,
+    "title": "Commands Screen",
+    "group": "UX SYSTEM",
+    "short": "Утверждённый каркас экрана управления командами: Graffiti → XY → назначение, плоский teal-список и отдельный вход в редактирование.",
+    "description": "Экран Commands / Команды использует тёмную шапку и фон, непрерывный список фирменного teal #159B92 и три смысловые зоны строки: реальная визуализация Graffiti, печатная двухзнаковая комбинация и локализованное назначение. Тап по строке открывает экран Команда для просмотра/редактирования; исполнение команды остаётся функцией KnockUI. ADD COMMAND закреплён снизу, прокручивается только список.",
+    "purpose": "Сделать список команд одновременно управляющим интерфейсом и постоянной визуальной связью между жестом Graffiti, кодом XY и назначением.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "shared",
+      "android",
+      "ios"
+    ],
+    "status": "approved",
+    "inputs": [
+      "Command registry",
+      "4Tap Graffiti Profile v1",
+      "Localized action names"
+    ],
+    "outputs": [
+      "Command list",
+      "Open Command detail/editor",
+      "Add command action"
+    ],
+    "parameters": {
+      "brand_teal": "#159B92",
+      "pressed": "#0F8F88",
+      "inactive": "#365C58",
+      "background": "#171717",
+      "header": "#3A3A3A",
+      "header_height_dp": 72,
+      "row_height_dp": 64,
+      "row_vertical_padding_dp": 8,
+      "separator_dp": 1,
+      "columns": "24% / 16% / 60% = Graffiti / XY / assignment",
+      "graffiti_area_dp": "~76 × 44",
+      "graffiti_height_dp": "~38–40",
+      "graffiti_color": "white",
+      "title": "Roboto Slab; 28 sp; weight 800; uppercase",
+      "assignment_text": "18 sp; weight 800; one line; end ellipsis",
+      "menu_touch_dp": "48 × 48",
+      "menu_visible_dp": "40 × 40",
+      "menu_outline_dp": 2,
+      "menu_radius_dp": 4,
+      "menu_lines": "~24 × 2 dp; 6 dp spacing",
+      "add_command_zone": "56 dp + safe-area; fixed bottom",
+      "target_visible_rows": "about 7 on standard portrait viewport; not hard-coded",
+      "row_tap": "open Command detail/editor; do not execute",
+      "scroll": "list only; header and ADD COMMAND fixed; transient scrollbar",
+      "layout_style": "flat continuous table; no cards/gaps"
+    },
+    "constraints": [
+      "Graffiti-column uses real canonical trajectories from 4Tap Graffiti Profile v1, not font imitation.",
+      "Long localized assignment names stay one line with end ellipsis; font is not individually reduced.",
+      "Persistent selected state is not used in ordinary mobile list mode.",
+      "Inactive/disabled commands may remain openable for editing/restoration.",
+      "Commands is for management; KnockUI is for execution.",
+      "Screen filling and command content remain subject to later detailed review."
+    ],
+    "open_questions": [
+      "Detailed content and population of the Commands screen.",
+      "Detailed behavior of the separate Command screen."
+    ],
+    "tags": [
+      "design",
+      "commands",
+      "graffiti",
+      "list",
       "canon"
     ]
   }
