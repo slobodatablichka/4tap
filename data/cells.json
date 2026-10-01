@@ -3352,12 +3352,12 @@
     ],
     "parameters": {
       "stage_status": "active",
-      "current_task": "Continue Design Canon after approved Destination v0.1",
+      "current_task": "Build and real-device review of Destination v0.1",
       "graffiti": "4Tap Graffiti Profile v1 — approved",
       "immediate_next": "one-step Accessibility onboarding",
       "subsequent": "canon-driven UI, recognizer validation and teaching",
       "public_beta_gate": "Design Canon v1.0 before public beta",
-      "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Command Input base scheme; Destination v0.1; brand teal #159B92",
+      "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Command Input base scheme; Destination v0.1 + first Android implementation; brand teal #159B92",
       "content_detailing": "separate follow-up per screen"
     },
     "constraints": [
@@ -3985,7 +3985,8 @@
       "destination_model": "Command XY → Destination",
       "real_device_review": "accepted working surface; future changes are refinement",
       "graffiti_area_future_correction": "same size as KnockUI working field",
-      "scale_review": "current implementation feels somewhat large; review during refinement"
+      "scale_review": "current implementation feels somewhat large; review during refinement",
+      "destination_flow": "implemented first pass: opens Destination and receives APP/SYSTEM/WEB result"
     },
     "constraints": [
       "Destination surface is detailed and implemented through its own Design Canon.",
@@ -4012,7 +4013,7 @@
     "title": "Destination / ВЕДЕТ В",
     "group": "UX SYSTEM",
     "short": "Утверждённая поверхность выбора назначения: Приложения / Система / WEB.",
-    "description": "Destination / ВЕДЕТ В — единая поверхность выбора назначения команды. Под шапкой расположен трёхпозиционный переключатель ПРИЛОЖЕНИЯ / СИСТЕМА / WEB. APP запускает выбранное приложение, SYSTEM содержит только явно поддержанные системные назначения, WEB хранит URL независимо от браузера.",
+    "description": "Destination / ВЕДЕТ В — утверждённая единая поверхность выбора назначения. Header 72 dp; под ним тёмная полоса 48 dp с тремя равными сегментами ПРИЛОЖЕНИЯ / СИСТЕМА / WEB и teal active segment. Первая Android-реализация добавлена и ожидает build/real-device review.",
     "purpose": "Отделить саму двухзнаковую команду от типа её назначения и позволить одной модели поддерживать приложения, системные действия и интернет-страницы.",
     "kind": "core",
     "models": [
@@ -4060,7 +4061,13 @@
       ],
       "web_history": "architecturally anticipated; not in first UI canon",
       "browser_share": "future browser → Share → 4Tap input path reserved; no UI/implementation in v0.1",
-      "deep_link": "no separate DEEP_LINK type in v0.1"
+      "deep_link": "no separate DEEP_LINK type in v0.1",
+      "header": "72 dp",
+      "category_strip": "48 dp; dark strip; three equal segments; active #159B92",
+      "app_rows": "64 dp; icon ~40×40 dp; 18 sp / 800; alphabetical; compact reveal search",
+      "system_rows": "64 dp; verified destinations only; v0.1 = Settings",
+      "web_block": "~184 dp; 16 top + 20 label + 8 + 56 input + 12 + 56 use + 16 bottom",
+      "android_code": "first implementation added; awaits build/real-device review"
     },
     "constraints": [
       "Categories describe destination type, not command type.",
@@ -4074,7 +4081,6 @@
     ],
     "open_questions": [
       "Initial category for a new command without destination.",
-      "Exact visual geometry/state treatment of the three-way category switch.",
       "Exact search icon/interaction.",
       "Supported system destinations catalog.",
       "URL validation/normalization rules.",
