@@ -176,7 +176,7 @@
     "title": "4Tap Design Canon",
     "group": "UX SYSTEM",
     "short": "Единый визуальный и поведенческий канон для KnockUI, состояний ввода, обратной связи и пользовательских экранов.",
-    "description": "Design Canon задаёт визуальный язык, implementation gate и нормализованную логику поверхностей. Выбор XY отделён от проверки жеста: общий Pair Selection выбирает знакопару через два этапа 6×6, а Gesture Check необязательно проверяет воспроизводимость выбранных жестов.",
+    "description": "Design Canon задаёт визуальный язык, implementation gate и нормализованную логику поверхностей. Для KnockUI утверждены двухпанельная модель, functional control strip, служебный Logo/About, Draw-slots, Destination-line и AUTO/MANUAL/Send flow; точная dp-геометрия остаётся текущим блоком.",
     "purpose": "Не допустить расхождения интерфейсов и закрепить узнаваемую механику продукта.",
     "kind": "core",
     "models": [
@@ -204,10 +204,10 @@
     "parameters": {
       "current_working_version": "v0.1",
       "core_surfaces": "KnockUI; 4Tap; Команды; Команда; Command Space / Pair Selection; Gesture Check / ПРОВЕРКА ЖЕСТА; Destination / ВЕДЕТ В; Assign / НАЗНАЧИТЬ; Алфавит; Настройки",
-      "immediate_next": "KnockUI surface refinement: approve geometry and behavior under the existing two-panel model; recognizer v2.1 / Gesture Check remain the stable baseline",
+      "immediate_next": "KnockUI exact geometry: window size/position, control-strip and destination-line heights, element spacing, visual states and AUTO delay; recognizer v2.1 / Gesture Check remain stable baseline",
       "next_revision": "v0.2 after first canon-driven implementation/usability pass",
       "public_beta": "v1.0 before public beta",
-      "knockui_panel_model": "approved: quick_shortcuts / drawing_canvas; remember last active panel",
+      "knockui_panel_model": "approved: quick_shortcuts / drawing_canvas; remember last active panel; Logo/About is service view, not third panel",
       "brand_teal": "#159B92",
       "common_list_row": "64 dp; 8 dp vertical padding; 1 dp separator",
       "common_header": "72 dp; Roboto Slab 28 sp / 800",
@@ -231,7 +231,9 @@
       "assign_semantics": "НАЗНАЧИТЬ selects Destination before XY",
       "pair_selection": "approved and implemented candidate: persistent 64 dp [X]+[Y] row; 6×6 X → 6×6 Y; optional ДЛЯ: Destination; standalone Back | ЗНАКОПАРА | Search; free XY → Gesture Check",
       "gesture_check": "approved and implemented: X starts AUTO; X PASS → Y; manual slot tap → MANUAL; ACTION_DOWN clears only active-sign feedback; included in stable real-device baseline",
-      "recognizer_next": "v2.1 stable real-device baseline; reopen only for a new reproducible issue or planned calibration/personalization"
+      "recognizer_next": "v2.1 stable real-device baseline; reopen only for a new reproducible issue or planned calibration/personalization",
+      "knockui_control_strip": "approved order: 4Tap Logo | Ярлыки | Рисование | [Slot 1 | Slot 2 | Send in Draw] | flexible space | Close",
+      "knockui_draw_flow": "AUTO without slot selection → sequential Slot 1/2 → Destination preview → delayed auto-Send; tap Slot → MANUAL, cancel pending auto-Send, no auto-advance, explicit Send"
     },
     "constraints": [
       "Канон должен сохранять скорость и минимальное вмешательство в текущий контекст пользователя.",
@@ -248,7 +250,8 @@
       "UI-код не придумывает недостающий дизайн: при отсутствии правила или asset реализация останавливается до утверждения.",
       "Системная Android/iOS/Material пиктограмма не подменяет каноническую UI-графику без отдельного решения.",
       "Если общее UI-правило изменено, зависимые локальные каноны проверяются на противоречия до реализации.",
-      "Recognizer refinement must preserve canonical stroke direction and use current Profile v1 SVGs as the geometry source."
+      "Recognizer refinement must preserve canonical stroke direction and use current Profile v1 SVGs as the geometry source.",
+      "KnockUI control strip is an explicit exception to the common 72 dp + Back + title application-header pattern; its exact dp geometry is local and still pending."
     ],
     "open_questions": [
       "Финальная типографика и motion language",
@@ -267,8 +270,8 @@
     "order": 32.5,
     "title": "Canonical UI Graphics",
     "group": "UX SYSTEM",
-    "short": "Реестр утверждённой UI-графики 4Tap: Back, Menu, Search, Frame и правила платформенных производных.",
-    "description": "Канонические Back/Menu/Search/Frame имеют утверждённые assets. Для Android добавлены точные производные Search и Frame; Back/Menu уже существовали. Header-actions используют 48×48 dp touch-area и 40×40 dp видимую графику. Текущий Android UI подключён к этому реестру и входит в текущую физическую сборку; отдельный focused visual-conformance review при необходимости остаётся самостоятельной проверкой, а не общим verification blocker.",
+    "short": "Реестр утверждённой UI-графики 4Tap: общие Back/Menu/Search/Frame и канонические KnockUI Logo/Shortcuts/Draw/Send/Close.",
+    "description": "К общим Back/Menu/Search/Frame добавлены канонические KnockUI assets: 4Tap Logo, Quick Shortcuts, Drawing Canvas, Send и Close. KnockUI command slots используют общий Frame. Белый Logo на светлом фоне инвертируется в фирменный #159B92. Exact dp-size элементов control strip пока определяется локальной геометрией KnockUI и не наследуется автоматически из 48×48/40×40 header-action стандарта.",
     "purpose": "Не допустить визуального расхождения между поверхностями и платформами и отделить утверждение графики от её реализации.",
     "kind": "core",
     "models": [
@@ -290,6 +293,11 @@
       "Menu",
       "Search",
       "Frame",
+      "4Tap Logo",
+      "Quick Shortcuts",
+      "Drawing Canvas",
+      "Send",
+      "Close",
       "Platform-faithful derivatives"
     ],
     "parameters": {
@@ -304,7 +312,10 @@
       "platform_derivative": "must preserve contour, proportions, frame, placement and visible size",
       "android_search": "ic_search_4tap.xml — implemented derivative",
       "android_frame": "ic_frame_4tap.xml — implemented derivative",
-      "android_status": "connected in Commands/Destination/Command; present in current physical-device build; focused visual conformance may be reviewed separately"
+      "android_status": "connected in Commands/Destination/Command; present in current physical-device build; focused visual conformance may be reviewed separately",
+      "knockui_assets": "logo-4tap.svg; quick_shortcuts.svg; drawing_canvas.svg; send.svg; close.svg",
+      "knockui_logo_light_background": "invert white artwork/frame to #159B92",
+      "knockui_control_strip_size": "TBD by KnockUI local geometry; common 48×48 touch / 40×40 visible is not automatic"
     },
     "constraints": [
       "No automatic substitution with Android/iOS/Material system icons.",
@@ -1006,7 +1017,7 @@
     ],
     "parameters": {
       "prototype_size": "320×390 dp",
-      "final_geometry": "TBD by Design Canon",
+      "final_geometry": "partially canonized: control strip / Draw behavior approved; exact dp size and positioning TBD",
       "scope": "localized touchable overlay",
       "overlay_type": "TYPE_ACCESSIBILITY_OVERLAY",
       "permission": "user-enabled AccessibilityService",
@@ -1016,7 +1027,7 @@
     "constraints": [
       "Canvas появляется только после явной активации 4Tap.",
       "Касания внутри canvas во время ввода принадлежат 4Tap.",
-      "Окончательные геометрия и feedback не считаются утверждёнными до Design Canon."
+      "Control strip and Draw behavior are approved; exact dp geometry, positioning and visual states still require the next Design Canon decision."
     ],
     "open_questions": [],
     "tags": [
@@ -1040,7 +1051,7 @@
           "url": "https://developer.android.com/reference/android/view/WindowManager.LayoutParams"
         }
       ],
-      "next_step": "Redesign geometry, states and feedback under the active 4Tap Design Canon task.",
+      "next_step": "Finalize exact KnockUI geometry and visual states under Design Canon, then implement and real-device test without changing recognizer v2.1 baseline.",
       "implication": "The post-activation input surface is technically verified; its remaining work is product/UX design and cross-version validation."
     }
   },
@@ -1078,13 +1089,14 @@
       "pass_through_required": false,
       "lifecycle": "temporary; shown only during KnockUI command input",
       "prototype_result": "navigation-bar 4 taps → Accessibility KnockUI → S → C → SC → Settings — PASS",
-      "prototype_scope": "real-device overlay over another foreground app"
+      "prototype_scope": "real-device overlay over another foreground app",
+      "canon_target": "approved control strip + Logo/About + Slot1/Slot2/Send + Destination-line + AUTO/MANUAL behavior; exact dp geometry TBD"
     },
     "constraints": [
       "AccessibilityService включается пользователем.",
       "Touchable overlay забирает касания внутри своей области на время ввода.",
       "Pass-through для gesture canvas не требуется.",
-      "Размер, положение, состояния и визуальная обратная связь определяются Design Canon."
+      "Control strip and Draw flow are now defined by Design Canon; exact size, position, visual states and motion remain the active geometry task."
     ],
     "open_questions": [
       "Какую степень видимости должна иметь поверхность KnockUI в состояниях ожидания/ввода/распознавания?",
@@ -1112,7 +1124,7 @@
           "url": "https://developer.android.com/reference/android/view/WindowManager.LayoutParams"
         }
       ],
-      "next_step": "Apply the active Design Canon to geometry, visual states and feedback, then retest.",
+      "next_step": "Finalize window/control-strip/destination-line/work-area geometry, implement canon without recognizer changes, then rerun real-device full-chain test.",
       "implication": "Post-activation drawing is no longer an Android feasibility risk; current work is UX canon and compatibility."
     }
   },
@@ -3438,7 +3450,7 @@
     "title": "Stage 2 — Product Canon",
     "group": "ROADMAP",
     "short": "Current Android recognizer/Gesture Check build is stable on-device; preserve as baseline.",
-    "description": "Both command creation paths and current recognizer v2.1/Gesture Check refinements now form the accepted physical-device Android baseline. Further recognizer changes are driven by new reproducible observations or a later calibration/personalization stage.",
+    "description": "Recognizer v2.1/Gesture Check remain the accepted physical-device Android baseline. KnockUI control strip and Draw AUTO/MANUAL/Send behavior are now canonized; current work is exact surface geometry before implementation.",
     "purpose": "Стабилизировать визуальный язык и жестовые эталоны до масштабирования продукта.",
     "kind": "core",
     "models": [
@@ -3461,12 +3473,12 @@
     ],
     "parameters": {
       "stage_status": "active",
-      "current_task": "refine the KnockUI surface under Design Canon while preserving the stable Android recognizer/Gesture Check baseline",
+      "current_task": "finalize exact KnockUI geometry after approved control strip / Logo/About / Destination-line / AUTO-MANUAL-Send behavior",
       "graffiti": "4Tap Graffiti Profile v1 approved; Letter-F revised 2026-10-01",
-      "immediate_next": "no recognizer change required unless new reproducible issue appears",
+      "immediate_next": "approve KnockUI window/row/icon/touch sizes, spacing, screen position, visual states and AUTO-delay; then project docs → code → build → real-device test",
       "subsequent": "later: explicit edit-XY review, broader productization/onboarding, planned recognizer calibration/personalization",
       "public_beta_gate": "Design Canon v1.0 before public beta",
-      "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; normalized dual create-flow with shared Pair Selection + Gesture Check; brand teal #159B92; Pair Selection contextual geometry; Gesture Check stable physical-device baseline; recognizer v2.1 stable physical-device baseline",
+      "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; normalized dual create-flow with shared Pair Selection + Gesture Check; brand teal #159B92; Pair Selection contextual geometry; Gesture Check stable physical-device baseline; recognizer v2.1 stable physical-device baseline; KnockUI control strip; Logo/About service view; Draw Slot1/Slot2 + Destination-line + AUTO/MANUAL/Send flow",
       "content_detailing": "separate follow-up per screen",
       "data_collection": "deferred: no real-trace accumulation/analysis in the next block",
       "personalization": "deferred: common templates + several user-specific samples"
@@ -3918,8 +3930,8 @@
     "order": 34,
     "title": "KnockUI Panels",
     "group": "UX SYSTEM",
-    "short": "KnockUI имеет две взаимоисключающие рабочие панели: «Ярлыки» и «Рисование».",
-    "description": "В одном компактном окне KnockUI используются две панели, занимающие одну рабочую область и вызываемые переключателем. «Ярлыки» (`quick_shortcuts`) содержит обычные ярлыки-пиктограммы программ для прямого запуска. «Рисование» (`drawing_canvas`) содержит поле пальцевого ввода двухзнаковых команд 4Tap. Панели не показываются одновременно. KnockUI запоминает последнюю активную панель и восстанавливает её при следующем вызове.",
+    "short": "KnockUI: две рабочие панели плюс канонический control strip и Draw AUTO/MANUAL flow.",
+    "description": "KnockUI сохраняет две взаимоисключающие рабочие панели «Ярлыки» (`quick_shortcuts`) и «Рисование» (`drawing_canvas`) в одной рабочей области. Control strip имеет порядок `4Tap Logo | Ярлыки | Рисование | [Slot 1 | Slot 2 | Send — только Draw] | flexible space | Close`. Logo открывает информационное About-представление в рабочей области и не является третьей панелью. В Draw отдельная строка под control strip показывает Destination. Без выбора Slot действует AUTO: распознанные знаки последовательно заполняют Slot 1/2 и исполнимая пара запускается после короткой задержки. Тап по Slot отменяет pending auto-Send и переводит Draw в MANUAL: выбранный Slot не переключается автоматически, исполнение только по Send.",
     "purpose": "Дать пользователю два быстрых способа действия — визуальный запуск по ярлыку и моторный запуск по двухзнаковой команде — без увеличения размера KnockUI одновременным показом обеих поверхностей.",
     "kind": "core",
     "models": [
@@ -3934,11 +3946,16 @@
     "status": "approved",
     "inputs": [
       "KnockUI activation",
-      "Last active panel state"
+      "Last active panel state",
+      "Touch/drawing input"
     ],
     "outputs": [
       "quick_shortcuts panel",
-      "drawing_canvas panel"
+      "drawing_canvas panel",
+      "About service view",
+      "Two command slots",
+      "Destination preview",
+      "Manual or automatic command execution"
     ],
     "parameters": {
       "panels": "quick_shortcuts; drawing_canvas",
@@ -3947,11 +3964,23 @@
       "switcher": true,
       "remember_last_panel": true,
       "first_launch_panel": "TBD",
-      "icon_sources": "4tap-app/design/knockui/icons/"
+      "icon_sources": "4tap-app/design/knockui/icons/",
+      "control_strip": "4Tap Logo | Ярлыки | Рисование | [Slot 1 | Slot 2 | Send in Draw] | flexible space | Close",
+      "logo_role": "service About button; not third panel; temporary content = localized long text + images + vertical scroll until animation exists",
+      "draw_slots": "two Frame-based slots; visible only in drawing mode",
+      "destination_line": "separate row below control strip in Draw; APP name / SYSTEM label / short WEB display",
+      "send": "always visible in Draw; disabled until complete executable pair; enabled thereafter",
+      "auto": "default without explicit slot selection; sequential Slot 1→Slot 2; destination preview; delayed auto-Send",
+      "manual": "tap any empty/filled slot; cancel pending auto-Send; selected slot remains drawing target; no auto-advance; explicit Send only",
+      "exact_geometry": "TBD: window/row sizes, icon/touch sizes, spacing, positioning, selected/disabled visuals, delay duration, motion"
     },
     "constraints": [
-      "Обе панели занимают одну рабочую область KnockUI и не показываются рядом одновременно.",
-      "При следующем вызове восстанавливается последняя активная панель.",
+      "Обе рабочие панели занимают одну рабочую область KnockUI и не показываются рядом одновременно.",
+      "При следующем вызове восстанавливается последняя рабочая панель; About по Logo не становится третьей запоминаемой панелью.",
+      "Control strip KnockUI не является обычным application header и не требует отдельного Back/title.",
+      "Send всегда присутствует в Draw, но не исполняется без полной исполнимой пары.",
+      "Tap по Slot переводит Draw в MANUAL и отменяет pending auto-Send.",
+      "Recognizer v2.1 / Gesture Check baseline этим UI-каноном не меняется.",
       "Количество и раскладка быстрых ярлыков пока не утверждены.",
       "Переключение свайпом пока не утверждено.",
       "Начальная панель первого запуска пока не утверждена."
