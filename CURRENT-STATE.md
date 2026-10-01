@@ -482,6 +482,21 @@ Existing Command editing remains independent:
 
 Current Android routing still reflects the older model in one place: ADD COMMAND opens ВЕДЕТ В with empty slots. The next implementation block must replace that with НАЗНАЧИТЬ and add the free-XY → ВЕДЕТ В path.
 
+## Dual-flow Android routing — implemented
+
+Android now follows the approved split creation logic:
+
+- `ADD COMMAND → AssignActivity / НАЗНАЧИТЬ`;
+- `НАЗНАЧИТЬ` has no XY slots and uses `Back | НАЗНАЧИТЬ | Search`;
+- selected Destination is preserved as pending destination-first draft context until Command Input is implemented;
+- free full `XY` in `КОМБИНАЦИИ` enables `ВЕДЕТ В`;
+- pair-first `ВЕДЕТ В` receives the selected XY explicitly;
+- `DestinationActivity` rejects entry without a complete two-sign XY;
+- pair-first Destination selection opens `Command` with a complete `XY + Destination` draft;
+- free pairs no longer show a standalone FREE dialog; occupied pairs keep the existing assignment/open-command behavior.
+
+Build and real-device review are still required; no new PASS is recorded yet.
+
 ## iOS implementation options
 
 iOS больше не описывается как keyboard-only архитектура. Зафиксированы варианты реализации, окончательный выбор отложен.
