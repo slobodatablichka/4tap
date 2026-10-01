@@ -220,7 +220,8 @@
       "command_space_view": "approved as dedicated availability representation in Commands; detailed UI next",
       "command_creation": "ADD COMMAND → Destination → suggested free XY → Command Input → Command",
       "graffiti_display_priority": "default: canonical 4Tap Graffiti for alphabet signs being shown/selected/formed; plain text only for explicitly defined roles such as existing XY identifier or keyboard search",
-      "graffiti_guides": "default: start point + drawing-direction arrow; explicit exception for already completed/assigned command presentation"
+      "graffiti_guides": "default: start point + drawing-direction arrow; explicit exception for already completed/assigned command presentation",
+      "back_navigation": "default: Back is first left item in 72 dp top header; touch 48×48 dp; grammar Back → optional context → title → right actions"
     },
     "constraints": [
       "Канон должен сохранять скорость и минимальное вмешательство в текущий контекст пользователя.",
@@ -232,7 +233,8 @@
       "Утверждённые правила строк, размеров шрифтов, Graffiti и состояний применяются к структурно аналогичным ситуациям, если отдельная поверхность не задаёт исключение.",
       "Если поверхность показывает, выбирает, вводит, собирает или формирует знаки командного алфавита, по умолчанию используется графическое представление 4Tap Graffiti.",
       "Если отдельно не предусмотрено иное, Graffiti-знак показывает начальную точку и стрелку направления.",
-      "Уже сформированная/назначенная команда в Commands — явное исключение: её Graffiti и текстовый XY показываются без стартовой точки/стрелки."
+      "Уже сформированная/назначенная команда в Commands — явное исключение: её Graffiti и текстовый XY показываются без стартовой точки/стрелки.",
+      "Если иное отдельно не утверждено, Back располагается слева в верхнем header; иное размещение требует явного исключения."
     ],
     "open_questions": [
       "Финальная типографика и motion language",
@@ -3874,7 +3876,7 @@
     "title": "Commands Screen",
     "group": "UX SYSTEM",
     "short": "Утверждённый экран управления назначенными командами плюс отдельное представление Command Space для занятости 1296 пар.",
-    "description": "Commands / Команды использует два режима: НАЗНАЧЕНИЯ и КОМБИНАЦИИ. В НАЗНАЧЕНИЯ строка остаётся Graffiti → текстовый XY → назначение; назначение выравнивается вправо, а уже назначенная Graffiti-пара показывается без start/direction markers. КОМБИНАЦИИ использует графический алфавит с начальной точкой и стрелкой и общий X-эталон высоты. Refinement реализован в Android и ожидает повторный real-device review.",
+    "description": "Commands / Команды использует канонический header Back | КОМАНДЫ | Search | Menu и два режима: НАЗНАЧЕНИЯ и КОМБИНАЦИИ. НАЗНАЧЕНИЯ сохраняет строку Graffiti → XY → назначение; КОМБИНАЦИИ показывает двухуровневый Command Space. Последний header refinement реализован и ожидает повторный real-device review.",
     "purpose": "Сделать список команд одновременно управляющим интерфейсом и постоянной визуальной связью между жестом Graffiti, кодом XY и назначением.",
     "kind": "core",
     "models": [
@@ -3934,7 +3936,9 @@
       "assigned_command_markers": "explicit exception: no start point / direction arrow for completed assignment Graffiti; text XY remains plain identifier",
       "command_space_glyph_guides": "start point + direction arrow",
       "command_space_height_rule": "X establishes common target rendered height for all alphabet glyphs",
-      "command_space_second_header": "Back | [Graffiti X] + [second slot] | ADD COMMAND; 72 dp"
+      "command_space_second_header": "Back | [Graffiti X] + [second slot] | ADD COMMAND; 72 dp",
+      "header_structure": "Back | COMMANDS / КОМАНДЫ | Search | Menu",
+      "back_button": "canonical left header control; 48×48 dp touch area"
     },
     "constraints": [
       "Graffiti-column uses real canonical trajectories from 4Tap Graffiti Profile v1, not font imitation.",
@@ -4101,7 +4105,7 @@
     "title": "Destination / ВЕДЕТ В",
     "group": "UX SYSTEM",
     "short": "Destination v0.1 принят на физическом устройстве: Приложения / Система / WEB — PASS.",
-    "description": "Destination / ВЕДЕТ В — утверждённая единая поверхность ПРИЛОЖЕНИЯ / СИСТЕМА / WEB; v0.1 прошёл real-device review. При редактировании существующей команды выбор возвращается в Command. При создании новой команды через ADD COMMAND Destination выбирается первым и затем используется для предложения свободных XY перед Command Input.",
+    "description": "Destination / ВЕДЕТ В — единая поверхность ПРИЛОЖЕНИЯ / СИСТЕМА / WEB. Header уточнён по общему канону: Back | [slot 1][slot 2] | ВЕДЕТ В. Для существующей команды слоты показывают текущий Graffiti XY без start/direction markers; при новом ADD COMMAND оба слота пусты до выбора XY. Базовый Destination v0.1 ранее прошёл real-device review; header refinement ожидает повторную проверку.",
     "purpose": "Отделить саму двухзнаковую команду от типа её назначения и позволить одной модели поддерживать приложения, системные действия и интернет-страницы.",
     "kind": "core",
     "models": [
@@ -4160,7 +4164,12 @@
       "real_device_review": "PASS: app selection; SYSTEM → Settings; WEB URL → domain in Command; category switching; Back unchanged; app search; 4-tap → KnockUI remains working",
       "existing_command_flow": "selection → return to Command",
       "new_command_flow": "selection → suggest free XY → Command Input → Command",
-      "new_command_flow_status": "approved architecture; not yet implemented"
+      "new_command_flow_status": "approved architecture; not yet implemented",
+      "header_structure": "Back | [slot 1][slot 2] | ВЕДЕТ В",
+      "command_context_slots": "2 × 48 dp; contextual only, not input",
+      "existing_command_slots": "show current Graffiti XY without start point/direction arrow",
+      "new_command_slots": "empty when Destination is first step before XY",
+      "header_refinement_status": "implemented; repeat real-device review pending"
     },
     "constraints": [
       "Categories describe destination type, not command type.",

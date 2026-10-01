@@ -407,6 +407,24 @@ Raw coordinate space совпадает с physical display `1440 × 2880` од�
 
 Новый refinement ожидает повторный build и real-device review.
 
+## Canonical Back header refinement
+
+Утверждено общее правило header:
+
+- если иное отдельно не предусмотрено, `Back` располагается слева в верхней заголовочной строке;
+- header — `72 dp`;
+- touch-area Back — `48 × 48 dp`;
+- базовая грамматика: `Back → контекст (если нужен) → название поверхности → действия справа`.
+
+Применено в Android-коде:
+
+- `Commands`: `Back | КОМАНДЫ | Search | Menu`;
+- `Destination`: `Back | [slot 1][slot 2] | ВЕДЕТ В`;
+- существующая команда показывает в этих слотах текущий Graffiti XY без start/direction markers;
+- новая команда через `ADD COMMAND → Destination` показывает два пустых слота.
+
+Refinement реализован и ожидает повторный real-device review.
+
 ## iOS implementation options
 
 iOS больше не описывается как keyboard-only архитектура. Зафиксированы варианты реализации, окончательный выбор отложен.
