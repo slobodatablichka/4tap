@@ -503,7 +503,8 @@
       "activation_surface": "AccessibilityService + TYPE_ACCESSIBILITY_OVERLAY — verified on LGM-V300L / Android 9",
       "tap_thresholds": "3 or 4 sequential taps; current prototype = 4",
       "rearm": "automatic after successful activation",
-      "post_activation_surface": "TYPE_ACCESSIBILITY_OVERLAY — verified"
+      "post_activation_surface": "TYPE_ACCESSIBILITY_OVERLAY — verified",
+      "test_launch_rule": "When verifying 4-tap → KnockUI, do not include adb shell am force-stop app.fourtap.knockui in the normal launch sequence; verify AccessibilityService remains active."
     },
     "constraints": [
       "4Tap remains an ordinary user-installed app on stock Android.",
@@ -527,7 +528,7 @@
       "confidence": "high",
       "summary": "Full chain verified after removing SYSTEM_ALERT_WINDOW: navigation-bar 4 taps → Accessibility KnockUI → S → C → SC → Settings.",
       "sources": [],
-      "next_step": "Current project task: form the 4Tap Design Canon. Immediately after it, productize the one-step Accessibility onboarding; newer stock Android validation follows.",
+      "next_step": "Preserve the verified activation baseline while Command Input and the remaining Design Canon are completed; onboarding follows Design Canon, then newer stock Android validation.",
       "implication": "The first Android end-to-end milestone is passed; remaining risk is product/distribution suitability rather than basic trigger feasibility."
     }
   },
@@ -3328,8 +3329,8 @@
     "section": "roadmap",
     "title": "Stage 2 — Product Canon",
     "group": "ROADMAP",
-    "short": "Текущий этап: сформировать 4Tap Design Canon; сразу после него — one-step Accessibility onboarding.",
-    "description": "Stage 2 активен после завершения Android Stage 1. 4Tap Graffiti Profile v1 принят. Утверждены двухпанельная модель KnockUI, Commands, рабочая поверхность Command после real-device review, проектная схема Command Input и базовая модель Destination. Следующая работа — детализировать Destination и затем продолжать остальные поверхности.",
+    "short": "Текущий этап: Design Canon; Destination v0.1 закрыт, следующий цельный UI-блок — Command Input / XY.",
+    "description": "Stage 2 активен после завершения Android Stage 1. Утверждены двухпанельная модель KnockUI, Commands, рабочая поверхность Command, схема Command Input и Destination v0.1. Destination реализован и проверен на физическом устройстве. Следующая работа — детализировать и реализовать Command Input / XY.",
     "purpose": "Стабилизировать визуальный язык и жестовые эталоны до масштабирования продукта.",
     "kind": "core",
     "models": [
@@ -3352,17 +3353,17 @@
     ],
     "parameters": {
       "stage_status": "active",
-      "current_task": "Build and real-device review of Destination v0.1",
+      "current_task": "Command Input / XY — detailed design, implementation, real-device review",
       "graffiti": "4Tap Graffiti Profile v1 — approved",
-      "immediate_next": "one-step Accessibility onboarding",
-      "subsequent": "canon-driven UI, recognizer validation and teaching",
+      "immediate_next": "Command Input / XY",
+      "subsequent": "continue remaining Design Canon surfaces; onboarding only after Design Canon",
       "public_beta_gate": "Design Canon v1.0 before public beta",
-      "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Command Input base scheme; Destination v0.1 + first Android implementation; brand teal #159B92",
+      "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; Command Input base scheme; brand teal #159B92",
       "content_detailing": "separate follow-up per screen"
     },
     "constraints": [
       "Не масштабировать recognizer и UI хаотично до фиксации соответствующих канонов.",
-      "Onboarding проектируется после Design Canon и использует его элементы."
+      "Onboarding проектируется после Design Canon и не является текущим UI-блоком."
     ],
     "open_questions": [],
     "tags": [
@@ -4012,8 +4013,8 @@
     "order": 37,
     "title": "Destination / ВЕДЕТ В",
     "group": "UX SYSTEM",
-    "short": "Утверждённая поверхность выбора назначения: Приложения / Система / WEB.",
-    "description": "Destination / ВЕДЕТ В — утверждённая единая поверхность выбора назначения. Header 72 dp; под ним тёмная полоса 48 dp с тремя равными сегментами ПРИЛОЖЕНИЯ / СИСТЕМА / WEB и teal active segment. Первая Android-реализация добавлена и ожидает build/real-device review.",
+    "short": "Destination v0.1 принят на физическом устройстве: Приложения / Система / WEB — PASS.",
+    "description": "Destination / ВЕДЕТ В — утверждённая единая поверхность выбора назначения. Header 72 dp; под ним тёмная полоса 48 dp с тремя равными сегментами ПРИЛОЖЕНИЯ / СИСТЕМА / WEB и teal active segment. Первая Android-реализация собрана и прошла real-device review.",
     "purpose": "Отделить саму двухзнаковую команду от типа её назначения и позволить одной модели поддерживать приложения, системные действия и интернет-страницы.",
     "kind": "core",
     "models": [
@@ -4067,7 +4068,8 @@
       "app_rows": "64 dp; icon ~40×40 dp; 18 sp / 800; alphabetical; compact reveal search",
       "system_rows": "64 dp; verified destinations only; v0.1 = Settings",
       "web_block": "~184 dp; 16 top + 20 label + 8 + 56 input + 12 + 56 use + 16 bottom",
-      "android_code": "first implementation added; awaits build/real-device review"
+      "android_code": "implemented; assembleDebug PASS; real-device PASS",
+      "real_device_review": "PASS: app selection; SYSTEM → Settings; WEB URL → domain in Command; category switching; Back unchanged; app search; 4-tap → KnockUI remains working"
     },
     "constraints": [
       "Categories describe destination type, not command type.",
@@ -4098,7 +4100,8 @@
       "canon",
       "v0.1",
       "share",
-      "url"
+      "url",
+      "real-device-pass"
     ]
   },
   {
@@ -4145,7 +4148,8 @@
       "project_ideas_not_canon": [
         "recommend correct trajectory/direction/start point",
         "offer tracing of canonical template after recognition"
-      ]
+      ],
+      "next_status": "next active UI block after Destination v0.1 real-device PASS"
     },
     "constraints": [
       "Recommendations and canonical-template tracing are project ideas only, not approved behavior.",
