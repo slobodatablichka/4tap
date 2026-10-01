@@ -360,52 +360,22 @@ Raw coordinate space совпадает с physical display `1440 × 2880` од�
 - RuStore остаётся primary Russia channel, Google Play и другие магазины — дополнительными;
 - monetization и promotion сохранены отдельными продуктными узлами.
 
-## Command Input / Command creation — утверждено 2026-10-01
+## Pair Selection / Command Space — current
 
-После Destination v0.1 принят следующий связанный блок продуктовой модели:
+Текущая каноническая модель выбора XY:
 
 - Command Space содержит 1296 пар `A–Z + 0–9`; одинаковые пары разрешены;
-- в контуре `Commands` должно быть отдельное представление Command Space для занятых/свободных комбинаций; точная структура — следующий Design Canon-блок;
-- новая команда создаётся в порядке `ADD COMMAND → Destination → рекомендации свободных XY → Command Input → Command`;
-- существующая команда сохраняет независимое редактирование `XY` и `ВЕДЕТ В`;
-- Command Input показывает 36 Graffiti-эталонов `6 × 6` с траекторией, кружком начала и стрелкой направления;
-- занятость показывается заранее: до первого знака — доступность семейства `X?`, после первого — конкретных пар;
-- оба слота XY можно повторно выбрать;
-- нераспознанный штрих получает видимый аварийный feedback и объяснение перед очисткой;
-- предложения похожих символов, tracing и учебное рисование поверх эталона предусмотрены на будущее, но в текущий блок не входят.
+- `Pair Selection / Выбор знакопары` — единственный механизм назначения XY;
+- первый уровень: 36 Graffiti-знаков `6 × 6`;
+- второй уровень: 36 вторых Graffiti-знаков `6 × 6`;
+- задача второго уровня — только завершить выбор свободной `XY`;
+- целевая строка второго уровня: `[Graffiti X] + [второй слот]`, без действия `ВЕДЕТ В`;
+- после любой успешно выбранной свободной XY Pair Selection **всегда** открывает `Проверка жеста`;
+- занятая пара в `КОМБИНАЦИИ` может открыть существующую `Command`;
+- текстовый поиск `A–Z + 0–9` остаётся отдельной навигацией по Command Space;
+- рисование не используется для назначения XY.
 
-Первый Android-pass Command Space просмотрен на устройстве; утверждённый refinement реализован. Следующий шаг — повторный build + real-device review, затем геометрия Command Input и рекомендации свободных XY.
-
-## Commands / Command Space — first Android implementation
-
-Структура Command Space утверждена и первая Android-реализация добавлена в `4tap-app`:
-
-- `Commands` имеет два режима: `НАЗНАЧЕНИЯ / КОМБИНАЦИИ`;
-- первый уровень `КОМБИНАЦИИ` — только меню из 36 реальных Graffiti-знаков `6 × 6`, без счётчиков;
-- полностью занятое семейство `X?` приглушается, но остаётся доступным для просмотра;
-- второй уровень показывает 36 конкретных пар выбранного первого знака;
-- занятая пара показывает назначение и может открыть существующий `Command`;
-- свободная пара только показывает состояние и не создаёт альтернативный flow `XY → Destination`;
-- поиск использует стандартную Android-клавиатуру: `A–Z + 0–9`, максимум два знака;
-- первый знак поиска открывает семейство, два знака — конкретную пару;
-- `ADD COMMAND` в первой реализации видим, но неактивен до реализации Command Input;
-- реализация ожидает build и real-device review.
-
-## Commands / Command Space refinement — approved and implemented
-
-После первого real-device просмотра утверждён и реализован следующий refinement:
-
-- общее правило продукта: при показе/выборе/сборке знаков командного алфавита преимущество имеет 4Tap Graffiti;
-- если иное отдельно не предусмотрено, знак показывается с начальной точкой и стрелкой направления;
-- явное исключение: уже назначенная строка `Graffiti → XY → Destination` показывает состоявшуюся Graffiti-пару и текстовый XY без стартовой точки/стрелки;
-- Destination в строке выравнивается по правому краю;
-- первый уровень `КОМБИНАЦИИ`: 36 Graffiti-знаков с guides и общей визуальной высотой по X-эталону;
-- второй уровень: `Back | [Graffiti X] + [второй слот] | ДОБАВИТЬ КОМАНДУ`, затем 36 отдельных вторых Graffiti-знаков;
-- нижняя ADD-кнопка убрана из режима `КОМБИНАЦИИ`; в `НАЗНАЧЕНИЯ` она сохраняется;
-- `ADD COMMAND` теперь открывает Destination; автоматическое XY до реализации Command Input не назначается;
-- клавиатурный поиск остаётся специально определённым текстовым исключением.
-
-Новый refinement ожидает повторный build и real-device review.
+Текущий Android Command Space уже содержит двухэтапный 6×6 выбор, но ещё требует приведения второго уровня к этому целевому flow и повторного real-device review.
 
 ## Canonical Back header refinement
 
@@ -459,63 +429,37 @@ Refinement реализован и ожидает повторный real-device
 
 Новый conformance-pass ещё не получил real-device PASS: требуется `assembleDebug` и повторная проверка на устройстве.
 
-## Dual command-creation logic — approved
+## Command creation / Gesture Check routing — current
 
-Command creation formally split into two distinct paths.
+Обе ветки используют общий блок:
 
-### Pair-first
+`Pair Selection → Проверка жеста`.
 
-`КОМБИНАЦИИ → свободная XY → ВЕДЕТ В → Destination → КОМАНДА`.
+`Проверка жеста` можно выполнить или пропустить; она не меняет XY.
 
-`ВЕДЕТ В` now requires a known XY. Both Graffiti slots are always filled; the former empty-XY state is invalid.
+Маршрутизационный инвариант после проверки:
 
-### Destination-first
+1. известна `XY`, Destination отсутствует → `ВЕДЕТ В`;
+2. Destination был выбран **до XY** через `НАЗНАЧИТЬ` → после выбора XY известны обе части → `КОМАНДА`;
+3. при редактировании существующей команды Destination уже известен → новая XY возвращается в `КОМАНДА`.
 
-`ДОБАВИТЬ КОМАНДУ → НАЗНАЧИТЬ → Destination → Command Input → XY → КОМАНДА`.
+Общее правило:
 
-`НАЗНАЧИТЬ` is a new separate surface, not a mode of `ВЕДЕТ В`. It selects the object that will receive a command, then passes the selected Destination to Command Input.
+`XY + no Destination → ВЕДЕТ В`  
+`XY + Destination → КОМАНДА`.
 
-Existing Command editing remains independent:
+Отсюда два create-flow:
 
-- `КОМАНДА → ВЕДЕТ В` changes Destination;
-- `КОМАНДА → Command Input` changes XY.
+- destination-first: `ADD COMMAND → НАЗНАЧИТЬ → Destination → Pair Selection → Проверка жеста → Command`;
+- pair-first: `Commands / КОМБИНАЦИИ → Pair Selection → Проверка жеста → ВЕДЕТ В → Destination → Command`.
 
-Current Android routing still reflects the older model in one place: ADD COMMAND opens ВЕДЕТ В with empty slots. The next implementation block must replace that with НАЗНАЧИТЬ and add the free-XY → ВЕДЕТ В path.
+Редактирование XY:
 
-## Dual-flow Android routing — implemented
+`Command → Pair Selection → Проверка жеста → Command`.
 
-Android now follows the approved split creation logic:
+`ВЕДЕТ В` всегда требует известную XY. `НАЗНАЧИТЬ` используется только тогда, когда Destination выбирается до XY.
 
-- `ADD COMMAND → AssignActivity / НАЗНАЧИТЬ`;
-- `НАЗНАЧИТЬ` has no XY slots and uses `Back | НАЗНАЧИТЬ | Search`;
-- selected Destination is preserved as pending destination-first draft context until Command Input is implemented;
-- free full `XY` in `КОМБИНАЦИИ` enables `ВЕДЕТ В`;
-- pair-first `ВЕДЕТ В` receives the selected XY explicitly;
-- `DestinationActivity` rejects entry without a complete two-sign XY;
-- pair-first Destination selection opens `Command` with a complete `XY + Destination` draft;
-- free pairs no longer show a standalone FREE dialog; occupied pairs keep the existing assignment/open-command behavior.
-
-Build and real-device review are still required; no new PASS is recorded yet.
-
-## Pair Selection / Gesture Check normalization
-
-The previous canonical Command Input model has been superseded and removed from the public architecture map.
-
-Current approved logic:
-
-- `Pair Selection / Выбор знакопары` is the single XY assignment mechanism;
-- it uses two stages: 6×6 first-sign selection, then 6×6 second-sign selection;
-- drawing is not used to assign XY;
-- after a free XY is selected, `Gesture Check / Проверка жеста` optionally verifies that the recognizer identifies the user's X and Y gestures;
-- Gesture Check may be skipped and never changes XY.
-
-Flows:
-
-- destination-first: `ADD COMMAND → НАЗНАЧИТЬ → Destination → Pair Selection → Gesture Check → Command`;
-- pair-first: `Commands / КОМБИНАЦИИ → Pair Selection → Gesture Check → ВЕДЕТ В → Destination → Command`;
-- edit XY: `Command → Pair Selection → Gesture Check → Command`.
-
-Current Android code predates this normalization in two places: destination-first stops at a pending Destination draft, and pair-first currently goes from free XY directly to ВЕДЕТ В. These are implementation gaps, not alternate canonical flows.
+Текущий Android-код ещё не полностью соответствует нормализованной логике: destination-first после выбора Destination пока останавливается на pending draft, а pair-first после свободной XY пока идёт напрямую в `ВЕДЕТ В`. Это implementation gaps, а не альтернативные flow.
 
 ## iOS implementation options
 

@@ -229,8 +229,8 @@
       "canonical_frame": "40×40 dp visible asset for empty square slots/containers where specified",
       "destination_semantics": "ВЕДЕТ В requires known XY",
       "assign_semantics": "НАЗНАЧИТЬ selects Destination before XY",
-      "pair_selection": "shared two-stage 6×6 X→Y selector; not a drawing surface",
-      "gesture_check": "optional recognition check after XY selection; PASSED or SKIPPED; never changes XY"
+      "pair_selection": "shared two-stage 6×6 X→Y selector; successful free XY always → Gesture Check",
+      "gesture_check": "optional recognition check after XY selection; may be skipped; routes by data state: no Destination → ВЕДЕТ В, Destination known → Command"
     },
     "constraints": [
       "Канон должен сохранять скорость и минимальное вмешательство в текущий контекст пользователя.",
@@ -3436,9 +3436,9 @@
     ],
     "parameters": {
       "stage_status": "active",
-      "current_task": "Pair Selection + Gesture Check geometry",
+      "current_task": "Pair Selection exact surface refinement + Gesture Check geometry",
       "graffiti": "4Tap Graffiti Profile v1 — approved",
-      "immediate_next": "approve canonical layouts and transitions",
+      "immediate_next": "finalize Pair Selection composition without direct ВЕДЕТ В, then design Gesture Check",
       "subsequent": "implement destination-first continuation and pair-first Gesture Check before ВЕДЕТ В",
       "public_beta_gate": "Design Canon v1.0 before public beta",
       "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; normalized dual create-flow with shared Pair Selection + Gesture Check; brand teal #159B92",
@@ -4008,13 +4008,13 @@
       "assigned_command_markers": "explicit exception: no start point / direction arrow for completed assignment Graffiti; text XY remains plain identifier",
       "command_space_glyph_guides": "start point + direction arrow",
       "command_space_height_rule": "X establishes common target rendered height for all alphabet glyphs",
-      "command_space_second_header": "current Android still shows ВЕДЕТ В; target Pair Selection completes on free Y and proceeds to Gesture Check",
+      "command_space_second_header": "target: [Graffiti X] + [second slot]; no ВЕДЕТ В action; free XY always proceeds to Gesture Check",
       "header_structure": "Back | COMMANDS / КОМАНДЫ | Search | Menu",
       "back_button": "canonical left header control; 48×48 dp touch area",
       "header_actions": "canonical Back / Search / Menu assets; 48×48 dp touch; 40×40 dp visible",
       "search_icon": "framed canonical Search asset; not Android system icon",
       "menu_icon": "framed canonical Menu asset; geometry comes from asset",
-      "command_space_pair_flow": "target: select free XY → Gesture Check → ВЕДЕТ В → Destination → Command"
+      "command_space_pair_flow": "select free XY → Gesture Check; then route by data state: no Destination → ВЕДЕТ В, Destination known → Command"
     },
     "constraints": [
       "Graffiti-column uses real canonical trajectories from 4Tap Graffiti Profile v1, not font imitation.",
@@ -4076,18 +4076,19 @@
       "implementation_status": "Commands host exists; target Gesture Check transition not yet implemented",
       "first_level_full_family": "muted color; remains openable for inspection",
       "search": "standard Android keyboard; A–Z + 0–9; max 2 symbols",
-      "free_pair_tap": "complete Pair Selection → Gesture Check",
+      "free_pair_tap": "complete Pair Selection → always Gesture Check",
       "occupied_pair_tap": "show assignment and allow opening existing Command",
       "height_normalization": "common target height derived from X fit; proportions preserved",
-      "second_level_header": "selected X + second-sign selection; target has no direct ВЕДЕТ В action",
+      "second_level_header": "[Graffiti X] + [second slot]; no direct ВЕДЕТ В action",
       "second_level_header_height_dp": 72,
-      "bottom_add_button": "absent in COMBINATIONS; ADD lives in second-level header; assignments keeps bottom ADD",
+      "bottom_add_button": "absent in КОМБИНАЦИИ; ADD remains only in НАЗНАЧЕНИЯ",
       "add_command": "not part of Pair Selection",
       "back_behavior": "single top-header Back; second level → first level; top level → leave Commands"
     },
     "constraints": [
       "The view must reflect current registry occupancy rather than a static teaching matrix.",
-      "An existing command being edited must not be treated as conflicting with itself."
+      "An existing command being edited must not be treated as conflicting with itself.",
+      "Pair Selection never chooses the post-check destination; its successful output always goes to Gesture Check."
     ],
     "open_questions": [
       "Exact standalone/contextual geometry outside Commands.",
@@ -4384,7 +4385,8 @@
       "edit_xy": "Command → Pair Selection → Gesture Check → Command",
       "gesture_check": "optional; PASSED or SKIPPED; does not change XY",
       "convergence": "Command opens when XY and Destination are both known",
-      "implementation_status": "project logic normalized; Android routing still needs Pair Selection/Gesture Check implementation"
+      "implementation_status": "project logic normalized; Android routing still needs Pair Selection/Gesture Check implementation",
+      "routing_invariant": "after Gesture Check: XY + no Destination → ВЕДЕТ В; XY + Destination → Command"
     },
     "constraints": [
       "Pair Selection is the only canonical command-pair assignment mechanism.",
@@ -4392,7 +4394,8 @@
       "Gesture Check follows selected free XY and may be skipped.",
       "Gesture Check never changes XY and never selects Destination.",
       "ВЕДЕТ В requires known XY.",
-      "НАЗНАЧИТЬ selects Destination before XY."
+      "НАЗНАЧИТЬ selects Destination before XY.",
+      "НАЗНАЧИТЬ is used only when Destination is chosen before XY."
     ],
     "open_questions": [
       "Exact Pair Selection geometry in each host context.",
@@ -4414,7 +4417,7 @@
     "title": "Pair Selection / Выбор знакопары",
     "group": "UX SYSTEM",
     "short": "Общий двухэтапный выбор свободной XY через две Graffiti-сетки 6×6.",
-    "description": "Pair Selection is the single canonical XY assignment mechanism. Stage 1 selects X from 36 Graffiti signs; stage 2 selects Y from 36 signs and validates exact-pair occupancy. It is reused in Commands / КОМБИНАЦИИ, after НАЗНАЧИТЬ, and when editing Command. It is not a drawing surface.",
+    "description": "Pair Selection is the single canonical XY assignment mechanism. Stage 1 selects X from 36 Graffiti signs; stage 2 selects Y from 36 signs and validates exact-pair occupancy. A successful free XY always proceeds to Gesture Check; Pair Selection itself does not decide the later route.",
     "purpose": "Исключить дублирующие способы назначения XY и переиспользовать одну модель выбора во всех flow.",
     "kind": "core",
     "models": [
@@ -4444,15 +4447,17 @@
       "graffiti_guides": "start point + direction arrow",
       "occupied_pair": "cannot be assigned to a new command",
       "existing_self_pair": "does not conflict with itself while editing",
-      "next": "free XY → Gesture Check",
+      "next": "free XY → always Gesture Check",
       "drawing": "not used for XY assignment",
       "hosts": "Commands / КОМБИНАЦИИ; destination-first after НАЗНАЧИТЬ; Command XY edit",
-      "implementation_status": "Commands host partly exists; shared contextual surface not yet implemented"
+      "implementation_status": "Commands host partly exists; shared contextual surface not yet implemented",
+      "post_check_routing": "not owned by Pair Selection"
     },
     "constraints": [
       "The same canonical selection logic is reused in every context.",
       "Occupied pairs are not recognition errors.",
-      "Pair Selection does not choose Destination or save Command."
+      "Pair Selection does not choose Destination or save Command.",
+      "Successful Pair Selection always ends at Gesture Check."
     ],
     "open_questions": [
       "Exact standalone/contextual geometry.",
@@ -4474,7 +4479,7 @@
     "title": "Gesture Check / Проверка жеста",
     "group": "UX SYSTEM",
     "short": "Необязательная проверка: recognizer должен определить жесты пользователя как уже выбранные X и Y.",
-    "description": "Gesture Check follows a selected free XY. The surface presents the canonical X/Y examples and lets the user test their own gestures. Successful checks yield PASSED; the entire check can be skipped. It does not select or modify XY and does not choose Destination.",
+    "description": "Gesture Check follows every successfully selected free XY. It optionally verifies the user's X/Y gestures and may be skipped. After check/skip, routing is determined by known data: XY without Destination → ВЕДЕТ В; XY with Destination → Command.",
     "purpose": "Проверить воспроизводимость выбранной знакопары конкретным пользователем, не превращая проверку в обязательный gate.",
     "kind": "core",
     "models": [
@@ -4502,15 +4507,17 @@
       "retry": "allowed after failed recognition",
       "skip": "always allowed",
       "changes_xy": false,
-      "destination_first_next": "Command",
-      "pair_first_next": "ВЕДЕТ В",
-      "edit_next": "Command",
-      "implementation_status": "not implemented"
+      "implementation_status": "not implemented",
+      "routing_rule": "XY + no Destination → ВЕДЕТ В; XY + Destination → Command",
+      "destination_first": "НАЗНАЧИТЬ selects Destination before XY; after Pair Selection/Gesture Check both parts are known → Command",
+      "pair_first": "XY known, Destination absent → after Gesture Check open ВЕДЕТ В",
+      "edit": "existing Command already has Destination; changed XY returns to Command after Gesture Check"
     },
     "constraints": [
       "Failure does not change or clear XY.",
       "Failure does not block continuation.",
-      "Gesture Check is not the XY assignment mechanism."
+      "Gesture Check is not the XY assignment mechanism.",
+      "Post-check routing is data-driven: absence/presence of Destination determines ВЕДЕТ В vs Command."
     ],
     "open_questions": [
       "Exact header and geometry.",
