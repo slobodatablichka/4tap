@@ -549,7 +549,7 @@ Private `4tap-app` now contains the approved next code pass:
 - DTW band is 18% of sequence length with minimum 6 samples; non-diagonal warp steps carry a 0.01 penalty;
 - no real user traces are accumulated and no personalization is active.
 
-Status: implementation exists; new `testDebugUnitTest`, `assembleDebug` and real-device recognition review are still pending.
+Status: `testDebugUnitTest` and `assembleDebug` are PASS (`BUILD SUCCESSFUL`, 2026-10-01). Real-device recognition review is still pending.
 
 ## iOS implementation options
 
