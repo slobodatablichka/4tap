@@ -512,8 +512,8 @@ Private `4tap-app` now contains the complete implementation candidate for the ap
 
 Verification status is deliberately separate from implementation status:
 
-1. `testDebugUnitTest` — not yet confirmed;
-2. `assembleDebug` — not yet confirmed for this candidate;
+1. `testDebugUnitTest` — PASS (`BUILD SUCCESSFUL`, 2026-10-01);
+2. `assembleDebug` — PASS (`BUILD SUCCESSFUL`, 2026-10-01);
 3. pair-first / destination-first / edit XY on physical device — not yet confirmed;
 4. `4 taps → KnockUI → SC → Settings` regression after recognizer replacement — not yet confirmed.
 

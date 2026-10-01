@@ -1284,7 +1284,7 @@
       "threshold_status": "technical prototype parameter; not final canon",
       "current_prototype_subset": "all 36 templates loaded by implementation candidate",
       "verification_tests": "36 self-matches; translation/scale invariance; S/5, I/1, Z/2; short-stroke rejection; nearest-candidate diagnostic",
-      "verification_status": "tests added; testDebugUnitTest/assembleDebug/real-device results pending",
+      "verification_status": "testDebugUnitTest PASS; assembleDebug PASS; real-device verification pending",
       "attention_pairs": "S/5; I/1; Z/2"
     },
     "constraints": [
@@ -1305,12 +1305,12 @@
     ],
     "order": 70,
     "verification": {
-      "state": "implemented-unverified",
+      "state": "build-verified-device-pending",
       "date": "2026-10-01",
       "confidence": "medium",
-      "summary": "36-template recognizer and verification tests are implemented in 4tap-app, but this cycle has not yet produced unit-test, build or physical-device PASS.",
+      "summary": "36-template recognizer unit tests and Android assembleDebug completed successfully. Physical finger-input quality and threshold calibration remain unverified.",
       "sources": [],
-      "next_step": "Run testDebugUnitTest, then assembleDebug, then exercise Gesture Check and the KnockUI SC regression on the physical Android device.",
+      "next_step": "Install the new debug APK and run Gesture Check on-device, then rerun the KnockUI SC regression.",
       "implication": "The prior architectural gap (S/C-only code) is closed in implementation, but recognition quality remains an empirical validation task."
     }
   },
@@ -3415,7 +3415,7 @@
     "title": "Stage 2 — Product Canon",
     "group": "ROADMAP",
     "short": "Pair Selection, Gesture Check and the 36-symbol recognizer are implemented candidates; verification is next.",
-    "description": "Stage 2 active. Canon and implementation candidates now exist for shared Pair Selection and Gesture Check, together with a recognizer driven by all 36 canonical Graffiti SVGs. No new PASS is recorded until unit tests, assembleDebug and real-device review.",
+    "description": "Stage 2 active. Pair Selection, Gesture Check and the 36-symbol recognizer implementation candidate have passed unit tests and assembleDebug. Next: physical-device review and recognition calibration.",
     "purpose": "Стабилизировать визуальный язык и жестовые эталоны до масштабирования продукта.",
     "kind": "core",
     "models": [
@@ -3438,9 +3438,9 @@
     ],
     "parameters": {
       "stage_status": "active",
-      "current_task": "verify Pair Selection + Gesture Check + 36-symbol recognizer implementation candidate",
+      "current_task": "real-device verification of Pair Selection + Gesture Check + 36-symbol recognizer",
       "graffiti": "4Tap Graffiti Profile v1 — approved",
-      "immediate_next": "testDebugUnitTest → assembleDebug",
+      "immediate_next": "install debug APK → real-device pair-first / destination-first / edit XY review",
       "subsequent": "real-device pair-first → destination-first → edit XY → KnockUI SC regression",
       "public_beta_gate": "Design Canon v1.0 before public beta",
       "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; normalized dual create-flow with shared Pair Selection + Gesture Check; brand teal #159B92; Pair Selection contextual geometry; Gesture Check base surface; 36-symbol recognizer implementation candidate (verification pending)",
@@ -4390,7 +4390,7 @@
       "edit_xy": "Command → Pair Selection → Gesture Check → Command",
       "gesture_check": "optional/non-blocking; PASS/FAIL belongs to individual attempts; does not change XY",
       "convergence": "Command opens when XY and Destination are both known",
-      "implementation_status": "combined Android routing implemented candidate for destination-first, pair-first and edit XY; unit/build/device verification pending",
+      "implementation_status": "combined Android routing passed assembleDebug; physical-device verification pending",
       "routing_invariant": "after Gesture Check: XY + no Destination → ВЕДЕТ В; XY + Destination → Command",
       "pair_selection_geometry": "persistent [X]+[Y] row; two stable-position 6×6 stages; standalone header Back | ЗНАКОПАРА | Search; optional ДЛЯ: Destination"
     },
@@ -4460,7 +4460,7 @@
       "search": "text navigation in same selector: 1 char → X/Y-stage; 2 chars → exact XY",
       "drawing": "not used for XY assignment",
       "hosts": "Commands / КОМБИНАЦИИ; destination-first after НАЗНАЧИТЬ; Command XY edit",
-      "implementation_status": "PairSelectionGridView + standalone PairSelectionActivity implemented candidate; build/device verification pending",
+      "implementation_status": "implementation candidate built successfully; real-device verification pending",
       "post_check_routing": "not owned by Pair Selection",
       "android_components": "PairSelectionGridView; PairSelectionScreenView; PairSelectionActivity"
     },
@@ -4532,7 +4532,7 @@
       "persistence": "check result is not stored as Command property",
       "back": "return to Pair Selection with selected XY preserved",
       "routing_rule": "XY + no Destination → ВЕДЕТ В; XY + Destination → Command",
-      "implementation_status": "GestureCheckActivity + GestureCheckScreenView implemented candidate; build/device verification pending",
+      "implementation_status": "implementation candidate built successfully; real-device verification pending",
       "pair_row": "implemented candidate: 72 dp; active sign teal, inactive sign muted teal",
       "bottom_action": "implemented candidate: fixed 56 dp; SKIP before first attempt, CONTINUE afterwards",
       "recognizer": "36 canonical A–Z + 0–9 SVG templates; profile-driven geometry matcher; validation pending"
