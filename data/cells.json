@@ -1116,10 +1116,10 @@
       "canvas"
     ],
     "verification": {
-      "state": "verified-supported",
-      "date": "2026-09-29",
+      "state": "build-pass-device-pending",
+      "date": "2026-10-02",
       "confidence": "high",
-      "summary": "A clean real-device build confirms TYPE_ACCESSIBILITY_OVERLAY can show KnockUI above another foreground app, accept S → C, produce SC and launch the assigned Settings action without SYSTEM_ALERT_WINDOW.",
+      "summary": "Current canon-driven KnockUI candidate passed testDebugUnitTest and assembleDebug (BUILD SUCCESSFUL). Real-device UI/behavior review is still pending.",
       "sources": [
         {
           "label": "Android AccessibilityService API",
@@ -1130,7 +1130,7 @@
           "url": "https://developer.android.com/reference/android/view/WindowManager.LayoutParams"
         }
       ],
-      "next_step": "Run testDebugUnitTest and assembleDebug, install candidate, then real-device review of panel geometry, icons, AUTO/MANUAL, 1.0 s auto-Send and full command execution.",
+      "next_step": "Install debug APK and verify wide bottom panel geometry, control strip, About, slots, Destination-line, AUTO/MANUAL, 1.0 s auto-Send and command execution on the physical device.",
       "implication": "Post-activation drawing is no longer an Android feasibility risk; current work is UX canon and compatibility."
     }
   },
@@ -3479,9 +3479,9 @@
     ],
     "parameters": {
       "stage_status": "active",
-      "current_task": "build and real-device review of canon-driven KnockUI implementation candidate",
+      "current_task": "real-device review of build-passed canon-driven KnockUI candidate",
       "graffiti": "4Tap Graffiti Profile v1 approved; Letter-F revised 2026-10-01",
-      "immediate_next": "testDebugUnitTest → assembleDebug → install APK → verify wide bottom panel, controls, About, slots, Destination-line, AUTO/MANUAL and 1.0 s auto-Send",
+      "immediate_next": "install debug APK → verify wide bottom panel, controls, About, slots, Destination-line, AUTO/MANUAL and 1.0 s auto-Send",
       "subsequent": "later: explicit edit-XY review, broader productization/onboarding, planned recognizer calibration/personalization",
       "public_beta_gate": "Design Canon v1.0 before public beta",
       "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; normalized dual create-flow with shared Pair Selection + Gesture Check; brand teal #159B92; Pair Selection contextual geometry; Gesture Check stable physical-device baseline; recognizer v2.1 stable physical-device baseline; KnockUI control strip; Logo/About service view; Draw Slot1/Slot2 + Destination-line + AUTO/MANUAL/Send flow; KnockUI wide-bottom-panel geometry principle; adaptive 40–45% height; 1.0 s AUTO delay",
