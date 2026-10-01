@@ -1259,8 +1259,8 @@
     "section": "android",
     "title": "Gesture Recognizer",
     "group": "RECOGNITION",
-    "short": "Recognizer v2.1 candidate: marker-oriented templates + endpoint/tail-aware scoring; build/device verification pending.",
-    "description": "Device review exposed O→Q and 4→9 (10/10) confusion. Source audit found raw SVG path direction reversed relative to the visible start marker for at least C, O and 4. v2.1 now orients templates from the canonical start marker, uses revised Q, and adds start/end point+direction penalties plus explicit terminal-tail weighting on top of bounded DTW.",
+    "short": "Recognizer v2.1 is the current stable physical-device baseline.",
+    "description": "After revised Q, marker-based template orientation and endpoint/tail-aware scoring, the current Android build was installed and the user confirmed that 4Tap works well and stably on the physical device.",
     "purpose": "Преобразовать траекторию пальца в символ.",
     "kind": "core",
     "models": [
@@ -1292,9 +1292,9 @@
       "threshold_status": "v2 temporary implementation gate; not product canon",
       "current_prototype_subset": "all 36 templates loaded by implementation candidate",
       "verification_tests": "36 self-matches; translation/scale invariance; S/5, I/1, Z/2; short-stroke rejection; nearest-candidate diagnostic",
-      "verification_status": "implementation committed; new unit/build/device verification pending",
+      "verification_status": "testDebugUnitTest PASS; assembleDebug PASS; physical-device stable-work confirmation",
       "attention_pairs": "S/5; I/1; Z/2",
-      "current_status": "v2.1 implemented candidate; unit/build/device verification pending",
+      "current_status": "stable real-device baseline",
       "next_algorithm": "implemented: bounded DTW-like alignment",
       "next_features": "implemented: normalized position + tangent/direction + local turn",
       "letter_f": "uses revised canonical Letter-F.svg from 2026-10-01",
@@ -1328,13 +1328,13 @@
     ],
     "order": 70,
     "verification": {
-      "state": "implemented-v2.1-unverified",
+      "state": "real-device-pass-baseline",
       "date": "2026-10-01",
-      "confidence": "medium",
-      "summary": "v2.1 source changes are committed after device confusion analysis, but no new build or physical-device result exists yet.",
+      "confidence": "high",
+      "summary": "Current v2.1 build is installed on a physical Android device and the user reports good, stable operation.",
       "sources": [],
-      "next_step": "Run testDebugUnitTest and assembleDebug, then retest O/Q and 4/9 on-device.",
-      "implication": "The observed 4→9 issue may have been driven partly by reversed canonical path orientation; this is now corrected generically."
+      "next_step": "Keep v2.1 as baseline; reopen recognizer work only for new reproducible issues or planned calibration/personalization.",
+      "implication": "Recognizer v2.1, Gesture Check and current command flow are the accepted Android baseline."
     }
   },
   {
@@ -3437,8 +3437,8 @@
     "section": "roadmap",
     "title": "Stage 2 — Product Canon",
     "group": "ROADMAP",
-    "short": "Recognizer v2.1 is implemented; next verify O/Q and 4/9.",
-    "description": "Both command creation flows remain device-PASS. Recognition review found O→Q and 4→9. Revised Q, marker-based template orientation and endpoint/tail-aware scoring are now implemented candidates.",
+    "short": "Current Android recognizer/Gesture Check build is stable on-device; preserve as baseline.",
+    "description": "Both command creation paths and current recognizer v2.1/Gesture Check refinements now form the accepted physical-device Android baseline. Further recognizer changes are driven by new reproducible observations or a later calibration/personalization stage.",
     "purpose": "Стабилизировать визуальный язык и жестовые эталоны до масштабирования продукта.",
     "kind": "core",
     "models": [
@@ -3461,10 +3461,10 @@
     ],
     "parameters": {
       "stage_status": "active",
-      "current_task": "verify recognizer v2.1",
+      "current_task": "preserve stable Android baseline and continue next planned product block",
       "graffiti": "4Tap Graffiti Profile v1 approved; Letter-F revised 2026-10-01",
-      "immediate_next": "testDebugUnitTest → assembleDebug",
-      "subsequent": "real-device O/Q → 4/9 → broader symbol sample → KnockUI regression",
+      "immediate_next": "no recognizer change required unless new reproducible issue appears",
+      "subsequent": "later: explicit edit-XY review, broader productization/onboarding, planned recognizer calibration/personalization",
       "public_beta_gate": "Design Canon v1.0 before public beta",
       "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; normalized dual create-flow with shared Pair Selection + Gesture Check; brand teal #159B92; Pair Selection contextual geometry; Gesture Check base surface; 36-symbol recognizer implementation candidate (verification pending)",
       "content_detailing": "separate follow-up per screen",
@@ -4414,7 +4414,7 @@
       "edit_xy": "Command → Pair Selection → Gesture Check → Command",
       "gesture_check": "optional/non-blocking; PASS/FAIL belongs to individual attempts; does not change XY",
       "convergence": "Command opens when XY and Destination are both known",
-      "implementation_status": "destination-first and pair-first both passed on physical Android device 2026-10-01",
+      "implementation_status": "current combined Android flow included in stable physical-device baseline",
       "routing_invariant": "after Gesture Check: XY + no Destination → ВЕДЕТ В; XY + Destination → Command",
       "pair_selection_geometry": "persistent [X]+[Y] row; two stable-position 6×6 stages; standalone header Back | ЗНАКОПАРА | Search; optional ДЛЯ: Destination",
       "execution_regression": "a newly created command was invoked successfully through KnockUI three times",
@@ -4560,7 +4560,7 @@
       "persistence": "check result is not stored as Command property",
       "back": "return to Pair Selection with selected XY preserved",
       "routing_rule": "XY + no Destination → ВЕДЕТ В; XY + Destination → Command",
-      "implementation_status": "feedback-reset + AUTO→MANUAL: unit/build PASS; repeated device review pending",
+      "implementation_status": "feedback-reset + AUTO→MANUAL implemented; unit/build PASS; current physical-device build reported stable",
       "pair_row": "implemented candidate: 72 dp; active sign teal, inactive sign muted teal",
       "bottom_action": "implemented candidate: fixed 56 dp; SKIP before first attempt, CONTINUE afterwards",
       "recognizer": "36 canonical A–Z + 0–9 SVG templates; profile-driven geometry matcher; validation pending",
@@ -4585,6 +4585,15 @@
       "recognition",
       "graffiti",
       "canon"
-    ]
+    ],
+    "verification": {
+      "state": "real-device-pass-baseline",
+      "date": "2026-10-01",
+      "confidence": "high",
+      "summary": "Current Gesture Check refinement is included in the physical-device build the user reports as working well and stably.",
+      "sources": [],
+      "next_step": "Preserve current behavior unless a new reproducible UI issue appears.",
+      "implication": "Gesture Check refinement is no longer verification-pending."
+    }
   }
 ]

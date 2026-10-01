@@ -596,3 +596,14 @@ The private implementation repo now contains:
 - no symbol-specific classifier exceptions.
 
 Status: implementation committed; new unit/build/device verification pending.
+
+
+## Stable Android recognizer baseline — 2026-10-01
+
+After installing the build with revised Q, marker-oriented templates and endpoint/tail-aware recognizer v2.1, the user confirmed on a physical Android device:
+
+**the current 4Tap works well and stably.**
+
+This closes the pending physical-device verification status for recognizer v2.1 / Gesture Check / current command flow and establishes them as the current Android baseline.
+
+Further recognizer changes are opened only for new reproducible problems or a separate planned calibration/personalization stage.
