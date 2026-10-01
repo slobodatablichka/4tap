@@ -369,7 +369,7 @@
     "title": "4Tap Graffiti Profile v1",
     "group": "GESTURE LANGUAGE",
     "short": "Утверждённый продуктовый набор из 36 одноштриховых знаков 4Tap: A–Z и 0–9.",
-    "description": "Product Profile v1 remains a 36-symbol A–Z/0–9 set with explicit start/direction guides. On 2026-10-01 the canonical Letter-F.svg was deliberately replaced by a new one-stroke, phi-like form after device experience showed the prior F was impractical. Current source of truth is 4tap-app/design/graffiti/v1/annotated/*.svg; the old import ZIP is historical baseline only.",
+    "description": "4Tap Graffiti Profile v1 remains the canonical 36-symbol A–Z/0–9 set. Letter-F was revised earlier; on 2026-10-01 Letter-Q was also deliberately replaced with a more distinctive one-stroke form after O→Q device confusion. Current source of truth is 4tap-app/design/graffiti/v1/annotated/*.svg.",
     "purpose": "Получить обучаемый и технически однозначный алфавит для пальцевого ввода 4Tap.",
     "kind": "core",
     "models": [
@@ -395,16 +395,18 @@
       "source": "4tap-app/design/graffiti/v1/annotated/*.svg",
       "direction_sensitive": true,
       "start_rule": "all signs start at the top except A, M, N",
-      "attention_pairs": "S/5; I/1; Z/2",
+      "attention_pairs": "S/5; I/1; Z/2; O/Q; 4/9",
       "canonical_registry": "SHA256SUMS.txt",
       "letter_f_revision": "2026-10-01; new phi-like one-stroke Letter-F.svg; SHA-256 2c8cfbb764e5c7a01e6f08d58c1d0e7376d1560ec1dd06e216903b2859823a5a",
-      "archive_status": "Graffiti-for-4Tap-Letters-and-Digits.zip = historical import baseline, not override for later approved glyph revisions"
+      "archive_status": "Graffiti-for-4Tap-Letters-and-Digits.zip = historical import baseline, not override for later approved glyph revisions",
+      "letter_q_revision": "2026-10-01; revised one-stroke Q with pronounced terminal exit; SHA-256 c9cbd9459127b5d3d40153d13b95bfbffa4e36a2050fdd62b6cfda4e9894131c",
+      "direction_semantics": "start circle + end arrow define canonical stroke direction; raw SVG path order may be reversed by export"
     },
     "constraints": [
-      "Do not change the approved set silently or merely to simplify classification; individual deliberate revisions require an explicit project decision.",
-      "For S/5, I/1 and Z/2 the user should express distinctive geometry clearly.",
       "Current annotated SVG files are the geometry source for UI/training/recognizer.",
-      "Approved glyph replacement requires checksum + project-state + public-map synchronization."
+      "Start circle and end arrow define canonical direction; recognizer must not blindly trust raw SVG path ordering.",
+      "Approved glyph replacement requires checksum + project-state + public-map synchronization.",
+      "Do not redraw 4/9 yet; first verify orientation normalization and endpoint/tail-aware recognizer."
     ],
     "open_questions": [],
     "tags": [
@@ -417,10 +419,10 @@
       "state": "approved-revised",
       "date": "2026-10-01",
       "confidence": "high",
-      "summary": "Profile v1 remains canonical; Letter-F.svg was explicitly revised and replaced in the private implementation repository.",
+      "summary": "Profile v1 remains canonical. Q was explicitly revised after O→Q confusion; direction semantics were clarified after reverse-exported paths were found.",
       "sources": [],
-      "next_step": "Use the revised F as the recognizer/UI source during the next Android code refinement.",
-      "implication": "Recognizer must adapt to the current product glyph source; no hidden old-F template may remain."
+      "next_step": "Build and device-test revised Q plus endpoint/tail-aware recognizer on O/Q and 4/9.",
+      "implication": "Recognizer derives direction from visible start/end markers and current canonical SVG geometry."
     }
   },
   {
@@ -1257,8 +1259,8 @@
     "section": "android",
     "title": "Gesture Recognizer",
     "group": "RECOGNITION",
-    "short": "Recognizer v2 implemented candidate: bounded DTW + position/tangent/turn features; verification pending.",
-    "description": "The v1 rigid matcher failed real-device quality review. 4tap-app now contains recognizer v2: canonical SVG-derived features are compared with bounded DTW, using normalized position, local tangent/direction and local turning. No user-trace accumulation or personalization is included in this block.",
+    "short": "Recognizer v2.1 candidate: marker-oriented templates + endpoint/tail-aware scoring; build/device verification pending.",
+    "description": "Device review exposed O→Q and 4→9 (10/10) confusion. Source audit found raw SVG path direction reversed relative to the visible start marker for at least C, O and 4. v2.1 now orients templates from the canonical start marker, uses revised Q, and adds start/end point+direction penalties plus explicit terminal-tail weighting on top of bounded DTW.",
     "purpose": "Преобразовать траекторию пальца в символ.",
     "kind": "core",
     "models": [
@@ -1290,9 +1292,9 @@
       "threshold_status": "v2 temporary implementation gate; not product canon",
       "current_prototype_subset": "all 36 templates loaded by implementation candidate",
       "verification_tests": "36 self-matches; translation/scale invariance; S/5, I/1, Z/2; short-stroke rejection; nearest-candidate diagnostic",
-      "verification_status": "recognizer v2: testDebugUnitTest PASS; assembleDebug PASS; real-device verification pending",
+      "verification_status": "implementation committed; new unit/build/device verification pending",
       "attention_pairs": "S/5; I/1; Z/2",
-      "current_status": "v2 implemented candidate; unit/build/device verification pending",
+      "current_status": "v2.1 implemented candidate; unit/build/device verification pending",
       "next_algorithm": "implemented: bounded DTW-like alignment",
       "next_features": "implemented: normalized position + tangent/direction + local turn",
       "letter_f": "uses revised canonical Letter-F.svg from 2026-10-01",
@@ -1301,14 +1303,19 @@
       "future_personalization": "deferred: common templates + several user-specific samples",
       "v2_weights": "position 0.55; direction 0.30; turn 0.15",
       "dtw_band": "18% of sequence length; minimum 6 samples",
-      "warp_step_penalty": 0.01
+      "warp_step_penalty": 0.01,
+      "template_orientation": "orient raw stroke to the visible canonical start marker before feature extraction",
+      "reverse_exports_found": "C; O; 4",
+      "endpoint_score": "base DTW 0.50; start point 0.08; start direction 0.07; end point 0.12; end direction 0.08; tail 0.15",
+      "tail_window": "last 13 of 64 resampled points (~20%)",
+      "revised_q": "uses canonical Q revision c9cbd9459127b5d3d40153d13b95bfbffa4e36a2050fdd62b6cfda4e9894131c",
+      "real_device_observation": "O→Q; 4→9 in 10/10 attempts before v2.1"
     },
     "constraints": [
-      "Canonical SVG geometry remains the source of truth; do not maintain a hidden second alphabet.",
-      "Stroke direction/order must be preserved; reversed paths are not equivalent.",
-      "DTW warping must be bounded so materially different shapes do not become equivalent.",
-      "Do not collect/store real user traces in the next implementation block.",
-      "Personal adaptation is deferred and must be designed separately before implementation."
+      "No special-case if/else classifier rules for O/Q or 4/9.",
+      "Canonical visible start marker determines direction when raw path order disagrees.",
+      "Real user traces are not collected in this block.",
+      "Personal adaptation remains deferred."
     ],
     "open_questions": [
       "After v2 is implemented, what device-level rejection threshold is appropriate?",
@@ -1321,13 +1328,13 @@
     ],
     "order": 70,
     "verification": {
-      "state": "v2-build-verified-device-pending",
+      "state": "implemented-v2.1-unverified",
       "date": "2026-10-01",
       "confidence": "medium",
-      "summary": "Recognizer v2 compiles and passes unit tests; physical-device recognition quality has not yet been re-evaluated.",
+      "summary": "v2.1 source changes are committed after device confusion analysis, but no new build or physical-device result exists yet.",
       "sources": [],
-      "next_step": "Install the new debug APK and retest Gesture Check, especially revised F and previously difficult symbols.",
-      "implication": "The algorithmic refinement is present in code, but no recognition-quality improvement may be claimed until physical-device results."
+      "next_step": "Run testDebugUnitTest and assembleDebug, then retest O/Q and 4/9 on-device.",
+      "implication": "The observed 4→9 issue may have been driven partly by reversed canonical path orientation; this is now corrected generically."
     }
   },
   {
@@ -3430,8 +3437,8 @@
     "section": "roadmap",
     "title": "Stage 2 — Product Canon",
     "group": "ROADMAP",
-    "short": "Recognizer v2 and Gesture Check refinement are implemented candidates; verification is next.",
-    "description": "Both creation flows remain device-PASS. Recognizer v2 and Gesture Check refinement now pass unit tests and assembleDebug; next is physical-device recognition review and KnockUI regression.",
+    "short": "Recognizer v2.1 is implemented; next verify O/Q and 4/9.",
+    "description": "Both command creation flows remain device-PASS. Recognition review found O→Q and 4→9. Revised Q, marker-based template orientation and endpoint/tail-aware scoring are now implemented candidates.",
     "purpose": "Стабилизировать визуальный язык и жестовые эталоны до масштабирования продукта.",
     "kind": "core",
     "models": [
@@ -3454,10 +3461,10 @@
     ],
     "parameters": {
       "stage_status": "active",
-      "current_task": "real-device verification of recognizer v2 + Gesture Check refinement",
+      "current_task": "verify recognizer v2.1",
       "graffiti": "4Tap Graffiti Profile v1 approved; Letter-F revised 2026-10-01",
-      "immediate_next": "install debug APK → test revised F, difficult symbols, AUTO→MANUAL, feedback reset",
-      "subsequent": "real-device Gesture Check recognition review → KnockUI regression → explicit edit-XY review",
+      "immediate_next": "testDebugUnitTest → assembleDebug",
+      "subsequent": "real-device O/Q → 4/9 → broader symbol sample → KnockUI regression",
       "public_beta_gate": "Design Canon v1.0 before public beta",
       "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; normalized dual create-flow with shared Pair Selection + Gesture Check; brand teal #159B92; Pair Selection contextual geometry; Gesture Check base surface; 36-symbol recognizer implementation candidate (verification pending)",
       "content_detailing": "separate follow-up per screen",

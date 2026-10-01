@@ -577,3 +577,22 @@ Entry candidates:
 2026-09-29 на `LGM-V300L / Android 9` подтверждена полная цепочка при выключенном системном доступе «Поверх других приложений»: `4 taps → AccessibilityService → TYPE_ACCESSIBILITY_OVERLAY KnockUI → S → C → SC → Settings`.
 
 `SYSTEM_ALERT_WINDOW` затем полностью удалён из `AndroidManifest.xml`, сборка переустановлена и та же цепочка повторно прошла — PASS. Текущий Android-кандидат требует одного пользовательского системного включения: `4Tap corner activation` в Accessibility.
+
+
+## Recognizer v2.1 — Q / O-Q / 4-9 refinement
+
+Physical-device review found:
+
+- `O → Q`;
+- `4 → 9` in ten consecutive attempts.
+
+The private implementation repo now contains:
+
+- revised canonical `Letter-Q.svg`;
+- updated Q checksum;
+- generic template orientation from the canonical start marker, because raw SVG path order was found reversed for at least `C`, `O` and `4`;
+- endpoint-aware score: start point/direction + end point/direction;
+- extra terminal-tail weight over the last 13 of 64 samples;
+- no symbol-specific classifier exceptions.
+
+Status: implementation committed; new unit/build/device verification pending.
