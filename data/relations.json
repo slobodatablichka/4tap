@@ -1138,5 +1138,29 @@
     "to": "command-create-flow",
     "relation": "даёт данные о свободных комбинациях для рекомендаций",
     "type": "model"
+  },
+  {
+    "from": "design-canon",
+    "to": "ui-graphics-registry",
+    "relation": "задаёт правила и требует канонические UI-assets",
+    "type": "model"
+  },
+  {
+    "from": "ui-graphics-registry",
+    "to": "commands-screen",
+    "relation": "задаёт Back, Search и Menu",
+    "type": "design"
+  },
+  {
+    "from": "ui-graphics-registry",
+    "to": "destination-surface",
+    "relation": "задаёт Back, Search и Frame для контекстных слотов",
+    "type": "design"
+  },
+  {
+    "from": "ui-graphics-registry",
+    "to": "command-input-mode",
+    "relation": "задаёт общую графическую дисциплину UI-элементов",
+    "type": "design"
   }
 ]

@@ -176,7 +176,7 @@
     "title": "4Tap Design Canon",
     "group": "UX SYSTEM",
     "short": "Единый визуальный и поведенческий канон для KnockUI, состояний ввода, обратной связи и пользовательских экранов.",
-    "description": "Текущая активная продуктовая задача. Первый рабочий Design Canon задаёт визуальный и поведенческий язык 4Tap: KnockUI, экран состояния 4Tap, Команды, Команда, Destination / ВЕДЕТ В, Алфавит и Настройки; типографику, геометрию, состояния, feedback, motion, звук/вибрацию и правила пользовательских экранов. После канона следующим отдельным шагом проектируется one-step Accessibility onboarding.",
+    "description": "Design Canon задаёт не только визуальный язык, но и обязательный implementation gate: общий канон → реестр канонической графики → локальный канон поверхности → код. Если правила или графического asset не хватает, сначала утверждается правило/графика и только затем выполняется реализация.",
     "purpose": "Не допустить расхождения интерфейсов и закрепить узнаваемую механику продукта.",
     "kind": "core",
     "models": [
@@ -204,7 +204,7 @@
     "parameters": {
       "current_working_version": "v0.1",
       "core_surfaces": "KnockUI; 4Tap; Команды; Команда; Destination / ВЕДЕТ В; Алфавит; Настройки",
-      "immediate_next": "repeat Commands / Command Space real-device review after approved refinement",
+      "immediate_next": "bring Android Commands/Destination UI into conformance with normalized canon",
       "next_revision": "v0.2 after first canon-driven implementation/usability pass",
       "public_beta": "v1.0 before public beta",
       "knockui_panel_model": "approved: quick_shortcuts / drawing_canvas; remember last active panel",
@@ -221,7 +221,13 @@
       "command_creation": "ADD COMMAND → Destination → suggested free XY → Command Input → Command",
       "graffiti_display_priority": "default: canonical 4Tap Graffiti for alphabet signs being shown/selected/formed; plain text only for explicitly defined roles such as existing XY identifier or keyboard search",
       "graffiti_guides": "default: start point + drawing-direction arrow; explicit exception for already completed/assigned command presentation",
-      "back_navigation": "default: Back is first left item in 72 dp top header; touch 48×48 dp; grammar Back → optional context → title → right actions"
+      "back_navigation": "single Back in top header; one level back in current context; secondary rows do not duplicate",
+      "implementation_gate": "DESIGN-CANON → canonical graphics registry → surface canon → code",
+      "missing_rule": "stop implementation; approve rule first",
+      "missing_graphic": "stop implementation; create/approve asset first",
+      "system_icon_substitution": "not allowed by default",
+      "canonical_header_actions": "Back / Menu / Search: 48×48 dp touch; 40×40 dp visible canonical artwork",
+      "canonical_frame": "40×40 dp visible asset for empty square slots/containers where specified"
     },
     "constraints": [
       "Канон должен сохранять скорость и минимальное вмешательство в текущий контекст пользователя.",
@@ -234,19 +240,78 @@
       "Если поверхность показывает, выбирает, вводит, собирает или формирует знаки командного алфавита, по умолчанию используется графическое представление 4Tap Graffiti.",
       "Если отдельно не предусмотрено иное, Graffiti-знак показывает начальную точку и стрелку направления.",
       "Уже сформированная/назначенная команда в Commands — явное исключение: её Graffiti и текстовый XY показываются без стартовой точки/стрелки.",
-      "Если иное отдельно не утверждено, Back располагается слева в верхнем header; иное размещение требует явного исключения."
+      "Если иное отдельно не утверждено, Back располагается слева в верхнем header; иное размещение требует явного исключения.",
+      "UI-код не придумывает недостающий дизайн: при отсутствии правила или asset реализация останавливается до утверждения.",
+      "Системная Android/iOS/Material пиктограмма не подменяет каноническую UI-графику без отдельного решения.",
+      "Если общее UI-правило изменено, зависимые локальные каноны проверяются на противоречия до реализации."
     ],
     "open_questions": [
       "Финальная типографика и motion language",
       "Визуальная степень заметности KnockUI",
       "Точная геометрия и состояния основных поверхностей",
-      "Exact Command Space presentation inside Commands",
       "Exact Command Input geometry and recommendation presentation"
     ],
     "tags": [
       "design",
       "ux",
       "canon"
+    ]
+  },
+  {
+    "id": "ui-graphics-registry",
+    "section": "product",
+    "order": 32.5,
+    "title": "Canonical UI Graphics",
+    "group": "UX SYSTEM",
+    "short": "Реестр утверждённой UI-графики 4Tap: Back, Menu, Search, Frame и правила платформенных производных.",
+    "description": "Код не придумывает пиктограммы заново. Канонический asset определяет форму, рамку и внутреннюю геометрию; платформенная производная обязана сохранять их. Header-actions по умолчанию имеют touch-area 48×48 dp и видимую графику 40×40 dp. Системные иконки не подменяют канонические автоматически.",
+    "purpose": "Не допустить визуального расхождения между поверхностями и платформами и отделить утверждение графики от её реализации.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "shared",
+      "android",
+      "ios"
+    ],
+    "status": "approved",
+    "inputs": [
+      "4Tap Design Canon",
+      "Approved graphic assets"
+    ],
+    "outputs": [
+      "Back",
+      "Menu",
+      "Search",
+      "Frame",
+      "Platform-faithful derivatives"
+    ],
+    "parameters": {
+      "header_action_touch": "48 × 48 dp",
+      "header_action_visible": "40 × 40 dp",
+      "canonical_color": "#FEFEFE",
+      "back": "framed; one-level-back semantic",
+      "menu": "framed three-line asset",
+      "search": "framed magnifier asset; no system substitute",
+      "frame": "empty square frame for slots/containers",
+      "asset_authority": "shape/frame/internal spacing from approved artwork",
+      "platform_derivative": "must preserve contour, proportions, frame, placement and visible size"
+    },
+    "constraints": [
+      "No automatic substitution with Android/iOS/Material system icons.",
+      "No extra frame around already framed assets.",
+      "No extra padding that reduces canonical visible artwork.",
+      "If required asset is missing, implementation waits for approval/creation."
+    ],
+    "open_questions": [],
+    "tags": [
+      "design",
+      "icons",
+      "graphics",
+      "canon",
+      "assets"
     ]
   },
   {
@@ -3340,8 +3405,8 @@
     "section": "roadmap",
     "title": "Stage 2 — Product Canon",
     "group": "ROADMAP",
-    "short": "Текущий этап: refined Command Space реализован; следующий рубеж — повторный build + real-device review.",
-    "description": "Stage 2 активен. После первого физического просмотра Commands утверждён refinement: общий приоритет Graffiti, start/direction markers для выбираемых знаков, единая X-высота, правое выравнивание назначения, новый второй уровень Command Space и активный вход ADD COMMAND → Destination. Следующий рубеж — повторная сборка и проверка на физическом устройстве; затем Command Input.",
+    "short": "Текущий этап: Design Canon нормализован; следующий рубеж — привести Android UI к канонической графике и повторно проверить на устройстве.",
+    "description": "Stage 2 активен. После real-device review введён строгий canon/graphics implementation gate, зарегистрированы канонические Back/Menu/Search/Frame и устранено противоречие с дублирующим Back второго уровня Command Space. Следующий шаг — отдельный implementation-блок conformance-fix, затем повторный real-device review.",
     "purpose": "Стабилизировать визуальный язык и жестовые эталоны до масштабирования продукта.",
     "kind": "core",
     "models": [
@@ -3364,10 +3429,10 @@
     ],
     "parameters": {
       "stage_status": "active",
-      "current_task": "Commands / Command Space refined implementation — repeat build + real-device review",
+      "current_task": "Commands / Destination canon-conformance implementation",
       "graffiti": "4Tap Graffiti Profile v1 — approved",
-      "immediate_next": "verify refined Graffiti markers, X-height, second-level header and ADD → Destination",
-      "subsequent": "Command Input exact geometry + free-pair recommendation UI → Android implementation; onboarding after Design Canon",
+      "immediate_next": "replace noncanonical Search/render scaling; remove duplicate second-level Back; use canonical Frame/assets",
+      "subsequent": "repeat real-device review → Command Input exact geometry + free-pair recommendation UI",
       "public_beta_gate": "Design Canon v1.0 before public beta",
       "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; Destination-first create flow; Command Input structure; brand teal #159B92",
       "content_detailing": "separate follow-up per screen"
@@ -3876,7 +3941,7 @@
     "title": "Commands Screen",
     "group": "UX SYSTEM",
     "short": "Утверждённый экран управления назначенными командами плюс отдельное представление Command Space для занятости 1296 пар.",
-    "description": "Commands / Команды использует канонический header Back | КОМАНДЫ | Search | Menu и два режима: НАЗНАЧЕНИЯ и КОМБИНАЦИИ. НАЗНАЧЕНИЯ сохраняет строку Graffiti → XY → назначение; КОМБИНАЦИИ показывает двухуровневый Command Space. Последний header refinement реализован и ожидает повторный real-device review.",
+    "description": "Commands / Команды подчиняется нормализованному Design Canon. Header: один канонический Back слева, затем КОМАНДЫ, справа канонические Search и Menu. Второй уровень Command Space не дублирует Back: верхний Back возвращает к первому уровню. Текущий Android UI требует отдельного conformance-fix по каноническим assets.",
     "purpose": "Сделать список команд одновременно управляющим интерфейсом и постоянной визуальной связью между жестом Graffiti, кодом XY и назначением.",
     "kind": "core",
     "models": [
@@ -3919,9 +3984,6 @@
       "assignment_text": "18 sp; weight 800; one line; end ellipsis",
       "menu_touch_dp": "48 × 48",
       "menu_visible_dp": "40 × 40",
-      "menu_outline_dp": 2,
-      "menu_radius_dp": 4,
-      "menu_lines": "~24 × 2 dp; 6 dp spacing",
       "add_command_zone": "56 dp + safe-area; fixed bottom",
       "target_visible_rows": "about 7 on standard portrait viewport; not hard-coded",
       "row_tap": "open Command detail/editor; do not execute",
@@ -3930,15 +3992,18 @@
       "command_space_view": "НАЗНАЧЕНИЯ / КОМБИНАЦИИ; first level 36 Graffiti glyphs 6×6; second level 36 individual second Graffiti glyphs",
       "add_command_flow": "Destination first → suggested free XY → Command Input → Command",
       "command_space_search": "standard Android keyboard; A–Z + 0–9; max 2 chars; 1 char opens family; 2 chars opens exact pair",
-      "command_space_android": "refinement implemented; repeat build/real-device review pending",
+      "command_space_android": "current code requires conformance fix after canon normalization",
       "add_command_current_implementation": "active: opens Destination as first create-flow step; no automatic XY before Command Input exists",
       "assignment_alignment": "destination right-aligned",
       "assigned_command_markers": "explicit exception: no start point / direction arrow for completed assignment Graffiti; text XY remains plain identifier",
       "command_space_glyph_guides": "start point + direction arrow",
       "command_space_height_rule": "X establishes common target rendered height for all alphabet glyphs",
-      "command_space_second_header": "Back | [Graffiti X] + [second slot] | ADD COMMAND; 72 dp",
+      "command_space_second_header": "[Graffiti X] + [second slot] | ADD COMMAND; no duplicate Back",
       "header_structure": "Back | COMMANDS / КОМАНДЫ | Search | Menu",
-      "back_button": "canonical left header control; 48×48 dp touch area"
+      "back_button": "canonical left header control; 48×48 dp touch area",
+      "header_actions": "canonical Back / Search / Menu assets; 48×48 dp touch; 40×40 dp visible",
+      "search_icon": "framed canonical Search asset; not Android system icon",
+      "menu_icon": "framed canonical Menu asset; geometry comes from asset"
     },
     "constraints": [
       "Graffiti-column uses real canonical trajectories from 4Tap Graffiti Profile v1, not font imitation.",
@@ -3950,7 +4015,7 @@
     ],
     "open_questions": [
       "Detailed content and population of the assigned-command list.",
-      "Repeat real-device visual review of refined Commands / Command Space."
+      "Real-device review after canon-conformance implementation."
     ],
     "tags": [
       "design",
@@ -3967,7 +4032,7 @@
     "title": "Command Space View",
     "group": "UX SYSTEM",
     "short": "Отдельное представление в контуре Commands показывает занятость и доступность полного пространства из 1296 знакопар.",
-    "description": "Command Space View — второй режим Commands. Первый уровень: 36 Graffiti-знаков 6×6 без счётчиков, с начальной точкой и стрелкой; все знаки используют общую целевую высоту по X-эталону. Полностью занятое семейство приглушается, но открывается. Второй уровень: верхняя строка Back | [Graffiti X] + [второй слот] | ДОБАВИТЬ КОМАНДУ и 36 отдельных вторых Graffiti-знаков, а не текстовые пары. Поиск остаётся текстовым исключением через Android-клавиатуру.",
+    "description": "Command Space View остаётся вторым режимом Commands. На втором уровне отдельного Back в контекстной строке нет: единственный Back находится в основном header и возвращает к первому уровню. Контекстная строка содержит [Graffiti X] + [второй слот] | ДОБАВИТЬ КОМАНДУ.",
     "purpose": "Не провоцировать пользователя выбирать уже занятые комбинации и дать обзор доступного namespace.",
     "kind": "core",
     "models": [
@@ -3997,23 +4062,24 @@
       "first_level": "36 canonical Graffiti signs; 6×6; menu only; no counts; guides visible",
       "second_level": "36 individual second Graffiti signs; 6×6; pair state derives from selected first + cell",
       "occupancy_states": "free / partially occupied / fully occupied semantics; exact visuals TBD",
-      "implementation_status": "approved refinement implemented; repeat build/real-device review pending",
+      "implementation_status": "canon normalized; Android conformance fix pending",
       "first_level_full_family": "muted color; remains openable for inspection",
       "search": "standard Android keyboard; A–Z + 0–9; max 2 symbols",
       "free_pair_tap": "show free state only; do not start XY-first create flow",
       "occupied_pair_tap": "show assignment and allow opening existing Command",
       "height_normalization": "common target height derived from X fit; proportions preserved",
-      "second_level_header": "Back | [Graffiti first] + [second slot] | ADD COMMAND",
+      "second_level_header": "[Graffiti first] + [second slot] | ADD COMMAND",
       "second_level_header_height_dp": 72,
       "bottom_add_button": "absent in COMBINATIONS; ADD lives in second-level header; assignments keeps bottom ADD",
-      "add_command": "opens Destination first; selected Command Space prefix/pair does not create XY-first flow"
+      "add_command": "opens Destination first; selected Command Space prefix/pair does not create XY-first flow",
+      "back_behavior": "single top-header Back; second level → first level; top level → leave Commands"
     },
     "constraints": [
       "The view must reflect current registry occupancy rather than a static teaching matrix.",
       "An existing command being edited must not be treated as conflicting with itself."
     ],
     "open_questions": [
-      "Repeat real-device review: marker readability, X-height consistency, second-level header density."
+      "Real-device review after canon-conformance implementation."
     ],
     "tags": [
       "design",
@@ -4166,10 +4232,11 @@
       "new_command_flow": "selection → suggest free XY → Command Input → Command",
       "new_command_flow_status": "approved architecture; not yet implemented",
       "header_structure": "Back | [slot 1][slot 2] | ВЕДЕТ В",
-      "command_context_slots": "2 × 48 dp; contextual only, not input",
+      "command_context_slots": "2 × 48 dp layout slots using canonical Frame artwork at 40×40 dp",
       "existing_command_slots": "show current Graffiti XY without start point/direction arrow",
       "new_command_slots": "empty when Destination is first step before XY",
-      "header_refinement_status": "implemented; repeat real-device review pending"
+      "header_refinement_status": "canon normalized; Android conformance fix pending",
+      "search_icon": "canonical framed Search asset; 48×48 dp touch; 40×40 dp visible; system icon not used"
     },
     "constraints": [
       "Categories describe destination type, not command type.",
@@ -4183,7 +4250,6 @@
     ],
     "open_questions": [
       "Initial category for a new command without destination.",
-      "Exact search icon/interaction.",
       "Supported system destinations catalog.",
       "URL validation/normalization rules.",
       "Optional custom WEB labels.",
