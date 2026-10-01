@@ -176,7 +176,7 @@
     "title": "4Tap Design Canon",
     "group": "UX SYSTEM",
     "short": "Единый визуальный и поведенческий канон для KnockUI, состояний ввода, обратной связи и пользовательских экранов.",
-    "description": "Design Canon задаёт не только визуальный язык, но и обязательный implementation gate: общий канон → реестр канонической графики → локальный канон поверхности → код. Если правила или графического asset не хватает, сначала утверждается правило/графика и только затем выполняется реализация.",
+    "description": "Design Canon задаёт визуальный язык и обязательный implementation gate: общий канон → реестр канонической графики → локальный канон поверхности → код. Android conformance-pass по уже реализованным Commands, Destination и Command выполнен; требуется сборка и повторный real-device review.",
     "purpose": "Не допустить расхождения интерфейсов и закрепить узнаваемую механику продукта.",
     "kind": "core",
     "models": [
@@ -204,7 +204,7 @@
     "parameters": {
       "current_working_version": "v0.1",
       "core_surfaces": "KnockUI; 4Tap; Команды; Команда; Destination / ВЕДЕТ В; Алфавит; Настройки",
-      "immediate_next": "bring Android Commands/Destination UI into conformance with normalized canon",
+      "immediate_next": "assembleDebug + real-device review of canon-conformance Android UI",
       "next_revision": "v0.2 after first canon-driven implementation/usability pass",
       "public_beta": "v1.0 before public beta",
       "knockui_panel_model": "approved: quick_shortcuts / drawing_canvas; remember last active panel",
@@ -264,7 +264,7 @@
     "title": "Canonical UI Graphics",
     "group": "UX SYSTEM",
     "short": "Реестр утверждённой UI-графики 4Tap: Back, Menu, Search, Frame и правила платформенных производных.",
-    "description": "Код не придумывает пиктограммы заново. Канонический asset определяет форму, рамку и внутреннюю геометрию; платформенная производная обязана сохранять их. Header-actions по умолчанию имеют touch-area 48×48 dp и видимую графику 40×40 dp. Системные иконки не подменяют канонические автоматически.",
+    "description": "Канонические Back/Menu/Search/Frame имеют утверждённые assets. Для Android добавлены точные производные Search и Frame; Back/Menu уже существовали. Header-actions используют 48×48 dp touch-area и 40×40 dp видимую графику. Текущий Android UI подключён к этому реестру и ожидает real-device review.",
     "purpose": "Не допустить визуального расхождения между поверхностями и платформами и отделить утверждение графики от её реализации.",
     "kind": "core",
     "models": [
@@ -297,7 +297,10 @@
       "search": "framed magnifier asset; no system substitute",
       "frame": "empty square frame for slots/containers",
       "asset_authority": "shape/frame/internal spacing from approved artwork",
-      "platform_derivative": "must preserve contour, proportions, frame, placement and visible size"
+      "platform_derivative": "must preserve contour, proportions, frame, placement and visible size",
+      "android_search": "ic_search_4tap.xml — implemented derivative",
+      "android_frame": "ic_frame_4tap.xml — implemented derivative",
+      "android_status": "connected in Commands/Destination/Command; review pending"
     },
     "constraints": [
       "No automatic substitution with Android/iOS/Material system icons.",
@@ -3405,8 +3408,8 @@
     "section": "roadmap",
     "title": "Stage 2 — Product Canon",
     "group": "ROADMAP",
-    "short": "Текущий этап: Design Canon нормализован; следующий рубеж — привести Android UI к канонической графике и повторно проверить на устройстве.",
-    "description": "Stage 2 активен. После real-device review введён строгий canon/graphics implementation gate, зарегистрированы канонические Back/Menu/Search/Frame и устранено противоречие с дублирующим Back второго уровня Command Space. Следующий шаг — отдельный implementation-блок conformance-fix, затем повторный real-device review.",
+    "short": "Текущий этап: Android UI приведён к нормализованному канону; следующий рубеж — build + real-device review.",
+    "description": "Stage 2 активен. Canon/graphics gate нормализован, а Commands/Destination/Command получили Android conformance-pass: канонические Search/Frame, единые header-actions и единый Back. Следующий шаг — assembleDebug и повторная проверка на физическом устройстве; после PASS — Command Input.",
     "purpose": "Стабилизировать визуальный язык и жестовые эталоны до масштабирования продукта.",
     "kind": "core",
     "models": [
@@ -3429,10 +3432,10 @@
     ],
     "parameters": {
       "stage_status": "active",
-      "current_task": "Commands / Destination canon-conformance implementation",
+      "current_task": "Android canon-conformance — build + real-device review",
       "graffiti": "4Tap Graffiti Profile v1 — approved",
-      "immediate_next": "replace noncanonical Search/render scaling; remove duplicate second-level Back; use canonical Frame/assets",
-      "subsequent": "repeat real-device review → Command Input exact geometry + free-pair recommendation UI",
+      "immediate_next": "verify canonical Search/Menu/Back/Frame and single Back behavior on device",
+      "subsequent": "Command Input exact geometry + free-pair recommendation UI",
       "public_beta_gate": "Design Canon v1.0 before public beta",
       "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; Destination-first create flow; Command Input structure; brand teal #159B92",
       "content_detailing": "separate follow-up per screen"
@@ -3941,7 +3944,7 @@
     "title": "Commands Screen",
     "group": "UX SYSTEM",
     "short": "Утверждённый экран управления назначенными командами плюс отдельное представление Command Space для занятости 1296 пар.",
-    "description": "Commands / Команды подчиняется нормализованному Design Canon. Header: один канонический Back слева, затем КОМАНДЫ, справа канонические Search и Menu. Второй уровень Command Space не дублирует Back: верхний Back возвращает к первому уровню. Текущий Android UI требует отдельного conformance-fix по каноническим assets.",
+    "description": "Commands / Команды приведён к нормализованному Design Canon: один верхний Back, канонические Search/Menu, 48→40 dp header-actions, канонический Frame для слотов. Второй уровень Command Space больше не дублирует Back; верхний Back возвращает на первый уровень. Требуется build/real-device review.",
     "purpose": "Сделать список команд одновременно управляющим интерфейсом и постоянной визуальной связью между жестом Graffiti, кодом XY и назначением.",
     "kind": "core",
     "models": [
@@ -3992,7 +3995,7 @@
       "command_space_view": "НАЗНАЧЕНИЯ / КОМБИНАЦИИ; first level 36 Graffiti glyphs 6×6; second level 36 individual second Graffiti glyphs",
       "add_command_flow": "Destination first → suggested free XY → Command Input → Command",
       "command_space_search": "standard Android keyboard; A–Z + 0–9; max 2 chars; 1 char opens family; 2 chars opens exact pair",
-      "command_space_android": "current code requires conformance fix after canon normalization",
+      "command_space_android": "canon-conformance implemented; build/real-device review pending",
       "add_command_current_implementation": "active: opens Destination as first create-flow step; no automatic XY before Command Input exists",
       "assignment_alignment": "destination right-aligned",
       "assigned_command_markers": "explicit exception: no start point / direction arrow for completed assignment Graffiti; text XY remains plain identifier",
@@ -4062,7 +4065,7 @@
       "first_level": "36 canonical Graffiti signs; 6×6; menu only; no counts; guides visible",
       "second_level": "36 individual second Graffiti signs; 6×6; pair state derives from selected first + cell",
       "occupancy_states": "free / partially occupied / fully occupied semantics; exact visuals TBD",
-      "implementation_status": "canon normalized; Android conformance fix pending",
+      "implementation_status": "canon-conformance implemented; build/real-device review pending",
       "first_level_full_family": "muted color; remains openable for inspection",
       "search": "standard Android keyboard; A–Z + 0–9; max 2 symbols",
       "free_pair_tap": "show free state only; do not start XY-first create flow",
@@ -4171,7 +4174,7 @@
     "title": "Destination / ВЕДЕТ В",
     "group": "UX SYSTEM",
     "short": "Destination v0.1 принят на физическом устройстве: Приложения / Система / WEB — PASS.",
-    "description": "Destination / ВЕДЕТ В — единая поверхность ПРИЛОЖЕНИЯ / СИСТЕМА / WEB. Header уточнён по общему канону: Back | [slot 1][slot 2] | ВЕДЕТ В. Для существующей команды слоты показывают текущий Graffiti XY без start/direction markers; при новом ADD COMMAND оба слота пусты до выбора XY. Базовый Destination v0.1 ранее прошёл real-device review; header refinement ожидает повторную проверку.",
+    "description": "Destination / ВЕДЕТ В сохраняет принятый каркас и приведён к нормализованному канону: канонические Back/Search, контекстные слоты на каноническом Frame, 48→40 dp header-actions. Базовый Destination v0.1 ранее прошёл PASS; новый conformance-refinement требует повторного review.",
     "purpose": "Отделить саму двухзнаковую команду от типа её назначения и позволить одной модели поддерживать приложения, системные действия и интернет-страницы.",
     "kind": "core",
     "models": [
@@ -4232,11 +4235,11 @@
       "new_command_flow": "selection → suggest free XY → Command Input → Command",
       "new_command_flow_status": "approved architecture; not yet implemented",
       "header_structure": "Back | [slot 1][slot 2] | ВЕДЕТ В",
-      "command_context_slots": "2 × 48 dp layout slots using canonical Frame artwork at 40×40 dp",
+      "command_context_slots": "2 × 48 dp slots with canonical 40×40 Frame artwork",
       "existing_command_slots": "show current Graffiti XY without start point/direction arrow",
       "new_command_slots": "empty when Destination is first step before XY",
-      "header_refinement_status": "canon normalized; Android conformance fix pending",
-      "search_icon": "canonical framed Search asset; 48×48 dp touch; 40×40 dp visible; system icon not used"
+      "header_refinement_status": "canon-conformance implemented; build/real-device review pending",
+      "search_icon": "canonical framed Search asset; system icon removed"
     },
     "constraints": [
       "Categories describe destination type, not command type.",

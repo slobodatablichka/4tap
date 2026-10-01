@@ -443,6 +443,22 @@ Refinement реализован и ожидает повторный real-device
 - второй уровень Command Space больше не имеет дублирующего Back в контекстной строке;
 - текущий Android UI требует отдельного conformance-fix; новый PASS пока не зафиксирован.
 
+## Android UI canon-conformance — implemented
+
+По уже реализованным Android-поверхностям выполнено приведение к нормализованному Design Canon:
+
+- добавлены точные Android-производные канонических `Search` и `Frame`;
+- `Back / Search / Menu` используют общую схему `48 × 48 dp touch → 40 × 40 dp visible`;
+- системный Android Search удалён из `Commands` и `Destination`;
+- Menu больше не уменьшается произвольным padding/alpha;
+- второй уровень `КОМБИНАЦИИ` больше не содержит дублирующий Back;
+- верхний Back на втором уровне возвращает к первому уровню, аппаратный Back ведёт так же;
+- слоты `Commands` и `Destination` используют канонический Frame;
+- `Command` использует тот же общий helper канонического Back;
+- KnockUI/MainActivity не содержат затронутых header-actions/Frame и в этом блоке не менялись.
+
+Новый conformance-pass ещё не получил real-device PASS: требуется `assembleDebug` и повторная проверка на устройстве.
+
 ## iOS implementation options
 
 iOS больше не описывается как keyboard-only архитектура. Зафиксированы варианты реализации, окончательный выбор отложен.
