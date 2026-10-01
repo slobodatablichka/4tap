@@ -204,7 +204,7 @@
     "parameters": {
       "current_working_version": "v0.1",
       "core_surfaces": "KnockUI; 4Tap; Команды; Команда; Command Space / Pair Selection; Gesture Check / ПРОВЕРКА ЖЕСТА; Destination / ВЕДЕТ В; Assign / НАЗНАЧИТЬ; Алфавит; Настройки",
-      "immediate_next": "verify implemented Pair Selection + Gesture Check + 36-symbol recognizer: unit tests → assembleDebug → real-device review",
+      "immediate_next": "implement approved refinement: new canonical F + Gesture Check feedback-reset/AUTO→MANUAL + recognizer v2",
       "next_revision": "v0.2 after first canon-driven implementation/usability pass",
       "public_beta": "v1.0 before public beta",
       "knockui_panel_model": "approved: quick_shortcuts / drawing_canvas; remember last active panel",
@@ -230,7 +230,8 @@
       "destination_semantics": "ВЕДЕТ В requires known XY",
       "assign_semantics": "НАЗНАЧИТЬ selects Destination before XY",
       "pair_selection": "approved and implemented candidate: persistent 64 dp [X]+[Y] row; 6×6 X → 6×6 Y; optional ДЛЯ: Destination; standalone Back | ЗНАКОПАРА | Search; free XY → Gesture Check",
-      "gesture_check": "approved and implemented candidate: manual X/Y selection; unlimited retries; adaptive fixed-position canvas; fixed 4-line result zone; text feedback; skip/continue; no gate"
+      "gesture_check": "approved refinement: start X in AUTO; X PASS auto-selects Y; any manual X/Y tap switches permanently to MANUAL for the session; ACTION_DOWN clears only active-sign feedback",
+      "recognizer_next": "DTW-like trajectory alignment + position + tangent/direction + turning features; no real-sample accumulation yet; personalization later"
     },
     "constraints": [
       "Канон должен сохранять скорость и минимальное вмешательство в текущий контекст пользователя.",
@@ -246,7 +247,8 @@
       "Если иное отдельно не утверждено, Back располагается слева в верхнем header; иное размещение требует явного исключения.",
       "UI-код не придумывает недостающий дизайн: при отсутствии правила или asset реализация останавливается до утверждения.",
       "Системная Android/iOS/Material пиктограмма не подменяет каноническую UI-графику без отдельного решения.",
-      "Если общее UI-правило изменено, зависимые локальные каноны проверяются на противоречия до реализации."
+      "Если общее UI-правило изменено, зависимые локальные каноны проверяются на противоречия до реализации.",
+      "Recognizer refinement must preserve canonical stroke direction and use current Profile v1 SVGs as the geometry source."
     ],
     "open_questions": [
       "Финальная типографика и motion language",
@@ -367,7 +369,7 @@
     "title": "4Tap Graffiti Profile v1",
     "group": "GESTURE LANGUAGE",
     "short": "Утверждённый продуктовый набор из 36 одноштриховых знаков 4Tap: A–Z и 0–9.",
-    "description": "Продуктовый набор v1 зафиксирован ручными SVG с явными началом и направлением штриха. Базовое правило: все знаки начинаются сверху, кроме A, M и N. Набор считается принятым продуктовым состоянием, а не черновиком. Пары S/5, I/1 и Z/2 требуют повышенной различимости при письме и отдельного внимания распознавателя, но не являются основанием менять общий принцип письма или переводить цифры на старт снизу.",
+    "description": "Product Profile v1 remains a 36-symbol A–Z/0–9 set with explicit start/direction guides. On 2026-10-01 the canonical Letter-F.svg was deliberately replaced by a new one-stroke, phi-like form after device experience showed the prior F was impractical. Current source of truth is 4tap-app/design/graffiti/v1/annotated/*.svg; the old import ZIP is historical baseline only.",
     "purpose": "Получить обучаемый и технически однозначный алфавит для пальцевого ввода 4Tap.",
     "kind": "core",
     "models": [
@@ -390,15 +392,19 @@
     "parameters": {
       "alphabet": "A–Z + 0–9",
       "product_version": "v1",
-      "source": "4tap-app/design/graffiti/v1",
+      "source": "4tap-app/design/graffiti/v1/annotated/*.svg",
       "direction_sensitive": true,
       "start_rule": "all signs start at the top except A, M, N",
-      "attention_pairs": "S/5; I/1; Z/2"
+      "attention_pairs": "S/5; I/1; Z/2",
+      "canonical_registry": "SHA256SUMS.txt",
+      "letter_f_revision": "2026-10-01; new phi-like one-stroke Letter-F.svg; SHA-256 2c8cfbb764e5c7a01e6f08d58c1d0e7376d1560ec1dd06e216903b2859823a5a",
+      "archive_status": "Graffiti-for-4Tap-Letters-and-Digits.zip = historical import baseline, not override for later approved glyph revisions"
     },
     "constraints": [
-      "Не менять утверждённый набор только ради упрощения классификатора; распознаватель адаптируется к продуктовому языку.",
-      "Для S/5, I/1 и Z/2 пользователь должен достаточно выражать различительные элементы формы.",
-      "Нормализация и шаблоны распознавателя хранятся отдельно от продуктовых SVG-исходников."
+      "Do not change the approved set silently or merely to simplify classification; individual deliberate revisions require an explicit project decision.",
+      "For S/5, I/1 and Z/2 the user should express distinctive geometry clearly.",
+      "Current annotated SVG files are the geometry source for UI/training/recognizer.",
+      "Approved glyph replacement requires checksum + project-state + public-map synchronization."
     ],
     "open_questions": [],
     "tags": [
@@ -408,13 +414,13 @@
       "recognizer"
     ],
     "verification": {
-      "state": "non-technical",
-      "date": "2026-09-30",
+      "state": "approved-revised",
+      "date": "2026-10-01",
       "confidence": "high",
-      "summary": "4Tap Graffiti Set v1 принят как продуктовое состояние. Алфавит и правило направления письма зафиксированы; дальнейшая работа относится к распознаванию, обучению и Design Canon.",
+      "summary": "Profile v1 remains canonical; Letter-F.svg was explicitly revised and replaced in the private implementation repository.",
       "sources": [],
-      "next_step": "Использовать v1 как исходный алфавит при проектировании обучения и при проверке recognizer confusion matrix.",
-      "implication": "Статус набора не зависит от того, остаются ли отдельные близкие пары сложными для классификации."
+      "next_step": "Use the revised F as the recognizer/UI source during the next Android code refinement.",
+      "implication": "Recognizer must adapt to the current product glyph source; no hidden old-F template may remain."
     }
   },
   {
@@ -1251,8 +1257,8 @@
     "section": "android",
     "title": "Gesture Recognizer",
     "group": "RECOGNITION",
-    "short": "36-знаковый profile-driven recognizer реализован как кандидат; качество на реальном пальцевом вводе ещё проверяется.",
-    "description": "Current 4tap-app code no longer limits recognition to hardcoded S/C. The implementation candidate loads all 36 canonical 4Tap Graffiti Profile v1 SVG strokes, preserves drawing direction, normalizes translation/uniform scale, resamples the path, ranks all templates and applies a prototype rejection threshold. Unit tests are present but have not yet been run in the current verification cycle.",
+    "short": "36-symbol matcher works as a pipeline but real-device classification quality is insufficient; recognizer v2 is specified.",
+    "description": "Device testing on 2026-10-01 showed that the current rigid resampled point-to-point matcher misclassifies many human-drawn symbols. The next approved design keeps canonical SVG geometry and stroke direction but replaces rigid alignment with DTW-like trajectory alignment and compares position together with local tangent/direction and turning/curvature.",
     "purpose": "Преобразовать траекторию пальца в символ.",
     "kind": "core",
     "models": [
@@ -1281,23 +1287,30 @@
       "normalization": "translation + uniform scale; ordered-path direction preserved",
       "resampling": "64 path samples",
       "prototype_reject_distance": 0.3,
-      "threshold_status": "technical prototype parameter; not final canon",
+      "threshold_status": "0.30 is v1 prototype parameter only; recalibrate after v2 device tests",
       "current_prototype_subset": "all 36 templates loaded by implementation candidate",
       "verification_tests": "36 self-matches; translation/scale invariance; S/5, I/1, Z/2; short-stroke rejection; nearest-candidate diagnostic",
-      "verification_status": "testDebugUnitTest PASS; assembleDebug PASS; real-device verification pending",
-      "attention_pairs": "S/5; I/1; Z/2"
+      "verification_status": "real-device tested: pipeline works, quality FAIL / refinement required",
+      "attention_pairs": "S/5; I/1; Z/2",
+      "current_status": "v1 pipeline/device-tested; recognition quality insufficient",
+      "next_algorithm": "bounded DTW-like alignment instead of only point-i ↔ point-i distance",
+      "next_features": "normalized position + local tangent/direction + local turning/curvature",
+      "letter_f": "uses revised canonical Letter-F.svg from 2026-10-01",
+      "best_second": "retain best + second candidate diagnostics",
+      "real_samples_now": "do not accumulate or analyze user traces in this implementation block",
+      "future_personalization": "common templates + several samples from the specific user; separate later design/implementation block"
     },
     "constraints": [
-      "Do not infer 36-symbol real-world accuracy from the earlier S/C device PASS.",
-      "Errors and handwriting variability must be measured on actual finger input.",
-      "Particularly monitor S/5, I/1 and Z/2.",
-      "The 0.30 rejection threshold is provisional until device evidence exists.",
-      "Canonical SVG geometry remains the template source; do not maintain a second hidden hand-coded alphabet."
+      "Canonical SVG geometry remains the source of truth; do not maintain a hidden second alphabet.",
+      "Stroke direction/order must be preserved; reversed paths are not equivalent.",
+      "DTW warping must be bounded so materially different shapes do not become equivalent.",
+      "Do not collect/store real user traces in the next implementation block.",
+      "Personal adaptation is deferred and must be designed separately before implementation."
     ],
     "open_questions": [
-      "What confusion matrix is obtained for real finger input across all 36 symbols?",
-      "What rejection threshold gives an acceptable false-command rate?",
-      "Is per-user calibration materially beneficial?"
+      "After v2 is implemented, what device-level rejection threshold is appropriate?",
+      "Later: what dataset/confusion matrix should be collected?",
+      "Later: how many per-user samples are useful and how should they be stored?"
     ],
     "tags": [
       "android",
@@ -1305,13 +1318,13 @@
     ],
     "order": 70,
     "verification": {
-      "state": "build-verified-device-pending",
+      "state": "device-tested-needs-refinement",
       "date": "2026-10-01",
-      "confidence": "medium",
-      "summary": "36-template recognizer unit tests and Android assembleDebug completed successfully. Physical finger-input quality and threshold calibration remain unverified.",
+      "confidence": "high",
+      "summary": "Both command-creation flows work on device, but many Gesture Check symbols are misclassified by recognizer v1; old F was especially impractical and has been replaced canonically.",
       "sources": [],
-      "next_step": "Install the new debug APK and run Gesture Check on-device, then rerun the KnockUI SC regression.",
-      "implication": "The prior architectural gap (S/C-only code) is closed in implementation, but recognition quality remains an empirical validation task."
+      "next_step": "Implement v2 DTW/tangent/turn matcher, then rerun unit/build/device recognition tests without accumulating a user dataset yet.",
+      "implication": "The routing/UI pipeline is viable; classification quality is now the main recognition engineering task."
     }
   },
   {
@@ -3414,8 +3427,8 @@
     "section": "roadmap",
     "title": "Stage 2 — Product Canon",
     "group": "ROADMAP",
-    "short": "Pair Selection, Gesture Check and the 36-symbol recognizer are implemented candidates; verification is next.",
-    "description": "Stage 2 active. Pair Selection, Gesture Check and the 36-symbol recognizer implementation candidate have passed unit tests and assembleDebug. Next: physical-device review and recognition calibration.",
+    "short": "Command creation is device-PASS; next block is Gesture Check + recognizer v2 refinement.",
+    "description": "Both creation paths pass on device and a newly created command executed through KnockUI three times. Recognition quality is the current weakness. The next code block is the revised F plus Gesture Check reset/AUTO→MANUAL and recognizer v2 using bounded DTW-like alignment with direction/tangent/turning features.",
     "purpose": "Стабилизировать визуальный язык и жестовые эталоны до масштабирования продукта.",
     "kind": "core",
     "models": [
@@ -3438,13 +3451,15 @@
     ],
     "parameters": {
       "stage_status": "active",
-      "current_task": "real-device verification of Pair Selection + Gesture Check + 36-symbol recognizer",
-      "graffiti": "4Tap Graffiti Profile v1 — approved",
-      "immediate_next": "install debug APK → real-device pair-first / destination-first / edit XY review",
-      "subsequent": "real-device pair-first → destination-first → edit XY → KnockUI SC regression",
+      "current_task": "implement approved Gesture Check + recognizer v2 refinement",
+      "graffiti": "4Tap Graffiti Profile v1 approved; Letter-F revised 2026-10-01",
+      "immediate_next": "code: revised F consumption + feedback reset + AUTO→MANUAL + DTW/tangent/turn recognizer",
+      "subsequent": "unit/build → real-device recognition retest → explicit edit-XY device review",
       "public_beta_gate": "Design Canon v1.0 before public beta",
       "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; normalized dual create-flow with shared Pair Selection + Gesture Check; brand teal #159B92; Pair Selection contextual geometry; Gesture Check base surface; 36-symbol recognizer implementation candidate (verification pending)",
-      "content_detailing": "separate follow-up per screen"
+      "content_detailing": "separate follow-up per screen",
+      "data_collection": "deferred: no real-trace accumulation/analysis in the next block",
+      "personalization": "deferred: common templates + several user-specific samples"
     },
     "constraints": [
       "Не масштабировать recognizer и UI хаотично до фиксации соответствующих канонов.",
@@ -3950,7 +3965,7 @@
     "title": "Commands Screen",
     "group": "UX SYSTEM",
     "short": "Утверждённый экран управления назначенными командами плюс отдельное представление Command Space для занятости 1296 пар.",
-    "description": "Commands / Команды hosts the shared Pair Selection as КОМБИНАЦИИ. The Android implementation candidate now routes a free XY to Gesture Check first, then to ВЕДЕТ В; the previous direct free-XY → ВЕДЕТ В implementation has been removed. Verification is pending.",
+    "description": "Commands / Команды hosts the shared Pair Selection as КОМБИНАЦИИ. Pair-first creation now passes on the physical Android device: free XY → Gesture Check → ВЕДЕТ В → Destination → Command.",
     "purpose": "Сделать список команд одновременно управляющим интерфейсом и постоянной визуальной связью между жестом Graffiti, кодом XY и назначением.",
     "kind": "core",
     "models": [
@@ -4004,7 +4019,7 @@
       "command_space_view": "НАЗНАЧЕНИЯ / КОМБИНАЦИИ; Pair Selection uses persistent [X]+[Y] context row on both 6×6 stages",
       "add_command_flow": "ДОБАВИТЬ КОМАНДУ → НАЗНАЧИТЬ → Destination → Pair Selection → Gesture Check → Command",
       "command_space_search": "standard Android keyboard; A–Z + 0–9; max 2 chars; 1 char opens family; 2 chars opens exact pair",
-      "command_space_android": "shared PairSelectionGridView implementation candidate; free XY → Gesture Check; build/device verification pending",
+      "command_space_android": "shared PairSelectionGridView pair-first creation flow passed on physical device 2026-10-01",
       "add_command_current_implementation": "implemented: opens AssignActivity / НАЗНАЧИТЬ",
       "assignment_alignment": "destination right-aligned",
       "assigned_command_markers": "explicit exception: no start point / direction arrow for completed assignment Graffiti; text XY remains plain identifier",
@@ -4224,7 +4239,7 @@
       "next": "selected Destination → standalone Pair Selection (Back | ЗНАКОПАРА | Search; ДЛЯ: Destination) → Gesture Check → Command",
       "xy_context": "unknown on entry; no ВЕДЕТ В XY slots",
       "persistence": "final save happens on Command",
-      "implementation_status": "destination-first continuation through Pair Selection + Gesture Check implemented candidate; verification pending",
+      "implementation_status": "complete destination-first flow through Pair Selection + Gesture Check + Command passed on physical device 2026-10-01",
       "header": "Back | НАЗНАЧИТЬ | Search",
       "xy_slots": "absent",
       "android_implementation": "AssignActivity now preserves Destination and continues to ЗНАКОПАРА → Gesture Check → Command",
@@ -4237,8 +4252,7 @@
       "User-facing strings are localizable."
     ],
     "open_questions": [
-      "Whether list/category geometry fully reuses Destination components.",
-      "Real-device review of the complete destination-first flow."
+      "Whether list/category geometry fully reuses Destination components."
     ],
     "tags": [
       "design",
@@ -4390,9 +4404,11 @@
       "edit_xy": "Command → Pair Selection → Gesture Check → Command",
       "gesture_check": "optional/non-blocking; PASS/FAIL belongs to individual attempts; does not change XY",
       "convergence": "Command opens when XY and Destination are both known",
-      "implementation_status": "combined Android routing passed assembleDebug; physical-device verification pending",
+      "implementation_status": "destination-first and pair-first both passed on physical Android device 2026-10-01",
       "routing_invariant": "after Gesture Check: XY + no Destination → ВЕДЕТ В; XY + Destination → Command",
-      "pair_selection_geometry": "persistent [X]+[Y] row; two stable-position 6×6 stages; standalone header Back | ЗНАКОПАРА | Search; optional ДЛЯ: Destination"
+      "pair_selection_geometry": "persistent [X]+[Y] row; two stable-position 6×6 stages; standalone header Back | ЗНАКОПАРА | Search; optional ДЛЯ: Destination",
+      "execution_regression": "a newly created command was invoked successfully through KnockUI three times",
+      "gesture_refinement": "next code pass: active-sign feedback reset + AUTO→MANUAL behavior"
     },
     "constraints": [
       "Pair Selection is the only canonical command-pair assignment mechanism.",
@@ -4403,7 +4419,9 @@
       "НАЗНАЧИТЬ selects Destination before XY.",
       "НАЗНАЧИТЬ is used only when Destination is chosen before XY."
     ],
-    "open_questions": [],
+    "open_questions": [
+      "Explicit physical-device review of existing-Command XY edit remains."
+    ],
     "tags": [
       "design",
       "command",
@@ -4460,7 +4478,7 @@
       "search": "text navigation in same selector: 1 char → X/Y-stage; 2 chars → exact XY",
       "drawing": "not used for XY assignment",
       "hosts": "Commands / КОМБИНАЦИИ; destination-first after НАЗНАЧИТЬ; Command XY edit",
-      "implementation_status": "implementation candidate built successfully; real-device verification pending",
+      "implementation_status": "pair-first and destination-first use passed on physical device 2026-10-01; existing-Command edit context still needs explicit device review",
       "post_check_routing": "not owned by Pair Selection",
       "android_components": "PairSelectionGridView; PairSelectionScreenView; PairSelectionActivity"
     },
@@ -4489,7 +4507,7 @@
     "title": "Gesture Check / Проверка жеста",
     "group": "UX SYSTEM",
     "short": "Необязательная практическая проверка выбранных X/Y с повторными попытками и независимым текстовым feedback.",
-    "description": "Gesture Check follows every selected free XY. X and Y stay visible and can be activated in any order; the user may redraw either sign any number of times, including after a successful recognition. Each attempt gets PASS/FAIL feedback. A fixed four-line result zone preserves the latest result for X and Y without moving the drawing canvas. The check may be skipped or continued after any results.",
+    "description": "Gesture Check remains non-blocking and uses fixed pair/canvas/4-line feedback geometry. Real-device flow works, but device review exposed a feedback-reset bug and led to a refined AUTO→MANUAL active-sign policy.",
     "purpose": "Проверить воспроизводимость выбранной знакопары конкретным пользователем, не превращая проверку в обязательный gate.",
     "kind": "core",
     "models": [
@@ -4516,15 +4534,15 @@
     "parameters": {
       "header": "Back | ПРОВЕРКА ЖЕСТА",
       "pair_display": "[X] + [Y], both canonical Graffiti examples always visible",
-      "active_sign": "tap X or Y; no automatic switching",
-      "attempt_order": "arbitrary; X/Y may be repeated in any sequence",
+      "active_sign": "entry: X active in AUTO; X PASS → Y active; FAIL stays on current sign; any user tap on X/Y switches session to MANUAL; MANUAL never auto-switches after PASS/FAIL",
+      "attempt_order": "AUTO guides first X→Y success; after any manual slot tap user fully controls X/Y order",
       "repeat_after_pass": "allowed without limit",
       "drawing_canvas": "single adaptive canvas occupying the stable area between pair row and fixed result zone; does not shift with feedback",
       "result_zone": "implemented candidate: fixed 4 × 24 dp lines; latest 2 lines X + latest 2 lines Y",
       "pass_text": "РАСПОЗНАНО — [X/Y]",
       "fail_unrecognized_text": "НЕ РАСПОЗНАНО — [X/Y]",
       "fail_other_text": "НЕ РАСПОЗНАНО — [X/Y] → / ОПРЕДЕЛЕНО КАК [actual]",
-      "result_memory": "only latest result per sign; retry replaces that sign only",
+      "result_memory": "latest completed result per sign; active-sign result is blank while its next attempt is being drawn",
       "attempt_states": "UNTOUCHED | PASS | FAIL_UNRECOGNIZED | FAIL_OTHER(actualSymbol)",
       "icons": "no new PASS/FAIL icons; textual feedback",
       "skip_continue": "before first attempt = ПРОПУСТИТЬ; after any attempt = ПРОДОЛЖИТЬ",
@@ -4532,24 +4550,25 @@
       "persistence": "check result is not stored as Command property",
       "back": "return to Pair Selection with selected XY preserved",
       "routing_rule": "XY + no Destination → ВЕДЕТ В; XY + Destination → Command",
-      "implementation_status": "implementation candidate built successfully; real-device verification pending",
+      "implementation_status": "current surface/flow passed device use; approved reset + AUTO/MANUAL refinement not yet coded",
       "pair_row": "implemented candidate: 72 dp; active sign teal, inactive sign muted teal",
       "bottom_action": "implemented candidate: fixed 56 dp; SKIP before first attempt, CONTINUE afterwards",
-      "recognizer": "36 canonical A–Z + 0–9 SVG templates; profile-driven geometry matcher; validation pending"
+      "recognizer": "36 canonical A–Z + 0–9 SVG templates; profile-driven geometry matcher; validation pending",
+      "feedback_reset": "on new stroke ACTION_DOWN, clear previous feedback only for the active sign; preserve the other sign's latest result"
     },
     "constraints": [
       "Gesture Check never changes XY.",
       "PASS/FAIL belongs to an individual attempt, not to the whole command.",
       "PASS never disables further attempts.",
       "FAIL never blocks continuation.",
-      "User controls X↔Y switching.",
       "Canvas geometry remains fixed while result text changes.",
       "X and Y results remain independent and persist until replaced.",
-      "No new canonical PASS/FAIL pictograms are required for this surface."
+      "No new canonical PASS/FAIL pictograms are required for this surface.",
+      "Automatic switching is allowed only in AUTO and only from successful first-sign X to Y.",
+      "Any explicit slot tap hands X/Y control to the user for the rest of the Gesture Check session.",
+      "Starting a retry clears stale feedback for that active sign immediately."
     ],
-    "open_questions": [
-      "Real-device usability/recognition review may refine implementation-level canvas/result typography without changing the approved structure."
-    ],
+    "open_questions": [],
     "tags": [
       "design",
       "gesture-check",

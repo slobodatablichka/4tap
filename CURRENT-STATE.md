@@ -459,7 +459,7 @@ Refinement реализован и ожидает повторный real-device
 
 `ВЕДЕТ В` всегда требует известную XY. `НАЗНАЧИТЬ` используется только тогда, когда Destination выбирается до XY.
 
-Новый Android implementation-кандидат уже соответствует нормализованной маршрутизации: destination-first продолжает Destination → Pair Selection → Gesture Check → Command, а pair-first ведёт свободную XY → Gesture Check → ВЕДЕТ В. Unit/build/real-device verification ещё не выполнены.
+Android-маршрутизация подтверждена на физическом устройстве 2026-10-01: destination-first и pair-first проходят до конца. Новая созданная команда после этого трижды успешно выполнена через KnockUI. Existing-Command XY edit остаётся отдельной непроверенной device-веткой.
 
 ## Pair Selection — contextual geometry approved
 
@@ -518,6 +518,24 @@ Verification status is deliberately separate from implementation status:
 4. `4 taps → KnockUI → SC → Settings` regression after recognizer replacement — not yet confirmed.
 
 No new PASS is recorded yet.
+
+## Real-device command creation + recognizer review — 2026-10-01
+
+Confirmed:
+
+- destination-first creation — PASS;
+- pair-first creation — PASS;
+- a newly created command executed through KnockUI three times — PASS ×3.
+
+Gesture Check / recognizer findings:
+
+- current 36-symbol recognizer pipeline runs, but many finger-drawn symbols are misclassified;
+- old F was especially impractical to recognize and is now replaced by a new canonical phi-like `Letter-F.svg`;
+- Gesture Check has a stale-feedback bug: retry begins while the previous active-sign result remains visible;
+- approved fix: clear only active-sign feedback at stroke start, keep the other sign's result;
+- approved X/Y logic: start X in AUTO, X PASS → Y; any manual X/Y tap switches to MANUAL and disables further auto-switching for that session.
+
+Recognizer v2 is now specified as bounded DTW-like trajectory alignment using position + local tangent/direction + turning/curvature. Real trace accumulation/analysis is deliberately deferred. Future personalization is reserved as `common templates + several user-specific samples`.
 
 ## iOS implementation options
 
