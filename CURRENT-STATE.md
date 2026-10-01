@@ -82,12 +82,12 @@ Android 4Tap — обычное пользовательское приложе�
 
 `другое приложение → 4 тапа в LEFT/RIGHT области navigation bar → KnockUI → S → C → SC → Android Settings`.
 
-Текущий trigger использует `AccessibilityService + TYPE_ACCESSIBILITY_OVERLAY`; после успешной активации зоны автоматически перевооружаются. ADB/debug broadcast для пользовательской цепочки не требуется.
+Текущий trigger и KnockUI используют один `AccessibilityService + TYPE_ACCESSIBILITY_OVERLAY`; `SYSTEM_ALERT_WINDOW` удалён. ADB/debug broadcast для пользовательской цепочки не требуется. Recognizer v2.1 / Gesture Check / command flow входят в стабильный real-device baseline.
 
 Ближайшие задачи:
-1. сохранить этот рабочий механизм как baseline;
-2. спроектировать понятный onboarding для двух текущих user grants: Accessibility и «Поверх других приложений»;
-3. проверить возможность сократить onboarding до одного разрешения;
+1. сохранять текущий recognizer/Gesture Check baseline без изменений до новой воспроизводимой причины;
+2. усовершенствовать саму поверхность KnockUI по Design Canon: сначала геометрия и поведение, затем project docs → code → build → real-device test;
+3. после Design Canon сделать понятный one-step Accessibility onboarding;
 4. подготовить Google Play Accessibility declaration / prominent disclosure / consent / review video и advance notice;
 5. повторить механизм на более новых stock Android-устройствах.
 
@@ -121,15 +121,15 @@ Android 4Tap — обычное пользовательское приложе�
 
 В публичной карте обновлён узел `android-runtime-constraints`.
 
-Текущий prototype использует два user-granted capability:
-- `AccessibilityService + TYPE_ACCESSIBILITY_OVERLAY` — navigation-bar trigger;
-- `SYSTEM_ALERT_WINDOW + TYPE_APPLICATION_OVERLAY` — KnockUI поверх текущего приложения.
+Текущий Android-кандидат использует один user-granted capability:
 
-AccessibilityService в текущем prototype использует `canRetrieveWindowContent=false` и не читает содержимое экранов.
+- `AccessibilityService + TYPE_ACCESSIBILITY_OVERLAY` — и navigation-bar trigger, и KnockUI поверх текущего приложения.
+
+`SYSTEM_ALERT_WINDOW` удалён из manifest и не входит в текущий Android-path. AccessibilityService использует `canRetrieveWindowContent=false` и не читает содержимое экранов.
 
 Google Play допускает AccessibilityService и для приложений, не являющихся accessibility tools, но требует declaration, prominent in-app disclosure, affirmative consent и review. Для приложения с AccessibilityService доступен advance notice App Review.
 
-Два системных подтверждения — текущий UX/compliance риск, а не технический blocker. Отдельно проверяется возможность сократить onboarding до одного user grant.
+Текущий onboarding therefore строится вокруг одного пользовательского включения Accessibility; это остаётся UX/compliance задачей, а не техническим blocker.
 
 Остальные runtime-ограничения сохраняются: чувствительные экраны могут скрывать application overlay; запуск действий зависит от background-launch rules и intent/deep-link contracts; Settings Console учитывает package visibility.
 
@@ -351,12 +351,12 @@ Raw coordinate space совпадает с physical display `1440 × 2880` од�
 
 Публичная карта синхронизирована с рабочим планом `4tap-app`:
 
-- ближайший Android milestone: другая программа → 3/4 быстрых угловых тапа → KnockUI → `S → C → SC` → действие;
+- подтверждённый Android milestone: другая программа → 3/4 быстрых угловых тапа → KnockUI → двухзнаковая команда → действие; текущий recognizer v2.1 / Gesture Check / command flow — stable real-device baseline;
 - Android activation описан как ordinary-app lower-corner sequence;
 - неудачная/неполная tap sequence означает reset, а не переход к системной модификации;
 - SystemUI/AOSP ветвь помечена архивной и удалена из активного roadmap-графа;
 - Local Canvas связан с общим `ActivationRequest`;
-- Design Canon, 4Tap Graffiti Profile, Settings Console, Founder 40 privacy rule и Russia Integration Catalog остаются в roadmap;
+- текущий Product Canon focus — усовершенствование поверхности KnockUI; Design Canon, 4Tap Graffiti Profile, Settings Console, Founder 40 privacy rule и Russia Integration Catalog остаются в roadmap;
 - RuStore остаётся primary Russia channel, Google Play и другие магазины — дополнительными;
 - monetization и promotion сохранены отдельными продуктными узлами.
 
@@ -477,7 +477,7 @@ The public architecture now records one shared Pair Selection geometry:
 - Search is navigation through the same selector: 1 character → X/Y stage, 2 characters → exact XY;
 - Back: Y→X; standalone X after НАЗНАЧИТЬ→НАЗНАЧИТЬ preserving Destination; standalone X from Command→Command unchanged.
 
-Pair Selection geometry is approved and Android implementation candidate now exists (`PairSelectionGridView` + standalone `ЗНАКОПАРА`). Build/device verification is pending.
+Pair Selection geometry is approved. The shared `PairSelectionGridView` + standalone `ЗНАКОПАРА` are present in the current Android baseline; pair-first and destination-first flows passed on a physical device. Existing-Command XY edit remains a separate explicit device check.
 
 ## Gesture Check — approved base surface
 
@@ -485,17 +485,19 @@ The public architecture now records the concrete Gesture Check behavior:
 
 - `Back | ПРОВЕРКА ЖЕСТА`;
 - both `[X] + [Y]` examples remain visible;
-- X/Y is selected by tap; there is no automatic switching;
-- either sign may be redrawn any number of times, including after PASS;
-- one fixed drawing canvas never moves because of recognition feedback;
-- feedback is textual; no new PASS/FAIL pictograms are introduced;
-- a fixed four-line zone reserves up to two lines for the latest X result and two for Y;
-- retry replaces only that sign's previous result;
+- при входе активен X и действует режим `AUTO`;
+- успешный X в `AUTO` автоматически переводит активность на Y; FAIL не переключает знак;
+- любой явный тап пользователя по X или Y переводит сессию в `MANUAL`, после чего автопереключение отключено;
+- любой знак можно перерисовывать без ограничения, включая после PASS;
+- один fixed drawing canvas не меняет положение из-за recognition feedback;
+- feedback текстовый; новые PASS/FAIL pictograms не вводятся;
+- fixed four-line zone резервирует до двух строк для последнего X-result и двух для Y;
+- новая попытка очищает старый feedback только активного знака уже на `ACTION_DOWN`; результат второго знака сохраняется;
 - before any attempt the bottom action is `ПРОПУСТИТЬ`; after an attempt it is `ПРОДОЛЖИТЬ`;
 - PASS/FAIL never gates continuation and is not persisted as part of Command;
 - exit routing remains `XY + no Destination → ВЕДЕТ В`, `XY + Destination → КОМАНДА`.
 
-First Android candidate uses a 72 dp pair row, adaptive canvas, fixed four × 24 dp feedback lines and fixed 56 dp bottom action. These are implementation-level values pending physical review; the approved fixed structure is unchanged.
+The current Android build uses a 72 dp pair row, adaptive canvas, fixed four × 24 dp feedback lines and fixed 56 dp bottom action. These implementation-level values are present in the stable physical-device baseline, but they are not promoted to generic canon solely by that stability result.
 
 ## Pair Selection / Gesture Check / Recognizer — Android candidate implemented
 
@@ -510,14 +512,14 @@ Private `4tap-app` now contains the complete implementation candidate for the ap
 - recognizer now loads all 36 canonical Profile v1 SVG strokes instead of hardcoded S/C templates;
 - recognizer tests were added for all canonical self-matches, scale/translation invariance and S/5, I/1, Z/2.
 
-Verification status is deliberately separate from implementation status:
+Current verification status:
 
 1. `testDebugUnitTest` — PASS (`BUILD SUCCESSFUL`, 2026-10-01);
 2. `assembleDebug` — PASS (`BUILD SUCCESSFUL`, 2026-10-01);
-3. pair-first / destination-first / edit XY on physical device — not yet confirmed;
-4. `4 taps → KnockUI → SC → Settings` regression after recognizer replacement — not yet confirmed.
-
-No new PASS is recorded yet.
+3. pair-first and destination-first creation — real-device PASS;
+4. newly created command execution through KnockUI — PASS ×3;
+5. recognizer v2.1 / Gesture Check / current command flow — stable physical-device baseline;
+6. Existing-Command XY edit — still requires its own explicit device check.
 
 ## Real-device command creation + recognizer review — 2026-10-01
 
