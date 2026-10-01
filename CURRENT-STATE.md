@@ -609,3 +609,21 @@ After installing the build with revised Q, marker-oriented templates and endpoin
 This closes the pending physical-device verification status for recognizer v2.1 / Gesture Check / current command flow and establishes them as the current Android baseline.
 
 Further recognizer changes are opened only for new reproducible problems or a separate planned calibration/personalization stage.
+
+## KnockUI control strip canon — 2026-10-02
+
+Утверждён следующий слой Product Canon KnockUI:
+
+- KnockUI сохраняет две рабочие панели: `Ярлыки` / `Рисование`;
+- верхняя полоса — отдельный functional control strip, не обычный `72 dp + Back + title` application header;
+- порядок: `4Tap Logo | Ярлыки | Рисование | [Slot 1 | Slot 2 | Send — только Draw] | flexible space | Close`;
+- Logo — служебная About-кнопка, а не третья панель; до появления мультфильма рабочая область показывает локализуемый длинный текст с изображениями и вертикальным scroll;
+- на светлом фоне белая графика Logo инвертируется в `#159B92`;
+- в Draw под control strip выделяется отдельная Destination-line;
+- `Send` видим всегда в Draw, disabled до полной исполнимой пары и enabled после её получения;
+- без выбора Slot действует `AUTO`: Slot 1 → Slot 2 → Destination preview → auto-Send после короткой заметной задержки;
+- tap по Slot отменяет pending auto-Send и переводит Draw в `MANUAL`; выбранный Slot остаётся целью до явного выбора другого, а выполнение возможно только по `Send`;
+- в private `4tap-app` добавлены канонические `logo-4tap.svg`, `send.svg`, `close.svg` рядом с существующими KnockUI icons.
+
+Точные размеры окна/строк/control-strip элементов, интервалы, позиционирование, visual states и длительность AUTO-delay пока не утверждены. Следующий шаг — именно эта геометрия; recognizer v2.1 / Gesture Check baseline не меняется.
+
