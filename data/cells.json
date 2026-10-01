@@ -131,7 +131,7 @@
     "title": "Command Space",
     "group": "PROTOCOL",
     "short": "Пары символов A–Z и 0–9 образуют пространство команд.",
-    "description": "Базовый словарь содержит 36 символов. При запрете пары из двух одинаковых символов получается 36 × 35 = 1260 двухсимвольных команд.",
+    "description": "Базовый словарь содержит 36 символов. Разрешены все упорядоченные пары, включая пары из двух одинаковых символов; 36 × 36 = 1296 двухсимвольных команд.",
     "purpose": "Создать компактный и запоминаемый namespace команд.",
     "kind": "core",
     "models": [
@@ -155,8 +155,8 @@
     ],
     "parameters": {
       "alphabet": "A–Z + 0–9",
-      "capacity": 1260,
-      "same_symbol_pair": "excluded"
+      "capacity": 1296,
+      "same_symbol_pair": "allowed"
     },
     "constraints": [
       "В конкретном канале способ ввода символов может отличаться."
@@ -1620,14 +1620,14 @@
       "UserGesture assignment"
     ],
     "parameters": {
-      "capacity_view": 1260,
+      "capacity_view": 1296,
       "system_editable": false,
       "user_editable": true
     },
     "constraints": [
       "Installed-app discovery is subject to Android 11+ package visibility.",
       "Google Play treats installed-app inventory as sensitive; broad QUERY_ALL_PACKAGES requires core-function justification and declaration, and targeted visibility should be preferred when sufficient.",
-      "The 1260-space UI should provide search/filtering rather than relying only on a literal matrix."
+      "The 1296-space UI should provide search/filtering rather than relying only on a literal matrix."
     ],
     "open_questions": [
       "Can an ACTION_MAIN/LAUNCHER intent query provide sufficient scoped visibility for the desired app picker without QUERY_ALL_PACKAGES?"
@@ -2565,7 +2565,7 @@
       "Команда XY"
     ],
     "parameters": {
-      "namespace": 1260
+      "namespace": 1296
     },
     "constraints": [
       "Gesture input is confined to the Mini Program UI.",
@@ -2832,7 +2832,7 @@
       "Команда XY"
     ],
     "parameters": {
-      "namespace": 1260
+      "namespace": 1296
     },
     "constraints": [
       "Скорость ниже жестового вызова",

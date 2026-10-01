@@ -426,10 +426,6 @@
       html += `<tr><th class="rowhead">${a}</th>`;
       alphabet.forEach(b => {
         const combo = a + b;
-        if (a === b) {
-          html += '<td><button class="combo-btn disabled" type="button" disabled>—</button></td>';
-          return;
-        }
         const item = byCombo.get(combo);
         const cls = item ? (item.type === 'system' ? 'system' : 'user') : '';
         html += `<td><button class="combo-btn ${cls}" type="button" data-combo="${combo}" title="${combo}">${combo}</button></td>`;
@@ -465,7 +461,7 @@
   function updateStats() {
     const sys = state.gestures.filter(x => x.type === 'system').length;
     const usr = state.gestures.filter(x => x.type === 'user').length;
-    stats.textContent = `System: ${sys} · User: ${usr} · Free: ${1260 - sys - usr}`;
+    stats.textContent = `System: ${sys} · User: ${usr} · Free: ${1296 - sys - usr}`;
   }
 
   comboSearch.addEventListener('input', () => {
