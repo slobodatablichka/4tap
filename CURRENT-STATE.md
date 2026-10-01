@@ -68,7 +68,7 @@ Android 4Tap — обычное пользовательское приложе�
 - универсальное определение «пустой/неактивной» точки в чужом приложении не может считаться гарантированным;
 - Android intents/deep links подтверждены с ограничениями background activity launch и resolver;
 - требования Google Play к AccessibilityService и package visibility внесены в документацию;
-- $1 Recognizer оставлен как технически реальный MVP-кандидат, но качество на 36 символах требует собственного прототипа;
+- проверка 2026-09-28 рассматривала $1 Recognizer как технический ориентир для MVP; текущий implementation-кандидат уже заменил S/C-only прототип собственным profile-driven matcher по 36 каноническим SVG, при этом реальное качество и threshold всё ещё требуют отдельной верификации;
 - iOS Custom Keyboard подтверждён как ограниченная input surface; App Review Guideline 4.4.1 блокирует запуск произвольных приложений из keyboard extension;
 - WeChat Mini Program подтверждён как локальная/contained среда, не глобальный OS-layer;
 - WhatsApp Cloud API подтверждает чатовый command/response transport через webhooks;
@@ -459,7 +459,7 @@ Refinement реализован и ожидает повторный real-device
 
 `ВЕДЕТ В` всегда требует известную XY. `НАЗНАЧИТЬ` используется только тогда, когда Destination выбирается до XY.
 
-Текущий Android-код ещё не полностью соответствует нормализованной логике: destination-first после выбора Destination пока останавливается на pending draft, а pair-first после свободной XY пока идёт напрямую в `ВЕДЕТ В`. Это implementation gaps, а не альтернативные flow.
+Новый Android implementation-кандидат уже соответствует нормализованной маршрутизации: destination-first продолжает Destination → Pair Selection → Gesture Check → Command, а pair-first ведёт свободную XY → Gesture Check → ВЕДЕТ В. Unit/build/real-device verification ещё не выполнены.
 
 ## Pair Selection — contextual geometry approved
 
@@ -477,7 +477,7 @@ The public architecture now records one shared Pair Selection geometry:
 - Search is navigation through the same selector: 1 character → X/Y stage, 2 characters → exact XY;
 - Back: Y→X; standalone X after НАЗНАЧИТЬ→НАЗНАЧИТЬ preserving Destination; standalone X from Command→Command unchanged.
 
-Pair Selection geometry is now approved for Android implementation.
+Pair Selection geometry is approved and Android implementation candidate now exists (`PairSelectionGridView` + standalone `ЗНАКОПАРА`). Build/device verification is pending.
 
 ## Gesture Check — approved base surface
 
@@ -495,7 +495,29 @@ The public architecture now records the concrete Gesture Check behavior:
 - PASS/FAIL never gates continuation and is not persisted as part of Command;
 - exit routing remains `XY + no Destination → ВЕДЕТ В`, `XY + Destination → КОМАНДА`.
 
-Exact numeric canvas dimensions and final feedback typography remain implementation-level geometry decisions within this fixed structure.
+First Android candidate uses a 72 dp pair row, adaptive canvas, fixed four × 24 dp feedback lines and fixed 56 dp bottom action. These are implementation-level values pending physical review; the approved fixed structure is unchanged.
+
+## Pair Selection / Gesture Check / Recognizer — Android candidate implemented
+
+Private `4tap-app` now contains the complete implementation candidate for the approved command-flow block:
+
+- one shared `PairSelectionGridView` for Commands, destination-first and existing-Command edit;
+- standalone `Back | ЗНАКОПАРА | Search` surface;
+- pair-first: `XY → Gesture Check → ВЕДЕТ В → Destination → Command`;
+- destination-first: `НАЗНАЧИТЬ → Destination → ЗНАКОПАРА → Gesture Check → Command`;
+- edit: `Command → ЗНАКОПАРА → Gesture Check → Command`;
+- Gesture Check supports arbitrary X/Y switching, unlimited retries, independent latest-result feedback and non-blocking skip/continue;
+- recognizer now loads all 36 canonical Profile v1 SVG strokes instead of hardcoded S/C templates;
+- recognizer tests were added for all canonical self-matches, scale/translation invariance and S/5, I/1, Z/2.
+
+Verification status is deliberately separate from implementation status:
+
+1. `testDebugUnitTest` — not yet confirmed;
+2. `assembleDebug` — not yet confirmed for this candidate;
+3. pair-first / destination-first / edit XY on physical device — not yet confirmed;
+4. `4 taps → KnockUI → SC → Settings` regression after recognizer replacement — not yet confirmed.
+
+No new PASS is recorded yet.
 
 ## iOS implementation options
 

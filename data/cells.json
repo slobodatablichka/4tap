@@ -204,7 +204,7 @@
     "parameters": {
       "current_working_version": "v0.1",
       "core_surfaces": "KnockUI; 4Tap; Команды; Команда; Command Space / Pair Selection; Gesture Check / ПРОВЕРКА ЖЕСТА; Destination / ВЕДЕТ В; Assign / НАЗНАЧИТЬ; Алфавит; Настройки",
-      "immediate_next": "implement Pair Selection → Gesture Check → data-driven routing",
+      "immediate_next": "verify implemented Pair Selection + Gesture Check + 36-symbol recognizer: unit tests → assembleDebug → real-device review",
       "next_revision": "v0.2 after first canon-driven implementation/usability pass",
       "public_beta": "v1.0 before public beta",
       "knockui_panel_model": "approved: quick_shortcuts / drawing_canvas; remember last active panel",
@@ -229,8 +229,8 @@
       "canonical_frame": "40×40 dp visible asset for empty square slots/containers where specified",
       "destination_semantics": "ВЕДЕТ В requires known XY",
       "assign_semantics": "НАЗНАЧИТЬ selects Destination before XY",
-      "pair_selection": "approved contextual geometry: persistent [X]+[Y] row; 6×6 X → 6×6 Y; optional ДЛЯ: Destination; standalone header Back | ЗНАКОПАРА | Search; free XY → Gesture Check",
-      "gesture_check": "approved base surface: tap-select X/Y; unlimited retries incl. after PASS; fixed canvas; fixed 4-line latest-result zone; text feedback; skip/continue; no gate; data-driven exit"
+      "pair_selection": "approved and implemented candidate: persistent 64 dp [X]+[Y] row; 6×6 X → 6×6 Y; optional ДЛЯ: Destination; standalone Back | ЗНАКОПАРА | Search; free XY → Gesture Check",
+      "gesture_check": "approved and implemented candidate: manual X/Y selection; unlimited retries; adaptive fixed-position canvas; fixed 4-line result zone; text feedback; skip/continue; no gate"
     },
     "constraints": [
       "Канон должен сохранять скорость и минимальное вмешательство в текущий контекст пользователя.",
@@ -251,8 +251,7 @@
     "open_questions": [
       "Финальная типографика и motion language",
       "Визуальная степень заметности KnockUI",
-      "Точная геометрия и состояния основных поверхностей",
-      "Gesture Check exact numeric canvas/result typography within approved fixed structure."
+      "Точная геометрия и состояния основных поверхностей"
     ],
     "tags": [
       "design",
@@ -610,7 +609,7 @@
       "confidence": "high",
       "summary": "Full chain verified after removing SYSTEM_ALERT_WINDOW: navigation-bar 4 taps → Accessibility KnockUI → S → C → SC → Settings.",
       "sources": [],
-      "next_step": "Preserve the verified activation baseline while Pair Selection + Gesture Check Android implementation is completed; onboarding follows Design Canon, then newer stock Android validation.",
+      "next_step": "Preserve the verified activation baseline while the new 36-symbol recognizer + Pair Selection + Gesture Check candidate is verified; explicitly rerun 4 taps → KnockUI → SC → Settings after the UI/recognizer build.",
       "implication": "The first Android end-to-end milestone is passed; remaining risk is product/distribution suitability rather than basic trigger feasibility."
     }
   },
@@ -1252,8 +1251,8 @@
     "section": "android",
     "title": "Gesture Recognizer",
     "group": "RECOGNITION",
-    "short": "Распознаёт утверждённые одноштриховые знаки 4Tap A–Z и 0–9.",
-    "description": "$1 is a real, lightweight unistroke template matcher designed for rapid UI prototyping. Published work reports strong accuracy on its evaluated gesture sets, but those results do not validate a 36-symbol KnockUI Graffiti alphabet, finger input, or the chosen confidence threshold.",
+    "short": "36-знаковый profile-driven recognizer реализован как кандидат; качество на реальном пальцевом вводе ещё проверяется.",
+    "description": "Current 4tap-app code no longer limits recognition to hardcoded S/C. The implementation candidate loads all 36 canonical 4Tap Graffiti Profile v1 SVG strokes, preserves drawing direction, normalizes translation/uniform scale, resamples the path, ranks all templates and applies a prototype rejection threshold. Unit tests are present but have not yet been run in the current verification cycle.",
     "purpose": "Преобразовать траекторию пальца в символ.",
     "kind": "core",
     "models": [
@@ -1265,30 +1264,39 @@
     ],
     "status": "needs-validation",
     "inputs": [
-      "Нормализованный штрих"
+      "Finger stroke / GesturePoint sequence",
+      "36 canonical 4Tap Graffiti Profile v1 SVG templates"
     ],
     "outputs": [
-      "Recognized symbol + confidence"
+      "Accepted symbol or rejection",
+      "Nearest candidate + distance",
+      "Second candidate + distance"
     ],
     "parameters": {
-      "candidate": "$1 Unistroke Recognizer",
+      "implementation": "profile-driven unistroke template matcher in 4tap-app/PalmGraffitiRecognizer.kt",
       "alphabet": "A–Z + 0–9",
-      "published_role": "rapid prototyping; template matching",
-      "current_prototype_subset": "S, C",
+      "template_source": "4tap-app/design/graffiti/v1/annotated/*.svg",
+      "svg_stroke_commands": "M; relative l; relative c; <line>",
       "direction_sensitive": true,
-      "product_reference": "4Tap Graffiti Profile v1",
-      "source": "4tap-app/design/graffiti/v1",
-      "attention_pairs": "S/5; I/1; Z/2",
-      "start_rule": "all signs start at the top except A, M, N"
+      "normalization": "translation + uniform scale; ordered-path direction preserved",
+      "resampling": "64 path samples",
+      "prototype_reject_distance": 0.3,
+      "threshold_status": "technical prototype parameter; not final canon",
+      "current_prototype_subset": "all 36 templates loaded by implementation candidate",
+      "verification_tests": "36 self-matches; translation/scale invariance; S/5, I/1, Z/2; short-stroke rejection; nearest-candidate diagnostic",
+      "verification_status": "tests added; testDebugUnitTest/assembleDebug/real-device results pending",
+      "attention_pairs": "S/5; I/1; Z/2"
     },
     "constraints": [
-      "Ошибки распознавания и вариативность почерка должны измеряться на реальном вводе.",
-      "Особо контролировать S/5, I/1 и Z/2.",
-      "Не перепроектировать утверждённый продуктовый алфавит только ради удобства классификатора."
+      "Do not infer 36-symbol real-world accuracy from the earlier S/C device PASS.",
+      "Errors and handwriting variability must be measured on actual finger input.",
+      "Particularly monitor S/5, I/1 and Z/2.",
+      "The 0.30 rejection threshold is provisional until device evidence exists.",
+      "Canonical SVG geometry remains the template source; do not maintain a second hidden hand-coded alphabet."
     ],
     "open_questions": [
-      "What confusion matrix is obtained for the actual 36 KnockUI symbols?",
-      "What confidence/rejection threshold gives an acceptable false-command rate?",
+      "What confusion matrix is obtained for real finger input across all 36 symbols?",
+      "What rejection threshold gives an acceptable false-command rate?",
       "Is per-user calibration materially beneficial?"
     ],
     "tags": [
@@ -1297,18 +1305,13 @@
     ],
     "order": 70,
     "verification": {
-      "state": "requires-prototype",
-      "date": "2026-09-28",
-      "confidence": "high",
-      "summary": "The limited real-device prototype now confirms recognition of the original Palm Graffiti S and C and correct SC sequencing. Full A–Z / 0–9 accuracy remains unvalidated and still requires its own dataset and tests.",
-      "sources": [
-        {
-          "label": "$1 Unistroke Recognizer — University of Washington",
-          "url": "https://depts.washington.edu/acelab/proj/dollar/index.html"
-        }
-      ],
-      "next_step": "S/C and SC sequencing are now confirmed on a real Android device. Next move the working recognizer into the post-activation local KnockUI surface; defer the 36-symbol benchmark until the limited end-to-end flow is stable.",
-      "implication": "Ограниченный S/C prototype подтверждает жизнеспособность направленно-чувствительного одноштрихового распознавания на реальном пальцевом вводе, но нельзя переносить этот результат на весь алфавит. Для 36 символов всё ещё нужна собственная матрица ошибок."
+      "state": "implemented-unverified",
+      "date": "2026-10-01",
+      "confidence": "medium",
+      "summary": "36-template recognizer and verification tests are implemented in 4tap-app, but this cycle has not yet produced unit-test, build or physical-device PASS.",
+      "sources": [],
+      "next_step": "Run testDebugUnitTest, then assembleDebug, then exercise Gesture Check and the KnockUI SC regression on the physical Android device.",
+      "implication": "The prior architectural gap (S/C-only code) is closed in implementation, but recognition quality remains an empirical validation task."
     }
   },
   {
@@ -3411,8 +3414,8 @@
     "section": "roadmap",
     "title": "Stage 2 — Product Canon",
     "group": "ROADMAP",
-    "short": "Pair Selection contextual geometry and Gesture Check base surface approved; combined Android implementation is next.",
-    "description": "Stage 2 active. Pair Selection now has approved contextual geometry across Commands, destination-first, and Command edit; Gesture Check has an approved base composition. Next: implement the combined Android flow and review it on device.",
+    "short": "Pair Selection, Gesture Check and the 36-symbol recognizer are implemented candidates; verification is next.",
+    "description": "Stage 2 active. Canon and implementation candidates now exist for shared Pair Selection and Gesture Check, together with a recognizer driven by all 36 canonical Graffiti SVGs. No new PASS is recorded until unit tests, assembleDebug and real-device review.",
     "purpose": "Стабилизировать визуальный язык и жестовые эталоны до масштабирования продукта.",
     "kind": "core",
     "models": [
@@ -3435,12 +3438,12 @@
     ],
     "parameters": {
       "stage_status": "active",
-      "current_task": "implement Pair Selection → Gesture Check → data-driven routing",
+      "current_task": "verify Pair Selection + Gesture Check + 36-symbol recognizer implementation candidate",
       "graffiti": "4Tap Graffiti Profile v1 — approved",
-      "immediate_next": "assembleDebug + real-device review after implementation",
-      "subsequent": "verify destination-first, pair-first, and existing-Command XY edit on device",
+      "immediate_next": "testDebugUnitTest → assembleDebug",
+      "subsequent": "real-device pair-first → destination-first → edit XY → KnockUI SC regression",
       "public_beta_gate": "Design Canon v1.0 before public beta",
-      "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; normalized dual create-flow with shared Pair Selection + Gesture Check; brand teal #159B92; Pair Selection contextual geometry; Gesture Check base surface",
+      "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; normalized dual create-flow with shared Pair Selection + Gesture Check; brand teal #159B92; Pair Selection contextual geometry; Gesture Check base surface; 36-symbol recognizer implementation candidate (verification pending)",
       "content_detailing": "separate follow-up per screen"
     },
     "constraints": [
@@ -3947,7 +3950,7 @@
     "title": "Commands Screen",
     "group": "UX SYSTEM",
     "short": "Утверждённый экран управления назначенными командами плюс отдельное представление Command Space для занятости 1296 пар.",
-    "description": "Commands / Команды hosts the shared Pair Selection as the КОМБИНАЦИИ mode. A free XY should proceed to optional Gesture Check; only after that does pair-first creation open ВЕДЕТ В. Current Android still contains the older direct free-XY → ВЕДЕТ В step and needs alignment.",
+    "description": "Commands / Команды hosts the shared Pair Selection as КОМБИНАЦИИ. The Android implementation candidate now routes a free XY to Gesture Check first, then to ВЕДЕТ В; the previous direct free-XY → ВЕДЕТ В implementation has been removed. Verification is pending.",
     "purpose": "Сделать список команд одновременно управляющим интерфейсом и постоянной визуальной связью между жестом Graffiti, кодом XY и назначением.",
     "kind": "core",
     "models": [
@@ -4001,7 +4004,7 @@
       "command_space_view": "НАЗНАЧЕНИЯ / КОМБИНАЦИИ; Pair Selection uses persistent [X]+[Y] context row on both 6×6 stages",
       "add_command_flow": "ДОБАВИТЬ КОМАНДУ → НАЗНАЧИТЬ → Destination → Pair Selection → Gesture Check → Command",
       "command_space_search": "standard Android keyboard; A–Z + 0–9; max 2 chars; 1 char opens family; 2 chars opens exact pair",
-      "command_space_android": "current implementation predates Gesture Check; routing update pending",
+      "command_space_android": "shared PairSelectionGridView implementation candidate; free XY → Gesture Check; build/device verification pending",
       "add_command_current_implementation": "implemented: opens AssignActivity / НАЗНАЧИТЬ",
       "assignment_alignment": "destination right-aligned",
       "assigned_command_markers": "explicit exception: no start point / direction arrow for completed assignment Graffiti; text XY remains plain identifier",
@@ -4013,7 +4016,7 @@
       "header_actions": "canonical Back / Search / Menu assets; 48×48 dp touch; 40×40 dp visible",
       "search_icon": "framed canonical Search asset; not Android system icon",
       "menu_icon": "framed canonical Menu asset; geometry comes from asset",
-      "command_space_pair_flow": "free XY → Gesture Check; then no Destination → ВЕДЕТ В → Destination → Command",
+      "command_space_pair_flow": "implemented candidate: free XY → Gesture Check → ВЕДЕТ В → Destination → Command",
       "command_space_first_header": "[empty slot] + [empty slot] above first 6×6; same position as second-stage row"
     },
     "constraints": [
@@ -4027,7 +4030,7 @@
     ],
     "open_questions": [
       "Detailed content and population of the assigned-command list.",
-      "Real-device review after dual-flow navigation implementation."
+      "Real-device review of Pair Selection + Gesture Check routing."
     ],
     "tags": [
       "design",
@@ -4074,18 +4077,18 @@
       "first_level": "[empty] + [empty] context row, then 36 canonical Graffiti signs 6×6",
       "second_level": "[X] + [empty] in the same context row, then 36 Y signs 6×6",
       "occupancy_states": "available = normal; fully occupied family / occupied Y = muted; Commands may still inspect occupied",
-      "implementation_status": "contextual geometry approved; Android shared implementation pending",
+      "implementation_status": "shared PairSelectionGridView implemented candidate in Commands and standalone host; unit/build/device verification pending",
       "first_level_full_family": "muted color; remains openable for inspection",
       "search": "A–Z + 0–9; max 2; 1 char selects X/opens Y stage; 2 chars resolves exact XY; same occupancy/context rules",
       "free_pair_tap": "complete Pair Selection → always Gesture Check",
       "occupied_pair_tap": "Commands: may open existing Command; destination-first/edit: unavailable except current self-pair",
       "height_normalization": "common target height derived from X fit; proportions preserved",
       "second_level_header": "[Graffiti X] + [second slot]; no direct ВЕДЕТ В action",
-      "second_level_header_height_dp": 72,
+      "second_level_header_height_dp": 64,
       "bottom_add_button": "absent in КОМБИНАЦИИ; ADD remains only in НАЗНАЧЕНИЯ",
       "add_command": "not part of Pair Selection",
       "back_behavior": "Y stage → X stage; standalone X after НАЗНАЧИТЬ → НАЗНАЧИТЬ preserving Destination; X from Command edit → Command unchanged; Commands keeps its own hierarchy",
-      "context_row": "persistent on both stages: [X] + [Y]; keeps grid position stable",
+      "context_row": "persistent 64 dp row on both stages: [X] + [Y]; keeps grid position stable",
       "standalone_header": "Back | ЗНАКОПАРА | Search",
       "known_destination": "shown right-aligned in context row as ДЛЯ: Destination; 18 sp / 800; one line; ellipsis"
     },
@@ -4145,10 +4148,10 @@
       "row_text": "Roboto Slab 18 sp / 800",
       "bottom_actions": "DELETE | SAVE; fixed 56 dp",
       "command_xy": "editable",
-      "command_edit": "standalone Pair Selection (Back | ЗНАКОПАРА | Search; current XY + ДЛЯ: Destination) → Gesture Check → return XY to Command",
+      "command_edit": "implemented candidate: standalone Pair Selection → Gesture Check → selected XY returns to current CommandDraft; final change remains pending until SAVE",
       "status_toggle": "ACTIVE ↔ INACTIVE; no Android switch",
       "dirty_back": "confirm only when data changed",
-      "android_code": "implemented first pass in 4tap-app",
+      "android_code": "accepted Command baseline plus new XY-edit routing implementation candidate; new routing not yet device-verified",
       "destination_row": "ВЕДЕТ В",
       "destination_edit": "opens ВЕДЕТ В with current known XY",
       "destination_model": "Command XY → Destination",
@@ -4157,7 +4160,7 @@
       "scale_review": "current implementation feels somewhat large; review during refinement",
       "destination_flow": "implemented first pass: opens Destination and receives APP/SYSTEM/WEB result",
       "existing_command_edit": "Destination and XY remain independently editable",
-      "new_command_entry": "complete draft arrives after both XY and Destination are known; Gesture Check is optional/non-blocking and has per-attempt feedback"
+      "new_command_entry": "complete draft arrives after XY + Destination; Gesture Check is optional/non-blocking with per-attempt feedback; implementation candidate pending verification"
     },
     "constraints": [
       "Destination surface is detailed and implemented through its own Design Canon.",
@@ -4186,7 +4189,7 @@
     "title": "Assign / НАЗНАЧИТЬ",
     "group": "UX SYSTEM",
     "short": "Отдельная поверхность destination-first создания: выбрать объект, которому назначить новую знакопару.",
-    "description": "НАЗНАЧИТЬ chooses Destination first. Target flow then opens the shared Pair Selection, followed by optional Gesture Check and Command. Current Android stops at a pending Destination draft until Pair Selection is implemented.",
+    "description": "НАЗНАЧИТЬ chooses Destination first. The Android implementation candidate now preserves that Destination, opens standalone Pair Selection, then Gesture Check and Command. Build and real-device verification are pending.",
     "purpose": "Дать естественный путь создания команды от приложения/системного действия/WEB к свободной знакопаре.",
     "kind": "core",
     "models": [
@@ -4221,10 +4224,10 @@
       "next": "selected Destination → standalone Pair Selection (Back | ЗНАКОПАРА | Search; ДЛЯ: Destination) → Gesture Check → Command",
       "xy_context": "unknown on entry; no ВЕДЕТ В XY slots",
       "persistence": "final save happens on Command",
-      "implementation_status": "AssignActivity exists; continuation into approved Pair Selection pending",
+      "implementation_status": "destination-first continuation through Pair Selection + Gesture Check implemented candidate; verification pending",
       "header": "Back | НАЗНАЧИТЬ | Search",
       "xy_slots": "absent",
-      "android_implementation": "AssignActivity implemented; continuation into Pair Selection pending",
+      "android_implementation": "AssignActivity now preserves Destination and continues to ЗНАКОПАРА → Gesture Check → Command",
       "pair_selection_context": "Destination stays visible at right of persistent [X]+[Y] row"
     },
     "constraints": [
@@ -4235,7 +4238,7 @@
     ],
     "open_questions": [
       "Whether list/category geometry fully reuses Destination components.",
-      "Real-device review of first Assign surface."
+      "Real-device review of the complete destination-first flow."
     ],
     "tags": [
       "design",
@@ -4387,7 +4390,7 @@
       "edit_xy": "Command → Pair Selection → Gesture Check → Command",
       "gesture_check": "optional/non-blocking; PASS/FAIL belongs to individual attempts; does not change XY",
       "convergence": "Command opens when XY and Destination are both known",
-      "implementation_status": "project logic and surface geometry approved; combined Android implementation pending",
+      "implementation_status": "combined Android routing implemented candidate for destination-first, pair-first and edit XY; unit/build/device verification pending",
       "routing_invariant": "after Gesture Check: XY + no Destination → ВЕДЕТ В; XY + Destination → Command",
       "pair_selection_geometry": "persistent [X]+[Y] row; two stable-position 6×6 stages; standalone header Back | ЗНАКОПАРА | Search; optional ДЛЯ: Destination"
     },
@@ -4442,7 +4445,7 @@
     "parameters": {
       "capacity": 1296,
       "same_symbol_pairs": "allowed",
-      "context_row": "persistent on both stages; [empty]+[empty] → [X]+[empty]; grid position remains fixed",
+      "context_row": "persistent 64 dp on both stages; [empty]+[empty] → [X]+[empty]; grid position remains fixed",
       "stage_1": "36 canonical Graffiti signs; 6×6; choose X",
       "stage_2": "36 canonical Graffiti signs; 6×6; choose Y; state derives from full XY",
       "standalone_header": "Back | ЗНАКОПАРА | Search",
@@ -4457,8 +4460,9 @@
       "search": "text navigation in same selector: 1 char → X/Y-stage; 2 chars → exact XY",
       "drawing": "not used for XY assignment",
       "hosts": "Commands / КОМБИНАЦИИ; destination-first after НАЗНАЧИТЬ; Command XY edit",
-      "implementation_status": "geometry approved; Android implementation pending",
-      "post_check_routing": "not owned by Pair Selection"
+      "implementation_status": "PairSelectionGridView + standalone PairSelectionActivity implemented candidate; build/device verification pending",
+      "post_check_routing": "not owned by Pair Selection",
+      "android_components": "PairSelectionGridView; PairSelectionScreenView; PairSelectionActivity"
     },
     "constraints": [
       "The same 6×6 X → 6×6 Y core is reused in every context.",
@@ -4515,8 +4519,8 @@
       "active_sign": "tap X or Y; no automatic switching",
       "attempt_order": "arbitrary; X/Y may be repeated in any sequence",
       "repeat_after_pass": "allowed without limit",
-      "drawing_canvas": "single fixed canvas; position/size do not shift with feedback",
-      "result_zone": "fixed 4-line reserve: up to 2 lines for latest X result + up to 2 lines for latest Y result",
+      "drawing_canvas": "single adaptive canvas occupying the stable area between pair row and fixed result zone; does not shift with feedback",
+      "result_zone": "implemented candidate: fixed 4 × 24 dp lines; latest 2 lines X + latest 2 lines Y",
       "pass_text": "РАСПОЗНАНО — [X/Y]",
       "fail_unrecognized_text": "НЕ РАСПОЗНАНО — [X/Y]",
       "fail_other_text": "НЕ РАСПОЗНАНО — [X/Y] → / ОПРЕДЕЛЕНО КАК [actual]",
@@ -4528,7 +4532,10 @@
       "persistence": "check result is not stored as Command property",
       "back": "return to Pair Selection with selected XY preserved",
       "routing_rule": "XY + no Destination → ВЕДЕТ В; XY + Destination → Command",
-      "implementation_status": "surface behavior approved; Android implementation pending"
+      "implementation_status": "GestureCheckActivity + GestureCheckScreenView implemented candidate; build/device verification pending",
+      "pair_row": "implemented candidate: 72 dp; active sign teal, inactive sign muted teal",
+      "bottom_action": "implemented candidate: fixed 56 dp; SKIP before first attempt, CONTINUE afterwards",
+      "recognizer": "36 canonical A–Z + 0–9 SVG templates; profile-driven geometry matcher; validation pending"
     },
     "constraints": [
       "Gesture Check never changes XY.",
@@ -4541,9 +4548,7 @@
       "No new canonical PASS/FAIL pictograms are required for this surface."
     ],
     "open_questions": [
-      "Exact numeric canvas size.",
-      "Exact typography/height for four feedback lines.",
-      "Exact selected-state treatment for active X/Y within approved tokens."
+      "Real-device usability/recognition review may refine implementation-level canvas/result typography without changing the approved structure."
     ],
     "tags": [
       "design",
