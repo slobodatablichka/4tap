@@ -459,6 +459,29 @@ Refinement реализован и ожидает повторный real-device
 
 Новый conformance-pass ещё не получил real-device PASS: требуется `assembleDebug` и повторная проверка на устройстве.
 
+## Dual command-creation logic — approved
+
+Command creation formally split into two distinct paths.
+
+### Pair-first
+
+`КОМБИНАЦИИ → свободная XY → ВЕДЕТ В → Destination → КОМАНДА`.
+
+`ВЕДЕТ В` now requires a known XY. Both Graffiti slots are always filled; the former empty-XY state is invalid.
+
+### Destination-first
+
+`ДОБАВИТЬ КОМАНДУ → НАЗНАЧИТЬ → Destination → Command Input → XY → КОМАНДА`.
+
+`НАЗНАЧИТЬ` is a new separate surface, not a mode of `ВЕДЕТ В`. It selects the object that will receive a command, then passes the selected Destination to Command Input.
+
+Existing Command editing remains independent:
+
+- `КОМАНДА → ВЕДЕТ В` changes Destination;
+- `КОМАНДА → Command Input` changes XY.
+
+Current Android routing still reflects the older model in one place: ADD COMMAND opens ВЕДЕТ В with empty slots. The next implementation block must replace that with НАЗНАЧИТЬ and add the free-XY → ВЕДЕТ В path.
+
 ## iOS implementation options
 
 iOS больше не описывается как keyboard-only архитектура. Зафиксированы варианты реализации, окончательный выбор отложен.

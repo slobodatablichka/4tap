@@ -176,7 +176,7 @@
     "title": "4Tap Design Canon",
     "group": "UX SYSTEM",
     "short": "Единый визуальный и поведенческий канон для KnockUI, состояний ввода, обратной связи и пользовательских экранов.",
-    "description": "Design Canon задаёт визуальный язык и обязательный implementation gate: общий канон → реестр канонической графики → локальный канон поверхности → код. Android conformance-pass по уже реализованным Commands, Destination и Command выполнен; требуется сборка и повторный real-device review.",
+    "description": "Design Canon задаёт визуальный язык, canon/graphics implementation gate и формальную логику поверхностей. Создание команды имеет два утверждённых входа: от свободной XY через ВЕДЕТ В и от назначения через отдельную поверхность НАЗНАЧИТЬ.",
     "purpose": "Не допустить расхождения интерфейсов и закрепить узнаваемую механику продукта.",
     "kind": "core",
     "models": [
@@ -203,8 +203,8 @@
     ],
     "parameters": {
       "current_working_version": "v0.1",
-      "core_surfaces": "KnockUI; 4Tap; Команды; Команда; Destination / ВЕДЕТ В; Алфавит; Настройки",
-      "immediate_next": "assembleDebug + real-device review of canon-conformance Android UI",
+      "core_surfaces": "KnockUI; 4Tap; Команды; Команда; Command Space; Destination / ВЕДЕТ В; Assign / НАЗНАЧИТЬ; Command Input; Алфавит; Настройки",
+      "immediate_next": "implement dual command-creation navigation in Android, then build/real-device review",
       "next_revision": "v0.2 after first canon-driven implementation/usability pass",
       "public_beta": "v1.0 before public beta",
       "knockui_panel_model": "approved: quick_shortcuts / drawing_canvas; remember last active panel",
@@ -218,7 +218,7 @@
       "destination_surface": "approved v0.1; Apps / System / WEB; WEB URL model; history/share reserved",
       "command_input": "approved structure: 1296 pairs; annotated 6×6 references; proactive occupancy; editable slots; explicit recognition-error feedback",
       "command_space_view": "approved as dedicated availability representation in Commands; detailed UI next",
-      "command_creation": "ADD COMMAND → Destination → suggested free XY → Command Input → Command",
+      "command_creation": "pair-first: КОМБИНАЦИИ → free XY → ВЕДЕТ В → Destination → Command; destination-first: ADD COMMAND → НАЗНАЧИТЬ → Destination → Command Input → XY → Command",
       "graffiti_display_priority": "default: canonical 4Tap Graffiti for alphabet signs being shown/selected/formed; plain text only for explicitly defined roles such as existing XY identifier or keyboard search",
       "graffiti_guides": "default: start point + drawing-direction arrow; explicit exception for already completed/assigned command presentation",
       "back_navigation": "single Back in top header; one level back in current context; secondary rows do not duplicate",
@@ -227,7 +227,9 @@
       "missing_graphic": "stop implementation; create/approve asset first",
       "system_icon_substitution": "not allowed by default",
       "canonical_header_actions": "Back / Menu / Search: 48×48 dp touch; 40×40 dp visible canonical artwork",
-      "canonical_frame": "40×40 dp visible asset for empty square slots/containers where specified"
+      "canonical_frame": "40×40 dp visible asset for empty square slots/containers where specified",
+      "destination_semantics": "ВЕДЕТ В requires known XY",
+      "assign_semantics": "НАЗНАЧИТЬ selects Destination before XY"
     },
     "constraints": [
       "Канон должен сохранять скорость и минимальное вмешательство в текущий контекст пользователя.",
@@ -3408,8 +3410,8 @@
     "section": "roadmap",
     "title": "Stage 2 — Product Canon",
     "group": "ROADMAP",
-    "short": "Текущий этап: Android UI приведён к нормализованному канону; следующий рубеж — build + real-device review.",
-    "description": "Stage 2 активен. Canon/graphics gate нормализован, а Commands/Destination/Command получили Android conformance-pass: канонические Search/Frame, единые header-actions и единый Back. Следующий шаг — assembleDebug и повторная проверка на физическом устройстве; после PASS — Command Input.",
+    "short": "Текущий этап: dual command-creation logic approved; next — Android routing implementation.",
+    "description": "Stage 2 active. Design Canon and canonical graphics are normalized. Command creation is now formally split into pair-first via ВЕДЕТ В and destination-first via the separate НАЗНАЧИТЬ surface. Next step: implement routing/state separation in Android, then build + real-device review.",
     "purpose": "Стабилизировать визуальный язык и жестовые эталоны до масштабирования продукта.",
     "kind": "core",
     "models": [
@@ -3432,12 +3434,12 @@
     ],
     "parameters": {
       "stage_status": "active",
-      "current_task": "Android canon-conformance — build + real-device review",
+      "current_task": "dual command-creation routing implementation",
       "graffiti": "4Tap Graffiti Profile v1 — approved",
-      "immediate_next": "verify canonical Search/Menu/Back/Frame and single Back behavior on device",
-      "subsequent": "Command Input exact geometry + free-pair recommendation UI",
+      "immediate_next": "ADD COMMAND → НАЗНАЧИТЬ; free XY → ВЕДЕТ В; prohibit empty-XY ВЕДЕТ В",
+      "subsequent": "build/real-device review → Command Input exact geometry + free-pair recommendations",
       "public_beta_gate": "Design Canon v1.0 before public beta",
-      "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; Destination-first create flow; Command Input structure; brand teal #159B92",
+      "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; dual create-flow: pair-first ВЕДЕТ В + destination-first НАЗНАЧИТЬ; Command Input structure; brand teal #159B92",
       "content_detailing": "separate follow-up per screen"
     },
     "constraints": [
@@ -3944,7 +3946,7 @@
     "title": "Commands Screen",
     "group": "UX SYSTEM",
     "short": "Утверждённый экран управления назначенными командами плюс отдельное представление Command Space для занятости 1296 пар.",
-    "description": "Commands / Команды приведён к нормализованному Design Canon: один верхний Back, канонические Search/Menu, 48→40 dp header-actions, канонический Frame для слотов. Второй уровень Command Space больше не дублирует Back; верхний Back возвращает на первый уровень. Требуется build/real-device review.",
+    "description": "Commands / Команды управляет назначенными командами и Command Space. ДОБАВИТЬ КОМАНДУ в НАЗНАЧЕНИЯ открывает отдельную поверхность НАЗНАЧИТЬ. В КОМБИНАЦИИ выбранная свободная полная XY ведёт через действие ВЕДЕТ В к Destination.",
     "purpose": "Сделать список команд одновременно управляющим интерфейсом и постоянной визуальной связью между жестом Graffiti, кодом XY и назначением.",
     "kind": "core",
     "models": [
@@ -3967,7 +3969,9 @@
       "Open Command detail/editor",
       "Add command action",
       "Open Command Space availability view",
-      "Start destination-first command creation"
+      "Start destination-first command creation",
+      "Start destination-first creation via НАЗНАЧИТЬ",
+      "Start pair-first creation from free XY via ВЕДЕТ В"
     ],
     "parameters": {
       "brand_teal": "#159B92",
@@ -3993,20 +3997,21 @@
       "scroll": "list only; header and ADD COMMAND fixed; transient scrollbar",
       "layout_style": "flat continuous table; no cards/gaps",
       "command_space_view": "НАЗНАЧЕНИЯ / КОМБИНАЦИИ; first level 36 Graffiti glyphs 6×6; second level 36 individual second Graffiti glyphs",
-      "add_command_flow": "Destination first → suggested free XY → Command Input → Command",
+      "add_command_flow": "ДОБАВИТЬ КОМАНДУ → НАЗНАЧИТЬ → Destination → Command Input → XY → Command",
       "command_space_search": "standard Android keyboard; A–Z + 0–9; max 2 chars; 1 char opens family; 2 chars opens exact pair",
       "command_space_android": "canon-conformance implemented; build/real-device review pending",
-      "add_command_current_implementation": "active: opens Destination as first create-flow step; no automatic XY before Command Input exists",
+      "add_command_current_implementation": "outdated: currently opens ВЕДЕТ В; must be redirected to НАЗНАЧИТЬ",
       "assignment_alignment": "destination right-aligned",
       "assigned_command_markers": "explicit exception: no start point / direction arrow for completed assignment Graffiti; text XY remains plain identifier",
       "command_space_glyph_guides": "start point + direction arrow",
       "command_space_height_rule": "X establishes common target rendered height for all alphabet glyphs",
-      "command_space_second_header": "[Graffiti X] + [second slot] | ADD COMMAND; no duplicate Back",
+      "command_space_second_header": "[Graffiti X] + [second slot] | ВЕДЕТ В; no duplicate Back",
       "header_structure": "Back | COMMANDS / КОМАНДЫ | Search | Menu",
       "back_button": "canonical left header control; 48×48 dp touch area",
       "header_actions": "canonical Back / Search / Menu assets; 48×48 dp touch; 40×40 dp visible",
       "search_icon": "framed canonical Search asset; not Android system icon",
-      "menu_icon": "framed canonical Menu asset; geometry comes from asset"
+      "menu_icon": "framed canonical Menu asset; geometry comes from asset",
+      "command_space_pair_flow": "free XY → ВЕДЕТ В → Destination → Command"
     },
     "constraints": [
       "Graffiti-column uses real canonical trajectories from 4Tap Graffiti Profile v1, not font imitation.",
@@ -4018,7 +4023,7 @@
     ],
     "open_questions": [
       "Detailed content and population of the assigned-command list.",
-      "Real-device review after canon-conformance implementation."
+      "Real-device review after dual-flow navigation implementation."
     ],
     "tags": [
       "design",
@@ -4035,7 +4040,7 @@
     "title": "Command Space View",
     "group": "UX SYSTEM",
     "short": "Отдельное представление в контуре Commands показывает занятость и доступность полного пространства из 1296 знакопар.",
-    "description": "Command Space View остаётся вторым режимом Commands. На втором уровне отдельного Back в контекстной строке нет: единственный Back находится в основном header и возвращает к первому уровню. Контекстная строка содержит [Graffiti X] + [второй слот] | ДОБАВИТЬ КОМАНДУ.",
+    "description": "Command Space View — второй режим Commands. После выбора полной свободной XY действие ВЕДЕТ В открывает Destination в контексте этой пары. Занятая пара открывает существующую Command; отдельного XY-first ADD COMMAND больше нет.",
     "purpose": "Не провоцировать пользователя выбирать уже занятые комбинации и дать обзор доступного namespace.",
     "kind": "core",
     "models": [
@@ -4065,16 +4070,16 @@
       "first_level": "36 canonical Graffiti signs; 6×6; menu only; no counts; guides visible",
       "second_level": "36 individual second Graffiti signs; 6×6; pair state derives from selected first + cell",
       "occupancy_states": "free / partially occupied / fully occupied semantics; exact visuals TBD",
-      "implementation_status": "canon-conformance implemented; build/real-device review pending",
+      "implementation_status": "current Android UI requires flow correction to pair-first ВЕДЕТ В",
       "first_level_full_family": "muted color; remains openable for inspection",
       "search": "standard Android keyboard; A–Z + 0–9; max 2 symbols",
-      "free_pair_tap": "show free state only; do not start XY-first create flow",
+      "free_pair_tap": "select full free XY; enable ВЕДЕТ В",
       "occupied_pair_tap": "show assignment and allow opening existing Command",
       "height_normalization": "common target height derived from X fit; proportions preserved",
-      "second_level_header": "[Graffiti first] + [second slot] | ADD COMMAND",
+      "second_level_header": "[Graffiti first] + [second slot] | ВЕДЕТ В",
       "second_level_header_height_dp": 72,
       "bottom_add_button": "absent in COMBINATIONS; ADD lives in second-level header; assignments keeps bottom ADD",
-      "add_command": "opens Destination first; selected Command Space prefix/pair does not create XY-first flow",
+      "add_command": "not used on pair-first path; free XY opens ВЕДЕТ В",
       "back_behavior": "single top-header Back; second level → first level; top level → leave Commands"
     },
     "constraints": [
@@ -4082,7 +4087,7 @@
       "An existing command being edited must not be treated as conflicting with itself."
     ],
     "open_questions": [
-      "Real-device review after canon-conformance implementation."
+      "Real-device review after dual-flow navigation implementation."
     ],
     "tags": [
       "design",
@@ -4099,7 +4104,7 @@
     "title": "Command Screen",
     "group": "UX SYSTEM",
     "short": "Принятая рабочая поверхность одной команды: редактируемая комбинация XY, назначение Destination, статус и сохранение.",
-    "description": "Command / Команда управляет одной пользовательской двухзнаковой командой. Первая Android-реализация принята на физическом устройстве. Для существующей команды COMMAND XY и ВЕДЕТ В остаются независимо редактируемыми; новый destination-first порядок относится только к созданию через ADD COMMAND.",
+    "description": "Command / Команда — точка сборки и редактирования полной связи XY + Destination. Для существующей команды XY и ВЕДЕТ В редактируются независимо. Новая полная команда может прийти либо из pair-first flow, либо из destination-first flow.",
     "purpose": "Дать единый редактор одной команды, сохраняя визуальную связь между Graffiti, XY, назначением и состоянием.",
     "kind": "core",
     "models": [
@@ -4139,21 +4144,21 @@
       "dirty_back": "confirm only when data changed",
       "android_code": "implemented first pass in 4tap-app",
       "destination_row": "ВЕДЕТ В",
-      "destination_edit": "opens Destination surface",
+      "destination_edit": "opens ВЕДЕТ В with current known XY",
       "destination_model": "Command XY → Destination",
       "real_device_review": "accepted working surface; future changes are refinement",
       "graffiti_area_future_correction": "same size as KnockUI working field",
       "scale_review": "current implementation feels somewhat large; review during refinement",
       "destination_flow": "implemented first pass: opens Destination and receives APP/SYSTEM/WEB result",
       "existing_command_edit": "XY and Destination remain independently editable",
-      "new_command_entry": "completed draft arrives from Destination-first creation flow"
+      "new_command_entry": "complete draft may arrive from free XY → ВЕДЕТ В or НАЗНАЧИТЬ → Destination → Command Input"
     },
     "constraints": [
       "Destination surface is detailed and implemented through its own Design Canon.",
       "Real Graffiti geometry comes from approved v1 SVG sources.",
       "User-facing strings remain localizable.",
       "Command base structure is accepted; future visual changes are refinement, not a reset of the surface model.",
-      "Destination-first ordering applies to new-command creation, not to editing an existing command."
+      "Creation order depends on entry path; existing-command editing remains independent."
     ],
     "open_questions": [
       "Final delete confirmation behavior."
@@ -4168,13 +4173,78 @@
     ]
   },
   {
+    "id": "assign-surface",
+    "section": "product",
+    "order": 36.7,
+    "title": "Assign / НАЗНАЧИТЬ",
+    "group": "UX SYSTEM",
+    "short": "Отдельная поверхность destination-first создания: выбрать объект, которому назначить новую знакопару.",
+    "description": "НАЗНАЧИТЬ открывается из ДОБАВИТЬ КОМАНДУ и выбирает приложение, системное назначение или WEB до выбора XY. Это отдельная поверхность, не пустое состояние ВЕДЕТ В. После выбора Destination открывается Command Input с известным Destination.",
+    "purpose": "Дать естественный путь создания команды от приложения/системного действия/WEB к свободной знакопаре.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "shared",
+      "android",
+      "ios"
+    ],
+    "status": "approved",
+    "inputs": [
+      "ADD COMMAND",
+      "Applications",
+      "System destinations",
+      "WEB destinations"
+    ],
+    "outputs": [
+      "Selected Destination for Command Input"
+    ],
+    "parameters": {
+      "ui_ru": "НАЗНАЧИТЬ",
+      "semantic_name": "Assign",
+      "model": "Destination → XY",
+      "categories": [
+        "ПРИЛОЖЕНИЯ",
+        "СИСТЕМА",
+        "WEB"
+      ],
+      "entry": "КОМАНДЫ / НАЗНАЧЕНИЯ → ДОБАВИТЬ КОМАНДУ",
+      "next": "selected Destination → Command Input",
+      "xy_context": "unknown on entry; no ВЕДЕТ В XY slots",
+      "persistence": "final save happens on Command",
+      "implementation_status": "approved logic; exact visual geometry and Android implementation pending"
+    },
+    "constraints": [
+      "НАЗНАЧИТЬ is separate from ВЕДЕТ В.",
+      "It does not display empty XY slots as a substitute for known command context.",
+      "After Destination selection, XY remains user-selected through Command Input.",
+      "User-facing strings are localizable."
+    ],
+    "open_questions": [
+      "Exact header composition.",
+      "Exact Search placement.",
+      "Whether list/category geometry fully reuses Destination components.",
+      "Exact recommendation UI after Destination selection."
+    ],
+    "tags": [
+      "design",
+      "assign",
+      "destination",
+      "command",
+      "creation",
+      "canon"
+    ]
+  },
+  {
     "id": "destination-surface",
     "section": "product",
     "order": 37,
     "title": "Destination / ВЕДЕТ В",
     "group": "UX SYSTEM",
-    "short": "Destination v0.1 принят на физическом устройстве: Приложения / Система / WEB — PASS.",
-    "description": "Destination / ВЕДЕТ В сохраняет принятый каркас и приведён к нормализованному канону: канонические Back/Search, контекстные слоты на каноническом Frame, 48→40 dp header-actions. Базовый Destination v0.1 ранее прошёл PASS; новый conformance-refinement требует повторного review.",
+    "short": "ВЕДЕТ В — выбор Destination только для уже известной знакопары XY.",
+    "description": "Destination / ВЕДЕТ В отвечает на вопрос «куда ведёт эта знакопара?». Вход разрешён только с известной XY; оба Graffiti-слота header всегда заполнены. Поверхность используется при редактировании существующей команды и в pair-first create-flow из свободной XY.",
     "purpose": "Отделить саму двухзнаковую команду от типа её назначения и позволить одной модели поддерживать приложения, системные действия и интернет-страницы.",
     "kind": "core",
     "models": [
@@ -4188,14 +4258,14 @@
     ],
     "status": "approved",
     "inputs": [
-      "Current destination",
+      "Known XY",
+      "Current destination when editing",
       "Applications",
       "System destinations",
       "WEB destinations"
     ],
     "outputs": [
-      "Selected destination for existing Command",
-      "Selected destination for new-command creation flow"
+      "Selected Destination for known XY"
     ],
     "parameters": {
       "ui_ru": "ВЕДЕТ В",
@@ -4206,12 +4276,12 @@
         "СИСТЕМА",
         "WEB"
       ],
-      "entry": "tap whole ВЕДЕТ В row in Command",
+      "entry": "existing Command ВЕДЕТ В row OR free XY from Command Space",
       "back_without_selection": "return to Command unchanged",
       "selection": "return selected destination to Command",
       "persistence": "final save happens on Command",
       "version": "Design Canon v0.1",
-      "layout": "Back + ВЕДЕТ В; full-width 3-way switch; one scrollable work area",
+      "layout": "Back | [known XY slots] | ВЕДЕТ В; full-width 3-way switch; one work area",
       "category_on_entry": "open category matching current destination",
       "apps": "launch-capable apps only; icon + display name; 64 dp rows; alphabetical; compact/reveal search; no package name in UI",
       "system": "curated verified destinations only",
@@ -4231,28 +4301,27 @@
       "web_block": "~184 dp; 16 top + 20 label + 8 + 56 input + 12 + 56 use + 16 bottom",
       "android_code": "implemented; assembleDebug PASS; real-device PASS",
       "real_device_review": "PASS: app selection; SYSTEM → Settings; WEB URL → domain in Command; category switching; Back unchanged; app search; 4-tap → KnockUI remains working",
-      "existing_command_flow": "selection → return to Command",
-      "new_command_flow": "selection → suggest free XY → Command Input → Command",
-      "new_command_flow_status": "approved architecture; not yet implemented",
+      "existing_command_flow": "select Destination → return to Command",
+      "new_command_flow": "free XY → ВЕДЕТ В → select Destination → complete draft → Command",
+      "new_command_flow_status": "approved; Android routing correction pending",
       "header_structure": "Back | [slot 1][slot 2] | ВЕДЕТ В",
       "command_context_slots": "2 × 48 dp slots with canonical 40×40 Frame artwork",
-      "existing_command_slots": "show current Graffiti XY without start point/direction arrow",
-      "new_command_slots": "empty when Destination is first step before XY",
-      "header_refinement_status": "canon-conformance implemented; build/real-device review pending",
+      "existing_command_slots": "always show known Graffiti XY without start point/direction arrow",
+      "new_command_slots": "not applicable; ВЕДЕТ В cannot open without XY",
+      "header_refinement_status": "canon-conformance implemented visually; flow correction pending",
       "search_icon": "canonical framed Search asset; system icon removed"
     },
     "constraints": [
       "Categories describe destination type, not command type.",
-      "Existing-command selection returns to Command; new-command selection continues to XY input; final persistence happens on Command.",
       "Applications category does not expose technical package names.",
       "System category contains only technically verified supported destinations.",
       "WEB stores URL, not browser + URL.",
       "WEB history is anticipated but excluded from first UI canon.",
       "Browser Share → 4Tap is architecturally reserved but not implemented in v0.1.",
-      "User-facing strings are localizable."
+      "User-facing strings are localizable.",
+      "ВЕДЕТ В cannot be opened without a known XY."
     ],
     "open_questions": [
-      "Initial category for a new command without destination.",
       "Supported system destinations catalog.",
       "URL validation/normalization rules.",
       "Optional custom WEB labels.",
@@ -4280,7 +4349,7 @@
     "title": "Command Input / XY",
     "group": "UX SYSTEM",
     "short": "Утверждённая структура ввода XY: 36 аннотированных Graffiti-эталонов, предварительная занятость, два редактируемых слота и объяснимый recognition feedback.",
-    "description": "Command Input остаётся подрежимом Command. Все 1296 пар A–Z + 0–9 допустимы, включая AA / SS / 11. Поверхность показывает 36 канонических эталонов 6×6 с траекторией, кружком начала и стрелкой направления. До первого знака видна доступность семейств X?, после первого — занятость конкретных пар. Оба слота можно повторно выбрать; нераспознанный штрих сначала получает аварийный feedback и объяснение, затем очищается без смены этапа.",
+    "description": "Command Input выбирает/редактирует XY. Для destination-first creation он получает уже выбранный Destination от НАЗНАЧИТЬ; для pair-first creation не используется. При редактировании существующей Command меняет XY независимо от Destination.",
     "purpose": "Редактировать XY через тот же жестовый язык, которым пользователь затем вызывает команды.",
     "kind": "core",
     "models": [
@@ -4314,11 +4383,11 @@
       "existing_command_self_occupancy": "current pair does not block itself while editing",
       "slots": "first and second slots remain selectable/editable",
       "drawing_field": "same intended working size as KnockUI drawing_canvas",
-      "successful_flow": "accepted first → second; accepted free second → return XY to Command",
+      "successful_flow": "existing edit: return XY to Command; new destination-first flow: Destination + accepted free XY → Command",
       "occupied_pair": "keep both recognized symbols; allow replacing second or selecting first",
       "unrecognized_stroke": "keep visible → blink/pulse + explain redraw → smooth clear → remain on same slot",
       "final_validation": "always re-check availability before returning XY",
-      "creation_context": "Destination known first; free-pair recommendations may be shown",
+      "creation_context": "destination-first only: Destination comes from НАЗНАЧИТЬ before XY",
       "recommendations": "non-binding; occupied pairs excluded; exact ranking/UI TBD",
       "future_learning_not_current": "similar-symbol suggestions; corrective guidance; tracing; drawing over template"
     },
@@ -4327,7 +4396,8 @@
       "Recognizer must not disguise an occupied/unavailable choice as a recognition error.",
       "Occupancy is shown proactively but final availability is still validated.",
       "Recommendations never prevent choosing another free pair.",
-      "Similar-symbol suggestions, tracing and drawing over the canonical template are future learning features, not current implementation."
+      "Similar-symbol suggestions, tracing and drawing over the canonical template are future learning features, not current implementation.",
+      "Pair-first creation from Command Space does not pass through Command Input."
     ],
     "open_questions": [
       "Exact visual treatment of free / partially occupied / fully occupied states.",
@@ -4349,8 +4419,8 @@
     "order": 36.6,
     "title": "Command Creation Flow",
     "group": "UX SYSTEM",
-    "short": "Новая команда создаётся от назначения к знакопаре: Destination сначала, затем свободный XY.",
-    "description": "ADD COMMAND больше не начинается с выбора знакопары. Пользователь сначала выбирает приложение, системное назначение или WEB destination. Зная назначение и текущую занятость namespace, 4Tap может предложить подходящие свободные XY. Пользователь может принять предложение или выбрать любую другую свободную пару через Command Input. Существующая команда по-прежнему позволяет независимо менять Destination и XY.",
+    "short": "Новая команда создаётся двумя симметричными путями: от свободной XY или от Destination.",
+    "description": "4Tap поддерживает два create-flow, которые сходятся в полном черновике XY + Destination. Pair-first: пользователь выбирает свободную XY в КОМБИНАЦИИ, затем ВЕДЕТ В и Destination. Destination-first: ДОБАВИТЬ КОМАНДУ открывает отдельную поверхность НАЗНАЧИТЬ, после выбора Destination открывается Command Input для свободной XY.",
     "purpose": "Снизить когнитивную нагрузку при создании команды и использовать контекст назначения для полезных свободных рекомендаций.",
     "kind": "core",
     "models": [
@@ -4364,6 +4434,7 @@
     ],
     "status": "approved",
     "inputs": [
+      "Free XY from Command Space",
       "ADD COMMAND",
       "Destination",
       "Command Space occupancy"
@@ -4372,21 +4443,25 @@
       "Command draft with Destination and XY"
     ],
     "parameters": {
-      "sequence": "ADD COMMAND → Destination → suggested free XY → Command Input → Command",
-      "destination_first": true,
-      "recommendations": "free pairs only; non-binding",
-      "user_override": "any other free pair allowed",
+      "pair_first": "КОМБИНАЦИИ → free XY → ВЕДЕТ В → Destination → Command",
+      "destination_first": "ДОБАВИТЬ КОМАНДУ → НАЗНАЧИТЬ → Destination → Command Input → XY → Command",
+      "convergence": "XY + Destination → Command",
+      "recommendations": "destination-first only; free pairs only; non-binding",
+      "user_override": "any other free pair allowed in Command Input",
       "existing_command_edit": "unchanged; Destination and XY independently editable",
-      "implementation_status": "approved architecture; not yet implemented"
+      "implementation_status": "project logic approved; Android routing update pending"
     },
     "constraints": [
+      "ВЕДЕТ В requires known XY and never represents an empty-XY state.",
+      "НАЗНАЧИТЬ is a separate surface, not a mode of ВЕДЕТ В.",
       "Recommendations must never include occupied pairs.",
       "Recommendation logic must not silently assign a pair without user choice.",
-      "The new order applies to creation, not ordinary editing of an existing command."
+      "Both create-flow paths converge only after XY and Destination are known."
     ],
     "open_questions": [
       "Ranking algorithm for suitable free pairs.",
-      "Exact recommendation presentation before/inside Command Input."
+      "Exact recommendation presentation in Command Input.",
+      "Exact visual geometry of НАЗНАЧИТЬ before implementation."
     ],
     "tags": [
       "design",
