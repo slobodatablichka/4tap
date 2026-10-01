@@ -3333,8 +3333,8 @@
     "section": "roadmap",
     "title": "Stage 2 — Product Canon",
     "group": "ROADMAP",
-    "short": "Текущий этап: Destination v0.1 закрыт; архитектура Command Input/create-flow утверждена; следующий блок — Command Space в Commands.",
-    "description": "Stage 2 активен. Утверждены KnockUI panels, Commands, рабочая поверхность Command, Destination v0.1 real-device PASS, полный Command Space на 1296 пар и структура Command Input. Для новой команды принят flow Destination → рекомендации свободных XY → Command Input → Command. Следующая работа — спроектировать Command Space как представление занятости в Commands, затем уточнить геометрию Command Input и реализовать блок.",
+    "short": "Текущий этап: Command Space спроектирован и реализован первым Android-pass; следующий рубеж — build + real-device review.",
+    "description": "Stage 2 активен. Command Space в Commands теперь имеет утверждённую структуру НАЗНАЧЕНИЯ / КОМБИНАЦИИ и первую Android-реализацию: 6×6 Graffiti-меню, второй уровень 36 пар и клавиатурный поиск. Следующий рубеж — собрать и проверить поверхность на физическом устройстве; затем уточнить Command Input и рекомендации свободных XY.",
     "purpose": "Стабилизировать визуальный язык и жестовые эталоны до масштабирования продукта.",
     "kind": "core",
     "models": [
@@ -3357,12 +3357,12 @@
     ],
     "parameters": {
       "stage_status": "active",
-      "current_task": "Command Space view in Commands — detailed design",
+      "current_task": "Commands / Command Space — build + real-device review",
       "graffiti": "4Tap Graffiti Profile v1 — approved",
-      "immediate_next": "Command Space occupancy presentation",
-      "subsequent": "Command Input exact geometry + free-pair recommendation UI → Android implementation → real-device review; onboarding after Design Canon",
+      "immediate_next": "real-device PASS or refinement of first Android implementation",
+      "subsequent": "Command Input exact geometry + free-pair recommendation UI → Android implementation; onboarding after Design Canon",
       "public_beta_gate": "Design Canon v1.0 before public beta",
-      "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Destination-first create flow; Command Input structure; brand teal #159B92",
+      "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; Destination-first create flow; Command Input structure; brand teal #159B92",
       "content_detailing": "separate follow-up per screen"
     },
     "constraints": [
@@ -3869,7 +3869,7 @@
     "title": "Commands Screen",
     "group": "UX SYSTEM",
     "short": "Утверждённый экран управления назначенными командами плюс отдельное представление Command Space для занятости 1296 пар.",
-    "description": "Commands / Команды сохраняет плоский teal-список назначенных команд Graffiti → XY → назначение. Дополнительно утверждено отдельное представление Command Space, чтобы пользователь заранее видел свободные и занятые комбинации. ADD COMMAND запускает новый create-flow: сначала Destination, затем рекомендации свободных XY и Command Input.",
+    "description": "Commands / Команды использует два режима одной поверхности: НАЗНАЧЕНИЯ и КОМБИНАЦИИ. НАЗНАЧЕНИЯ сохраняет плоский teal-список Graffiti → XY → назначение. КОМБИНАЦИИ показывает полный Command Space двухуровнево: 36 первых Graffiti-знаков 6×6, затем 36 конкретных пар выбранного семейства. Первая Android-реализация добавлена и ожидает build/real-device review.",
     "purpose": "Сделать список команд одновременно управляющим интерфейсом и постоянной визуальной связью между жестом Graffiti, кодом XY и назначением.",
     "kind": "core",
     "models": [
@@ -3920,8 +3920,11 @@
       "row_tap": "open Command detail/editor; do not execute",
       "scroll": "list only; header and ADD COMMAND fixed; transient scrollbar",
       "layout_style": "flat continuous table; no cards/gaps",
-      "command_space_view": "approved; dedicated availability representation; exact navigation/layout TBD",
-      "add_command_flow": "Destination first → suggested free XY → Command Input → Command"
+      "command_space_view": "НАЗНАЧЕНИЯ / КОМБИНАЦИИ; first level 36 Graffiti glyphs 6×6 without counts; full family muted; second level 36 exact pairs",
+      "add_command_flow": "Destination first → suggested free XY → Command Input → Command",
+      "command_space_search": "standard Android keyboard; A–Z + 0–9; max 2 chars; 1 char opens family; 2 chars opens exact pair",
+      "command_space_android": "first implementation added; build/real-device review pending",
+      "add_command_current_implementation": "visible but inactive until Command Input exists"
     },
     "constraints": [
       "Graffiti-column uses real canonical trajectories from 4Tap Graffiti Profile v1, not font imitation.",
@@ -3932,9 +3935,8 @@
       "Screen filling and command content remain subject to later detailed review."
     ],
     "open_questions": [
-      "Exact switch/navigation between assigned-command list and Command Space.",
-      "Exact Command Space hierarchy and occupancy visualization.",
-      "Detailed content and population of the assigned-command list."
+      "Detailed content and population of the assigned-command list.",
+      "Real-device visual review of Commands / Command Space."
     ],
     "tags": [
       "design",
@@ -3951,7 +3953,7 @@
     "title": "Command Space View",
     "group": "UX SYSTEM",
     "short": "Отдельное представление в контуре Commands показывает занятость и доступность полного пространства из 1296 знакопар.",
-    "description": "Command Space View нужен не для исполнения команды, а для ориентации и назначения: пользователь должен заранее видеть, какие комбинации свободны. Утверждено существование отдельного представления в Commands и двухуровневая семантика занятости: до выбора первого знака видна доступность семейства X?, после выбора — состояния конкретных X? пар. Точная навигация и визуальная структура проектируются следующим блоком.",
+    "description": "Command Space View — второй режим поверхности Commands. Первый уровень является только меню: 36 канонических Graffiti-знаков в сетке 6×6 без счётчиков; если все X? заняты, знак приглушается, но остаётся доступным для просмотра. Второй уровень показывает 36 конкретных XA…X9 и их состояние free/occupied. Текстовый поиск использует обычную Android-клавиатуру: 1 знак открывает семейство, 2 знака — конкретную пару.",
     "purpose": "Не провоцировать пользователя выбирать уже занятые комбинации и дать обзор доступного namespace.",
     "kind": "core",
     "models": [
@@ -3978,20 +3980,21 @@
       "container": "Commands contour",
       "capacity": 1296,
       "same_symbol_pairs": "allowed",
-      "first_level": "36 first-symbol families X?",
-      "second_level": "36 exact X? pairs for selected first symbol",
+      "first_level": "36 canonical Graffiti signs; 6×6; menu only; no free-count labels",
+      "second_level": "36 exact pairs; 6×6; free / occupied",
       "occupancy_states": "free / partially occupied / fully occupied semantics; exact visuals TBD",
-      "implementation_status": "design next; not implemented"
+      "implementation_status": "first Android implementation added; build/real-device review pending",
+      "first_level_full_family": "muted color; remains openable for inspection",
+      "search": "standard Android keyboard; A–Z + 0–9; max 2 symbols",
+      "free_pair_tap": "show free state only; do not start XY-first create flow",
+      "occupied_pair_tap": "show assignment and allow opening existing Command"
     },
     "constraints": [
       "The view must reflect current registry occupancy rather than a static teaching matrix.",
-      "An existing command being edited must not be treated as conflicting with itself.",
-      "Exact tab/switch/navigation structure is not yet canon."
+      "An existing command being edited must not be treated as conflicting with itself."
     ],
     "open_questions": [
-      "How to switch between assigned-command list and Command Space.",
-      "Exact visual language for free, partial and full occupancy.",
-      "How much assignment detail to expose from the availability view."
+      "Real-device visual review and density/scale refinement."
     ],
     "tags": [
       "design",
