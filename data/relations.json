@@ -1078,5 +1078,17 @@
     "to": "android-integration",
     "relation": "APP and WEB execution depend on platform launch/intent handling",
     "type": "model"
+  },
+  {
+    "from": "command-screen",
+    "to": "destination-surface",
+    "relation": "Android first pass now implements open/select/return flow",
+    "type": "implementation"
+  },
+  {
+    "from": "destination-surface",
+    "to": "android-integration",
+    "relation": "first Android implementation queries launchable apps without QUERY_ALL_PACKAGES",
+    "type": "implementation"
   }
 ]
