@@ -129,7 +129,7 @@ Android 4Tap — обычное пользовательское приложе�
 
 Google Play допускает AccessibilityService и для приложений, не являющихся accessibility tools, но требует declaration, prominent in-app disclosure, affirmative consent и review. Для приложения с AccessibilityService доступен advance notice App Review.
 
-Текущий onboarding therefore строится вокруг одного пользовательского включения Accessibility; это остаётся UX/compliance задачей, а не техническим blocker.
+Текущий onboarding строится вокруг одного пользовательского включения Accessibility; это остаётся UX/compliance задачей, а не техническим blocker.
 
 Остальные runtime-ограничения сохраняются: чувствительные экраны могут скрывать application overlay; запуск действий зависит от background-launch rules и intent/deep-link contracts; Settings Console учитывает package visibility.
 
@@ -529,29 +529,29 @@ Confirmed:
 - pair-first creation — PASS;
 - a newly created command executed through KnockUI three times — PASS ×3.
 
-Gesture Check / recognizer findings:
+Findings at the first 36-symbol checkpoint:
 
-- current 36-symbol recognizer pipeline runs, but many finger-drawn symbols are misclassified;
-- old F was especially impractical to recognize and is now replaced by a new canonical phi-like `Letter-F.svg`;
-- Gesture Check has a stale-feedback bug: retry begins while the previous active-sign result remains visible;
-- approved fix: clear only active-sign feedback at stroke start, keep the other sign's result;
-- approved X/Y logic: start X in AUTO, X PASS → Y; any manual X/Y tap switches to MANUAL and disables further auto-switching for that session.
+- the initial recognizer pipeline ran, but many finger-drawn symbols were misclassified;
+- old F was especially impractical to recognize and was replaced by the canonical phi-like `Letter-F.svg`;
+- Gesture Check showed a stale-feedback bug on retry;
+- the approved fix clears only active-sign feedback at stroke start and preserves the other sign's result;
+- the approved X/Y policy starts in `AUTO`, moves X PASS → Y, and switches permanently to `MANUAL` after an explicit X/Y tap.
 
-Recognizer v2 is now specified as bounded DTW-like trajectory alignment using position + local tangent/direction + turning/curvature. Real trace accumulation/analysis is deliberately deferred. Future personalization is reserved as `common templates + several user-specific samples`.
+These findings led to the v2 refinement below and are no longer the current recognizer status.
 
-## Recognizer v2 + Gesture Check refinement — implemented candidate
+## Recognizer v2 + Gesture Check refinement — completed checkpoint
 
-Private `4tap-app` now contains the approved next code pass:
+The approved v2 pass introduced:
 
-- canonical revised F is consumed from the same Profile v1 SVG source;
-- Gesture Check clears stale active-sign feedback at `ACTION_DOWN`;
-- X/Y switching starts in `AUTO`: X PASS → Y; any explicit slot tap switches the session to `MANUAL`;
-- recognizer v2 uses 64-sample preprocessing plus bounded DTW;
-- local comparison cost combines normalized position (0.55), tangent/direction (0.30) and local turn (0.15);
-- DTW band is 18% of sequence length with minimum 6 samples; non-diagonal warp steps carry a 0.01 penalty;
-- no real user traces are accumulated and no personalization is active.
+- canonical revised F from the same Profile v1 SVG source;
+- Gesture Check feedback reset at `ACTION_DOWN`;
+- `AUTO → MANUAL` X/Y switching;
+- 64-sample preprocessing plus bounded DTW;
+- local comparison cost using normalized position (0.55), tangent/direction (0.30) and local turn (0.15);
+- an 18% DTW band with minimum 6 samples and a 0.01 non-diagonal warp-step penalty;
+- no real user-trace accumulation or personalization.
 
-Status: `testDebugUnitTest` and `assembleDebug` are PASS (`BUILD SUCCESSFUL`, 2026-10-01). Real-device recognition review is still pending.
+`testDebugUnitTest` and `assembleDebug` passed on 2026-10-01. The subsequent device review exposed O/Q and 4/9 cases and led directly to v2.1; this v2 checkpoint is closed.
 
 ## iOS implementation options
 
@@ -597,7 +597,7 @@ The private implementation repo now contains:
 - extra terminal-tail weight over the last 13 of 64 samples;
 - no symbol-specific classifier exceptions.
 
-Status: implementation committed; new unit/build/device verification pending.
+Status: `testDebugUnitTest` and `assembleDebug` — PASS; after installation the v2.1 build was confirmed stable on the physical Android device and is the current baseline.
 
 
 ## Stable Android recognizer baseline — 2026-10-01
