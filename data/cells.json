@@ -204,7 +204,7 @@
     "parameters": {
       "current_working_version": "v0.1",
       "core_surfaces": "KnockUI; 4Tap; Команды; Команда; Command Space / Pair Selection; Gesture Check / ПРОВЕРКА ЖЕСТА; Destination / ВЕДЕТ В; Assign / НАЗНАЧИТЬ; Алфавит; Настройки",
-      "immediate_next": "finish Pair Selection contextual geometry, then implement Pair Selection → Gesture Check → data-driven routing",
+      "immediate_next": "implement Pair Selection → Gesture Check → data-driven routing",
       "next_revision": "v0.2 after first canon-driven implementation/usability pass",
       "public_beta": "v1.0 before public beta",
       "knockui_panel_model": "approved: quick_shortcuts / drawing_canvas; remember last active panel",
@@ -216,7 +216,7 @@
       "commands_screen": "approved structural block; detailed population later",
       "command_screen": "accepted on real Android device; future changes are refinement",
       "destination_surface": "approved v0.1; Apps / System / WEB; WEB URL model; history/share reserved",
-      "command_space_view": "approved as dedicated availability representation in Commands; detailed UI next",
+      "command_space_view": "approved Pair Selection host in Commands / КОМБИНАЦИИ; same persistent context row and 6×6→6×6 core",
       "command_creation": "destination-first: ADD COMMAND → НАЗНАЧИТЬ → Destination → Pair Selection → Gesture Check → Command; pair-first: Commands/Combinations → Pair Selection → Gesture Check → ВЕДЕТ В → Destination → Command",
       "graffiti_display_priority": "default: canonical 4Tap Graffiti for alphabet signs being shown/selected/formed; plain text only for explicitly defined roles such as existing XY identifier or keyboard search",
       "graffiti_guides": "default: start point + drawing-direction arrow; explicit exception for already completed/assigned command presentation",
@@ -229,7 +229,7 @@
       "canonical_frame": "40×40 dp visible asset for empty square slots/containers where specified",
       "destination_semantics": "ВЕДЕТ В requires known XY",
       "assign_semantics": "НАЗНАЧИТЬ selects Destination before XY",
-      "pair_selection": "shared two-stage 6×6 X→Y selector; successful free XY always → Gesture Check",
+      "pair_selection": "approved contextual geometry: persistent [X]+[Y] row; 6×6 X → 6×6 Y; optional ДЛЯ: Destination; standalone header Back | ЗНАКОПАРА | Search; free XY → Gesture Check",
       "gesture_check": "approved base surface: tap-select X/Y; unlimited retries incl. after PASS; fixed canvas; fixed 4-line latest-result zone; text feedback; skip/continue; no gate; data-driven exit"
     },
     "constraints": [
@@ -252,8 +252,7 @@
       "Финальная типографика и motion language",
       "Визуальная степень заметности KnockUI",
       "Точная геометрия и состояния основных поверхностей",
-      "Exact Pair Selection geometry outside/inside Commands.",
-      "Exact Gesture Check geometry and feedback."
+      "Gesture Check exact numeric canvas/result typography within approved fixed structure."
     ],
     "tags": [
       "design",
@@ -3412,8 +3411,8 @@
     "section": "roadmap",
     "title": "Stage 2 — Product Canon",
     "group": "ROADMAP",
-    "short": "Gesture Check base surface approved; Pair Selection context geometry and combined Android implementation are next.",
-    "description": "Stage 2 active. Gesture Check now has an approved base composition: free X/Y switching, repeated attempts after PASS, fixed drawing canvas, fixed four-line result zone, text feedback, and non-blocking skip/continue. Next: finish contextual Pair Selection geometry and implement the combined Android flow.",
+    "short": "Pair Selection contextual geometry and Gesture Check base surface approved; combined Android implementation is next.",
+    "description": "Stage 2 active. Pair Selection now has approved contextual geometry across Commands, destination-first, and Command edit; Gesture Check has an approved base composition. Next: implement the combined Android flow and review it on device.",
     "purpose": "Стабилизировать визуальный язык и жестовые эталоны до масштабирования продукта.",
     "kind": "core",
     "models": [
@@ -3436,12 +3435,12 @@
     ],
     "parameters": {
       "stage_status": "active",
-      "current_task": "finish Pair Selection contextual geometry",
+      "current_task": "implement Pair Selection → Gesture Check → data-driven routing",
       "graffiti": "4Tap Graffiti Profile v1 — approved",
-      "immediate_next": "implement Pair Selection → Gesture Check → data-driven routing",
-      "subsequent": "assembleDebug + real-device review of both command-creation paths",
+      "immediate_next": "assembleDebug + real-device review after implementation",
+      "subsequent": "verify destination-first, pair-first, and existing-Command XY edit on device",
       "public_beta_gate": "Design Canon v1.0 before public beta",
-      "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; normalized dual create-flow with shared Pair Selection + Gesture Check; brand teal #159B92",
+      "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; normalized dual create-flow with shared Pair Selection + Gesture Check; brand teal #159B92; Pair Selection contextual geometry; Gesture Check base surface",
       "content_detailing": "separate follow-up per screen"
     },
     "constraints": [
@@ -3999,7 +3998,7 @@
       "row_tap": "open Command detail/editor; do not execute",
       "scroll": "list only; header and ADD COMMAND fixed; transient scrollbar",
       "layout_style": "flat continuous table; no cards/gaps",
-      "command_space_view": "НАЗНАЧЕНИЯ / КОМБИНАЦИИ; first level 36 Graffiti glyphs 6×6; second level 36 individual second Graffiti glyphs",
+      "command_space_view": "НАЗНАЧЕНИЯ / КОМБИНАЦИИ; Pair Selection uses persistent [X]+[Y] context row on both 6×6 stages",
       "add_command_flow": "ДОБАВИТЬ КОМАНДУ → НАЗНАЧИТЬ → Destination → Pair Selection → Gesture Check → Command",
       "command_space_search": "standard Android keyboard; A–Z + 0–9; max 2 chars; 1 char opens family; 2 chars opens exact pair",
       "command_space_android": "current implementation predates Gesture Check; routing update pending",
@@ -4008,13 +4007,14 @@
       "assigned_command_markers": "explicit exception: no start point / direction arrow for completed assignment Graffiti; text XY remains plain identifier",
       "command_space_glyph_guides": "start point + direction arrow",
       "command_space_height_rule": "X establishes common target rendered height for all alphabet glyphs",
-      "command_space_second_header": "target: [Graffiti X] + [second slot]; no ВЕДЕТ В action; free XY always proceeds to Gesture Check",
+      "command_space_second_header": "[Graffiti X] + [second slot]; no ВЕДЕТ В action; grid does not shift from first stage",
       "header_structure": "Back | COMMANDS / КОМАНДЫ | Search | Menu",
       "back_button": "canonical left header control; 48×48 dp touch area",
       "header_actions": "canonical Back / Search / Menu assets; 48×48 dp touch; 40×40 dp visible",
       "search_icon": "framed canonical Search asset; not Android system icon",
       "menu_icon": "framed canonical Menu asset; geometry comes from asset",
-      "command_space_pair_flow": "select free XY → Gesture Check; then route by data state: no Destination → ВЕДЕТ В, Destination known → Command"
+      "command_space_pair_flow": "free XY → Gesture Check; then no Destination → ВЕДЕТ В → Destination → Command",
+      "command_space_first_header": "[empty slot] + [empty slot] above first 6×6; same position as second-stage row"
     },
     "constraints": [
       "Graffiti-column uses real canonical trajectories from 4Tap Graffiti Profile v1, not font imitation.",
@@ -4022,7 +4022,8 @@
       "Persistent selected state is not used in ordinary mobile list mode.",
       "Inactive/disabled commands may remain openable for editing/restoration.",
       "Commands is for management; KnockUI is for execution.",
-      "Screen filling and command content remain subject to later detailed review."
+      "Screen filling and command content remain subject to later detailed review.",
+      "Pair Selection context row stays in the same position on both stages so the 6×6 grid does not jump."
     ],
     "open_questions": [
       "Detailed content and population of the assigned-command list.",
@@ -4042,8 +4043,8 @@
     "order": 35.5,
     "title": "Command Space / Pair Selection",
     "group": "UX SYSTEM",
-    "short": "Двухэтапный 6×6 выбор свободной знакопары; в Commands размещён как режим КОМБИНАЦИИ.",
-    "description": "Pair Selection is the shared canonical X→Y chooser. Commands / КОМБИНАЦИИ hosts the same selector for pair-first creation. A free pair proceeds to Gesture Check; occupied pairs may open their existing Command. Drawing is not used to assign XY.",
+    "short": "Утверждённый общий 6×6→6×6 Pair Selection; в Commands размещён как КОМБИНАЦИИ.",
+    "description": "Pair Selection is one shared selector with a persistent [X]+[Y] context row and two 6×6 Graffiti grids. Commands / КОМБИНАЦИИ hosts the same core without a separate Pair Selection header; standalone destination-first/edit contexts use Back | ЗНАКОПАРА | Search.",
     "purpose": "Дать единый способ выбора свободной XY во всех контекстах без конкурирующего gesture-input механизма.",
     "kind": "core",
     "models": [
@@ -4070,30 +4071,30 @@
       "container": "shared Pair Selection; hosted in Commands / КОМБИНАЦИИ and reused after НАЗНАЧИТЬ / in Command editing",
       "capacity": 1296,
       "same_symbol_pairs": "allowed",
-      "first_level": "36 canonical Graffiti signs; 6×6; menu only; no counts; guides visible",
-      "second_level": "36 individual second Graffiti signs; 6×6; pair state derives from selected first + cell",
-      "occupancy_states": "free / partially occupied / fully occupied semantics; exact visuals TBD",
-      "implementation_status": "Commands host exists; target Gesture Check transition not yet implemented",
+      "first_level": "[empty] + [empty] context row, then 36 canonical Graffiti signs 6×6",
+      "second_level": "[X] + [empty] in the same context row, then 36 Y signs 6×6",
+      "occupancy_states": "available = normal; fully occupied family / occupied Y = muted; Commands may still inspect occupied",
+      "implementation_status": "contextual geometry approved; Android shared implementation pending",
       "first_level_full_family": "muted color; remains openable for inspection",
-      "search": "standard Android keyboard; A–Z + 0–9; max 2 symbols",
+      "search": "A–Z + 0–9; max 2; 1 char selects X/opens Y stage; 2 chars resolves exact XY; same occupancy/context rules",
       "free_pair_tap": "complete Pair Selection → always Gesture Check",
-      "occupied_pair_tap": "show assignment and allow opening existing Command",
+      "occupied_pair_tap": "Commands: may open existing Command; destination-first/edit: unavailable except current self-pair",
       "height_normalization": "common target height derived from X fit; proportions preserved",
       "second_level_header": "[Graffiti X] + [second slot]; no direct ВЕДЕТ В action",
       "second_level_header_height_dp": 72,
       "bottom_add_button": "absent in КОМБИНАЦИИ; ADD remains only in НАЗНАЧЕНИЯ",
       "add_command": "not part of Pair Selection",
-      "back_behavior": "single top-header Back; second level → first level; top level → leave Commands"
+      "back_behavior": "Y stage → X stage; standalone X after НАЗНАЧИТЬ → НАЗНАЧИТЬ preserving Destination; X from Command edit → Command unchanged; Commands keeps its own hierarchy",
+      "context_row": "persistent on both stages: [X] + [Y]; keeps grid position stable",
+      "standalone_header": "Back | ЗНАКОПАРА | Search",
+      "known_destination": "shown right-aligned in context row as ДЛЯ: Destination; 18 sp / 800; one line; ellipsis"
     },
     "constraints": [
       "The view must reflect current registry occupancy rather than a static teaching matrix.",
       "An existing command being edited must not be treated as conflicting with itself.",
       "Pair Selection never chooses the post-check destination; its successful output always goes to Gesture Check."
     ],
-    "open_questions": [
-      "Exact standalone/contextual geometry outside Commands.",
-      "Exact visual treatment of free / occupied states."
-    ],
+    "open_questions": [],
     "tags": [
       "design",
       "commands",
@@ -4144,7 +4145,7 @@
       "row_text": "Roboto Slab 18 sp / 800",
       "bottom_actions": "DELETE | SAVE; fixed 56 dp",
       "command_xy": "editable",
-      "command_edit": "Pair Selection → Gesture Check → return XY to Command",
+      "command_edit": "standalone Pair Selection (Back | ЗНАКОПАРА | Search; current XY + ДЛЯ: Destination) → Gesture Check → return XY to Command",
       "status_toggle": "ACTIVE ↔ INACTIVE; no Android switch",
       "dirty_back": "confirm only when data changed",
       "android_code": "implemented first pass in 4tap-app",
@@ -4156,14 +4157,15 @@
       "scale_review": "current implementation feels somewhat large; review during refinement",
       "destination_flow": "implemented first pass: opens Destination and receives APP/SYSTEM/WEB result",
       "existing_command_edit": "Destination and XY remain independently editable",
-      "new_command_entry": "complete draft arrives after both XY and Destination are known; Gesture Check may be PASSED or SKIPPED"
+      "new_command_entry": "complete draft arrives after both XY and Destination are known; Gesture Check is optional/non-blocking and has per-attempt feedback"
     },
     "constraints": [
       "Destination surface is detailed and implemented through its own Design Canon.",
       "Real Graffiti geometry comes from approved v1 SVG sources.",
       "User-facing strings remain localizable.",
       "Command base structure is accepted; future visual changes are refinement, not a reset of the surface model.",
-      "Creation order depends on entry path; existing-command editing remains independent."
+      "Creation order depends on entry path; existing-command editing remains independent.",
+      "During XY edit, the Command's current pair does not conflict with itself; final change remains unsaved until SAVE."
     ],
     "open_questions": [
       "Final delete confirmation behavior."
@@ -4216,24 +4218,24 @@
         "WEB"
       ],
       "entry": "КОМАНДЫ / НАЗНАЧЕНИЯ → ДОБАВИТЬ КОМАНДУ",
-      "next": "selected Destination → Pair Selection → Gesture Check → Command",
+      "next": "selected Destination → standalone Pair Selection (Back | ЗНАКОПАРА | Search; ДЛЯ: Destination) → Gesture Check → Command",
       "xy_context": "unknown on entry; no ВЕДЕТ В XY slots",
       "persistence": "final save happens on Command",
-      "implementation_status": "approved logic; exact visual geometry and Android implementation pending",
+      "implementation_status": "AssignActivity exists; continuation into approved Pair Selection pending",
       "header": "Back | НАЗНАЧИТЬ | Search",
       "xy_slots": "absent",
-      "android_implementation": "AssignActivity implemented; continuation into Pair Selection pending"
+      "android_implementation": "AssignActivity implemented; continuation into Pair Selection pending",
+      "pair_selection_context": "Destination stays visible at right of persistent [X]+[Y] row"
     },
     "constraints": [
       "НАЗНАЧИТЬ is separate from ВЕДЕТ В.",
       "It does not display empty XY slots as a substitute for known command context.",
-      "After Destination selection, XY remains user-selected through Command Input.",
+      "After Destination selection, XY is user-selected through the shared Pair Selection.",
       "User-facing strings are localizable."
     ],
     "open_questions": [
       "Whether list/category geometry fully reuses Destination components.",
-      "Real-device review of first Assign surface.",
-      "Exact destination-context presentation inside Pair Selection."
+      "Real-device review of first Assign surface."
     ],
     "tags": [
       "design",
@@ -4383,10 +4385,11 @@
       "destination_first": "ДОБАВИТЬ КОМАНДУ → НАЗНАЧИТЬ → Destination → Pair Selection → Gesture Check → Command",
       "pair_first": "КОМАНДЫ / КОМБИНАЦИИ → Pair Selection → Gesture Check → ВЕДЕТ В → Destination → Command",
       "edit_xy": "Command → Pair Selection → Gesture Check → Command",
-      "gesture_check": "optional; PASSED or SKIPPED; does not change XY",
+      "gesture_check": "optional/non-blocking; PASS/FAIL belongs to individual attempts; does not change XY",
       "convergence": "Command opens when XY and Destination are both known",
-      "implementation_status": "project logic normalized; Android routing still needs Pair Selection/Gesture Check implementation",
-      "routing_invariant": "after Gesture Check: XY + no Destination → ВЕДЕТ В; XY + Destination → Command"
+      "implementation_status": "project logic and surface geometry approved; combined Android implementation pending",
+      "routing_invariant": "after Gesture Check: XY + no Destination → ВЕДЕТ В; XY + Destination → Command",
+      "pair_selection_geometry": "persistent [X]+[Y] row; two stable-position 6×6 stages; standalone header Back | ЗНАКОПАРА | Search; optional ДЛЯ: Destination"
     },
     "constraints": [
       "Pair Selection is the only canonical command-pair assignment mechanism.",
@@ -4397,10 +4400,7 @@
       "НАЗНАЧИТЬ selects Destination before XY.",
       "НАЗНАЧИТЬ is used only when Destination is chosen before XY."
     ],
-    "open_questions": [
-      "Exact Pair Selection geometry in each host context.",
-      "Exact Gesture Check geometry and feedback."
-    ],
+    "open_questions": [],
     "tags": [
       "design",
       "command",
@@ -4416,8 +4416,8 @@
     "order": 36.45,
     "title": "Pair Selection / Выбор знакопары",
     "group": "UX SYSTEM",
-    "short": "Общий двухэтапный выбор свободной XY через две Graffiti-сетки 6×6.",
-    "description": "Pair Selection is the single canonical XY assignment mechanism. Stage 1 selects X from 36 Graffiti signs; stage 2 selects Y from 36 signs and validates exact-pair occupancy. A successful free XY always proceeds to Gesture Check; Pair Selection itself does not decide the later route.",
+    "short": "Утверждённый единый выбор XY: постоянная строка контекста и две Graffiti-сетки 6×6.",
+    "description": "Pair Selection is the single canonical XY selector. The [X]+[Y] context row stays fixed above both 6×6 stages, so the grid does not move. If Destination is already known it is shown at right as ДЛЯ: Destination. Standalone contexts use Back | ЗНАКОПАРА | Search; Commands / КОМБИНАЦИИ hosts the same core inside Commands.",
     "purpose": "Исключить дублирующие способы назначения XY и переиспользовать одну модель выбора во всех flow.",
     "kind": "core",
     "models": [
@@ -4442,28 +4442,34 @@
     "parameters": {
       "capacity": 1296,
       "same_symbol_pairs": "allowed",
+      "context_row": "persistent on both stages; [empty]+[empty] → [X]+[empty]; grid position remains fixed",
       "stage_1": "36 canonical Graffiti signs; 6×6; choose X",
       "stage_2": "36 canonical Graffiti signs; 6×6; choose Y; state derives from full XY",
+      "standalone_header": "Back | ЗНАКОПАРА | Search",
+      "commands_host": "uses Commands header + НАЗНАЧЕНИЯ / КОМБИНАЦИИ; no second Pair Selection header",
+      "known_destination": "right side of context row: ДЛЯ: Destination; 18 sp / 800; one line; end ellipsis",
       "graffiti_guides": "start point + direction arrow",
-      "occupied_pair": "cannot be assigned to a new command",
-      "existing_self_pair": "does not conflict with itself while editing",
-      "next": "free XY → always Gesture Check",
+      "family_occupancy": "at least one available pair = normal; no available continuations = muted",
+      "occupied_pair": "muted; Commands may inspect/open existing Command; creation/edit cannot select it",
+      "existing_self_pair": "available to the Command being edited; does not conflict with itself",
+      "next": "free XY → always Gesture Check; no ДАЛЬШЕ / ВЕДЕТ В / ДОБАВИТЬ КОМАНДУ inside Pair Selection",
+      "back": "Y→X; X after НАЗНАЧИТЬ→НАЗНАЧИТЬ preserving Destination; X from Command→Command unchanged",
+      "search": "text navigation in same selector: 1 char → X/Y-stage; 2 chars → exact XY",
       "drawing": "not used for XY assignment",
       "hosts": "Commands / КОМБИНАЦИИ; destination-first after НАЗНАЧИТЬ; Command XY edit",
-      "implementation_status": "Commands host partly exists; shared contextual surface not yet implemented",
+      "implementation_status": "geometry approved; Android implementation pending",
       "post_check_routing": "not owned by Pair Selection"
     },
     "constraints": [
-      "The same canonical selection logic is reused in every context.",
+      "The same 6×6 X → 6×6 Y core is reused in every context.",
+      "The context row remains in a fixed position on both stages; the grid does not jump.",
+      "Destination is displayed only when already known.",
+      "Pair Selection does not choose Destination, check gestures, or save Command.",
+      "Successful free XY always proceeds directly to Gesture Check.",
       "Occupied pairs are not recognition errors.",
-      "Pair Selection does not choose Destination or save Command.",
-      "Successful Pair Selection always ends at Gesture Check."
+      "Canonical Back/Search/Frame assets come from the graphics registry."
     ],
-    "open_questions": [
-      "Exact standalone/contextual geometry.",
-      "Exact free/occupied visual states.",
-      "How known Destination context is shown."
-    ],
+    "open_questions": [],
     "tags": [
       "design",
       "pair-selection",

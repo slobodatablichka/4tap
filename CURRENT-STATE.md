@@ -461,6 +461,24 @@ Refinement реализован и ожидает повторный real-device
 
 Текущий Android-код ещё не полностью соответствует нормализованной логике: destination-first после выбора Destination пока останавливается на pending draft, а pair-first после свободной XY пока идёт напрямую в `ВЕДЕТ В`. Это implementation gaps, а не альтернативные flow.
 
+## Pair Selection — contextual geometry approved
+
+The public architecture now records one shared Pair Selection geometry:
+
+- one core for all contexts: persistent `[X] + [Y]` context row + `6×6 X → 6×6 Y`;
+- the context row stays in the same place on both stages, so the grid does not jump;
+- stage 1 shows `[□] + [□]`; stage 2 shows `[X] + [□]`;
+- when Destination is already known it is shown at right as `ДЛЯ: Destination`;
+- standalone destination-first/edit surface: `Back | ЗНАКОПАРА | Search`;
+- Commands / КОМБИНАЦИИ hosts the same core under its existing Commands header and mode switch;
+- free XY always goes directly to `Проверка жеста`; there is no `ДАЛЬШЕ`, `ВЕДЕТ В`, or `ДОБАВИТЬ КОМАНДУ` inside Pair Selection;
+- occupied families/pairs are muted; Commands may inspect an occupied pair, while creation/edit cannot select it;
+- the current self-pair of an edited Command does not conflict with itself;
+- Search is navigation through the same selector: 1 character → X/Y stage, 2 characters → exact XY;
+- Back: Y→X; standalone X after НАЗНАЧИТЬ→НАЗНАЧИТЬ preserving Destination; standalone X from Command→Command unchanged.
+
+Pair Selection geometry is now approved for Android implementation.
+
 ## Gesture Check — approved base surface
 
 The public architecture now records the concrete Gesture Check behavior:
