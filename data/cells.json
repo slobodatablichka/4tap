@@ -610,7 +610,7 @@
       "confidence": "high",
       "summary": "Full chain verified after removing SYSTEM_ALERT_WINDOW: navigation-bar 4 taps → Accessibility KnockUI → S → C → SC → Settings.",
       "sources": [],
-      "next_step": "Preserve the verified activation baseline while Command Input and the remaining Design Canon are completed; onboarding follows Design Canon, then newer stock Android validation.",
+      "next_step": "Preserve the verified activation baseline while Pair Selection + Gesture Check Android implementation is completed; onboarding follows Design Canon, then newer stock Android validation.",
       "implication": "The first Android end-to-end milestone is passed; remaining risk is product/distribution suitability rather than basic trigger feasibility."
     }
   },
