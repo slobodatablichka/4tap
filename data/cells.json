@@ -204,7 +204,7 @@
     "parameters": {
       "current_working_version": "v0.1",
       "core_surfaces": "KnockUI; 4Tap; Команды; Команда; Command Space / Pair Selection; Gesture Check / ПРОВЕРКА ЖЕСТА; Destination / ВЕДЕТ В; Assign / НАЗНАЧИТЬ; Алфавит; Настройки",
-      "immediate_next": "implement approved refinement: new canonical F + Gesture Check feedback-reset/AUTO→MANUAL + recognizer v2",
+      "immediate_next": "verify recognizer v2 + Gesture Check refinement: testDebugUnitTest → assembleDebug → real-device review",
       "next_revision": "v0.2 after first canon-driven implementation/usability pass",
       "public_beta": "v1.0 before public beta",
       "knockui_panel_model": "approved: quick_shortcuts / drawing_canvas; remember last active panel",
@@ -230,8 +230,8 @@
       "destination_semantics": "ВЕДЕТ В requires known XY",
       "assign_semantics": "НАЗНАЧИТЬ selects Destination before XY",
       "pair_selection": "approved and implemented candidate: persistent 64 dp [X]+[Y] row; 6×6 X → 6×6 Y; optional ДЛЯ: Destination; standalone Back | ЗНАКОПАРА | Search; free XY → Gesture Check",
-      "gesture_check": "approved refinement: start X in AUTO; X PASS auto-selects Y; any manual X/Y tap switches permanently to MANUAL for the session; ACTION_DOWN clears only active-sign feedback",
-      "recognizer_next": "DTW-like trajectory alignment + position + tangent/direction + turning features; no real-sample accumulation yet; personalization later"
+      "gesture_check": "approved and implemented candidate: X starts AUTO; X PASS → Y; manual slot tap → MANUAL; ACTION_DOWN clears only active-sign feedback",
+      "recognizer_next": "implemented candidate: bounded DTW + normalized position + tangent/direction + local turning; verification pending"
     },
     "constraints": [
       "Канон должен сохранять скорость и минимальное вмешательство в текущий контекст пользователя.",
@@ -1257,8 +1257,8 @@
     "section": "android",
     "title": "Gesture Recognizer",
     "group": "RECOGNITION",
-    "short": "36-symbol matcher works as a pipeline but real-device classification quality is insufficient; recognizer v2 is specified.",
-    "description": "Device testing on 2026-10-01 showed that the current rigid resampled point-to-point matcher misclassifies many human-drawn symbols. The next approved design keeps canonical SVG geometry and stroke direction but replaces rigid alignment with DTW-like trajectory alignment and compares position together with local tangent/direction and turning/curvature.",
+    "short": "Recognizer v2 implemented candidate: bounded DTW + position/tangent/turn features; verification pending.",
+    "description": "The v1 rigid matcher failed real-device quality review. 4tap-app now contains recognizer v2: canonical SVG-derived features are compared with bounded DTW, using normalized position, local tangent/direction and local turning. No user-trace accumulation or personalization is included in this block.",
     "purpose": "Преобразовать траекторию пальца в символ.",
     "kind": "core",
     "models": [
@@ -1287,18 +1287,21 @@
       "normalization": "translation + uniform scale; ordered-path direction preserved",
       "resampling": "64 path samples",
       "prototype_reject_distance": 0.3,
-      "threshold_status": "0.30 is v1 prototype parameter only; recalibrate after v2 device tests",
+      "threshold_status": "v2 temporary implementation gate; not product canon",
       "current_prototype_subset": "all 36 templates loaded by implementation candidate",
       "verification_tests": "36 self-matches; translation/scale invariance; S/5, I/1, Z/2; short-stroke rejection; nearest-candidate diagnostic",
-      "verification_status": "real-device tested: pipeline works, quality FAIL / refinement required",
+      "verification_status": "implementation committed; new unit/build/device verification pending",
       "attention_pairs": "S/5; I/1; Z/2",
-      "current_status": "v1 pipeline/device-tested; recognition quality insufficient",
-      "next_algorithm": "bounded DTW-like alignment instead of only point-i ↔ point-i distance",
-      "next_features": "normalized position + local tangent/direction + local turning/curvature",
+      "current_status": "v2 implemented candidate; unit/build/device verification pending",
+      "next_algorithm": "implemented: bounded DTW-like alignment",
+      "next_features": "implemented: normalized position + tangent/direction + local turn",
       "letter_f": "uses revised canonical Letter-F.svg from 2026-10-01",
       "best_second": "retain best + second candidate diagnostics",
-      "real_samples_now": "do not accumulate or analyze user traces in this implementation block",
-      "future_personalization": "common templates + several samples from the specific user; separate later design/implementation block"
+      "real_samples_now": "not collected or analyzed",
+      "future_personalization": "deferred: common templates + several user-specific samples",
+      "v2_weights": "position 0.55; direction 0.30; turn 0.15",
+      "dtw_band": "18% of sequence length; minimum 6 samples",
+      "warp_step_penalty": 0.01
     },
     "constraints": [
       "Canonical SVG geometry remains the source of truth; do not maintain a hidden second alphabet.",
@@ -1318,13 +1321,13 @@
     ],
     "order": 70,
     "verification": {
-      "state": "device-tested-needs-refinement",
+      "state": "implemented-v2-unverified",
       "date": "2026-10-01",
-      "confidence": "high",
-      "summary": "Both command-creation flows work on device, but many Gesture Check symbols are misclassified by recognizer v1; old F was especially impractical and has been replaced canonically.",
+      "confidence": "medium",
+      "summary": "Recognizer v2 code is implemented after the v1 real-device quality failure. New build and physical recognition results are not yet available.",
       "sources": [],
-      "next_step": "Implement v2 DTW/tangent/turn matcher, then rerun unit/build/device recognition tests without accumulating a user dataset yet.",
-      "implication": "The routing/UI pipeline is viable; classification quality is now the main recognition engineering task."
+      "next_step": "Run testDebugUnitTest and assembleDebug, then retest Gesture Check including revised F and several previously difficult symbols.",
+      "implication": "The algorithmic refinement is present in code, but no recognition-quality improvement may be claimed until physical-device results."
     }
   },
   {
@@ -3427,8 +3430,8 @@
     "section": "roadmap",
     "title": "Stage 2 — Product Canon",
     "group": "ROADMAP",
-    "short": "Command creation is device-PASS; next block is Gesture Check + recognizer v2 refinement.",
-    "description": "Both creation paths pass on device and a newly created command executed through KnockUI three times. Recognition quality is the current weakness. The next code block is the revised F plus Gesture Check reset/AUTO→MANUAL and recognizer v2 using bounded DTW-like alignment with direction/tangent/turning features.",
+    "short": "Recognizer v2 and Gesture Check refinement are implemented candidates; verification is next.",
+    "description": "Both creation flows remain device-PASS. The next recognizer/Gesture Check refinement has now been implemented: revised F source, stale-feedback reset, AUTO→MANUAL, and bounded-DTW recognition with position/tangent/turn features.",
     "purpose": "Стабилизировать визуальный язык и жестовые эталоны до масштабирования продукта.",
     "kind": "core",
     "models": [
@@ -3451,10 +3454,10 @@
     ],
     "parameters": {
       "stage_status": "active",
-      "current_task": "implement approved Gesture Check + recognizer v2 refinement",
+      "current_task": "verify recognizer v2 + Gesture Check refinement",
       "graffiti": "4Tap Graffiti Profile v1 approved; Letter-F revised 2026-10-01",
-      "immediate_next": "code: revised F consumption + feedback reset + AUTO→MANUAL + DTW/tangent/turn recognizer",
-      "subsequent": "unit/build → real-device recognition retest → explicit edit-XY device review",
+      "immediate_next": "testDebugUnitTest → assembleDebug",
+      "subsequent": "real-device Gesture Check recognition review → KnockUI regression → explicit edit-XY review",
       "public_beta_gate": "Design Canon v1.0 before public beta",
       "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; normalized dual create-flow with shared Pair Selection + Gesture Check; brand teal #159B92; Pair Selection contextual geometry; Gesture Check base surface; 36-symbol recognizer implementation candidate (verification pending)",
       "content_detailing": "separate follow-up per screen",
@@ -4408,7 +4411,7 @@
       "routing_invariant": "after Gesture Check: XY + no Destination → ВЕДЕТ В; XY + Destination → Command",
       "pair_selection_geometry": "persistent [X]+[Y] row; two stable-position 6×6 stages; standalone header Back | ЗНАКОПАРА | Search; optional ДЛЯ: Destination",
       "execution_regression": "a newly created command was invoked successfully through KnockUI three times",
-      "gesture_refinement": "next code pass: active-sign feedback reset + AUTO→MANUAL behavior"
+      "gesture_refinement": "AUTO→MANUAL + ACTION_DOWN feedback reset implemented candidate; verification pending"
     },
     "constraints": [
       "Pair Selection is the only canonical command-pair assignment mechanism.",
@@ -4507,7 +4510,7 @@
     "title": "Gesture Check / Проверка жеста",
     "group": "UX SYSTEM",
     "short": "Необязательная практическая проверка выбранных X/Y с повторными попытками и независимым текстовым feedback.",
-    "description": "Gesture Check remains non-blocking and uses fixed pair/canvas/4-line feedback geometry. Real-device flow works, but device review exposed a feedback-reset bug and led to a refined AUTO→MANUAL active-sign policy.",
+    "description": "Gesture Check device baseline is viable. The approved stale-feedback fix and AUTO→MANUAL active-sign policy are now implemented in 4tap-app and await rebuild/device verification.",
     "purpose": "Проверить воспроизводимость выбранной знакопары конкретным пользователем, не превращая проверку в обязательный gate.",
     "kind": "core",
     "models": [
@@ -4534,7 +4537,7 @@
     "parameters": {
       "header": "Back | ПРОВЕРКА ЖЕСТА",
       "pair_display": "[X] + [Y], both canonical Graffiti examples always visible",
-      "active_sign": "entry: X active in AUTO; X PASS → Y active; FAIL stays on current sign; any user tap on X/Y switches session to MANUAL; MANUAL never auto-switches after PASS/FAIL",
+      "active_sign": "implemented: entry X/AUTO; X PASS → Y; FAIL stays; any explicit X/Y tap → MANUAL; MANUAL never auto-switches",
       "attempt_order": "AUTO guides first X→Y success; after any manual slot tap user fully controls X/Y order",
       "repeat_after_pass": "allowed without limit",
       "drawing_canvas": "single adaptive canvas occupying the stable area between pair row and fixed result zone; does not shift with feedback",
@@ -4550,11 +4553,11 @@
       "persistence": "check result is not stored as Command property",
       "back": "return to Pair Selection with selected XY preserved",
       "routing_rule": "XY + no Destination → ВЕДЕТ В; XY + Destination → Command",
-      "implementation_status": "current surface/flow passed device use; approved reset + AUTO/MANUAL refinement not yet coded",
+      "implementation_status": "feedback-reset + AUTO→MANUAL implemented candidate; unit/build/device verification pending",
       "pair_row": "implemented candidate: 72 dp; active sign teal, inactive sign muted teal",
       "bottom_action": "implemented candidate: fixed 56 dp; SKIP before first attempt, CONTINUE afterwards",
       "recognizer": "36 canonical A–Z + 0–9 SVG templates; profile-driven geometry matcher; validation pending",
-      "feedback_reset": "on new stroke ACTION_DOWN, clear previous feedback only for the active sign; preserve the other sign's latest result"
+      "feedback_reset": "implemented: ACTION_DOWN clears only active-sign feedback and preserves the other sign"
     },
     "constraints": [
       "Gesture Check never changes XY.",

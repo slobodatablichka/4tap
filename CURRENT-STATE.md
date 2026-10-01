@@ -537,6 +537,20 @@ Gesture Check / recognizer findings:
 
 Recognizer v2 is now specified as bounded DTW-like trajectory alignment using position + local tangent/direction + turning/curvature. Real trace accumulation/analysis is deliberately deferred. Future personalization is reserved as `common templates + several user-specific samples`.
 
+## Recognizer v2 + Gesture Check refinement — implemented candidate
+
+Private `4tap-app` now contains the approved next code pass:
+
+- canonical revised F is consumed from the same Profile v1 SVG source;
+- Gesture Check clears stale active-sign feedback at `ACTION_DOWN`;
+- X/Y switching starts in `AUTO`: X PASS → Y; any explicit slot tap switches the session to `MANUAL`;
+- recognizer v2 uses 64-sample preprocessing plus bounded DTW;
+- local comparison cost combines normalized position (0.55), tangent/direction (0.30) and local turn (0.15);
+- DTW band is 18% of sequence length with minimum 6 samples; non-diagonal warp steps carry a 0.01 penalty;
+- no real user traces are accumulated and no personalization is active.
+
+Status: implementation exists; new `testDebugUnitTest`, `assembleDebug` and real-device recognition review are still pending.
+
 ## iOS implementation options
 
 iOS больше не описывается как keyboard-only архитектура. Зафиксированы варианты реализации, окончательный выбор отложен.
