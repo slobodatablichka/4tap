@@ -204,7 +204,7 @@
     "parameters": {
       "current_working_version": "v0.1",
       "core_surfaces": "KnockUI; 4Tap; Команды; Команда; Command Space / Pair Selection; Gesture Check / ПРОВЕРКА ЖЕСТА; Destination / ВЕДЕТ В; Assign / НАЗНАЧИТЬ; Алфавит; Настройки",
-      "immediate_next": "verify recognizer v2 + Gesture Check refinement: testDebugUnitTest → assembleDebug → real-device review",
+      "immediate_next": "KnockUI surface refinement: approve geometry and behavior under the existing two-panel model; recognizer v2.1 / Gesture Check remain the stable baseline",
       "next_revision": "v0.2 after first canon-driven implementation/usability pass",
       "public_beta": "v1.0 before public beta",
       "knockui_panel_model": "approved: quick_shortcuts / drawing_canvas; remember last active panel",
@@ -230,8 +230,8 @@
       "destination_semantics": "ВЕДЕТ В requires known XY",
       "assign_semantics": "НАЗНАЧИТЬ selects Destination before XY",
       "pair_selection": "approved and implemented candidate: persistent 64 dp [X]+[Y] row; 6×6 X → 6×6 Y; optional ДЛЯ: Destination; standalone Back | ЗНАКОПАРА | Search; free XY → Gesture Check",
-      "gesture_check": "approved and implemented candidate: X starts AUTO; X PASS → Y; manual slot tap → MANUAL; ACTION_DOWN clears only active-sign feedback",
-      "recognizer_next": "implemented candidate: bounded DTW + normalized position + tangent/direction + local turning; verification pending"
+      "gesture_check": "approved and implemented: X starts AUTO; X PASS → Y; manual slot tap → MANUAL; ACTION_DOWN clears only active-sign feedback; included in stable real-device baseline",
+      "recognizer_next": "v2.1 stable real-device baseline; reopen only for a new reproducible issue or planned calibration/personalization"
     },
     "constraints": [
       "Канон должен сохранять скорость и минимальное вмешательство в текущий контекст пользователя.",
@@ -268,7 +268,7 @@
     "title": "Canonical UI Graphics",
     "group": "UX SYSTEM",
     "short": "Реестр утверждённой UI-графики 4Tap: Back, Menu, Search, Frame и правила платформенных производных.",
-    "description": "Канонические Back/Menu/Search/Frame имеют утверждённые assets. Для Android добавлены точные производные Search и Frame; Back/Menu уже существовали. Header-actions используют 48×48 dp touch-area и 40×40 dp видимую графику. Текущий Android UI подключён к этому реестру и ожидает real-device review.",
+    "description": "Канонические Back/Menu/Search/Frame имеют утверждённые assets. Для Android добавлены точные производные Search и Frame; Back/Menu уже существовали. Header-actions используют 48×48 dp touch-area и 40×40 dp видимую графику. Текущий Android UI подключён к этому реестру и входит в текущую физическую сборку; отдельный focused visual-conformance review при необходимости остаётся самостоятельной проверкой, а не общим verification blocker.",
     "purpose": "Не допустить визуального расхождения между поверхностями и платформами и отделить утверждение графики от её реализации.",
     "kind": "core",
     "models": [
@@ -304,7 +304,7 @@
       "platform_derivative": "must preserve contour, proportions, frame, placement and visible size",
       "android_search": "ic_search_4tap.xml — implemented derivative",
       "android_frame": "ic_frame_4tap.xml — implemented derivative",
-      "android_status": "connected in Commands/Destination/Command; review pending"
+      "android_status": "connected in Commands/Destination/Command; present in current physical-device build; focused visual conformance may be reviewed separately"
     },
     "constraints": [
       "No automatic substitution with Android/iOS/Material system icons.",
@@ -421,7 +421,7 @@
       "confidence": "high",
       "summary": "Profile v1 remains canonical. Q was explicitly revised after O→Q confusion; direction semantics were clarified after reverse-exported paths were found.",
       "sources": [],
-      "next_step": "Build and device-test revised Q plus endpoint/tail-aware recognizer on O/Q and 4/9.",
+      "next_step": "Preserve the current Q revision and marker-based direction semantics as baseline; reopen only for a reproducible confusion case or planned profile refinement.",
       "implication": "Recognizer derives direction from visible start/end markers and current canonical SVG geometry."
     }
   },
@@ -617,7 +617,7 @@
       "confidence": "high",
       "summary": "Full chain verified after removing SYSTEM_ALERT_WINDOW: navigation-bar 4 taps → Accessibility KnockUI → S → C → SC → Settings.",
       "sources": [],
-      "next_step": "Preserve the verified activation baseline while the new 36-symbol recognizer + Pair Selection + Gesture Check candidate is verified; explicitly rerun 4 taps → KnockUI → SC → Settings after the UI/recognizer build.",
+      "next_step": "Preserve the verified activation and recognizer v2.1 baseline while the current product block refines the KnockUI surface under Design Canon; rerun the full chain after KnockUI code changes.",
       "implication": "The first Android end-to-end milestone is passed; remaining risk is product/distribution suitability rather than basic trigger feasibility."
     }
   },
@@ -1289,8 +1289,8 @@
       "normalization": "translation + uniform scale; ordered-path direction preserved",
       "resampling": "64 path samples",
       "prototype_reject_distance": 0.3,
-      "threshold_status": "v2 temporary implementation gate; not product canon",
-      "current_prototype_subset": "all 36 templates loaded by implementation candidate",
+      "threshold_status": "v2.1 temporary implementation gate; not product canon",
+      "current_prototype_subset": "all 36 canonical templates loaded in the current stable implementation",
       "verification_tests": "36 self-matches; translation/scale invariance; S/5, I/1, Z/2; short-stroke rejection; nearest-candidate diagnostic",
       "verification_status": "testDebugUnitTest PASS; assembleDebug PASS; physical-device stable-work confirmation",
       "attention_pairs": "S/5; I/1; Z/2",
@@ -1318,7 +1318,7 @@
       "Personal adaptation remains deferred."
     ],
     "open_questions": [
-      "After v2 is implemented, what device-level rejection threshold is appropriate?",
+      "Later calibration: what device-level rejection threshold is appropriate?",
       "Later: what dataset/confusion matrix should be collected?",
       "Later: how many per-user samples are useful and how should they be stored?"
     ],
@@ -1592,7 +1592,7 @@
       "confidence": "high",
       "summary": "The complete real-device flow passes in a clean build without SYSTEM_ALERT_WINDOW.",
       "sources": [],
-      "next_step": "Stage 2 is active: form the Design Canon; one-step Accessibility onboarding follows immediately after the canon, then newer-device compatibility.",
+      "next_step": "Stage 2 is active: refine the KnockUI surface under Design Canon while preserving the stable recognizer/Gesture Check baseline; one-step Accessibility onboarding and newer-device compatibility follow.",
       "implication": "Android Stage 1 end-to-end milestone is complete."
     }
   },
@@ -3461,12 +3461,12 @@
     ],
     "parameters": {
       "stage_status": "active",
-      "current_task": "preserve stable Android baseline and continue next planned product block",
+      "current_task": "refine the KnockUI surface under Design Canon while preserving the stable Android recognizer/Gesture Check baseline",
       "graffiti": "4Tap Graffiti Profile v1 approved; Letter-F revised 2026-10-01",
       "immediate_next": "no recognizer change required unless new reproducible issue appears",
       "subsequent": "later: explicit edit-XY review, broader productization/onboarding, planned recognizer calibration/personalization",
       "public_beta_gate": "Design Canon v1.0 before public beta",
-      "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; normalized dual create-flow with shared Pair Selection + Gesture Check; brand teal #159B92; Pair Selection contextual geometry; Gesture Check base surface; 36-symbol recognizer implementation candidate (verification pending)",
+      "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; normalized dual create-flow with shared Pair Selection + Gesture Check; brand teal #159B92; Pair Selection contextual geometry; Gesture Check stable physical-device baseline; recognizer v2.1 stable physical-device baseline",
       "content_detailing": "separate follow-up per screen",
       "data_collection": "deferred: no real-trace accumulation/analysis in the next block",
       "personalization": "deferred: common templates + several user-specific samples"
@@ -4102,7 +4102,7 @@
       "first_level": "[empty] + [empty] context row, then 36 canonical Graffiti signs 6×6",
       "second_level": "[X] + [empty] in the same context row, then 36 Y signs 6×6",
       "occupancy_states": "available = normal; fully occupied family / occupied Y = muted; Commands may still inspect occupied",
-      "implementation_status": "shared PairSelectionGridView implemented candidate in Commands and standalone host; unit/build/device verification pending",
+      "implementation_status": "shared PairSelectionGridView implemented in Commands and standalone host; unit/build PASS; pair-first and destination-first real-device PASS; Existing-Command XY edit remains a separate explicit device check",
       "first_level_full_family": "muted color; remains openable for inspection",
       "search": "A–Z + 0–9; max 2; 1 char selects X/opens Y stage; 2 chars resolves exact XY; same occupancy/context rules",
       "free_pair_tap": "complete Pair Selection → always Gesture Check",
@@ -4185,7 +4185,7 @@
       "scale_review": "current implementation feels somewhat large; review during refinement",
       "destination_flow": "implemented first pass: opens Destination and receives APP/SYSTEM/WEB result",
       "existing_command_edit": "Destination and XY remain independently editable",
-      "new_command_entry": "complete draft arrives after XY + Destination; Gesture Check is optional/non-blocking with per-attempt feedback; implementation candidate pending verification"
+      "new_command_entry": "complete draft arrives after XY + Destination; Gesture Check is optional/non-blocking with per-attempt feedback; both destination-first and pair-first creation flows passed on physical device"
     },
     "constraints": [
       "Destination surface is detailed and implemented through its own Design Canon.",
@@ -4214,7 +4214,7 @@
     "title": "Assign / НАЗНАЧИТЬ",
     "group": "UX SYSTEM",
     "short": "Отдельная поверхность destination-first создания: выбрать объект, которому назначить новую знакопару.",
-    "description": "НАЗНАЧИТЬ chooses Destination first. The Android implementation candidate now preserves that Destination, opens standalone Pair Selection, then Gesture Check and Command. Build and real-device verification are pending.",
+    "description": "НАЗНАЧИТЬ chooses Destination first. The Android implementation preserves that Destination, opens standalone Pair Selection, then Gesture Check and Command. The complete destination-first flow passed on a physical device on 2026-10-01.",
     "purpose": "Дать естественный путь создания команды от приложения/системного действия/WEB к свободной знакопаре.",
     "kind": "core",
     "models": [
@@ -4339,12 +4339,12 @@
       "real_device_review": "PASS: app selection; SYSTEM → Settings; WEB URL → domain in Command; category switching; Back unchanged; app search; 4-tap → KnockUI remains working",
       "existing_command_flow": "select Destination → return to Command",
       "new_command_flow": "Pair Selection → Gesture Check → ВЕДЕТ В → select Destination → Command",
-      "new_command_flow_status": "target normalized; Android currently enters ВЕДЕТ В directly after free XY and needs update",
+      "new_command_flow_status": "implemented; pair-first flow through Gesture Check → ВЕДЕТ В → Destination → Command passed on physical device 2026-10-01",
       "header_structure": "Back | [slot 1][slot 2] | ВЕДЕТ В",
       "command_context_slots": "2 × 48 dp slots with canonical 40×40 Frame artwork",
       "existing_command_slots": "always show known Graffiti XY without start point/direction arrow",
       "new_command_slots": "not applicable; activity refuses entry without full XY",
-      "header_refinement_status": "known-XY guard implemented; build/real-device review pending",
+      "header_refinement_status": "known-XY guard implemented and present in the current physical-device build; no separate focused header-only review is recorded",
       "search_icon": "canonical framed Search asset; system icon removed"
     },
     "constraints": [
@@ -4418,7 +4418,7 @@
       "routing_invariant": "after Gesture Check: XY + no Destination → ВЕДЕТ В; XY + Destination → Command",
       "pair_selection_geometry": "persistent [X]+[Y] row; two stable-position 6×6 stages; standalone header Back | ЗНАКОПАРА | Search; optional ДЛЯ: Destination",
       "execution_regression": "a newly created command was invoked successfully through KnockUI three times",
-      "gesture_refinement": "AUTO→MANUAL + ACTION_DOWN feedback reset implemented candidate; verification pending"
+      "gesture_refinement": "AUTO→MANUAL + ACTION_DOWN feedback reset implemented and included in the stable physical-device baseline"
     },
     "constraints": [
       "Pair Selection is the only canonical command-pair assignment mechanism.",
@@ -4517,7 +4517,7 @@
     "title": "Gesture Check / Проверка жеста",
     "group": "UX SYSTEM",
     "short": "Необязательная практическая проверка выбранных X/Y с повторными попытками и независимым текстовым feedback.",
-    "description": "Gesture Check device baseline is viable. The approved stale-feedback fix and AUTO→MANUAL active-sign policy are now implemented in 4tap-app and await rebuild/device verification.",
+    "description": "Gesture Check refinement is included in the current stable physical-device Android baseline. The stale-feedback fix and AUTO→MANUAL active-sign policy are implemented and verified as part of that build.",
     "purpose": "Проверить воспроизводимость выбранной знакопары конкретным пользователем, не превращая проверку в обязательный gate.",
     "kind": "core",
     "models": [
@@ -4563,7 +4563,7 @@
       "implementation_status": "feedback-reset + AUTO→MANUAL implemented; unit/build PASS; current physical-device build reported stable",
       "pair_row": "implemented candidate: 72 dp; active sign teal, inactive sign muted teal",
       "bottom_action": "implemented candidate: fixed 56 dp; SKIP before first attempt, CONTINUE afterwards",
-      "recognizer": "36 canonical A–Z + 0–9 SVG templates; profile-driven geometry matcher; validation pending",
+      "recognizer": "36 canonical A–Z + 0–9 SVG templates; recognizer v2.1; stable physical-device baseline",
       "feedback_reset": "implemented: ACTION_DOWN clears only active-sign feedback and preserves the other sign"
     },
     "constraints": [
