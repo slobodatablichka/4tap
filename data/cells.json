@@ -204,7 +204,7 @@
     "parameters": {
       "current_working_version": "v0.1",
       "core_surfaces": "KnockUI; 4Tap; Команды; Команда; Command Space / Pair Selection; Gesture Check / ПРОВЕРКА ЖЕСТА; Destination / ВЕДЕТ В; Assign / НАЗНАЧИТЬ; Алфавит; Настройки",
-      "immediate_next": "approve exact Pair Selection and Gesture Check geometry, then align Android routing",
+      "immediate_next": "finish Pair Selection contextual geometry, then implement Pair Selection → Gesture Check → data-driven routing",
       "next_revision": "v0.2 after first canon-driven implementation/usability pass",
       "public_beta": "v1.0 before public beta",
       "knockui_panel_model": "approved: quick_shortcuts / drawing_canvas; remember last active panel",
@@ -230,7 +230,7 @@
       "destination_semantics": "ВЕДЕТ В requires known XY",
       "assign_semantics": "НАЗНАЧИТЬ selects Destination before XY",
       "pair_selection": "shared two-stage 6×6 X→Y selector; successful free XY always → Gesture Check",
-      "gesture_check": "optional recognition check after XY selection; may be skipped; routes by data state: no Destination → ВЕДЕТ В, Destination known → Command"
+      "gesture_check": "approved base surface: tap-select X/Y; unlimited retries incl. after PASS; fixed canvas; fixed 4-line latest-result zone; text feedback; skip/continue; no gate; data-driven exit"
     },
     "constraints": [
       "Канон должен сохранять скорость и минимальное вмешательство в текущий контекст пользователя.",
@@ -3412,8 +3412,8 @@
     "section": "roadmap",
     "title": "Stage 2 — Product Canon",
     "group": "ROADMAP",
-    "short": "Текущий этап: Pair Selection / Gesture Check logic normalized; geometry and Android implementation are next.",
-    "description": "Stage 2 active. The former Command Input model is removed from the canonical map. XY selection is now one shared two-stage 6×6 Pair Selection, followed by an optional Gesture Check. Next: approve geometry, then update Android routing for both create flows.",
+    "short": "Gesture Check base surface approved; Pair Selection context geometry and combined Android implementation are next.",
+    "description": "Stage 2 active. Gesture Check now has an approved base composition: free X/Y switching, repeated attempts after PASS, fixed drawing canvas, fixed four-line result zone, text feedback, and non-blocking skip/continue. Next: finish contextual Pair Selection geometry and implement the combined Android flow.",
     "purpose": "Стабилизировать визуальный язык и жестовые эталоны до масштабирования продукта.",
     "kind": "core",
     "models": [
@@ -3436,10 +3436,10 @@
     ],
     "parameters": {
       "stage_status": "active",
-      "current_task": "Pair Selection exact surface refinement + Gesture Check geometry",
+      "current_task": "finish Pair Selection contextual geometry",
       "graffiti": "4Tap Graffiti Profile v1 — approved",
-      "immediate_next": "finalize Pair Selection composition without direct ВЕДЕТ В, then design Gesture Check",
-      "subsequent": "implement destination-first continuation and pair-first Gesture Check before ВЕДЕТ В",
+      "immediate_next": "implement Pair Selection → Gesture Check → data-driven routing",
+      "subsequent": "assembleDebug + real-device review of both command-creation paths",
       "public_beta_gate": "Design Canon v1.0 before public beta",
       "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; normalized dual create-flow with shared Pair Selection + Gesture Check; brand teal #159B92",
       "content_detailing": "separate follow-up per screen"
@@ -4478,8 +4478,8 @@
     "order": 36.55,
     "title": "Gesture Check / Проверка жеста",
     "group": "UX SYSTEM",
-    "short": "Необязательная проверка: recognizer должен определить жесты пользователя как уже выбранные X и Y.",
-    "description": "Gesture Check follows every successfully selected free XY. It optionally verifies the user's X/Y gestures and may be skipped. After check/skip, routing is determined by known data: XY without Destination → ВЕДЕТ В; XY with Destination → Command.",
+    "short": "Необязательная практическая проверка выбранных X/Y с повторными попытками и независимым текстовым feedback.",
+    "description": "Gesture Check follows every selected free XY. X and Y stay visible and can be activated in any order; the user may redraw either sign any number of times, including after a successful recognition. Each attempt gets PASS/FAIL feedback. A fixed four-line result zone preserves the latest result for X and Y without moving the drawing canvas. The check may be skipped or continued after any results.",
     "purpose": "Проверить воспроизводимость выбранной знакопары конкретным пользователем, не превращая проверку в обязательный gate.",
     "kind": "core",
     "models": [
@@ -4495,35 +4495,49 @@
     "inputs": [
       "Selected free XY",
       "4Tap Graffiti Profile",
-      "Recognizer"
+      "Recognizer",
+      "Optional known Destination context"
     ],
     "outputs": [
-      "GestureCheck PASSED or SKIPPED",
-      "Unchanged selected XY"
+      "Unchanged selected XY",
+      "Latest per-sign recognition feedback",
+      "Continue/skip routing"
     ],
     "parameters": {
-      "sequence": "check X → check Y",
-      "success": "recognizer identifies expected symbol",
-      "retry": "allowed after failed recognition",
-      "skip": "always allowed",
-      "changes_xy": false,
-      "implementation_status": "not implemented",
+      "header": "Back | ПРОВЕРКА ЖЕСТА",
+      "pair_display": "[X] + [Y], both canonical Graffiti examples always visible",
+      "active_sign": "tap X or Y; no automatic switching",
+      "attempt_order": "arbitrary; X/Y may be repeated in any sequence",
+      "repeat_after_pass": "allowed without limit",
+      "drawing_canvas": "single fixed canvas; position/size do not shift with feedback",
+      "result_zone": "fixed 4-line reserve: up to 2 lines for latest X result + up to 2 lines for latest Y result",
+      "pass_text": "РАСПОЗНАНО — [X/Y]",
+      "fail_unrecognized_text": "НЕ РАСПОЗНАНО — [X/Y]",
+      "fail_other_text": "НЕ РАСПОЗНАНО — [X/Y] → / ОПРЕДЕЛЕНО КАК [actual]",
+      "result_memory": "only latest result per sign; retry replaces that sign only",
+      "attempt_states": "UNTOUCHED | PASS | FAIL_UNRECOGNIZED | FAIL_OTHER(actualSymbol)",
+      "icons": "no new PASS/FAIL icons; textual feedback",
+      "skip_continue": "before first attempt = ПРОПУСТИТЬ; after any attempt = ПРОДОЛЖИТЬ",
+      "gate": "none; any result or no attempt may continue",
+      "persistence": "check result is not stored as Command property",
+      "back": "return to Pair Selection with selected XY preserved",
       "routing_rule": "XY + no Destination → ВЕДЕТ В; XY + Destination → Command",
-      "destination_first": "НАЗНАЧИТЬ selects Destination before XY; after Pair Selection/Gesture Check both parts are known → Command",
-      "pair_first": "XY known, Destination absent → after Gesture Check open ВЕДЕТ В",
-      "edit": "existing Command already has Destination; changed XY returns to Command after Gesture Check"
+      "implementation_status": "surface behavior approved; Android implementation pending"
     },
     "constraints": [
-      "Failure does not change or clear XY.",
-      "Failure does not block continuation.",
-      "Gesture Check is not the XY assignment mechanism.",
-      "Post-check routing is data-driven: absence/presence of Destination determines ВЕДЕТ В vs Command."
+      "Gesture Check never changes XY.",
+      "PASS/FAIL belongs to an individual attempt, not to the whole command.",
+      "PASS never disables further attempts.",
+      "FAIL never blocks continuation.",
+      "User controls X↔Y switching.",
+      "Canvas geometry remains fixed while result text changes.",
+      "X and Y results remain independent and persist until replaced.",
+      "No new canonical PASS/FAIL pictograms are required for this surface."
     ],
     "open_questions": [
-      "Exact header and geometry.",
-      "Drawing field size.",
-      "Exact PASSED/retry feedback.",
-      "Exact label for skip/continue."
+      "Exact numeric canvas size.",
+      "Exact typography/height for four feedback lines.",
+      "Exact selected-state treatment for active X/Y within approved tokens."
     ],
     "tags": [
       "design",

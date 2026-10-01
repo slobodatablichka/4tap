@@ -461,6 +461,24 @@ Refinement реализован и ожидает повторный real-device
 
 Текущий Android-код ещё не полностью соответствует нормализованной логике: destination-first после выбора Destination пока останавливается на pending draft, а pair-first после свободной XY пока идёт напрямую в `ВЕДЕТ В`. Это implementation gaps, а не альтернативные flow.
 
+## Gesture Check — approved base surface
+
+The public architecture now records the concrete Gesture Check behavior:
+
+- `Back | ПРОВЕРКА ЖЕСТА`;
+- both `[X] + [Y]` examples remain visible;
+- X/Y is selected by tap; there is no automatic switching;
+- either sign may be redrawn any number of times, including after PASS;
+- one fixed drawing canvas never moves because of recognition feedback;
+- feedback is textual; no new PASS/FAIL pictograms are introduced;
+- a fixed four-line zone reserves up to two lines for the latest X result and two for Y;
+- retry replaces only that sign's previous result;
+- before any attempt the bottom action is `ПРОПУСТИТЬ`; after an attempt it is `ПРОДОЛЖИТЬ`;
+- PASS/FAIL never gates continuation and is not persisted as part of Command;
+- exit routing remains `XY + no Destination → ВЕДЕТ В`, `XY + Destination → КОМАНДА`.
+
+Exact numeric canvas dimensions and final feedback typography remain implementation-level geometry decisions within this fixed structure.
+
 ## iOS implementation options
 
 iOS больше не описывается как keyboard-only архитектура. Зафиксированы варианты реализации, окончательный выбор отложен.
