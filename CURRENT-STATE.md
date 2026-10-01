@@ -627,3 +627,30 @@ Further recognizer changes are opened only for new reproducible problems or a se
 
 Точные размеры окна/строк/control-strip элементов, интервалы, позиционирование, visual states и длительность AUTO-delay пока не утверждены. Следующий шаг — именно эта геометрия; recognizer v2.1 / Gesture Check baseline не меняется.
 
+## KnockUI geometry + Android candidate — 2026-10-02
+
+Подтверждены три решения следующего блока:
+
+- KnockUI мыслится как **широкая компактная нижняя панель / широкое плавающее окно**;
+- положение панели не зависит от LEFT/RIGHT trigger: окно центрируется по горизонтали и занимает почти всю ширину с симметричными боковыми отступами;
+- высота адаптивная, ориентир `40–45%` доступной высоты, а не фиксированные `390 dp`;
+- AUTO-delay после полной исполнимой пары — `1,0 s`; tap по Slot в этот период отменяет auto-Send и переводит Draw в MANUAL.
+
+В private `4tap-app` внесён первый implementation candidate:
+
+- `12 dp` side/bottom margin;
+- `42%` screen height, clamp `300–420 dp`;
+- `48 dp` control strip;
+- `36 dp` Destination-line;
+- Android vector derivatives утверждённых Logo / Quick Shortcuts / Drawing / Send / Close;
+- persistence последней рабочей панели;
+- Logo/About scroll-content;
+- Draw Slot 1 / Slot 2;
+- Destination preview;
+- AUTO / MANUAL;
+- executable Send и delayed auto-Send.
+
+Recognizer v2.1 / Gesture Check не изменены.
+
+Статус: **implementation candidate; build/device PASS ещё не зафиксирован**. Следующий рубеж: `testDebugUnitTest → assembleDebug → install APK → real-device review`.
+
