@@ -204,7 +204,7 @@
     "parameters": {
       "current_working_version": "v0.1",
       "core_surfaces": "KnockUI; 4Tap; Команды; Команда; Destination / ВЕДЕТ В; Алфавит; Настройки",
-      "immediate_next": "one-step Accessibility onboarding",
+      "immediate_next": "Command Space view in Commands, then exact Command Input geometry",
       "next_revision": "v0.2 after first canon-driven implementation/usability pass",
       "public_beta": "v1.0 before public beta",
       "knockui_panel_model": "approved: quick_shortcuts / drawing_canvas; remember last active panel",
@@ -216,7 +216,9 @@
       "commands_screen": "approved structural block; detailed population later",
       "command_screen": "accepted on real Android device; future changes are refinement",
       "destination_surface": "approved v0.1; Apps / System / WEB; WEB URL model; history/share reserved",
-      "command_input": "approved project scheme; recommendations/tracing remain ideas"
+      "command_input": "approved structure: 1296 pairs; annotated 6×6 references; proactive occupancy; editable slots; explicit recognition-error feedback",
+      "command_space_view": "approved as dedicated availability representation in Commands; detailed UI next",
+      "command_creation": "ADD COMMAND → Destination → suggested free XY → Command Input → Command"
     },
     "constraints": [
       "Канон должен сохранять скорость и минимальное вмешательство в текущий контекст пользователя.",
@@ -230,7 +232,9 @@
     "open_questions": [
       "Финальная типографика и motion language",
       "Визуальная степень заметности KnockUI",
-      "Точная геометрия и состояния основных поверхностей"
+      "Точная геометрия и состояния основных поверхностей",
+      "Exact Command Space presentation inside Commands",
+      "Exact Command Input geometry and recommendation presentation"
     ],
     "tags": [
       "design",
@@ -3329,8 +3333,8 @@
     "section": "roadmap",
     "title": "Stage 2 — Product Canon",
     "group": "ROADMAP",
-    "short": "Текущий этап: Design Canon; Destination v0.1 закрыт, следующий цельный UI-блок — Command Input / XY.",
-    "description": "Stage 2 активен после завершения Android Stage 1. Утверждены двухпанельная модель KnockUI, Commands, рабочая поверхность Command, схема Command Input и Destination v0.1. Destination реализован и проверен на физическом устройстве. Следующая работа — детализировать и реализовать Command Input / XY.",
+    "short": "Текущий этап: Destination v0.1 закрыт; архитектура Command Input/create-flow утверждена; следующий блок — Command Space в Commands.",
+    "description": "Stage 2 активен. Утверждены KnockUI panels, Commands, рабочая поверхность Command, Destination v0.1 real-device PASS, полный Command Space на 1296 пар и структура Command Input. Для новой команды принят flow Destination → рекомендации свободных XY → Command Input → Command. Следующая работа — спроектировать Command Space как представление занятости в Commands, затем уточнить геометрию Command Input и реализовать блок.",
     "purpose": "Стабилизировать визуальный язык и жестовые эталоны до масштабирования продукта.",
     "kind": "core",
     "models": [
@@ -3353,12 +3357,12 @@
     ],
     "parameters": {
       "stage_status": "active",
-      "current_task": "Command Input / XY — detailed design, implementation, real-device review",
+      "current_task": "Command Space view in Commands — detailed design",
       "graffiti": "4Tap Graffiti Profile v1 — approved",
-      "immediate_next": "Command Input / XY",
-      "subsequent": "continue remaining Design Canon surfaces; onboarding only after Design Canon",
+      "immediate_next": "Command Space occupancy presentation",
+      "subsequent": "Command Input exact geometry + free-pair recommendation UI → Android implementation → real-device review; onboarding after Design Canon",
       "public_beta_gate": "Design Canon v1.0 before public beta",
-      "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; Command Input base scheme; brand teal #159B92",
+      "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Destination-first create flow; Command Input structure; brand teal #159B92",
       "content_detailing": "separate follow-up per screen"
     },
     "constraints": [
@@ -3864,8 +3868,8 @@
     "order": 35,
     "title": "Commands Screen",
     "group": "UX SYSTEM",
-    "short": "Утверждённый каркас экрана управления командами: Graffiti → XY → назначение, плоский teal-список и отдельный вход в редактирование.",
-    "description": "Экран Commands / Команды использует тёмную шапку и фон, непрерывный список фирменного teal #159B92 и три смысловые зоны строки: реальная визуализация Graffiti, печатная двухзнаковая комбинация и локализованное назначение. Тап по строке открывает экран Команда для просмотра/редактирования; исполнение команды остаётся функцией KnockUI. ADD COMMAND закреплён снизу, прокручивается только список.",
+    "short": "Утверждённый экран управления назначенными командами плюс отдельное представление Command Space для занятости 1296 пар.",
+    "description": "Commands / Команды сохраняет плоский teal-список назначенных команд Graffiti → XY → назначение. Дополнительно утверждено отдельное представление Command Space, чтобы пользователь заранее видел свободные и занятые комбинации. ADD COMMAND запускает новый create-flow: сначала Destination, затем рекомендации свободных XY и Command Input.",
     "purpose": "Сделать список команд одновременно управляющим интерфейсом и постоянной визуальной связью между жестом Graffiti, кодом XY и назначением.",
     "kind": "core",
     "models": [
@@ -3886,7 +3890,9 @@
     "outputs": [
       "Command list",
       "Open Command detail/editor",
-      "Add command action"
+      "Add command action",
+      "Open Command Space availability view",
+      "Start destination-first command creation"
     ],
     "parameters": {
       "brand_teal": "#159B92",
@@ -3913,7 +3919,9 @@
       "target_visible_rows": "about 7 on standard portrait viewport; not hard-coded",
       "row_tap": "open Command detail/editor; do not execute",
       "scroll": "list only; header and ADD COMMAND fixed; transient scrollbar",
-      "layout_style": "flat continuous table; no cards/gaps"
+      "layout_style": "flat continuous table; no cards/gaps",
+      "command_space_view": "approved; dedicated availability representation; exact navigation/layout TBD",
+      "add_command_flow": "Destination first → suggested free XY → Command Input → Command"
     },
     "constraints": [
       "Graffiti-column uses real canonical trajectories from 4Tap Graffiti Profile v1, not font imitation.",
@@ -3924,8 +3932,9 @@
       "Screen filling and command content remain subject to later detailed review."
     ],
     "open_questions": [
-      "Detailed content and population of the Commands screen.",
-      "Detailed behavior of the separate Command screen."
+      "Exact switch/navigation between assigned-command list and Command Space.",
+      "Exact Command Space hierarchy and occupancy visualization.",
+      "Detailed content and population of the assigned-command list."
     ],
     "tags": [
       "design",
@@ -3936,13 +3945,70 @@
     ]
   },
   {
+    "id": "command-space-view",
+    "section": "product",
+    "order": 35.5,
+    "title": "Command Space View",
+    "group": "UX SYSTEM",
+    "short": "Отдельное представление в контуре Commands показывает занятость и доступность полного пространства из 1296 знакопар.",
+    "description": "Command Space View нужен не для исполнения команды, а для ориентации и назначения: пользователь должен заранее видеть, какие комбинации свободны. Утверждено существование отдельного представления в Commands и двухуровневая семантика занятости: до выбора первого знака видна доступность семейства X?, после выбора — состояния конкретных X? пар. Точная навигация и визуальная структура проектируются следующим блоком.",
+    "purpose": "Не провоцировать пользователя выбирать уже занятые комбинации и дать обзор доступного namespace.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "shared",
+      "android",
+      "ios"
+    ],
+    "status": "approved",
+    "inputs": [
+      "Command Space 1296",
+      "SystemGestures",
+      "UserGestures"
+    ],
+    "outputs": [
+      "Availability overview",
+      "First-symbol family availability",
+      "Exact pair occupancy view"
+    ],
+    "parameters": {
+      "container": "Commands contour",
+      "capacity": 1296,
+      "same_symbol_pairs": "allowed",
+      "first_level": "36 first-symbol families X?",
+      "second_level": "36 exact X? pairs for selected first symbol",
+      "occupancy_states": "free / partially occupied / fully occupied semantics; exact visuals TBD",
+      "implementation_status": "design next; not implemented"
+    },
+    "constraints": [
+      "The view must reflect current registry occupancy rather than a static teaching matrix.",
+      "An existing command being edited must not be treated as conflicting with itself.",
+      "Exact tab/switch/navigation structure is not yet canon."
+    ],
+    "open_questions": [
+      "How to switch between assigned-command list and Command Space.",
+      "Exact visual language for free, partial and full occupancy.",
+      "How much assignment detail to expose from the availability view."
+    ],
+    "tags": [
+      "design",
+      "commands",
+      "command-space",
+      "availability",
+      "canon"
+    ]
+  },
+  {
     "id": "command-screen",
     "section": "product",
     "order": 36,
     "title": "Command Screen",
     "group": "UX SYSTEM",
     "short": "Принятая рабочая поверхность одной команды: редактируемая комбинация XY, назначение Destination, статус и сохранение.",
-    "description": "Command / Команда открывается из Commands и управляет одной пользовательской двухзнаковой командой. Первая Android-реализация собрана и просмотрена на физическом устройстве; поверхность принята как рабочая, дальнейшие изменения — refinement деталей. COMMAND открывает режим ввода XY; ВЕДЕТ В открывает Destination; STATUS переключается ACTIVE ↔ INACTIVE; dirty Back предлагает сохранить изменения.",
+    "description": "Command / Команда управляет одной пользовательской двухзнаковой командой. Первая Android-реализация принята на физическом устройстве. Для существующей команды COMMAND XY и ВЕДЕТ В остаются независимо редактируемыми; новый destination-first порядок относится только к созданию через ADD COMMAND.",
     "purpose": "Дать единый редактор одной команды, сохраняя визуальную связь между Graffiti, XY, назначением и состоянием.",
     "kind": "core",
     "models": [
@@ -3987,13 +4053,16 @@
       "real_device_review": "accepted working surface; future changes are refinement",
       "graffiti_area_future_correction": "same size as KnockUI working field",
       "scale_review": "current implementation feels somewhat large; review during refinement",
-      "destination_flow": "implemented first pass: opens Destination and receives APP/SYSTEM/WEB result"
+      "destination_flow": "implemented first pass: opens Destination and receives APP/SYSTEM/WEB result",
+      "existing_command_edit": "XY and Destination remain independently editable",
+      "new_command_entry": "completed draft arrives from Destination-first creation flow"
     },
     "constraints": [
       "Destination surface is detailed and implemented through its own Design Canon.",
       "Real Graffiti geometry comes from approved v1 SVG sources.",
       "User-facing strings remain localizable.",
-      "Command base structure is accepted; future visual changes are refinement, not a reset of the surface model."
+      "Command base structure is accepted; future visual changes are refinement, not a reset of the surface model.",
+      "Destination-first ordering applies to new-command creation, not to editing an existing command."
     ],
     "open_questions": [
       "Final delete confirmation behavior."
@@ -4014,7 +4083,7 @@
     "title": "Destination / ВЕДЕТ В",
     "group": "UX SYSTEM",
     "short": "Destination v0.1 принят на физическом устройстве: Приложения / Система / WEB — PASS.",
-    "description": "Destination / ВЕДЕТ В — утверждённая единая поверхность выбора назначения. Header 72 dp; под ним тёмная полоса 48 dp с тремя равными сегментами ПРИЛОЖЕНИЯ / СИСТЕМА / WEB и teal active segment. Первая Android-реализация собрана и прошла real-device review.",
+    "description": "Destination / ВЕДЕТ В — утверждённая единая поверхность ПРИЛОЖЕНИЯ / СИСТЕМА / WEB; v0.1 прошёл real-device review. При редактировании существующей команды выбор возвращается в Command. При создании новой команды через ADD COMMAND Destination выбирается первым и затем используется для предложения свободных XY перед Command Input.",
     "purpose": "Отделить саму двухзнаковую команду от типа её назначения и позволить одной модели поддерживать приложения, системные действия и интернет-страницы.",
     "kind": "core",
     "models": [
@@ -4034,7 +4103,8 @@
       "WEB destinations"
     ],
     "outputs": [
-      "Selected destination returned to Command"
+      "Selected destination for existing Command",
+      "Selected destination for new-command creation flow"
     ],
     "parameters": {
       "ui_ru": "ВЕДЕТ В",
@@ -4069,11 +4139,14 @@
       "system_rows": "64 dp; verified destinations only; v0.1 = Settings",
       "web_block": "~184 dp; 16 top + 20 label + 8 + 56 input + 12 + 56 use + 16 bottom",
       "android_code": "implemented; assembleDebug PASS; real-device PASS",
-      "real_device_review": "PASS: app selection; SYSTEM → Settings; WEB URL → domain in Command; category switching; Back unchanged; app search; 4-tap → KnockUI remains working"
+      "real_device_review": "PASS: app selection; SYSTEM → Settings; WEB URL → domain in Command; category switching; Back unchanged; app search; 4-tap → KnockUI remains working",
+      "existing_command_flow": "selection → return to Command",
+      "new_command_flow": "selection → suggest free XY → Command Input → Command",
+      "new_command_flow_status": "approved architecture; not yet implemented"
     },
     "constraints": [
       "Categories describe destination type, not command type.",
-      "Selection returns to Command; final persistence happens on Command.",
+      "Existing-command selection returns to Command; new-command selection continues to XY input; final persistence happens on Command.",
       "Applications category does not expose technical package names.",
       "System category contains only technically verified supported destinations.",
       "WEB stores URL, not browser + URL.",
@@ -4110,8 +4183,8 @@
     "order": 36.5,
     "title": "Command Input / XY",
     "group": "UX SYSTEM",
-    "short": "Утверждённая проектная схема ввода двухзнаковой команды внутри Command.",
-    "description": "Режим открывается внутри Command. Пользователь видит доступные знаки A–Z + 0–9, рисует один из них, recognizer определяет знак; процесс повторяется для второго символа, после чего формируется XY и комбинация проверяется на допустимость и занятость.",
+    "short": "Утверждённая структура ввода XY: 36 аннотированных Graffiti-эталонов, предварительная занятость, два редактируемых слота и объяснимый recognition feedback.",
+    "description": "Command Input остаётся подрежимом Command. Все 1296 пар A–Z + 0–9 допустимы, включая AA / SS / 11. Поверхность показывает 36 канонических эталонов 6×6 с траекторией, кружком начала и стрелкой направления. До первого знака видна доступность семейств X?, после первого — занятость конкретных пар. Оба слота можно повторно выбрать; нераспознанный штрих сначала получает аварийный feedback и объяснение, затем очищается без смены этапа.",
     "purpose": "Редактировать XY через тот же жестовый язык, которым пользователь затем вызывает команды.",
     "kind": "core",
     "models": [
@@ -4130,39 +4203,40 @@
       "4Tap Graffiti Profile v1"
     ],
     "outputs": [
-      "Recognized first symbol",
-      "Recognized second symbol",
-      "XY candidate"
+      "Recognized/selected first symbol",
+      "Recognized/selected second symbol",
+      "Validated free XY candidate"
     ],
     "parameters": {
       "container": "submode inside Command",
-      "sequence": [
-        "show A–Z + 0–9",
-        "user draws one visible sign",
-        "recognize sign",
-        "repeat for second sign",
-        "form XY",
-        "validate availability/occupancy",
-        "return result to Command"
-      ],
-      "project_ideas_not_canon": [
-        "recommend correct trajectory/direction/start point",
-        "offer tracing of canonical template after recognition"
-      ],
-      "next_status": "next active UI block after Destination v0.1 real-device PASS"
+      "command_space_capacity": 1296,
+      "same_symbol_pairs": "allowed",
+      "reference_grid": "36 signs; 6×6",
+      "reference_content": "canonical path + start circle + direction/end arrow + plain symbol label",
+      "first_slot_occupancy": "before drawing: mark signs with no free X? continuation as fully occupied",
+      "second_slot_occupancy": "after first sign: show occupied/free state of each exact X? pair",
+      "existing_command_self_occupancy": "current pair does not block itself while editing",
+      "slots": "first and second slots remain selectable/editable",
+      "drawing_field": "same intended working size as KnockUI drawing_canvas",
+      "successful_flow": "accepted first → second; accepted free second → return XY to Command",
+      "occupied_pair": "keep both recognized symbols; allow replacing second or selecting first",
+      "unrecognized_stroke": "keep visible → blink/pulse + explain redraw → smooth clear → remain on same slot",
+      "final_validation": "always re-check availability before returning XY",
+      "creation_context": "Destination known first; free-pair recommendations may be shown",
+      "recommendations": "non-binding; occupied pairs excluded; exact ranking/UI TBD",
+      "future_learning_not_current": "similar-symbol suggestions; corrective guidance; tracing; drawing over template"
     },
     "constraints": [
-      "Recommendations and canonical-template tracing are project ideas only, not approved behavior.",
-      "The mode remains inside Command rather than becoming a top-level navigation surface.",
-      "Detailed visual mechanics are still to be designed."
+      "The mode remains inside Command rather than becoming top-level navigation.",
+      "Recognizer must not disguise an occupied/unavailable choice as a recognition error.",
+      "Occupancy is shown proactively but final availability is still validated.",
+      "Recommendations never prevent choosing another free pair.",
+      "Similar-symbol suggestions, tracing and drawing over the canonical template are future learning features, not current implementation."
     ],
     "open_questions": [
-      "Exact layout of 36 signs.",
-      "Drawing-area geometry.",
-      "Recognition feedback and multi-candidate behavior.",
-      "Retry rules and transition between first/second sign.",
-      "Exact occupied/free-combination feedback.",
-      "Whether and how recommendations/tracing are later adopted."
+      "Exact visual treatment of free / partially occupied / fully occupied states.",
+      "Exact motion timing for unrecognized-stroke feedback.",
+      "Exact placement and ranking UI for suggested free XY pairs."
     ],
     "tags": [
       "design",
@@ -4170,6 +4244,60 @@
       "input",
       "graffiti",
       "recognition",
+      "canon"
+    ]
+  },
+  {
+    "id": "command-create-flow",
+    "section": "product",
+    "order": 36.6,
+    "title": "Command Creation Flow",
+    "group": "UX SYSTEM",
+    "short": "Новая команда создаётся от назначения к знакопаре: Destination сначала, затем свободный XY.",
+    "description": "ADD COMMAND больше не начинается с выбора знакопары. Пользователь сначала выбирает приложение, системное назначение или WEB destination. Зная назначение и текущую занятость namespace, 4Tap может предложить подходящие свободные XY. Пользователь может принять предложение или выбрать любую другую свободную пару через Command Input. Существующая команда по-прежнему позволяет независимо менять Destination и XY.",
+    "purpose": "Снизить когнитивную нагрузку при создании команды и использовать контекст назначения для полезных свободных рекомендаций.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "shared",
+      "android",
+      "ios"
+    ],
+    "status": "approved",
+    "inputs": [
+      "ADD COMMAND",
+      "Destination",
+      "Command Space occupancy"
+    ],
+    "outputs": [
+      "Command draft with Destination and XY"
+    ],
+    "parameters": {
+      "sequence": "ADD COMMAND → Destination → suggested free XY → Command Input → Command",
+      "destination_first": true,
+      "recommendations": "free pairs only; non-binding",
+      "user_override": "any other free pair allowed",
+      "existing_command_edit": "unchanged; Destination and XY independently editable",
+      "implementation_status": "approved architecture; not yet implemented"
+    },
+    "constraints": [
+      "Recommendations must never include occupied pairs.",
+      "Recommendation logic must not silently assign a pair without user choice.",
+      "The new order applies to creation, not ordinary editing of an existing command."
+    ],
+    "open_questions": [
+      "Ranking algorithm for suitable free pairs.",
+      "Exact recommendation presentation before/inside Command Input."
+    ],
+    "tags": [
+      "design",
+      "command",
+      "creation",
+      "destination",
+      "recommendation",
       "canon"
     ]
   }

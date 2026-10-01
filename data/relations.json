@@ -1090,5 +1090,53 @@
     "to": "android-integration",
     "relation": "first Android implementation queries launchable apps without QUERY_ALL_PACKAGES",
     "type": "implementation"
+  },
+  {
+    "from": "command-space",
+    "to": "command-space-view",
+    "relation": "задаёт полный namespace и правила пар",
+    "type": "model"
+  },
+  {
+    "from": "commands-screen",
+    "to": "command-space-view",
+    "relation": "открывает отдельное представление занятости",
+    "type": "flow"
+  },
+  {
+    "from": "command-space-view",
+    "to": "command-input-mode",
+    "relation": "использует ту же актуальную модель занятости",
+    "type": "model"
+  },
+  {
+    "from": "commands-screen",
+    "to": "command-create-flow",
+    "relation": "ADD COMMAND запускает создание новой команды",
+    "type": "flow"
+  },
+  {
+    "from": "command-create-flow",
+    "to": "destination-surface",
+    "relation": "сначала выбирает назначение",
+    "type": "flow"
+  },
+  {
+    "from": "command-create-flow",
+    "to": "command-input-mode",
+    "relation": "после Destination выбирает свободный XY",
+    "type": "flow"
+  },
+  {
+    "from": "command-create-flow",
+    "to": "command-screen",
+    "relation": "передаёт собранный черновик для итогового сохранения",
+    "type": "flow"
+  },
+  {
+    "from": "command-space-view",
+    "to": "command-create-flow",
+    "relation": "даёт данные о свободных комбинациях для рекомендаций",
+    "type": "model"
   }
 ]
