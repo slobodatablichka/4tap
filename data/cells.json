@@ -176,7 +176,7 @@
     "title": "4Tap Design Canon",
     "group": "UX SYSTEM",
     "short": "Единый визуальный и поведенческий канон для KnockUI, состояний ввода, обратной связи и пользовательских экранов.",
-    "description": "Design Canon задаёт визуальный язык, canon/graphics implementation gate и формальную логику поверхностей. Создание команды имеет два утверждённых входа: от свободной XY через ВЕДЕТ В и от назначения через отдельную поверхность НАЗНАЧИТЬ.",
+    "description": "Design Canon задаёт визуальный язык, implementation gate и нормализованную логику поверхностей. Выбор XY отделён от проверки жеста: общий Pair Selection выбирает знакопару через два этапа 6×6, а Gesture Check необязательно проверяет воспроизводимость выбранных жестов.",
     "purpose": "Не допустить расхождения интерфейсов и закрепить узнаваемую механику продукта.",
     "kind": "core",
     "models": [
@@ -203,8 +203,8 @@
     ],
     "parameters": {
       "current_working_version": "v0.1",
-      "core_surfaces": "KnockUI; 4Tap; Команды; Команда; Command Space; Destination / ВЕДЕТ В; Assign / НАЗНАЧИТЬ; Command Input; Алфавит; Настройки",
-      "immediate_next": "implement dual command-creation navigation in Android, then build/real-device review",
+      "core_surfaces": "KnockUI; 4Tap; Команды; Команда; Command Space / Pair Selection; Gesture Check / ПРОВЕРКА ЖЕСТА; Destination / ВЕДЕТ В; Assign / НАЗНАЧИТЬ; Алфавит; Настройки",
+      "immediate_next": "approve exact Pair Selection and Gesture Check geometry, then align Android routing",
       "next_revision": "v0.2 after first canon-driven implementation/usability pass",
       "public_beta": "v1.0 before public beta",
       "knockui_panel_model": "approved: quick_shortcuts / drawing_canvas; remember last active panel",
@@ -216,9 +216,8 @@
       "commands_screen": "approved structural block; detailed population later",
       "command_screen": "accepted on real Android device; future changes are refinement",
       "destination_surface": "approved v0.1; Apps / System / WEB; WEB URL model; history/share reserved",
-      "command_input": "approved structure: 1296 pairs; annotated 6×6 references; proactive occupancy; editable slots; explicit recognition-error feedback",
       "command_space_view": "approved as dedicated availability representation in Commands; detailed UI next",
-      "command_creation": "pair-first: КОМБИНАЦИИ → free XY → ВЕДЕТ В → Destination → Command; destination-first: ADD COMMAND → НАЗНАЧИТЬ → Destination → Command Input → XY → Command",
+      "command_creation": "destination-first: ADD COMMAND → НАЗНАЧИТЬ → Destination → Pair Selection → Gesture Check → Command; pair-first: Commands/Combinations → Pair Selection → Gesture Check → ВЕДЕТ В → Destination → Command",
       "graffiti_display_priority": "default: canonical 4Tap Graffiti for alphabet signs being shown/selected/formed; plain text only for explicitly defined roles such as existing XY identifier or keyboard search",
       "graffiti_guides": "default: start point + drawing-direction arrow; explicit exception for already completed/assigned command presentation",
       "back_navigation": "single Back in top header; one level back in current context; secondary rows do not duplicate",
@@ -229,7 +228,9 @@
       "canonical_header_actions": "Back / Menu / Search: 48×48 dp touch; 40×40 dp visible canonical artwork",
       "canonical_frame": "40×40 dp visible asset for empty square slots/containers where specified",
       "destination_semantics": "ВЕДЕТ В requires known XY",
-      "assign_semantics": "НАЗНАЧИТЬ selects Destination before XY"
+      "assign_semantics": "НАЗНАЧИТЬ selects Destination before XY",
+      "pair_selection": "shared two-stage 6×6 X→Y selector; not a drawing surface",
+      "gesture_check": "optional recognition check after XY selection; PASSED or SKIPPED; never changes XY"
     },
     "constraints": [
       "Канон должен сохранять скорость и минимальное вмешательство в текущий контекст пользователя.",
@@ -251,7 +252,8 @@
       "Финальная типографика и motion language",
       "Визуальная степень заметности KnockUI",
       "Точная геометрия и состояния основных поверхностей",
-      "Exact Command Input geometry and recommendation presentation"
+      "Exact Pair Selection geometry outside/inside Commands.",
+      "Exact Gesture Check geometry and feedback."
     ],
     "tags": [
       "design",
@@ -3410,8 +3412,8 @@
     "section": "roadmap",
     "title": "Stage 2 — Product Canon",
     "group": "ROADMAP",
-    "short": "Текущий этап: dual-flow Android routing реализован; следующий рубеж — build + real-device review.",
-    "description": "Stage 2 active. Pair-first и destination-first маршрутизация реализована: ADD COMMAND → НАЗНАЧИТЬ; свободная XY → ВЕДЕТ В; ВЕДЕТ В запрещён без полной XY. Destination-first ветка временно заканчивается на pending draft boundary до реализации Command Input. Следующий шаг — assembleDebug и физическая проверка.",
+    "short": "Текущий этап: Pair Selection / Gesture Check logic normalized; geometry and Android implementation are next.",
+    "description": "Stage 2 active. The former Command Input model is removed from the canonical map. XY selection is now one shared two-stage 6×6 Pair Selection, followed by an optional Gesture Check. Next: approve geometry, then update Android routing for both create flows.",
     "purpose": "Стабилизировать визуальный язык и жестовые эталоны до масштабирования продукта.",
     "kind": "core",
     "models": [
@@ -3434,12 +3436,12 @@
     ],
     "parameters": {
       "stage_status": "active",
-      "current_task": "dual-flow Android routing — build + real-device review",
+      "current_task": "Pair Selection + Gesture Check geometry",
       "graffiti": "4Tap Graffiti Profile v1 — approved",
-      "immediate_next": "verify Assign surface, free XY → ВЕДЕТ В, and no empty-XY ВЕДЕТ В",
-      "subsequent": "Command Input implementation to continue destination-first flow",
+      "immediate_next": "approve canonical layouts and transitions",
+      "subsequent": "implement destination-first continuation and pair-first Gesture Check before ВЕДЕТ В",
       "public_beta_gate": "Design Canon v1.0 before public beta",
-      "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; dual create-flow: pair-first ВЕДЕТ В + destination-first НАЗНАЧИТЬ; Command Input structure; brand teal #159B92",
+      "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; normalized dual create-flow with shared Pair Selection + Gesture Check; brand teal #159B92",
       "content_detailing": "separate follow-up per screen"
     },
     "constraints": [
@@ -3946,7 +3948,7 @@
     "title": "Commands Screen",
     "group": "UX SYSTEM",
     "short": "Утверждённый экран управления назначенными командами плюс отдельное представление Command Space для занятости 1296 пар.",
-    "description": "Commands / Команды реализует обе ветки создания: ADD COMMAND открывает отдельную НАЗНАЧИТЬ; в КОМБИНАЦИИ выбранная свободная полная XY активирует ВЕДЕТ В и передаётся в Destination. Требуется build/real-device review.",
+    "description": "Commands / Команды hosts the shared Pair Selection as the КОМБИНАЦИИ mode. A free XY should proceed to optional Gesture Check; only after that does pair-first creation open ВЕДЕТ В. Current Android still contains the older direct free-XY → ВЕДЕТ В step and needs alignment.",
     "purpose": "Сделать список команд одновременно управляющим интерфейсом и постоянной визуальной связью между жестом Graffiti, кодом XY и назначением.",
     "kind": "core",
     "models": [
@@ -3971,7 +3973,8 @@
       "Open Command Space availability view",
       "Start destination-first command creation",
       "Start destination-first creation via НАЗНАЧИТЬ",
-      "Start pair-first creation from free XY via ВЕДЕТ В"
+      "Host shared Pair Selection in КОМБИНАЦИИ",
+      "Start pair-first Gesture Check after free XY"
     ],
     "parameters": {
       "brand_teal": "#159B92",
@@ -3997,21 +4000,21 @@
       "scroll": "list only; header and ADD COMMAND fixed; transient scrollbar",
       "layout_style": "flat continuous table; no cards/gaps",
       "command_space_view": "НАЗНАЧЕНИЯ / КОМБИНАЦИИ; first level 36 Graffiti glyphs 6×6; second level 36 individual second Graffiti glyphs",
-      "add_command_flow": "ДОБАВИТЬ КОМАНДУ → НАЗНАЧИТЬ → Destination → Command Input → XY → Command",
+      "add_command_flow": "ДОБАВИТЬ КОМАНДУ → НАЗНАЧИТЬ → Destination → Pair Selection → Gesture Check → Command",
       "command_space_search": "standard Android keyboard; A–Z + 0–9; max 2 chars; 1 char opens family; 2 chars opens exact pair",
-      "command_space_android": "dual-flow routing implemented; build/real-device review pending",
+      "command_space_android": "current implementation predates Gesture Check; routing update pending",
       "add_command_current_implementation": "implemented: opens AssignActivity / НАЗНАЧИТЬ",
       "assignment_alignment": "destination right-aligned",
       "assigned_command_markers": "explicit exception: no start point / direction arrow for completed assignment Graffiti; text XY remains plain identifier",
       "command_space_glyph_guides": "start point + direction arrow",
       "command_space_height_rule": "X establishes common target rendered height for all alphabet glyphs",
-      "command_space_second_header": "[Graffiti X] + [second slot] | ВЕДЕТ В; no duplicate Back",
+      "command_space_second_header": "current Android still shows ВЕДЕТ В; target Pair Selection completes on free Y and proceeds to Gesture Check",
       "header_structure": "Back | COMMANDS / КОМАНДЫ | Search | Menu",
       "back_button": "canonical left header control; 48×48 dp touch area",
       "header_actions": "canonical Back / Search / Menu assets; 48×48 dp touch; 40×40 dp visible",
       "search_icon": "framed canonical Search asset; not Android system icon",
       "menu_icon": "framed canonical Menu asset; geometry comes from asset",
-      "command_space_pair_flow": "implemented: select free XY → ВЕДЕТ В → DestinationActivity with known XY"
+      "command_space_pair_flow": "target: select free XY → Gesture Check → ВЕДЕТ В → Destination → Command"
     },
     "constraints": [
       "Graffiti-column uses real canonical trajectories from 4Tap Graffiti Profile v1, not font imitation.",
@@ -4037,11 +4040,11 @@
     "id": "command-space-view",
     "section": "product",
     "order": 35.5,
-    "title": "Command Space View",
+    "title": "Command Space / Pair Selection",
     "group": "UX SYSTEM",
-    "short": "Отдельное представление в контуре Commands показывает занятость и доступность полного пространства из 1296 знакопар.",
-    "description": "Command Space View — второй режим Commands. Свободная полная XY выбирается без FREE-dialog и активирует действие ВЕДЕТ В; занятая пара по-прежнему показывает назначение и открывает существующую Command. Pair-first routing реализован, review pending.",
-    "purpose": "Не провоцировать пользователя выбирать уже занятые комбинации и дать обзор доступного namespace.",
+    "short": "Двухэтапный 6×6 выбор свободной знакопары; в Commands размещён как режим КОМБИНАЦИИ.",
+    "description": "Pair Selection is the shared canonical X→Y chooser. Commands / КОМБИНАЦИИ hosts the same selector for pair-first creation. A free pair proceeds to Gesture Check; occupied pairs may open their existing Command. Drawing is not used to assign XY.",
+    "purpose": "Дать единый способ выбора свободной XY во всех контекстах без конкурирующего gesture-input механизма.",
     "kind": "core",
     "models": [
       "b2c",
@@ -4059,27 +4062,27 @@
       "UserGestures"
     ],
     "outputs": [
-      "Availability overview",
-      "First-symbol family availability",
+      "Selected first symbol X",
+      "Selected free pair XY",
       "Exact pair occupancy view"
     ],
     "parameters": {
-      "container": "Commands contour",
+      "container": "shared Pair Selection; hosted in Commands / КОМБИНАЦИИ and reused after НАЗНАЧИТЬ / in Command editing",
       "capacity": 1296,
       "same_symbol_pairs": "allowed",
       "first_level": "36 canonical Graffiti signs; 6×6; menu only; no counts; guides visible",
       "second_level": "36 individual second Graffiti signs; 6×6; pair state derives from selected first + cell",
       "occupancy_states": "free / partially occupied / fully occupied semantics; exact visuals TBD",
-      "implementation_status": "pair-first routing implemented; build/real-device review pending",
+      "implementation_status": "Commands host exists; target Gesture Check transition not yet implemented",
       "first_level_full_family": "muted color; remains openable for inspection",
       "search": "standard Android keyboard; A–Z + 0–9; max 2 symbols",
-      "free_pair_tap": "select full free XY; enable ВЕДЕТ В; no separate FREE dialog",
+      "free_pair_tap": "complete Pair Selection → Gesture Check",
       "occupied_pair_tap": "show assignment and allow opening existing Command",
       "height_normalization": "common target height derived from X fit; proportions preserved",
-      "second_level_header": "[Graffiti first] + [second slot] | ВЕДЕТ В",
+      "second_level_header": "selected X + second-sign selection; target has no direct ВЕДЕТ В action",
       "second_level_header_height_dp": 72,
       "bottom_add_button": "absent in COMBINATIONS; ADD lives in second-level header; assignments keeps bottom ADD",
-      "add_command": "not used on pair-first path; free XY opens ВЕДЕТ В",
+      "add_command": "not part of Pair Selection",
       "back_behavior": "single top-header Back; second level → first level; top level → leave Commands"
     },
     "constraints": [
@@ -4087,7 +4090,8 @@
       "An existing command being edited must not be treated as conflicting with itself."
     ],
     "open_questions": [
-      "Real-device review after dual-flow navigation implementation."
+      "Exact standalone/contextual geometry outside Commands.",
+      "Exact visual treatment of free / occupied states."
     ],
     "tags": [
       "design",
@@ -4104,7 +4108,7 @@
     "title": "Command Screen",
     "group": "UX SYSTEM",
     "short": "Принятая рабочая поверхность одной команды: редактируемая комбинация XY, назначение Destination, статус и сохранение.",
-    "description": "Command / Команда — точка сборки и редактирования полной связи XY + Destination. Для существующей команды XY и ВЕДЕТ В редактируются независимо. Новая полная команда может прийти либо из pair-first flow, либо из destination-first flow.",
+    "description": "Command / Команда is the final editor for XY + Destination. Destination edits through ВЕДЕТ В; XY edits through the shared Pair Selection followed by optional Gesture Check.",
     "purpose": "Дать единый редактор одной команды, сохраняя визуальную связь между Graffiti, XY, назначением и состоянием.",
     "kind": "core",
     "models": [
@@ -4139,7 +4143,7 @@
       "row_text": "Roboto Slab 18 sp / 800",
       "bottom_actions": "DELETE | SAVE; fixed 56 dp",
       "command_xy": "editable",
-      "command_edit": "drawing/input mode inside Command",
+      "command_edit": "Pair Selection → Gesture Check → return XY to Command",
       "status_toggle": "ACTIVE ↔ INACTIVE; no Android switch",
       "dirty_back": "confirm only when data changed",
       "android_code": "implemented first pass in 4tap-app",
@@ -4150,8 +4154,8 @@
       "graffiti_area_future_correction": "same size as KnockUI working field",
       "scale_review": "current implementation feels somewhat large; review during refinement",
       "destination_flow": "implemented first pass: opens Destination and receives APP/SYSTEM/WEB result",
-      "existing_command_edit": "XY and Destination remain independently editable",
-      "new_command_entry": "complete draft may arrive from free XY → ВЕДЕТ В or НАЗНАЧИТЬ → Destination → Command Input"
+      "existing_command_edit": "Destination and XY remain independently editable",
+      "new_command_entry": "complete draft arrives after both XY and Destination are known; Gesture Check may be PASSED or SKIPPED"
     },
     "constraints": [
       "Destination surface is detailed and implemented through its own Design Canon.",
@@ -4179,7 +4183,7 @@
     "title": "Assign / НАЗНАЧИТЬ",
     "group": "UX SYSTEM",
     "short": "Отдельная поверхность destination-first создания: выбрать объект, которому назначить новую знакопару.",
-    "description": "НАЗНАЧИТЬ — отдельная destination-first поверхность. Первый Android-pass реализован как отдельная AssignActivity с каноническим header Back | НАЗНАЧИТЬ | Search, без XY-слотов, с переиспользованием утверждённых APP/SYSTEM/WEB компонентов. После выбора Destination состояние возвращается в Commands как pending draft до реализации Command Input.",
+    "description": "НАЗНАЧИТЬ chooses Destination first. Target flow then opens the shared Pair Selection, followed by optional Gesture Check and Command. Current Android stops at a pending Destination draft until Pair Selection is implemented.",
     "purpose": "Дать естественный путь создания команды от приложения/системного действия/WEB к свободной знакопаре.",
     "kind": "core",
     "models": [
@@ -4211,13 +4215,13 @@
         "WEB"
       ],
       "entry": "КОМАНДЫ / НАЗНАЧЕНИЯ → ДОБАВИТЬ КОМАНДУ",
-      "next": "selected Destination → pending draft boundary; Command Input not implemented yet",
+      "next": "selected Destination → Pair Selection → Gesture Check → Command",
       "xy_context": "unknown on entry; no ВЕДЕТ В XY slots",
       "persistence": "final save happens on Command",
       "implementation_status": "approved logic; exact visual geometry and Android implementation pending",
       "header": "Back | НАЗНАЧИТЬ | Search",
       "xy_slots": "absent",
-      "android_implementation": "implemented first pass; build/real-device review pending"
+      "android_implementation": "AssignActivity implemented; continuation into Pair Selection pending"
     },
     "constraints": [
       "НАЗНАЧИТЬ is separate from ВЕДЕТ В.",
@@ -4227,8 +4231,8 @@
     ],
     "open_questions": [
       "Whether list/category geometry fully reuses Destination components.",
-      "Exact recommendation UI after Destination selection.",
-      "Real-device review of first Assign surface."
+      "Real-device review of first Assign surface.",
+      "Exact destination-context presentation inside Pair Selection."
     ],
     "tags": [
       "design",
@@ -4246,7 +4250,7 @@
     "title": "Destination / ВЕДЕТ В",
     "group": "UX SYSTEM",
     "short": "ВЕДЕТ В — выбор Destination только для уже известной знакопары XY.",
-    "description": "ВЕДЕТ В — выбор Destination только для известной XY. Android routing теперь технически требует полную двухзнаковую команду; ADD COMMAND больше не открывает эту поверхность. Pair-first вход из Command Space передаёт XY явно.",
+    "description": "ВЕДЕТ В chooses Destination only for a known XY. In pair-first creation it is entered after Pair Selection and optional Gesture Check; in editing it is opened from Command.",
     "purpose": "Отделить саму двухзнаковую команду от типа её назначения и позволить одной модели поддерживать приложения, системные действия и интернет-страницы.",
     "kind": "core",
     "models": [
@@ -4278,7 +4282,7 @@
         "СИСТЕМА",
         "WEB"
       ],
-      "entry": "existing Command ВЕДЕТ В row OR free XY from Command Space",
+      "entry": "existing Command ВЕДЕТ В row OR pair-first Gesture Check completion/skip with known XY",
       "back_without_selection": "return to Command unchanged",
       "selection": "return selected destination to Command",
       "persistence": "final save happens on Command",
@@ -4304,8 +4308,8 @@
       "android_code": "implemented; assembleDebug PASS; real-device PASS",
       "real_device_review": "PASS: app selection; SYSTEM → Settings; WEB URL → domain in Command; category switching; Back unchanged; app search; 4-tap → KnockUI remains working",
       "existing_command_flow": "select Destination → return to Command",
-      "new_command_flow": "free XY → ВЕДЕТ В → select Destination → complete draft → Command",
-      "new_command_flow_status": "implemented pair-first routing; build/real-device review pending",
+      "new_command_flow": "Pair Selection → Gesture Check → ВЕДЕТ В → select Destination → Command",
+      "new_command_flow_status": "target normalized; Android currently enters ВЕДЕТ В directly after free XY and needs update",
       "header_structure": "Back | [slot 1][slot 2] | ВЕДЕТ В",
       "command_context_slots": "2 × 48 dp slots with canonical 40×40 Frame artwork",
       "existing_command_slots": "always show known Graffiti XY without start point/direction arrow",
@@ -4345,84 +4349,13 @@
     ]
   },
   {
-    "id": "command-input-mode",
-    "section": "product",
-    "order": 36.5,
-    "title": "Command Input / XY",
-    "group": "UX SYSTEM",
-    "short": "Утверждённая структура ввода XY: 36 аннотированных Graffiti-эталонов, предварительная занятость, два редактируемых слота и объяснимый recognition feedback.",
-    "description": "Command Input выбирает/редактирует XY. Для destination-first creation он получает уже выбранный Destination от НАЗНАЧИТЬ; для pair-first creation не используется. При редактировании существующей Command меняет XY независимо от Destination.",
-    "purpose": "Редактировать XY через тот же жестовый язык, которым пользователь затем вызывает команды.",
-    "kind": "core",
-    "models": [
-      "b2c",
-      "b2b"
-    ],
-    "platforms": [
-      "shared",
-      "android",
-      "ios"
-    ],
-    "status": "approved",
-    "inputs": [
-      "A–Z + 0–9",
-      "Finger stroke",
-      "4Tap Graffiti Profile v1"
-    ],
-    "outputs": [
-      "Recognized/selected first symbol",
-      "Recognized/selected second symbol",
-      "Validated free XY candidate"
-    ],
-    "parameters": {
-      "container": "submode inside Command",
-      "command_space_capacity": 1296,
-      "same_symbol_pairs": "allowed",
-      "reference_grid": "36 signs; 6×6",
-      "reference_content": "canonical path + start circle + direction/end arrow + plain symbol label",
-      "first_slot_occupancy": "before drawing: mark signs with no free X? continuation as fully occupied",
-      "second_slot_occupancy": "after first sign: show occupied/free state of each exact X? pair",
-      "existing_command_self_occupancy": "current pair does not block itself while editing",
-      "slots": "first and second slots remain selectable/editable",
-      "drawing_field": "same intended working size as KnockUI drawing_canvas",
-      "successful_flow": "existing edit: return XY to Command; new destination-first flow: Destination + accepted free XY → Command",
-      "occupied_pair": "keep both recognized symbols; allow replacing second or selecting first",
-      "unrecognized_stroke": "keep visible → blink/pulse + explain redraw → smooth clear → remain on same slot",
-      "final_validation": "always re-check availability before returning XY",
-      "creation_context": "destination-first only: Destination comes from НАЗНАЧИТЬ before XY",
-      "recommendations": "non-binding; occupied pairs excluded; exact ranking/UI TBD",
-      "future_learning_not_current": "similar-symbol suggestions; corrective guidance; tracing; drawing over template"
-    },
-    "constraints": [
-      "The mode remains inside Command rather than becoming top-level navigation.",
-      "Recognizer must not disguise an occupied/unavailable choice as a recognition error.",
-      "Occupancy is shown proactively but final availability is still validated.",
-      "Recommendations never prevent choosing another free pair.",
-      "Similar-symbol suggestions, tracing and drawing over the canonical template are future learning features, not current implementation.",
-      "Pair-first creation from Command Space does not pass through Command Input."
-    ],
-    "open_questions": [
-      "Exact visual treatment of free / partially occupied / fully occupied states.",
-      "Exact motion timing for unrecognized-stroke feedback.",
-      "Exact placement and ranking UI for suggested free XY pairs."
-    ],
-    "tags": [
-      "design",
-      "command",
-      "input",
-      "graffiti",
-      "recognition",
-      "canon"
-    ]
-  },
-  {
     "id": "command-create-flow",
     "section": "product",
     "order": 36.6,
     "title": "Command Creation Flow",
     "group": "UX SYSTEM",
-    "short": "Новая команда создаётся двумя симметричными путями: от свободной XY или от Destination.",
-    "description": "4Tap поддерживает два create-flow, которые сходятся в полном черновике XY + Destination. Pair-first: пользователь выбирает свободную XY в КОМБИНАЦИИ, затем ВЕДЕТ В и Destination. Destination-first: ДОБАВИТЬ КОМАНДУ открывает отдельную поверхность НАЗНАЧИТЬ, после выбора Destination открывается Command Input для свободной XY.",
+    "short": "Две ветки создания используют один общий блок: Pair Selection → Gesture Check.",
+    "description": "Command creation is normalized around one shared XY selector and one optional gesture-verification surface. Destination-first chooses Destination in НАЗНАЧИТЬ before Pair Selection; pair-first chooses XY first, checks/skips the gesture, then opens ВЕДЕТ В.",
     "purpose": "Снизить когнитивную нагрузку при создании команды и использовать контекст назначения для полезных свободных рекомендаций.",
     "kind": "core",
     "models": [
@@ -4436,34 +4369,34 @@
     ],
     "status": "approved",
     "inputs": [
-      "Free XY from Command Space",
       "ADD COMMAND",
       "Destination",
-      "Command Space occupancy"
+      "Command Space occupancy",
+      "Free XY"
     ],
     "outputs": [
       "Command draft with Destination and XY"
     ],
     "parameters": {
-      "pair_first": "КОМБИНАЦИИ → free XY → ВЕДЕТ В → Destination → Command",
-      "destination_first": "ДОБАВИТЬ КОМАНДУ → НАЗНАЧИТЬ → Destination → Command Input → XY → Command",
-      "convergence": "XY + Destination → Command",
-      "recommendations": "destination-first only; free pairs only; non-binding",
-      "user_override": "any other free pair allowed in Command Input",
-      "existing_command_edit": "unchanged; Destination and XY independently editable",
-      "implementation_status": "Android routing implemented; destination-first stops at pending draft until Command Input exists; build/real-device review pending"
+      "shared_block": "Pair Selection → Gesture Check",
+      "destination_first": "ДОБАВИТЬ КОМАНДУ → НАЗНАЧИТЬ → Destination → Pair Selection → Gesture Check → Command",
+      "pair_first": "КОМАНДЫ / КОМБИНАЦИИ → Pair Selection → Gesture Check → ВЕДЕТ В → Destination → Command",
+      "edit_xy": "Command → Pair Selection → Gesture Check → Command",
+      "gesture_check": "optional; PASSED or SKIPPED; does not change XY",
+      "convergence": "Command opens when XY and Destination are both known",
+      "implementation_status": "project logic normalized; Android routing still needs Pair Selection/Gesture Check implementation"
     },
     "constraints": [
-      "ВЕДЕТ В requires known XY and never represents an empty-XY state.",
-      "НАЗНАЧИТЬ is a separate surface, not a mode of ВЕДЕТ В.",
-      "Recommendations must never include occupied pairs.",
-      "Recommendation logic must not silently assign a pair without user choice.",
-      "Both create-flow paths converge only after XY and Destination are known."
+      "Pair Selection is the only canonical command-pair assignment mechanism.",
+      "Pair Selection uses two 6×6 Graffiti selection stages and is not a drawing surface.",
+      "Gesture Check follows selected free XY and may be skipped.",
+      "Gesture Check never changes XY and never selects Destination.",
+      "ВЕДЕТ В requires known XY.",
+      "НАЗНАЧИТЬ selects Destination before XY."
     ],
     "open_questions": [
-      "Ranking algorithm for suitable free pairs.",
-      "Exact recommendation presentation in Command Input.",
-      "Exact visual geometry of НАЗНАЧИТЬ before implementation."
+      "Exact Pair Selection geometry in each host context.",
+      "Exact Gesture Check geometry and feedback."
     ],
     "tags": [
       "design",
@@ -4471,6 +4404,125 @@
       "creation",
       "destination",
       "recommendation",
+      "canon"
+    ]
+  },
+  {
+    "id": "pair-selection-surface",
+    "section": "product",
+    "order": 36.45,
+    "title": "Pair Selection / Выбор знакопары",
+    "group": "UX SYSTEM",
+    "short": "Общий двухэтапный выбор свободной XY через две Graffiti-сетки 6×6.",
+    "description": "Pair Selection is the single canonical XY assignment mechanism. Stage 1 selects X from 36 Graffiti signs; stage 2 selects Y from 36 signs and validates exact-pair occupancy. It is reused in Commands / КОМБИНАЦИИ, after НАЗНАЧИТЬ, and when editing Command. It is not a drawing surface.",
+    "purpose": "Исключить дублирующие способы назначения XY и переиспользовать одну модель выбора во всех flow.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "shared",
+      "android",
+      "ios"
+    ],
+    "status": "approved",
+    "inputs": [
+      "A–Z + 0–9",
+      "Command Space occupancy",
+      "Optional current XY",
+      "Optional known Destination context"
+    ],
+    "outputs": [
+      "Selected free XY"
+    ],
+    "parameters": {
+      "capacity": 1296,
+      "same_symbol_pairs": "allowed",
+      "stage_1": "36 canonical Graffiti signs; 6×6; choose X",
+      "stage_2": "36 canonical Graffiti signs; 6×6; choose Y; state derives from full XY",
+      "graffiti_guides": "start point + direction arrow",
+      "occupied_pair": "cannot be assigned to a new command",
+      "existing_self_pair": "does not conflict with itself while editing",
+      "next": "free XY → Gesture Check",
+      "drawing": "not used for XY assignment",
+      "hosts": "Commands / КОМБИНАЦИИ; destination-first after НАЗНАЧИТЬ; Command XY edit",
+      "implementation_status": "Commands host partly exists; shared contextual surface not yet implemented"
+    },
+    "constraints": [
+      "The same canonical selection logic is reused in every context.",
+      "Occupied pairs are not recognition errors.",
+      "Pair Selection does not choose Destination or save Command."
+    ],
+    "open_questions": [
+      "Exact standalone/contextual geometry.",
+      "Exact free/occupied visual states.",
+      "How known Destination context is shown."
+    ],
+    "tags": [
+      "design",
+      "pair-selection",
+      "command-space",
+      "graffiti",
+      "canon"
+    ]
+  },
+  {
+    "id": "gesture-check-surface",
+    "section": "product",
+    "order": 36.55,
+    "title": "Gesture Check / Проверка жеста",
+    "group": "UX SYSTEM",
+    "short": "Необязательная проверка: recognizer должен определить жесты пользователя как уже выбранные X и Y.",
+    "description": "Gesture Check follows a selected free XY. The surface presents the canonical X/Y examples and lets the user test their own gestures. Successful checks yield PASSED; the entire check can be skipped. It does not select or modify XY and does not choose Destination.",
+    "purpose": "Проверить воспроизводимость выбранной знакопары конкретным пользователем, не превращая проверку в обязательный gate.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "shared",
+      "android",
+      "ios"
+    ],
+    "status": "approved",
+    "inputs": [
+      "Selected free XY",
+      "4Tap Graffiti Profile",
+      "Recognizer"
+    ],
+    "outputs": [
+      "GestureCheck PASSED or SKIPPED",
+      "Unchanged selected XY"
+    ],
+    "parameters": {
+      "sequence": "check X → check Y",
+      "success": "recognizer identifies expected symbol",
+      "retry": "allowed after failed recognition",
+      "skip": "always allowed",
+      "changes_xy": false,
+      "destination_first_next": "Command",
+      "pair_first_next": "ВЕДЕТ В",
+      "edit_next": "Command",
+      "implementation_status": "not implemented"
+    },
+    "constraints": [
+      "Failure does not change or clear XY.",
+      "Failure does not block continuation.",
+      "Gesture Check is not the XY assignment mechanism."
+    ],
+    "open_questions": [
+      "Exact header and geometry.",
+      "Drawing field size.",
+      "Exact PASSED/retry feedback.",
+      "Exact label for skip/continue."
+    ],
+    "tags": [
+      "design",
+      "gesture-check",
+      "recognition",
+      "graffiti",
       "canon"
     ]
   }

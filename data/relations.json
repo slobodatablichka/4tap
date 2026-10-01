@@ -1044,30 +1044,6 @@
     "type": "constraint"
   },
   {
-    "from": "command-screen",
-    "to": "command-input-mode",
-    "relation": "строка COMMAND открывает режим ввода XY внутри Command",
-    "type": "flow"
-  },
-  {
-    "from": "graffiti-profile",
-    "to": "command-input-mode",
-    "relation": "задаёт видимые и распознаваемые траектории знаков",
-    "type": "model"
-  },
-  {
-    "from": "command-input-mode",
-    "to": "command-space",
-    "relation": "формирует и проверяет двухзнаковую комбинацию XY",
-    "type": "model"
-  },
-  {
-    "from": "design-canon",
-    "to": "command-input-mode",
-    "relation": "фиксирует утверждённую проектную схему и границу неутверждённых идей",
-    "type": "model"
-  },
-  {
     "from": "destination-surface",
     "to": "android-actions",
     "relation": "SYSTEM uses only verified supported Android system destinations",
@@ -1104,21 +1080,9 @@
     "type": "flow"
   },
   {
-    "from": "command-space-view",
-    "to": "command-input-mode",
-    "relation": "использует ту же актуальную модель занятости",
-    "type": "model"
-  },
-  {
     "from": "commands-screen",
     "to": "command-create-flow",
     "relation": "ADD COMMAND запускает создание новой команды",
-    "type": "flow"
-  },
-  {
-    "from": "command-create-flow",
-    "to": "command-input-mode",
-    "relation": "после Destination выбирает свободный XY",
     "type": "flow"
   },
   {
@@ -1146,12 +1110,6 @@
     "type": "design"
   },
   {
-    "from": "ui-graphics-registry",
-    "to": "command-input-mode",
-    "relation": "задаёт общую графическую дисциплину UI-элементов",
-    "type": "design"
-  },
-  {
     "from": "design-canon",
     "to": "assign-surface",
     "relation": "фиксирует отдельную destination-first поверхность",
@@ -1161,12 +1119,6 @@
     "from": "commands-screen",
     "to": "assign-surface",
     "relation": "ДОБАВИТЬ КОМАНДУ открывает НАЗНАЧИТЬ",
-    "type": "flow"
-  },
-  {
-    "from": "assign-surface",
-    "to": "command-input-mode",
-    "relation": "после выбора Destination назначает свободную XY",
     "type": "flow"
   },
   {
@@ -1188,12 +1140,6 @@
     "type": "constraint"
   },
   {
-    "from": "command-space-view",
-    "to": "destination-surface",
-    "relation": "свободная полная XY открывает ВЕДЕТ В",
-    "type": "flow"
-  },
-  {
     "from": "destination-surface",
     "to": "command-screen",
     "relation": "pair-first flow передаёт полный XY + Destination draft",
@@ -1206,21 +1152,81 @@
     "type": "flow"
   },
   {
-    "from": "command-create-flow",
-    "to": "destination-surface",
-    "relation": "pair-first ветка использует ВЕДЕТ В после свободной XY",
-    "type": "flow"
-  },
-  {
-    "from": "command-create-flow",
-    "to": "command-input-mode",
-    "relation": "destination-first ветка выбирает XY после НАЗНАЧИТЬ",
-    "type": "flow"
-  },
-  {
     "from": "command-space-view",
     "to": "command-create-flow",
     "relation": "даёт pair-first вход от свободной XY",
+    "type": "flow"
+  },
+  {
+    "from": "design-canon",
+    "to": "pair-selection-surface",
+    "relation": "фиксирует единственный канонический способ выбора XY",
+    "type": "model"
+  },
+  {
+    "from": "design-canon",
+    "to": "gesture-check-surface",
+    "relation": "фиксирует необязательную проверку выбранных жестов",
+    "type": "model"
+  },
+  {
+    "from": "graffiti-profile",
+    "to": "pair-selection-surface",
+    "relation": "задаёт канонические формы X/Y",
+    "type": "model"
+  },
+  {
+    "from": "graffiti-profile",
+    "to": "gesture-check-surface",
+    "relation": "задаёт эталоны для проверки жеста",
+    "type": "model"
+  },
+  {
+    "from": "command-space-view",
+    "to": "pair-selection-surface",
+    "relation": "Commands / КОМБИНАЦИИ размещает общий Pair Selection",
+    "type": "model"
+  },
+  {
+    "from": "pair-selection-surface",
+    "to": "gesture-check-surface",
+    "relation": "свободная XY переходит в необязательную проверку",
+    "type": "flow"
+  },
+  {
+    "from": "assign-surface",
+    "to": "pair-selection-surface",
+    "relation": "после Destination выбирает свободную XY",
+    "type": "flow"
+  },
+  {
+    "from": "command-screen",
+    "to": "pair-selection-surface",
+    "relation": "редактирование XY использует общий выбор знакопары",
+    "type": "flow"
+  },
+  {
+    "from": "gesture-check-surface",
+    "to": "destination-surface",
+    "relation": "pair-first после проверки/пропуска открывает ВЕДЕТ В",
+    "type": "flow"
+  },
+  {
+    "from": "gesture-check-surface",
+    "to": "command-screen",
+    "relation": "destination-first/edit возвращает выбранную XY в Command",
+    "type": "flow"
+  },
+  {
+    "from": "command-create-flow",
+    "to": "pair-selection-surface",
+    "relation": "обе ветки используют общий выбор XY",
+    "type": "flow"
+  },
+  {
+    "from": "command-create-flow",
+    "to": "gesture-check-surface",
+    "relation": "обе ветки проходят или пропускают проверку жеста",
     "type": "flow"
   }
 ]

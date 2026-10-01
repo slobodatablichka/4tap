@@ -497,6 +497,26 @@ Android now follows the approved split creation logic:
 
 Build and real-device review are still required; no new PASS is recorded yet.
 
+## Pair Selection / Gesture Check normalization
+
+The previous canonical Command Input model has been superseded and removed from the public architecture map.
+
+Current approved logic:
+
+- `Pair Selection / Выбор знакопары` is the single XY assignment mechanism;
+- it uses two stages: 6×6 first-sign selection, then 6×6 second-sign selection;
+- drawing is not used to assign XY;
+- after a free XY is selected, `Gesture Check / Проверка жеста` optionally verifies that the recognizer identifies the user's X and Y gestures;
+- Gesture Check may be skipped and never changes XY.
+
+Flows:
+
+- destination-first: `ADD COMMAND → НАЗНАЧИТЬ → Destination → Pair Selection → Gesture Check → Command`;
+- pair-first: `Commands / КОМБИНАЦИИ → Pair Selection → Gesture Check → ВЕДЕТ В → Destination → Command`;
+- edit XY: `Command → Pair Selection → Gesture Check → Command`.
+
+Current Android code predates this normalization in two places: destination-first stops at a pending Destination draft, and pair-first currently goes from free XY directly to ВЕДЕТ В. These are implementation gaps, not alternate canonical flows.
+
 ## iOS implementation options
 
 iOS больше не описывается как keyboard-only архитектура. Зафиксированы варианты реализации, окончательный выбор отложен.
