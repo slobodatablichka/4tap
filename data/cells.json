@@ -324,7 +324,7 @@
       "knockui_assets": "logo-4tap.svg; quick_shortcuts.svg; drawing_canvas.svg; send.svg; close.svg; back-4_tap-dev.svg; screencart-logo.svg",
       "knockui_logo_light_background": "invert white artwork/frame to #159B92",
       "knockui_control_strip_size": "first Android candidate: 48 dp cells / 40 dp visible; subject to device review",
-      "knockui_android_derivatives": "ic_knockui_logo.xml; ic_knockui_shortcuts.xml; ic_knockui_draw.xml; ic_knockui_send.xml; ic_knockui_close.xml",
+      "knockui_android_derivatives": "ic_knockui_logo.xml; ic_knockui_shortcuts.xml; ic_knockui_draw.xml; ic_knockui_send.xml; ic_knockui_close.xml; ic_knockui_screencart.xml; ic_knockui_support_4tap.xml",
       "support_4tap_asset": "back-4_tap-dev.svg; approved 2026-10-02; three-line artwork back / <4_tap> / dev; symbolizes support for development work",
       "screencart_asset": "screencart-logo.svg; local canonical copy of ScreenCart project logo for Hub integration"
     },
@@ -362,7 +362,7 @@
       "android",
       "ios"
     ],
-    "status": "approved",
+    "status": "implemented-candidate",
     "inputs": [
       "4Tap Logo tap",
       "Available Hub routes",
@@ -378,12 +378,14 @@
       "role": "service view; not third panel",
       "layout": "action-icon row 1 → future row 2/3 if needed → text/media",
       "row_1": "Open 4Tap; ScreenCart; Support 4Tap",
-      "open_4tap": "active; closes KnockUI and opens the main working panel of the full 4Tap app",
-      "screencart": "future/placeholder until ScreenCart app is ready",
-      "support_4tap": "future/placeholder until payment route/URL exists",
+      "open_4tap": "implemented candidate: closes KnockUI and opens current full-app working surface CommandsActivity",
+      "screencart": "implemented as visible future/placeholder; no route",
+      "support_4tap": "implemented as visible future/placeholder; no route",
       "website_4tap": "possible future action; URL and final placement TBD; may be lower in Hub or removed",
       "assets": "logo-4tap.svg; screencart-logo.svg; back-4_tap-dev.svg",
-      "about_content": "temporary localized text + images with vertical scroll; future target may include a short animation/video"
+      "about_content": "temporary localized text + images with vertical scroll; future target may include a short animation/video",
+      "android_assets": "ic_knockui_screencart.xml; ic_knockui_support_4tap.xml",
+      "placeholder_visual_candidate": "reduced alpha, reusing disabled-style treatment; implementation candidate only, not separate visual canon"
     },
     "constraints": [
       "Hub does not become a third remembered panel; remembered state remains Ярлыки or Рисование.",
@@ -1169,7 +1171,8 @@
       "prototype_scope": "real-device overlay over another foreground app",
       "canon_target": "implemented candidate: wide centered bottom panel + Logo/About + Slot1/Slot2/Send + Destination-line + AUTO/MANUAL; AUTO delay 1.0 s",
       "geometry_candidate": "12 dp side/bottom; 42% height clamp 300–420 dp; 48 dp control strip; 36 dp Destination-line",
-      "device_review_2026_10_02": "initial review: wide lower surface generally good; refinement needed for NOT ASSIGNED destination and Logo/About Hub"
+      "device_review_2026_10_02": "initial review: wide lower surface generally good; refinement needed for NOT ASSIGNED destination and Logo/About Hub",
+      "hub_refinement_candidate": "Destination NOT ASSIGNED + Hub row 1 implemented; recognizer/Gesture Check untouched"
     },
     "constraints": [
       "AccessibilityService включается пользователем.",
@@ -1189,10 +1192,10 @@
       "canvas"
     ],
     "verification": {
-      "state": "device-review-refinement",
+      "state": "refinement-implemented-build-pending",
       "date": "2026-10-02",
       "confidence": "high",
-      "summary": "Build/install passed and the first physical-device review found the wide lower KnockUI surface generally good. Remaining approved refinements: NOT ASSIGNED destination state and Logo/About Hub; their code has not yet been implemented.",
+      "summary": "NOT ASSIGNED Destination state and first-row Logo/About Hub are implemented in Android code. Open 4Tap targets CommandsActivity; ScreenCart and Support are visible no-route placeholders. Build/install/device verification of this refinement is pending.",
       "sources": [
         {
           "label": "Android AccessibilityService API",
@@ -1203,7 +1206,7 @@
           "url": "https://developer.android.com/reference/android/view/WindowManager.LayoutParams"
         }
       ],
-      "next_step": "Implement NOT ASSIGNED Destination-line + Logo/About Hub first row, rebuild/install, then repeat focused device review. Quick Shortcuts population rules follow as a separate canon block.",
+      "next_step": "Run testDebugUnitTest, assembleDebug and installDebug, then focused device review of NOT ASSIGNED and Hub row/taps.",
       "implication": "Post-activation drawing is no longer an Android feasibility risk; current work is UX canon and compatibility."
     }
   },
@@ -3552,9 +3555,9 @@
     ],
     "parameters": {
       "stage_status": "active",
-      "current_task": "KnockUI refinement docs/assets approved: NOT ASSIGNED Destination + Logo/About Hub; implementation/device review next",
+      "current_task": "build/install/device review of implemented KnockUI refinement: NOT ASSIGNED + Logo/About Hub",
       "graffiti": "4Tap Graffiti Profile v1 approved; Letter-F revised 2026-10-01",
-      "immediate_next": "implement refinement → build/install → focused device review; then design Quick Shortcuts population rules",
+      "immediate_next": "testDebugUnitTest → assembleDebug → installDebug → focused device review; then Quick Shortcuts population canon",
       "subsequent": "later: explicit edit-XY review, broader productization/onboarding, planned recognizer calibration/personalization",
       "public_beta_gate": "Design Canon v1.0 before public beta",
       "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; normalized dual create-flow with shared Pair Selection + Gesture Check; brand teal #159B92; Pair Selection contextual geometry; Gesture Check stable physical-device baseline; recognizer v2.1 stable physical-device baseline; KnockUI control strip; Logo/About service view; Draw Slot1/Slot2 + Destination-line + AUTO/MANUAL/Send flow; KnockUI wide-bottom-panel geometry principle; adaptive 40–45% height; 1.0 s AUTO delay; Logo/About Hub expandable action-icon rows; НЕ НАЗНАЧЕНО Destination state; Support 4Tap and ScreenCart Hub assets",
@@ -4047,7 +4050,7 @@
       "control_strip": "4Tap Logo | Ярлыки | Рисование | [Slot 1 | Slot 2 | Send in Draw] | flexible space | Close",
       "logo_role": "service Logo/About Hub button; not third panel; does not replace remembered Ярлыки/Рисование state",
       "draw_slots": "two Frame-based slots; visible only in drawing mode",
-      "destination_line": "empty until full pair; assigned APP/SYSTEM/WEB → destination label; unassigned full pair → НЕ НАЗНАЧЕНО / NOT ASSIGNED; inactive-assignment presentation TBD",
+      "destination_line": "implemented candidate: empty until full pair; assigned → destination; unassigned full pair → НЕ НАЗНАЧЕНО / NOT ASSIGNED; inactive-assignment presentation TBD",
       "send": "always visible in Draw; disabled until complete executable pair; enabled thereafter",
       "auto": "default without explicit slot selection; sequential Slot 1→Slot 2; destination preview; auto-Send after 1.0 s",
       "manual": "tap any empty/filled slot; cancel pending auto-Send; selected slot remains drawing target; no auto-advance; explicit Send only",
@@ -4055,7 +4058,7 @@
       "geometry": "approved principle: wide compact bottom floating panel; centered regardless of LEFT/RIGHT trigger; near-full width; adaptive 40–45% height",
       "android_geometry_candidate": "12 dp side/bottom margin; 42% screen height, clamp 300–420 dp; 48 dp control strip; 36 dp Destination-line",
       "hub_layout": "one or more action-icon rows first, then text/media; additional rows may be added without changing Hub architecture",
-      "hub_row_1": "Open 4Tap = active; ScreenCart = future/placeholder; Support 4Tap = future/placeholder",
+      "hub_row_1": "implemented candidate: Open 4Tap active → CommandsActivity; ScreenCart placeholder; Support 4Tap placeholder",
       "hub_assets": "logo-4tap.svg; screencart-logo.svg; back-4_tap-dev.svg",
       "website_action": "possible future action; URL and placement not approved; not mandatory in row 1"
     },
