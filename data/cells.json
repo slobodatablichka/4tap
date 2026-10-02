@@ -1198,10 +1198,10 @@
       "canvas"
     ],
     "verification": {
-      "state": "symmetric-docked-close-fix-build-pending",
+      "state": "preliminary-device-pass",
       "date": "2026-10-02",
       "confidence": "high",
-      "summary": "Symmetric Docked entry remains implemented. Close semantics regression fixed: X always removes KnockUI, and any command execution removes KnockUI before launching its destination.",
+      "summary": "Current symmetric Docked 4Tap candidate with restored close semantics was checked on the physical Android device; user reports behavior appears correct.",
       "sources": [
         {
           "label": "Android AccessibilityService API",
@@ -1212,7 +1212,7 @@
           "url": "https://developer.android.com/reference/android/view/WindowManager.LayoutParams"
         }
       ],
-      "next_step": "Run testDebugUnitTest, assembleDebug and installDebug; verify X close, command close, reverse-entry docked composition and ordinary floating behavior.",
+      "next_step": "Proceed to Quick Shortcuts canon; run broader Docked internal-screen regression only if needed.",
       "implication": "Post-activation drawing is no longer an Android feasibility risk; current work is UX canon and compatibility."
     }
   },
@@ -3561,9 +3561,9 @@
     ],
     "parameters": {
       "stage_status": "active",
-      "current_task": "build/install/device review of symmetric Docked 4Tap with restored KnockUI close semantics",
+      "current_task": "Quick Shortcuts population canon after preliminary Docked 4Tap device PASS",
       "graffiti": "4Tap Graffiti Profile v1 approved; Letter-F revised 2026-10-01",
-      "immediate_next": "testDebugUnitTest → assembleDebug → installDebug → verify X close + command close + symmetric Docked entry",
+      "immediate_next": "define Quick Shortcuts rules; preserve current Docked/recognizer baseline unless a reproducible regression appears",
       "subsequent": "later: explicit edit-XY review, broader productization/onboarding, planned recognizer calibration/personalization",
       "public_beta_gate": "Design Canon v1.0 before public beta",
       "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; normalized dual create-flow with shared Pair Selection + Gesture Check; brand teal #159B92; Pair Selection contextual geometry; Gesture Check stable physical-device baseline; recognizer v2.1 stable physical-device baseline; KnockUI control strip; Logo/About service view; Draw Slot1/Slot2 + Destination-line + AUTO/MANUAL/Send flow; KnockUI wide-bottom-panel geometry principle; adaptive 40–45% height; 1.0 s AUTO delay; Logo/About Hub expandable action-icon rows; НЕ НАЗНАЧЕНО Destination state; Support 4Tap and ScreenCart Hub assets; Docked 4Tap layout/lifecycle",
@@ -4741,7 +4741,7 @@
       "android",
       "shared"
     ],
-    "status": "implemented-candidate",
+    "status": "preliminary-device-pass",
     "inputs": [
       "Open 4Tap action from Logo/About Hub"
     ],
@@ -4762,7 +4762,7 @@
       "android_implementation": "DockedFourTap lifecycle coordinator + FourTapApplication ActivityLifecycleCallbacks + DrawingOverlay floating/docked resize",
       "activity_fit": "internal Activity content receives bottom inset/padding equal to current KnockUI height",
       "external_command": "same close-before-launch rule in floating and docked; no persistent floating KnockUI after command execution",
-      "verification": "close-semantics regression fixed; build/install/device review pending",
+      "verification": "physical-device check reported 'Вроде всё в порядке'; preliminary PASS for symmetric Docked entry + X close + command-close semantics",
       "reverse_entry": "implemented candidate: resumed internal 4Tap Activity → corner-trigger → new KnockUI starts docked; current Activity/screen/state preserved",
       "reverse_entry_no_reset": "do not auto-navigate to Commands and do not recreate/reset current 4Tap screen",
       "non_4tap_trigger": "corner-trigger in any other foreground context keeps ordinary floating KnockUI",
