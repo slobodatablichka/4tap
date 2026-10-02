@@ -362,7 +362,7 @@
       "android",
       "ios"
     ],
-    "status": "implemented-candidate",
+    "status": "build-install-pass-device-pending",
     "inputs": [
       "4Tap Logo tap",
       "Available Hub routes",
@@ -385,7 +385,8 @@
       "assets": "logo-4tap.svg; screencart-logo.svg; back-4_tap-dev.svg",
       "about_content": "temporary localized text + images with vertical scroll; future target may include a short animation/video",
       "android_assets": "ic_knockui_screencart.xml; ic_knockui_support_4tap.xml",
-      "placeholder_visual_candidate": "reduced alpha, reusing disabled-style treatment; implementation candidate only, not separate visual canon"
+      "placeholder_visual_candidate": "reduced alpha, reusing disabled-style treatment; implementation candidate only, not separate visual canon",
+      "verification_2026_10_02": "testDebugUnitTest + assembleDebug + installDebug PASS; focused device review pending"
     },
     "constraints": [
       "Hub does not become a third remembered panel; remembered state remains Ярлыки or Рисование.",
@@ -1192,10 +1193,10 @@
       "canvas"
     ],
     "verification": {
-      "state": "refinement-implemented-build-pending",
+      "state": "refinement-build-install-pass-device-pending",
       "date": "2026-10-02",
       "confidence": "high",
-      "summary": "NOT ASSIGNED Destination state and first-row Logo/About Hub are implemented in Android code. Open 4Tap targets CommandsActivity; ScreenCart and Support are visible no-route placeholders. Build/install/device verification of this refinement is pending.",
+      "summary": "NOT ASSIGNED + Logo/About Hub refinement passed testDebugUnitTest, assembleDebug and installDebug. Installed on physical device; focused device review still pending.",
       "sources": [
         {
           "label": "Android AccessibilityService API",
@@ -1206,7 +1207,7 @@
           "url": "https://developer.android.com/reference/android/view/WindowManager.LayoutParams"
         }
       ],
-      "next_step": "Run testDebugUnitTest, assembleDebug and installDebug, then focused device review of NOT ASSIGNED and Hub row/taps.",
+      "next_step": "Verify unassigned pair state and Logo/About Hub behavior on the physical device.",
       "implication": "Post-activation drawing is no longer an Android feasibility risk; current work is UX canon and compatibility."
     }
   },
@@ -3555,9 +3556,9 @@
     ],
     "parameters": {
       "stage_status": "active",
-      "current_task": "build/install/device review of implemented KnockUI refinement: NOT ASSIGNED + Logo/About Hub",
+      "current_task": "focused device review of build/install-passed KnockUI refinement",
       "graffiti": "4Tap Graffiti Profile v1 approved; Letter-F revised 2026-10-01",
-      "immediate_next": "testDebugUnitTest → assembleDebug → installDebug → focused device review; then Quick Shortcuts population canon",
+      "immediate_next": "verify NOT ASSIGNED + Hub row/open-4Tap on device; then Quick Shortcuts population canon",
       "subsequent": "later: explicit edit-XY review, broader productization/onboarding, planned recognizer calibration/personalization",
       "public_beta_gate": "Design Canon v1.0 before public beta",
       "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; normalized dual create-flow with shared Pair Selection + Gesture Check; brand teal #159B92; Pair Selection contextual geometry; Gesture Check stable physical-device baseline; recognizer v2.1 stable physical-device baseline; KnockUI control strip; Logo/About service view; Draw Slot1/Slot2 + Destination-line + AUTO/MANUAL/Send flow; KnockUI wide-bottom-panel geometry principle; adaptive 40–45% height; 1.0 s AUTO delay; Logo/About Hub expandable action-icon rows; НЕ НАЗНАЧЕНО Destination state; Support 4Tap and ScreenCart Hub assets",
