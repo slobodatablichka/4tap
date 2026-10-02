@@ -673,3 +673,20 @@ Recognizer v2.1 / Gesture Check не изменены.
 
 Текущий порядок: `canon/docs/assets → code → build/install → focused device review`. Recognizer v2.1 / Gesture Check baseline не изменяется.
 
+## KnockUI Hub refinement implemented — 2026-10-02
+
+Утверждённый refinement после первого device review реализован в private `4tap-app`:
+
+- полная распознанная пара без assignment показывает локализуемое `НЕ НАЗНАЧЕНО / NOT ASSIGNED`;
+- для такой пары `Send` остаётся disabled, AUTO-send не запускается;
+- Logo/About показывает первый ряд Hub: `4Tap Logo | ScreenCart | Support 4Tap`, затем информационный текст;
+- `Открыть 4Tap` закрывает KnockUI и открывает текущую рабочую поверхность полного приложения — `CommandsActivity`;
+- ScreenCart и Support остаются видимыми future/placeholder без маршрута;
+- текущий implementation candidate приглушает placeholders reduced-alpha способом; это пока не отдельный визуальный канон;
+- добавлены Android derivatives `ic_knockui_screencart.xml` и `ic_knockui_support_4tap.xml`;
+- recognizer v2.1 / Gesture Check не изменены.
+
+Статус: **implementation candidate; build/install/device review этого refinement pending**.
+
+Следующий шаг: `testDebugUnitTest → assembleDebug → installDebug → focused device review`, затем отдельное проектирование правил `Ярлыки`.
+
