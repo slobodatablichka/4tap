@@ -204,7 +204,7 @@
     "parameters": {
       "current_working_version": "v0.1",
       "core_surfaces": "KnockUI; 4Tap; Команды; Команда; Command Space / Pair Selection; Gesture Check / ПРОВЕРКА ЖЕСТА; Destination / ВЕДЕТ В; Assign / НАЗНАЧИТЬ; Алфавит; Настройки",
-      "immediate_next": "choose accepted Graffiti reference size → derive relative stroke thickness → implement shared scale-aware renderer → device review; then Quick Shortcuts canon",
+      "immediate_next": "implement SVG-aware Graffiti renderer/model that preserves canonical stroke-width and marker geometry → device review small/medium/large → then Quick Shortcuts canon",
       "next_revision": "v0.2 after first canon-driven implementation/usability pass",
       "public_beta": "v1.0 before public beta",
       "knockui_panel_model": "approved: quick_shortcuts / drawing_canvas; remember last active panel; Logo/About is service view, not third panel",
@@ -240,9 +240,9 @@
       "knockui_unassigned_destination": "full recognized pair without assignment → НЕ НАЗНАЧЕНО / NOT ASSIGNED; Send disabled; no AUTO-send",
       "knockui_hub": "Logo opens service Hub, not third panel; action-icon rows precede text/media; row 1 = Open 4Tap (active), ScreenCart (future placeholder), Support 4Tap (future placeholder)",
       "knockui_docked_4tap": "symmetric: KnockUI→Open 4Tap and full 4Tap→corner-trigger→KnockUI produce same split composition; reverse entry preserves current screen/state",
-      "graffiti_scaling": "canonical displayed glyph scales path geometry + trajectory thickness + start point + end arrow together; fixed per-surface dp stroke for saved/reference glyphs is not allowed",
+      "graffiti_scaling": "canonical SVG is the visual source: viewBox + path + stroke-width + marker geometry scale with one transform",
       "graffiti_live_input_exception": "live finger stroke in KnockUI/Gesture Check is a separate feedback layer and may use its own UI thickness",
-      "graffiti_relative_thickness_status": "numeric relative thickness not yet fixed; derive from a visually accepted reference size before implementation"
+      "graffiti_relative_thickness_status": "no separate ratio TBD; use each SVG's own stroke-width and marker proportions"
     },
     "constraints": [
       "Канон должен сохранять скорость и минимальное вмешательство в текущий контекст пользователя.",
@@ -494,9 +494,9 @@
       "archive_status": "Graffiti-for-4Tap-Letters-and-Digits.zip = historical import baseline, not override for later approved glyph revisions",
       "letter_q_revision": "2026-10-01; revised one-stroke Q with pronounced terminal exit; SHA-256 c9cbd9459127b5d3d40153d13b95bfbffa4e36a2050fdd62b6cfda4e9894131c",
       "direction_semantics": "start circle + end arrow define canonical stroke direction; raw SVG path order may be reversed by export",
-      "rendering_system": "displayed canonical glyph = path + trajectory thickness + start point + end arrow, scaled as one system",
-      "stroke_scaling": "screen trajectory thickness must scale with the same geometric glyph scale; do not use independent fixed dp values per surface",
-      "guides_scaling": "start point and end arrow scale with glyph; omission requires a separate surface rule",
+      "rendering_system": "each canonical SVG is the complete visual reference for size/thickness: viewBox + trajectory + stroke-width + start/end marker geometry",
+      "stroke_scaling": "screen stroke width = SVG stroke-width × render scale",
+      "guides_scaling": "start/end marker geometry comes from SVG proportions and uses the same render transform",
       "live_input": "finger-input feedback stroke is outside canonical reference-glyph stroke scaling"
     },
     "constraints": [
@@ -3568,9 +3568,9 @@
     ],
     "parameters": {
       "stage_status": "active",
-      "current_task": "Graffiti rendering scale refinement before Quick Shortcuts canon",
+      "current_task": "Graffiti SVG-aware rendering refinement before Quick Shortcuts canon",
       "graffiti": "4Tap Graffiti Profile v1 approved; Letter-F revised 2026-10-01",
-      "immediate_next": "accepted reference size → relative trajectory thickness → shared scale-aware renderer → physical-device review at small/medium/large glyph sizes",
+      "immediate_next": "parse canonical SVG stroke-width/marker geometry → shared renderer → physical-device review at small/medium/large sizes",
       "subsequent": "later: explicit edit-XY review, broader productization/onboarding, planned recognizer calibration/personalization",
       "public_beta_gate": "Design Canon v1.0 before public beta",
       "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; normalized dual create-flow with shared Pair Selection + Gesture Check; brand teal #159B92; Pair Selection contextual geometry; Gesture Check stable physical-device baseline; recognizer v2.1 stable physical-device baseline; KnockUI control strip; Logo/About service view; Draw Slot1/Slot2 + Destination-line + AUTO/MANUAL/Send flow; KnockUI wide-bottom-panel geometry principle; adaptive 40–45% height; 1.0 s AUTO delay; Logo/About Hub expandable action-icon rows; НЕ НАЗНАЧЕНО Destination state; Support 4Tap and ScreenCart Hub assets; Docked 4Tap layout/lifecycle",
@@ -4823,21 +4823,19 @@
       "scale-proportional end arrow"
     ],
     "parameters": {
-      "formula": "screen trajectory thickness = canonical relative thickness × glyph scale",
-      "shared_scale": "path geometry, trajectory thickness, start point and end arrow scale together",
+      "formula": "screen stroke width = SVG stroke-width × render scale",
+      "shared_scale": "SVG viewBox, path, stroke-width and start/end marker geometry use one render transform",
       "fixed_dp_reference_stroke": "forbidden for canonical/saved glyph display",
       "live_input_exception": "live finger stroke is feedback UI and may use independent thickness",
-      "numeric_ratio": "TBD — derive from an already visually accepted reference size, do not invent a new value",
-      "implementation_target": "shared scale-aware Graffiti renderer/helper rather than per-surface stroke constants"
+      "numeric_ratio": "not applicable — canonical SVGs already encode the approved size/thickness relationship",
+      "implementation_target": "SVG-aware shared Graffiti renderer/model; parse and preserve canonical stroke-width and marker geometry"
     },
     "constraints": [
       "Do not change canonical glyph geometry as part of this refinement.",
       "Do not change recognizer v2.1.",
       "Guide omission on a specific surface requires a separate approved surface rule."
     ],
-    "open_questions": [
-      "Which currently accepted glyph size should serve as the reference for deriving canonical relative trajectory thickness?"
-    ],
+    "open_questions": [],
     "tags": [
       "graffiti",
       "rendering",
