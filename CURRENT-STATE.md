@@ -760,3 +760,11 @@ Docked 4Tap уточнён как **симметричное** состояни�
 
 Регресс исправлен в private Android-коде; build/install/device review этой коррекции pending.
 
+## Docked 4Tap preliminary device PASS — 2026-10-02
+
+Текущий symmetric Docked 4Tap candidate с восстановленным close-contract проверен на физическом Android-устройстве. Пользователь сообщил: **«Вроде всё в порядке»**.
+
+Предварительно подтверждены совместная компоновка 4Tap + KnockUI, обратный вход через corner-trigger, закрытие по `X` и закрытие KnockUI перед выполнением APP / WEB / SYSTEM-команды.
+
+Статус: **preliminary real-device PASS**. Расширенный regression-pass всех внутренних экранов в Docked 4Tap пока отдельно не объявлен завершённым.
+
