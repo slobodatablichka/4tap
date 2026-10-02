@@ -782,3 +782,11 @@ Docked 4Tap уточнён как **симметричное** состояни�
 
 Статус: **canon approved; implementation pending**.
 
+## Graffiti SVG visual source clarification — 2026-10-02
+
+Уточнён источник визуального эталона Graffiti: предоставленные канонические SVG уже содержат утверждённое сочетание размера и толщины.
+
+Renderer должен сохранять `viewBox + trajectory geometry + stroke-width + start/end marker geometry` каждого SVG и масштабировать их одним transform. Отдельный универсальный коэффициент толщины не требуется.
+
+Текущий Android renderer этот контракт пока не выполняет: он извлекает path/viewBox, но заменяет SVG stroke/guide geometry фиксированными dp-значениями. Статус: **canon clarified; implementation pending**.
+
