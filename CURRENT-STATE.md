@@ -722,3 +722,15 @@ Recognizer v2.1 / Gesture Check не изменены.
 
 Статус: **implementation candidate; build/install/device review pending**.
 
+## Symmetric Docked 4Tap entry — 2026-10-02
+
+Docked 4Tap уточнён как **симметричное** состояние независимо от порядка открытия компонентов:
+
+- `KnockUI → Открыть 4Tap` и `полный 4Tap → corner-trigger → KnockUI` должны приводить к одной компоновке;
+- если полный 4Tap уже открыт, corner-trigger создаёт KnockUI сразу в full-width docked-геометрии;
+- текущий экран и состояние полного 4Tap сохраняются; автоматического перехода в `Commands` нет;
+- в любом другом foreground-приложении corner-trigger продолжает открывать обычный floating KnockUI;
+- остальной Docked-contract (`Close`, возврат в floating при выходе из 4Tap, внутренняя навигация сверху) не меняется.
+
+Статус: **canon approved; reverse-entry Android refinement pending**.
+
