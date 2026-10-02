@@ -690,3 +690,20 @@ Recognizer v2.1 / Gesture Check не изменены.
 
 Следующий шаг: `testDebugUnitTest → assembleDebug → installDebug → focused device review`, затем отдельное проектирование правил `Ярлыки`.
 
+## Docked 4Tap canon — 2026-10-02
+
+Утверждён новый layout/lifecycle-режим для действия `Открыть 4Tap` из Logo/About Hub.
+
+**Docked 4Tap**:
+
+- KnockUI не закрывается;
+- нижний KnockUI становится full-width и остаётся закреплён снизу;
+- полный 4Tap целиком занимает оставшуюся верхнюю область;
+- обе части вместе заполняют доступную экранную область без перекрытия;
+- внутренняя навигация полного 4Tap остаётся в верхней области;
+- `Close` закрывает только KnockUI и разворачивает 4Tap на всю доступную область;
+- выход из полного 4Tap или запуск внешнего приложения возвращает KnockUI к обычной floating-геометрии;
+- другой функционал 4Tap/KnockUI не меняется.
+
+Статус: **canon approved; Android implementation pending**.
+
