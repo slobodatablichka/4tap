@@ -1176,8 +1176,9 @@
       "device_review_2026_10_02": "initial review: wide lower surface generally good; refinement needed for NOT ASSIGNED destination and Logo/About Hub",
       "hub_refinement_candidate": "Destination NOT ASSIGNED + Hub row 1 implemented; recognizer/Gesture Check untouched",
       "docked_target": "KnockUI full-width bottom; same height unless separately revised; full 4Tap top; no overlap/gap",
-      "docked_close": "Close KnockUI only; full 4Tap expands to full available area",
-      "docked_exit": "Leaving full 4Tap restores ordinary floating KnockUI"
+      "docked_close": "X/Close always closes KnockUI; full 4Tap expands if present",
+      "docked_exit": "Leaving full 4Tap restores ordinary floating KnockUI",
+      "command_close_contract": "any APP/WEB/SYSTEM command closes KnockUI before existing executor runs, in both floating and docked states"
     },
     "constraints": [
       "AccessibilityService включается пользователем.",
@@ -1197,10 +1198,10 @@
       "canvas"
     ],
     "verification": {
-      "state": "symmetric-docked-implemented-build-pending",
+      "state": "symmetric-docked-close-fix-build-pending",
       "date": "2026-10-02",
       "confidence": "high",
-      "summary": "Symmetric Docked entry is implemented: DrawingOverlay consults DockedFourTap foreground state, so corner-trigger over a resumed internal 4Tap Activity creates full-width docked KnockUI without restarting the current screen. Build/install/device verification is pending.",
+      "summary": "Symmetric Docked entry remains implemented. Close semantics regression fixed: X always removes KnockUI, and any command execution removes KnockUI before launching its destination.",
       "sources": [
         {
           "label": "Android AccessibilityService API",
@@ -1211,7 +1212,7 @@
           "url": "https://developer.android.com/reference/android/view/WindowManager.LayoutParams"
         }
       ],
-      "next_step": "Run testDebugUnitTest, assembleDebug and installDebug; verify reverse-entry, current-screen preservation, Close expansion and floating behavior outside 4Tap.",
+      "next_step": "Run testDebugUnitTest, assembleDebug and installDebug; verify X close, command close, reverse-entry docked composition and ordinary floating behavior.",
       "implication": "Post-activation drawing is no longer an Android feasibility risk; current work is UX canon and compatibility."
     }
   },
@@ -3560,9 +3561,9 @@
     ],
     "parameters": {
       "stage_status": "active",
-      "current_task": "build/install/device review of implemented symmetric Docked 4Tap entry",
+      "current_task": "build/install/device review of symmetric Docked 4Tap with restored KnockUI close semantics",
       "graffiti": "4Tap Graffiti Profile v1 approved; Letter-F revised 2026-10-01",
-      "immediate_next": "testDebugUnitTest → assembleDebug → installDebug → focused symmetric Docked device review",
+      "immediate_next": "testDebugUnitTest → assembleDebug → installDebug → verify X close + command close + symmetric Docked entry",
       "subsequent": "later: explicit edit-XY review, broader productization/onboarding, planned recognizer calibration/personalization",
       "public_beta_gate": "Design Canon v1.0 before public beta",
       "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; normalized dual create-flow with shared Pair Selection + Gesture Check; brand teal #159B92; Pair Selection contextual geometry; Gesture Check stable physical-device baseline; recognizer v2.1 stable physical-device baseline; KnockUI control strip; Logo/About service view; Draw Slot1/Slot2 + Destination-line + AUTO/MANUAL/Send flow; KnockUI wide-bottom-panel geometry principle; adaptive 40–45% height; 1.0 s AUTO delay; Logo/About Hub expandable action-icon rows; НЕ НАЗНАЧЕНО Destination state; Support 4Tap and ScreenCart Hub assets; Docked 4Tap layout/lifecycle",
@@ -4754,14 +4755,14 @@
       "full_4tap": "occupies all remaining available area above KnockUI",
       "composition": "full 4Tap top + KnockUI bottom = whole available screen area; no overlap/gap",
       "internal_navigation": "Commands / Command / Destination / Pair Selection / Gesture Check and later internal surfaces remain constrained to the upper area",
-      "close_knockui": "close KnockUI only; already-open 4Tap expands to the full available area",
+      "close_knockui": "X/Close always closes KnockUI; if full 4Tap is open, it expands to the full available area",
       "leave_4tap": "restore KnockUI ordinary floating geometry",
-      "external_launch_from_docked": "same as leave_4tap: KnockUI returns to floating geometry",
+      "external_launch_from_docked": "APP / WEB / SYSTEM command from KnockUI closes KnockUI before launching the destination",
       "repeat_open": "Open 4Tap from Hub creates Docked 4Tap again",
       "android_implementation": "DockedFourTap lifecycle coordinator + FourTapApplication ActivityLifecycleCallbacks + DrawingOverlay floating/docked resize",
       "activity_fit": "internal Activity content receives bottom inset/padding equal to current KnockUI height",
-      "external_command": "while docked, return KnockUI to floating before existing command executor launches external destination",
-      "verification": "build/install/device review pending",
+      "external_command": "same close-before-launch rule in floating and docked; no persistent floating KnockUI after command execution",
+      "verification": "close-semantics regression fixed; build/install/device review pending",
       "reverse_entry": "implemented candidate: resumed internal 4Tap Activity → corner-trigger → new KnockUI starts docked; current Activity/screen/state preserved",
       "reverse_entry_no_reset": "do not auto-navigate to Commands and do not recreate/reset current 4Tap screen",
       "non_4tap_trigger": "corner-trigger in any other foreground context keeps ordinary floating KnockUI",
