@@ -654,3 +654,22 @@ Recognizer v2.1 / Gesture Check не изменены.
 
 Статус: **implementation candidate; build/device PASS ещё не зафиксирован**. Следующий рубеж: `testDebugUnitTest → assembleDebug → install APK → real-device review`.
 
+## KnockUI first device review + Logo/About Hub — 2026-10-02
+
+Первый wide-bottom KnockUI candidate прошёл build/install и был просмотрен на физическом Android-устройстве. Общая поверхность оценена как удачная («вообще хорошо»), поэтому wide lower panel geometry principle сохраняется.
+
+Зафиксированы следующие refinement-решения:
+
+- полная распознанная пара без назначения показывает в Destination-line локализуемое `НЕ НАЗНАЧЕНО` / `NOT ASSIGNED`;
+- в этом состоянии `Send` disabled, AUTO-send не запускается;
+- представление по 4Tap Logo развивается в **Logo/About Hub**, но не становится третьей рабочей панелью;
+- верх Hub — расширяемая область action-icons: первый ряд, при необходимости второй/третий, и только затем информационный текст/мультимедиа;
+- первый ряд: `Открыть 4Tap` — рабочее действие; `ScreenCart` — future/placeholder; `Поддержать 4Tap` — future/placeholder;
+- `Открыть 4Tap` должен закрыть KnockUI и открыть главную рабочую панель полного приложения;
+- `Сайт 4Tap` пока не обязателен в первом ряду: URL, необходимость и окончательное место не утверждены;
+- добавлены канонические Hub-assets `back-4_tap-dev.svg` и локальная копия `screencart-logo.svg`;
+- внешний вид `back-4_tap-dev.svg` утверждён; его три строки `back / <4_tap> / dev` являются частью графики;
+- отсутствие содержимого в панели `Ярлыки` сейчас не является дефектом: правила её заполнения будут проектироваться отдельным следующим Design Canon-блоком.
+
+Текущий порядок: `canon/docs/assets → code → build/install → focused device review`. Recognizer v2.1 / Gesture Check baseline не изменяется.
+
