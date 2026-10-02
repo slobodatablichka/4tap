@@ -204,7 +204,7 @@
     "parameters": {
       "current_working_version": "v0.1",
       "core_surfaces": "KnockUI; 4Tap; Команды; Команда; Command Space / Pair Selection; Gesture Check / ПРОВЕРКА ЖЕСТА; Destination / ВЕДЕТ В; Assign / НАЗНАЧИТЬ; Алфавит; Настройки",
-      "immediate_next": "implement Commands → НАЗНАЧЕНИЯ Graffiti composition canon → build/install/device review → then Quick Shortcuts canon",
+      "immediate_next": "build/install + focused device review of Commands assignment Graffiti composition; then Quick Shortcuts canon",
       "next_revision": "v0.2 after first canon-driven implementation/usability pass",
       "public_beta": "v1.0 before public beta",
       "knockui_panel_model": "approved: quick_shortcuts / drawing_canvas; remember last active panel; Logo/About is service view, not third panel",
@@ -244,7 +244,7 @@
       "graffiti_live_input_exception": "live finger stroke in KnockUI/Gesture Check is a separate feedback layer and may use its own UI thickness",
       "graffiti_relative_thickness_status": "no separate ratio TBD; use each SVG's own stroke-width and marker proportions",
       "graffiti_reference": "~45 mm glyph height → ~3 mm trajectory in canonical source SVGs; 4Tap Graffiti only",
-      "commands_assignment_graffiti": "pair is one composition, not two equal slots; preserve target height before assignment text width; Destination yields via end ellipsis"
+      "commands_assignment_graffiti": "implemented candidate: X-based working width; 40 dp compact target height; natural widths; 4 dp side/gap; 8% reserve; global 36 dp guide threshold"
     },
     "constraints": [
       "Канон должен сохранять скорость и минимальное вмешательство в текущий контекст пользователя.",
@@ -3572,9 +3572,9 @@
     ],
     "parameters": {
       "stage_status": "active",
-      "current_task": "implement Commands assignment Graffiti composition canon",
+      "current_task": "build/install/device review of Commands assignment Graffiti layout + SVG-aware rendering",
       "graffiti": "4Tap Graffiti Profile v1 approved; Letter-F revised 2026-10-01",
-      "immediate_next": "X-reference 38–40 dp pair height + natural widths + 4 dp insets/gap + 8% width reserve + >=36 dp guides; then build/install/device review",
+      "immediate_next": "verify full glyph height, pair compactness and 36 dp guide threshold on physical device; then Quick Shortcuts canon",
       "subsequent": "later: explicit edit-XY review, broader productization/onboarding, planned recognizer calibration/personalization",
       "public_beta_gate": "Design Canon v1.0 before public beta",
       "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; normalized dual create-flow with shared Pair Selection + Gesture Check; brand teal #159B92; Pair Selection contextual geometry; Gesture Check stable physical-device baseline; recognizer v2.1 stable physical-device baseline; KnockUI control strip; Logo/About service view; Draw Slot1/Slot2 + Destination-line + AUTO/MANUAL/Send flow; KnockUI wide-bottom-panel geometry principle; adaptive 40–45% height; 1.0 s AUTO delay; Logo/About Hub expandable action-icon rows; НЕ НАЗНАЧЕНО Destination state; Support 4Tap and ScreenCart Hub assets; Docked 4Tap layout/lifecycle; Commands assignment Graffiti composition; 36 dp guide visibility threshold",
@@ -4151,7 +4151,7 @@
       "row_height_dp": 64,
       "row_vertical_padding_dp": 8,
       "separator_dp": 1,
-      "columns": "Graffiti gets canonical working width first; XY remains compact identifier; assignment uses remaining width with end ellipsis. Old 24%/16%/60% is not a hard Graffiti limit.",
+      "columns": "Graffiti fixed working width computed from X reference first; XY and assignment share remaining width; assignment uses end ellipsis",
       "graffiti_area_dp": "derived from X at 38–40 dp target height; pair side insets 4 dp; inter-glyph gap 4 dp",
       "graffiti_height_dp": "38–40 dp target; horizontal shortage must not reduce this height",
       "graffiti_color": "white",
@@ -4170,7 +4170,7 @@
       "command_space_android": "shared PairSelectionGridView pair-first creation flow passed on physical device 2026-10-01",
       "add_command_current_implementation": "implemented: opens AssignActivity / НАЗНАЧИТЬ",
       "assignment_alignment": "destination right-aligned",
-      "assigned_command_markers": ">=36 dp rendered height: mandatory start circle + end triangle; target 38–40 dp therefore shows both",
+      "assigned_command_markers": "implemented globally: rendered height >=36 dp shows start circle + end triangle; below 36 dp hides both",
       "command_space_glyph_guides": "same global rule: >=36 dp show both markers; <36 dp hide both",
       "command_space_height_rule": "X establishes common target rendered height for all alphabet glyphs",
       "command_space_second_header": "[Graffiti X] + [second slot]; no ВЕДЕТ В action; grid does not shift from first stage",
@@ -4182,7 +4182,8 @@
       "command_space_pair_flow": "implemented candidate: free XY → Gesture Check → ВЕДЕТ В → Destination → Command",
       "command_space_first_header": "[empty slot] + [empty slot] above first 6×6; same position as second-stage row",
       "graffiti_pair_model": "one compact pair composition, not two equal internal slots; each glyph keeps natural SVG width",
-      "graffiti_width_reference": "X establishes base width at target height; reserve 8% per glyph so W/M (~6.7% wider than X at equal height) keep full height"
+      "graffiti_width_reference": "X establishes base width at target height; reserve 8% per glyph so W/M (~6.7% wider than X at equal height) keep full height",
+      "graffiti_pair_android": "implemented candidate: compact pair, 40 dp target height, natural SVG widths, 4 dp side inset, 4 dp gap, 8% X-width reserve per glyph"
     },
     "constraints": [
       "Graffiti-column uses real canonical trajectories from 4Tap Graffiti Profile v1, not font imitation.",
@@ -4844,7 +4845,8 @@
       "tests": "no separate SVG metadata test added by project decision",
       "verification": "build/install/device review pending",
       "guides_visibility": ">=36 dp rendered SVG height → show both start circle and end triangle; <36 dp → hide both",
-      "guide_threshold_unit": "density-independent dp, not raw physical pixels"
+      "guide_threshold_unit": "density-independent dp, not raw physical pixels",
+      "guide_threshold_implementation": "implemented in shared GraffitiRenderer; local showGuides overrides removed"
     },
     "constraints": [
       "Do not change canonical glyph geometry as part of this refinement.",
@@ -4880,7 +4882,7 @@
       "android",
       "ios"
     ],
-    "status": "approved-canon-implementation-pending",
+    "status": "implemented-candidate",
     "inputs": [
       "4Tap Graffiti Profile v1",
       "Commands row 64 dp",
@@ -4902,7 +4904,9 @@
       "width_reserve_per_glyph": "8% relative to X width; covers current W/M at ~6.7% wider than X",
       "pair_alignment": "center as one composition",
       "text_pressure_rule": "Destination yields through end ellipsis before Graffiti height is reduced",
-      "guide_threshold": "rendered glyph height >=36 dp → start circle + end triangle mandatory; <36 dp → hide both"
+      "guide_threshold": "rendered glyph height >=36 dp → start circle + end triangle mandatory; <36 dp → hide both",
+      "android_implementation": "GraffitiPairView compactAssignmentLayout + X-based assignmentWorkingWidthPx; CommandsScreenView uses fixed computed Graffiti width; global renderer controls guide threshold",
+      "verification": "build/install/device review pending"
     },
     "constraints": [
       "Do not stretch narrow glyphs such as I to X/W width.",
