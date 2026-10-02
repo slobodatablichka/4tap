@@ -204,7 +204,7 @@
     "parameters": {
       "current_working_version": "v0.1",
       "core_surfaces": "KnockUI; 4Tap; Команды; Команда; Command Space / Pair Selection; Gesture Check / ПРОВЕРКА ЖЕСТА; Destination / ВЕДЕТ В; Assign / НАЗНАЧИТЬ; Алфавит; Настройки",
-      "immediate_next": "Implement Docked 4Tap layout/lifecycle; build/install/device review; recognizer v2.1 / Gesture Check remain unchanged",
+      "immediate_next": "Build/install/device review implemented Docked 4Tap candidate; preserve recognizer v2.1 / Gesture Check baseline",
       "next_revision": "v0.2 after first canon-driven implementation/usability pass",
       "public_beta": "v1.0 before public beta",
       "knockui_panel_model": "approved: quick_shortcuts / drawing_canvas; remember last active panel; Logo/About is service view, not third panel",
@@ -1197,10 +1197,10 @@
       "canvas"
     ],
     "verification": {
-      "state": "docked-canon-approved-implementation-pending",
+      "state": "docked-implemented-build-pending",
       "date": "2026-10-02",
       "confidence": "high",
-      "summary": "Previous Hub refinement passed build/install. New approved Docked 4Tap target keeps KnockUI open and full-width at bottom while full 4Tap occupies the remaining top area; implementation is pending.",
+      "summary": "Docked 4Tap Android candidate is implemented: overlay switches floating/full-width docked; internal 4Tap Activity content reserves the overlay height through lifecycle coordination. Build/install/device verification is pending.",
       "sources": [
         {
           "label": "Android AccessibilityService API",
@@ -1211,7 +1211,7 @@
           "url": "https://developer.android.com/reference/android/view/WindowManager.LayoutParams"
         }
       ],
-      "next_step": "Implement Docked 4Tap layout/lifecycle without recognizer/Gesture Check changes, then build/install/device review.",
+      "next_step": "Run testDebugUnitTest, assembleDebug, installDebug, then verify docked sizing, internal navigation, Close expansion and floating restore on exit.",
       "implication": "Post-activation drawing is no longer an Android feasibility risk; current work is UX canon and compatibility."
     }
   },
@@ -3560,9 +3560,9 @@
     ],
     "parameters": {
       "stage_status": "active",
-      "current_task": "implement approved Docked 4Tap layout/lifecycle",
+      "current_task": "build/install/device review of implemented Docked 4Tap Android candidate",
       "graffiti": "4Tap Graffiti Profile v1 approved; Letter-F revised 2026-10-01",
-      "immediate_next": "code → testDebugUnitTest/assembleDebug/installDebug → focused device review; then Quick Shortcuts population canon",
+      "immediate_next": "testDebugUnitTest → assembleDebug → installDebug → focused Docked 4Tap device review; then Quick Shortcuts population canon",
       "subsequent": "later: explicit edit-XY review, broader productization/onboarding, planned recognizer calibration/personalization",
       "public_beta_gate": "Design Canon v1.0 before public beta",
       "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; normalized dual create-flow with shared Pair Selection + Gesture Check; brand teal #159B92; Pair Selection contextual geometry; Gesture Check stable physical-device baseline; recognizer v2.1 stable physical-device baseline; KnockUI control strip; Logo/About service view; Draw Slot1/Slot2 + Destination-line + AUTO/MANUAL/Send flow; KnockUI wide-bottom-panel geometry principle; adaptive 40–45% height; 1.0 s AUTO delay; Logo/About Hub expandable action-icon rows; НЕ НАЗНАЧЕНО Destination state; Support 4Tap and ScreenCart Hub assets; Docked 4Tap layout/lifecycle",
@@ -4740,7 +4740,7 @@
       "android",
       "shared"
     ],
-    "status": "approved",
+    "status": "implemented-candidate",
     "inputs": [
       "Open 4Tap action from Logo/About Hub"
     ],
@@ -4757,7 +4757,11 @@
       "close_knockui": "close KnockUI only; already-open 4Tap expands to the full available area",
       "leave_4tap": "restore KnockUI ordinary floating geometry",
       "external_launch_from_docked": "same as leave_4tap: KnockUI returns to floating geometry",
-      "repeat_open": "Open 4Tap from Hub creates Docked 4Tap again"
+      "repeat_open": "Open 4Tap from Hub creates Docked 4Tap again",
+      "android_implementation": "DockedFourTap lifecycle coordinator + FourTapApplication ActivityLifecycleCallbacks + DrawingOverlay floating/docked resize",
+      "activity_fit": "internal Activity content receives bottom inset/padding equal to current KnockUI height",
+      "external_command": "while docked, return KnockUI to floating before existing command executor launches external destination",
+      "verification": "build/install/device review pending"
     },
     "constraints": [
       "Docked 4Tap is a layout/lifecycle state, not a third working panel.",
