@@ -176,7 +176,7 @@
     "title": "4Tap Design Canon",
     "group": "UX SYSTEM",
     "short": "Единый визуальный и поведенческий канон для KnockUI, состояний ввода, обратной связи и пользовательских экранов.",
-    "description": "Design Canon задаёт визуальный язык, implementation gate и нормализованную логику поверхностей. Для KnockUI утверждены двухпанельная модель, functional control strip, служебный Logo/About, Draw-slots, Destination-line и AUTO/MANUAL/Send flow; точная dp-геометрия остаётся текущим блоком.",
+    "description": "Design Canon задаёт визуальный язык, implementation gate и нормализованную логику поверхностей. Для KnockUI утверждены двухпанельная модель, control strip, Draw AUTO/MANUAL, wide-bottom geometry, состояние `НЕ НАЗНАЧЕНО` и служебный Logo/About Hub с расширяемой action-icon area.",
     "purpose": "Не допустить расхождения интерфейсов и закрепить узнаваемую механику продукта.",
     "kind": "core",
     "models": [
@@ -204,7 +204,7 @@
     "parameters": {
       "current_working_version": "v0.1",
       "core_surfaces": "KnockUI; 4Tap; Команды; Команда; Command Space / Pair Selection; Gesture Check / ПРОВЕРКА ЖЕСТА; Destination / ВЕДЕТ В; Assign / НАЗНАЧИТЬ; Алфавит; Настройки",
-      "immediate_next": "Build/review current KnockUI Android candidate: wide centered bottom panel, adaptive 42% candidate geometry, 1.0 s AUTO delay; recognizer v2.1 / Gesture Check remain stable baseline",
+      "immediate_next": "Implement approved KnockUI refinement: NOT ASSIGNED Destination state + Logo/About Hub first row; then build/device review; Quick Shortcuts population rules are a separate next canon block",
       "next_revision": "v0.2 after first canon-driven implementation/usability pass",
       "public_beta": "v1.0 before public beta",
       "knockui_panel_model": "approved: quick_shortcuts / drawing_canvas; remember last active panel; Logo/About is service view, not third panel",
@@ -236,7 +236,9 @@
       "knockui_draw_flow": "AUTO without slot selection → sequential Slot 1/2 → Destination preview → delayed auto-Send; tap Slot → MANUAL, cancel pending auto-Send, no auto-advance, explicit Send",
       "knockui_geometry": "approved principle: wide compact bottom floating panel; horizontal center independent of LEFT/RIGHT trigger; near-full width with symmetric margins; adaptive 40–45% height",
       "knockui_android_geometry_candidate": "12 dp side/bottom margin; 42% height clamped 300–420 dp; 48 dp control strip; 36 dp Destination-line",
-      "knockui_auto_delay": "1.0 s"
+      "knockui_auto_delay": "1.0 s",
+      "knockui_unassigned_destination": "full recognized pair without assignment → НЕ НАЗНАЧЕНО / NOT ASSIGNED; Send disabled; no AUTO-send",
+      "knockui_hub": "Logo opens service Hub, not third panel; action-icon rows precede text/media; row 1 = Open 4Tap (active), ScreenCart (future placeholder), Support 4Tap (future placeholder)"
     },
     "constraints": [
       "Канон должен сохранять скорость и минимальное вмешательство в текущий контекст пользователя.",
@@ -254,7 +256,8 @@
       "Системная Android/iOS/Material пиктограмма не подменяет каноническую UI-графику без отдельного решения.",
       "Если общее UI-правило изменено, зависимые локальные каноны проверяются на противоречия до реализации.",
       "Recognizer refinement must preserve canonical stroke direction and use current Profile v1 SVGs as the geometry source.",
-      "KnockUI control strip is an explicit exception to the common 72 dp + Back + title application-header pattern; its exact dp geometry is local and still pending."
+      "KnockUI control strip is an explicit exception to the common 72 dp + Back + title application-header pattern; its exact dp geometry is local and still pending.",
+      "Future/placeholder Hub actions without a real route must not imitate a successful working action."
     ],
     "open_questions": [
       "Финальная типографика и motion language",
@@ -273,8 +276,8 @@
     "order": 32.5,
     "title": "Canonical UI Graphics",
     "group": "UX SYSTEM",
-    "short": "Реестр утверждённой UI-графики 4Tap: общие Back/Menu/Search/Frame и канонические KnockUI Logo/Shortcuts/Draw/Send/Close.",
-    "description": "К общим Back/Menu/Search/Frame добавлены канонические KnockUI assets: 4Tap Logo, Quick Shortcuts, Drawing Canvas, Send и Close. KnockUI command slots используют общий Frame. Белый Logo на светлом фоне инвертируется в фирменный #159B92. Exact dp-size элементов control strip пока определяется локальной геометрией KnockUI и не наследуется автоматически из 48×48/40×40 header-action стандарта.",
+    "short": "Реестр утверждённой UI-графики 4Tap, включая KnockUI control strip и Logo/About Hub assets.",
+    "description": "Помимо общих Back/Menu/Search/Frame и KnockUI Logo/Shortcuts/Draw/Send/Close, реестр включает утверждённый `back-4_tap-dev.svg` для действия «Поддержать 4Tap» и локальную каноническую копию `screencart-logo.svg` для будущего перехода в ScreenCart.",
     "purpose": "Не допустить визуального расхождения между поверхностями и платформами и отделить утверждение графики от её реализации.",
     "kind": "core",
     "models": [
@@ -301,7 +304,9 @@
       "Drawing Canvas",
       "Send",
       "Close",
-      "Platform-faithful derivatives"
+      "Platform-faithful derivatives",
+      "Support 4Tap",
+      "ScreenCart Logo"
     ],
     "parameters": {
       "header_action_touch": "48 × 48 dp",
@@ -316,10 +321,12 @@
       "android_search": "ic_search_4tap.xml — implemented derivative",
       "android_frame": "ic_frame_4tap.xml — implemented derivative",
       "android_status": "connected in Commands/Destination/Command; present in current physical-device build; focused visual conformance may be reviewed separately",
-      "knockui_assets": "logo-4tap.svg; quick_shortcuts.svg; drawing_canvas.svg; send.svg; close.svg",
+      "knockui_assets": "logo-4tap.svg; quick_shortcuts.svg; drawing_canvas.svg; send.svg; close.svg; back-4_tap-dev.svg; screencart-logo.svg",
       "knockui_logo_light_background": "invert white artwork/frame to #159B92",
       "knockui_control_strip_size": "first Android candidate: 48 dp cells / 40 dp visible; subject to device review",
-      "knockui_android_derivatives": "ic_knockui_logo.xml; ic_knockui_shortcuts.xml; ic_knockui_draw.xml; ic_knockui_send.xml; ic_knockui_close.xml"
+      "knockui_android_derivatives": "ic_knockui_logo.xml; ic_knockui_shortcuts.xml; ic_knockui_draw.xml; ic_knockui_send.xml; ic_knockui_close.xml",
+      "support_4tap_asset": "back-4_tap-dev.svg; approved 2026-10-02; three-line artwork back / <4_tap> / dev; symbolizes support for development work",
+      "screencart_asset": "screencart-logo.svg; local canonical copy of ScreenCart project logo for Hub integration"
     },
     "constraints": [
       "No automatic substitution with Android/iOS/Material system icons.",
@@ -334,6 +341,70 @@
       "graphics",
       "canon",
       "assets"
+    ]
+  },
+  {
+    "id": "knockui-about-hub",
+    "section": "product",
+    "order": 34.5,
+    "title": "KnockUI Logo/About Hub",
+    "group": "UX SYSTEM",
+    "short": "Служебное представление по кнопке Logo: action-icons сверху, затем материал о 4Tap.",
+    "description": "Logo/About Hub открывается по 4Tap Logo в control strip и не является третьей рабочей панелью. Его верхняя часть — расширяемая область action-icons: один или несколько рядов, после которых начинается информационный текст/мультимедиа. Первый утверждённый ряд: «Открыть 4Tap» (рабочее действие), ScreenCart (future/placeholder) и «Поддержать 4Tap» (future/placeholder).",
+    "purpose": "Собрать в одной служебной точке вход в полное приложение, связанные продукты/поддержку и объяснение 4Tap, не перегружая control strip.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "shared",
+      "android",
+      "ios"
+    ],
+    "status": "approved",
+    "inputs": [
+      "4Tap Logo tap",
+      "Available Hub routes",
+      "Localized About content"
+    ],
+    "outputs": [
+      "Open full 4Tap",
+      "ScreenCart future action",
+      "Support 4Tap future action",
+      "About content"
+    ],
+    "parameters": {
+      "role": "service view; not third panel",
+      "layout": "action-icon row 1 → future row 2/3 if needed → text/media",
+      "row_1": "Open 4Tap; ScreenCart; Support 4Tap",
+      "open_4tap": "active; closes KnockUI and opens the main working panel of the full 4Tap app",
+      "screencart": "future/placeholder until ScreenCart app is ready",
+      "support_4tap": "future/placeholder until payment route/URL exists",
+      "website_4tap": "possible future action; URL and final placement TBD; may be lower in Hub or removed",
+      "assets": "logo-4tap.svg; screencart-logo.svg; back-4_tap-dev.svg",
+      "about_content": "temporary localized text + images with vertical scroll; future target may include a short animation/video"
+    },
+    "constraints": [
+      "Hub does not become a third remembered panel; remembered state remains Ярлыки or Рисование.",
+      "Additional action-icon rows may be added before informational content without changing Hub architecture.",
+      "Future/placeholder actions without a route must not imitate successful navigation.",
+      "Support 4Tap uses approved back-4_tap-dev.svg; its artwork is not re-typeset by code.",
+      "ScreenCart uses the locally stored canonical copy of the ScreenCart logo."
+    ],
+    "open_questions": [
+      "Как визуально обозначать future/placeholder actions?",
+      "Нужен ли Сайт 4Tap внутри Hub и где его размещать?",
+      "Какие действия войдут во второй и последующие ряды?"
+    ],
+    "tags": [
+      "knockui",
+      "about",
+      "hub",
+      "support",
+      "screencart",
+      "ux",
+      "canon"
     ]
   },
   {
@@ -1027,7 +1098,8 @@
       "permission": "user-enabled AccessibilityService",
       "system_alert_window": "not declared / not required",
       "pass_through_required": false,
-      "current_candidate": "12 dp side/bottom; 42% height clamp 300–420 dp; control strip 48 dp; Destination-line 36 dp"
+      "current_candidate": "12 dp side/bottom; 42% height clamp 300–420 dp; control strip 48 dp; Destination-line 36 dp",
+      "device_review_2026_10_02": "wide centered lower panel principle visually accepted in first device review; exact future refinements remain local"
     },
     "constraints": [
       "Canvas появляется только после явной активации 4Tap.",
@@ -1056,7 +1128,7 @@
           "url": "https://developer.android.com/reference/android/view/WindowManager.LayoutParams"
         }
       ],
-      "next_step": "Build current canon-driven candidate, install on device, review geometry/touch behavior, then adjust candidate dp values if needed without changing recognizer v2.1.",
+      "next_step": "Preserve accepted wide lower geometry while implementing Destination NOT ASSIGNED and Logo/About Hub; then focused device review.",
       "implication": "The post-activation input surface is technically verified; its remaining work is product/UX design and cross-version validation."
     }
   },
@@ -1096,7 +1168,8 @@
       "prototype_result": "navigation-bar 4 taps → Accessibility KnockUI → S → C → SC → Settings — PASS",
       "prototype_scope": "real-device overlay over another foreground app",
       "canon_target": "implemented candidate: wide centered bottom panel + Logo/About + Slot1/Slot2/Send + Destination-line + AUTO/MANUAL; AUTO delay 1.0 s",
-      "geometry_candidate": "12 dp side/bottom; 42% height clamp 300–420 dp; 48 dp control strip; 36 dp Destination-line"
+      "geometry_candidate": "12 dp side/bottom; 42% height clamp 300–420 dp; 48 dp control strip; 36 dp Destination-line",
+      "device_review_2026_10_02": "initial review: wide lower surface generally good; refinement needed for NOT ASSIGNED destination and Logo/About Hub"
     },
     "constraints": [
       "AccessibilityService включается пользователем.",
@@ -1116,10 +1189,10 @@
       "canvas"
     ],
     "verification": {
-      "state": "build-pass-device-pending",
+      "state": "device-review-refinement",
       "date": "2026-10-02",
       "confidence": "high",
-      "summary": "Current canon-driven KnockUI candidate passed testDebugUnitTest and assembleDebug (BUILD SUCCESSFUL). Real-device UI/behavior review is still pending.",
+      "summary": "Build/install passed and the first physical-device review found the wide lower KnockUI surface generally good. Remaining approved refinements: NOT ASSIGNED destination state and Logo/About Hub; their code has not yet been implemented.",
       "sources": [
         {
           "label": "Android AccessibilityService API",
@@ -1130,7 +1203,7 @@
           "url": "https://developer.android.com/reference/android/view/WindowManager.LayoutParams"
         }
       ],
-      "next_step": "Install debug APK and verify wide bottom panel geometry, control strip, About, slots, Destination-line, AUTO/MANUAL, 1.0 s auto-Send and command execution on the physical device.",
+      "next_step": "Implement NOT ASSIGNED Destination-line + Logo/About Hub first row, rebuild/install, then repeat focused device review. Quick Shortcuts population rules follow as a separate canon block.",
       "implication": "Post-activation drawing is no longer an Android feasibility risk; current work is UX canon and compatibility."
     }
   },
@@ -3456,7 +3529,7 @@
     "title": "Stage 2 — Product Canon",
     "group": "ROADMAP",
     "short": "Current Android recognizer/Gesture Check build is stable on-device; preserve as baseline.",
-    "description": "Recognizer v2.1/Gesture Check remain the accepted physical-device baseline. KnockUI control strip, Draw behavior and wide-bottom-panel geometry principle are canonized; the first Android implementation candidate is in code and awaits build/device review.",
+    "description": "Recognizer v2.1/Gesture Check remain the accepted physical-device baseline. First wide-bottom KnockUI candidate passed build/install and initial device review; the surface was generally accepted. Current refinement is NOT ASSIGNED Destination state + Logo/About Hub, followed by a separate Quick Shortcuts population canon block.",
     "purpose": "Стабилизировать визуальный язык и жестовые эталоны до масштабирования продукта.",
     "kind": "core",
     "models": [
@@ -3479,12 +3552,12 @@
     ],
     "parameters": {
       "stage_status": "active",
-      "current_task": "real-device review of build-passed canon-driven KnockUI candidate",
+      "current_task": "KnockUI refinement docs/assets approved: NOT ASSIGNED Destination + Logo/About Hub; implementation/device review next",
       "graffiti": "4Tap Graffiti Profile v1 approved; Letter-F revised 2026-10-01",
-      "immediate_next": "install debug APK → verify wide bottom panel, controls, About, slots, Destination-line, AUTO/MANUAL and 1.0 s auto-Send",
+      "immediate_next": "implement refinement → build/install → focused device review; then design Quick Shortcuts population rules",
       "subsequent": "later: explicit edit-XY review, broader productization/onboarding, planned recognizer calibration/personalization",
       "public_beta_gate": "Design Canon v1.0 before public beta",
-      "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; normalized dual create-flow with shared Pair Selection + Gesture Check; brand teal #159B92; Pair Selection contextual geometry; Gesture Check stable physical-device baseline; recognizer v2.1 stable physical-device baseline; KnockUI control strip; Logo/About service view; Draw Slot1/Slot2 + Destination-line + AUTO/MANUAL/Send flow; KnockUI wide-bottom-panel geometry principle; adaptive 40–45% height; 1.0 s AUTO delay",
+      "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; normalized dual create-flow with shared Pair Selection + Gesture Check; brand teal #159B92; Pair Selection contextual geometry; Gesture Check stable physical-device baseline; recognizer v2.1 stable physical-device baseline; KnockUI control strip; Logo/About service view; Draw Slot1/Slot2 + Destination-line + AUTO/MANUAL/Send flow; KnockUI wide-bottom-panel geometry principle; adaptive 40–45% height; 1.0 s AUTO delay; Logo/About Hub expandable action-icon rows; НЕ НАЗНАЧЕНО Destination state; Support 4Tap and ScreenCart Hub assets",
       "content_detailing": "separate follow-up per screen",
       "data_collection": "deferred: no real-trace accumulation/analysis in the next block",
       "personalization": "deferred: common templates + several user-specific samples"
@@ -3937,7 +4010,7 @@
     "title": "KnockUI Panels",
     "group": "UX SYSTEM",
     "short": "KnockUI: две рабочие панели плюс канонический control strip и Draw AUTO/MANUAL flow.",
-    "description": "KnockUI сохраняет две взаимоисключающие рабочие панели «Ярлыки» (`quick_shortcuts`) и «Рисование» (`drawing_canvas`) в одной рабочей области. Control strip имеет порядок `4Tap Logo | Ярлыки | Рисование | [Slot 1 | Slot 2 | Send — только Draw] | flexible space | Close`. Logo открывает информационное About-представление в рабочей области и не является третьей панелью. В Draw отдельная строка под control strip показывает Destination. Без выбора Slot действует AUTO: распознанные знаки последовательно заполняют Slot 1/2 и исполнимая пара запускается после короткой задержки. Тап по Slot отменяет pending auto-Send и переводит Draw в MANUAL: выбранный Slot не переключается автоматически, исполнение только по Send.",
+    "description": "KnockUI сохраняет две взаимоисключающие рабочие панели «Ярлыки» (`quick_shortcuts`) и «Рисование» (`drawing_canvas`) в одной рабочей области. Logo открывает отдельное служебное Logo/About Hub-представление, которое не является третьей панелью. В Draw полная неназначенная пара показывает `НЕ НАЗНАЧЕНО`, оставляет Send disabled и не запускает AUTO-send. Первый wide-bottom candidate прошёл build/install и первичный device review; общая поверхность принята как удачная. Правила наполнения «Ярлыков» пока не спроектированы.",
     "purpose": "Дать пользователю два быстрых способа действия — визуальный запуск по ярлыку и моторный запуск по двухзнаковой команде — без увеличения размера KnockUI одновременным показом обеих поверхностей.",
     "kind": "core",
     "models": [
@@ -3972,30 +4045,36 @@
       "first_launch_panel": "TBD",
       "icon_sources": "4tap-app/design/knockui/icons/",
       "control_strip": "4Tap Logo | Ярлыки | Рисование | [Slot 1 | Slot 2 | Send in Draw] | flexible space | Close",
-      "logo_role": "service About button; not third panel; temporary content = localized long text + images + vertical scroll until animation exists",
+      "logo_role": "service Logo/About Hub button; not third panel; does not replace remembered Ярлыки/Рисование state",
       "draw_slots": "two Frame-based slots; visible only in drawing mode",
-      "destination_line": "separate row below control strip in Draw; APP name / SYSTEM label / short WEB display",
+      "destination_line": "empty until full pair; assigned APP/SYSTEM/WEB → destination label; unassigned full pair → НЕ НАЗНАЧЕНО / NOT ASSIGNED; inactive-assignment presentation TBD",
       "send": "always visible in Draw; disabled until complete executable pair; enabled thereafter",
       "auto": "default without explicit slot selection; sequential Slot 1→Slot 2; destination preview; auto-Send after 1.0 s",
       "manual": "tap any empty/filled slot; cancel pending auto-Send; selected slot remains drawing target; no auto-advance; explicit Send only",
       "exact_geometry": "principle approved; candidate dp values pending build/device review",
       "geometry": "approved principle: wide compact bottom floating panel; centered regardless of LEFT/RIGHT trigger; near-full width; adaptive 40–45% height",
-      "android_geometry_candidate": "12 dp side/bottom margin; 42% screen height, clamp 300–420 dp; 48 dp control strip; 36 dp Destination-line"
+      "android_geometry_candidate": "12 dp side/bottom margin; 42% screen height, clamp 300–420 dp; 48 dp control strip; 36 dp Destination-line",
+      "hub_layout": "one or more action-icon rows first, then text/media; additional rows may be added without changing Hub architecture",
+      "hub_row_1": "Open 4Tap = active; ScreenCart = future/placeholder; Support 4Tap = future/placeholder",
+      "hub_assets": "logo-4tap.svg; screencart-logo.svg; back-4_tap-dev.svg",
+      "website_action": "possible future action; URL and placement not approved; not mandatory in row 1"
     },
     "constraints": [
+      "Logo/About Hub is a service view, not a third working panel and not a remembered panel state.",
       "Обе рабочие панели занимают одну рабочую область KnockUI и не показываются рядом одновременно.",
-      "При следующем вызове восстанавливается последняя рабочая панель; About по Logo не становится третьей запоминаемой панелью.",
       "Control strip KnockUI не является обычным application header и не требует отдельного Back/title.",
       "Send всегда присутствует в Draw, но не исполняется без полной исполнимой пары.",
       "Tap по Slot переводит Draw в MANUAL и отменяет pending auto-Send.",
       "Recognizer v2.1 / Gesture Check baseline этим UI-каноном не меняется.",
       "Количество и раскладка быстрых ярлыков пока не утверждены.",
       "Переключение свайпом пока не утверждено.",
-      "Начальная панель первого запуска пока не утверждена."
+      "Начальная панель первого запуска пока не утверждена.",
+      "A full unassigned recognized pair must show НЕ НАЗНАЧЕНО; Send remains disabled and AUTO-send does not run."
     ],
     "open_questions": [
       "Какая панель открывается при самом первом запуске?",
-      "Сколько быстрых ярлыков показывать и как их располагать?"
+      "Сколько быстрых ярлыков показывать и как их располагать?",
+      "Как показывать назначенную, но INACTIVE команду в Destination-line?"
     ],
     "tags": [
       "knockui",
@@ -4245,6 +4324,224 @@
     ]
   },
   {
+    "id": "pair-selection-surface",
+    "section": "product",
+    "order": 36.45,
+    "title": "Pair Selection / Выбор знакопары",
+    "group": "UX SYSTEM",
+    "short": "Утверждённый единый выбор XY: постоянная строка контекста и две Graffiti-сетки 6×6.",
+    "description": "Pair Selection is the single canonical XY selector. The [X]+[Y] context row stays fixed above both 6×6 stages, so the grid does not move. If Destination is already known it is shown at right as ДЛЯ: Destination. Standalone contexts use Back | ЗНАКОПАРА | Search; Commands / КОМБИНАЦИИ hosts the same core inside Commands.",
+    "purpose": "Исключить дублирующие способы назначения XY и переиспользовать одну модель выбора во всех flow.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "shared",
+      "android",
+      "ios"
+    ],
+    "status": "approved",
+    "inputs": [
+      "A–Z + 0–9",
+      "Command Space occupancy",
+      "Optional current XY",
+      "Optional known Destination context"
+    ],
+    "outputs": [
+      "Selected free XY"
+    ],
+    "parameters": {
+      "capacity": 1296,
+      "same_symbol_pairs": "allowed",
+      "context_row": "persistent 64 dp on both stages; [empty]+[empty] → [X]+[empty]; grid position remains fixed",
+      "stage_1": "36 canonical Graffiti signs; 6×6; choose X",
+      "stage_2": "36 canonical Graffiti signs; 6×6; choose Y; state derives from full XY",
+      "standalone_header": "Back | ЗНАКОПАРА | Search",
+      "commands_host": "uses Commands header + НАЗНАЧЕНИЯ / КОМБИНАЦИИ; no second Pair Selection header",
+      "known_destination": "right side of context row: ДЛЯ: Destination; 18 sp / 800; one line; end ellipsis",
+      "graffiti_guides": "start point + direction arrow",
+      "family_occupancy": "at least one available pair = normal; no available continuations = muted",
+      "occupied_pair": "muted; Commands may inspect/open existing Command; creation/edit cannot select it",
+      "existing_self_pair": "available to the Command being edited; does not conflict with itself",
+      "next": "free XY → always Gesture Check; no ДАЛЬШЕ / ВЕДЕТ В / ДОБАВИТЬ КОМАНДУ inside Pair Selection",
+      "back": "Y→X; X after НАЗНАЧИТЬ→НАЗНАЧИТЬ preserving Destination; X from Command→Command unchanged",
+      "search": "text navigation in same selector: 1 char → X/Y-stage; 2 chars → exact XY",
+      "drawing": "not used for XY assignment",
+      "hosts": "Commands / КОМБИНАЦИИ; destination-first after НАЗНАЧИТЬ; Command XY edit",
+      "implementation_status": "pair-first and destination-first use passed on physical device 2026-10-01; existing-Command edit context still needs explicit device review",
+      "post_check_routing": "not owned by Pair Selection",
+      "android_components": "PairSelectionGridView; PairSelectionScreenView; PairSelectionActivity"
+    },
+    "constraints": [
+      "The same 6×6 X → 6×6 Y core is reused in every context.",
+      "The context row remains in a fixed position on both stages; the grid does not jump.",
+      "Destination is displayed only when already known.",
+      "Pair Selection does not choose Destination, check gestures, or save Command.",
+      "Successful free XY always proceeds directly to Gesture Check.",
+      "Occupied pairs are not recognition errors.",
+      "Canonical Back/Search/Frame assets come from the graphics registry."
+    ],
+    "open_questions": [],
+    "tags": [
+      "design",
+      "pair-selection",
+      "command-space",
+      "graffiti",
+      "canon"
+    ]
+  },
+  {
+    "id": "gesture-check-surface",
+    "section": "product",
+    "order": 36.55,
+    "title": "Gesture Check / Проверка жеста",
+    "group": "UX SYSTEM",
+    "short": "Необязательная практическая проверка выбранных X/Y с повторными попытками и независимым текстовым feedback.",
+    "description": "Gesture Check refinement is included in the current stable physical-device Android baseline. The stale-feedback fix and AUTO→MANUAL active-sign policy are implemented and verified as part of that build.",
+    "purpose": "Проверить воспроизводимость выбранной знакопары конкретным пользователем, не превращая проверку в обязательный gate.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "shared",
+      "android",
+      "ios"
+    ],
+    "status": "approved",
+    "inputs": [
+      "Selected free XY",
+      "4Tap Graffiti Profile",
+      "Recognizer",
+      "Optional known Destination context"
+    ],
+    "outputs": [
+      "Unchanged selected XY",
+      "Latest per-sign recognition feedback",
+      "Continue/skip routing"
+    ],
+    "parameters": {
+      "header": "Back | ПРОВЕРКА ЖЕСТА",
+      "pair_display": "[X] + [Y], both canonical Graffiti examples always visible",
+      "active_sign": "implemented: entry X/AUTO; X PASS → Y; FAIL stays; any explicit X/Y tap → MANUAL; MANUAL never auto-switches",
+      "attempt_order": "AUTO guides first X→Y success; after any manual slot tap user fully controls X/Y order",
+      "repeat_after_pass": "allowed without limit",
+      "drawing_canvas": "single adaptive canvas occupying the stable area between pair row and fixed result zone; does not shift with feedback",
+      "result_zone": "implemented candidate: fixed 4 × 24 dp lines; latest 2 lines X + latest 2 lines Y",
+      "pass_text": "РАСПОЗНАНО — [X/Y]",
+      "fail_unrecognized_text": "НЕ РАСПОЗНАНО — [X/Y]",
+      "fail_other_text": "НЕ РАСПОЗНАНО — [X/Y] → / ОПРЕДЕЛЕНО КАК [actual]",
+      "result_memory": "latest completed result per sign; active-sign result is blank while its next attempt is being drawn",
+      "attempt_states": "UNTOUCHED | PASS | FAIL_UNRECOGNIZED | FAIL_OTHER(actualSymbol)",
+      "icons": "no new PASS/FAIL icons; textual feedback",
+      "skip_continue": "before first attempt = ПРОПУСТИТЬ; after any attempt = ПРОДОЛЖИТЬ",
+      "gate": "none; any result or no attempt may continue",
+      "persistence": "check result is not stored as Command property",
+      "back": "return to Pair Selection with selected XY preserved",
+      "routing_rule": "XY + no Destination → ВЕДЕТ В; XY + Destination → Command",
+      "implementation_status": "feedback-reset + AUTO→MANUAL implemented; unit/build PASS; current physical-device build reported stable",
+      "pair_row": "implemented candidate: 72 dp; active sign teal, inactive sign muted teal",
+      "bottom_action": "implemented candidate: fixed 56 dp; SKIP before first attempt, CONTINUE afterwards",
+      "recognizer": "36 canonical A–Z + 0–9 SVG templates; recognizer v2.1; stable physical-device baseline",
+      "feedback_reset": "implemented: ACTION_DOWN clears only active-sign feedback and preserves the other sign"
+    },
+    "constraints": [
+      "Gesture Check never changes XY.",
+      "PASS/FAIL belongs to an individual attempt, not to the whole command.",
+      "PASS never disables further attempts.",
+      "FAIL never blocks continuation.",
+      "Canvas geometry remains fixed while result text changes.",
+      "X and Y results remain independent and persist until replaced.",
+      "No new canonical PASS/FAIL pictograms are required for this surface.",
+      "Automatic switching is allowed only in AUTO and only from successful first-sign X to Y.",
+      "Any explicit slot tap hands X/Y control to the user for the rest of the Gesture Check session.",
+      "Starting a retry clears stale feedback for that active sign immediately."
+    ],
+    "open_questions": [],
+    "tags": [
+      "design",
+      "gesture-check",
+      "recognition",
+      "graffiti",
+      "canon"
+    ],
+    "verification": {
+      "state": "real-device-pass-baseline",
+      "date": "2026-10-01",
+      "confidence": "high",
+      "summary": "Current Gesture Check refinement is included in the physical-device build the user reports as working well and stably.",
+      "sources": [],
+      "next_step": "Preserve current behavior unless a new reproducible UI issue appears.",
+      "implication": "Gesture Check refinement is no longer verification-pending."
+    }
+  },
+  {
+    "id": "command-create-flow",
+    "section": "product",
+    "order": 36.6,
+    "title": "Command Creation Flow",
+    "group": "UX SYSTEM",
+    "short": "Две ветки создания используют один общий блок: Pair Selection → Gesture Check.",
+    "description": "Command creation is normalized around one shared XY selector and one optional gesture-verification surface. Destination-first chooses Destination in НАЗНАЧИТЬ before Pair Selection; pair-first chooses XY first, checks/skips the gesture, then opens ВЕДЕТ В.",
+    "purpose": "Снизить когнитивную нагрузку при создании команды и использовать контекст назначения для полезных свободных рекомендаций.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "shared",
+      "android",
+      "ios"
+    ],
+    "status": "approved",
+    "inputs": [
+      "ADD COMMAND",
+      "Destination",
+      "Command Space occupancy",
+      "Free XY"
+    ],
+    "outputs": [
+      "Command draft with Destination and XY"
+    ],
+    "parameters": {
+      "shared_block": "Pair Selection → Gesture Check",
+      "destination_first": "ДОБАВИТЬ КОМАНДУ → НАЗНАЧИТЬ → Destination → Pair Selection → Gesture Check → Command",
+      "pair_first": "КОМАНДЫ / КОМБИНАЦИИ → Pair Selection → Gesture Check → ВЕДЕТ В → Destination → Command",
+      "edit_xy": "Command → Pair Selection → Gesture Check → Command",
+      "gesture_check": "optional/non-blocking; PASS/FAIL belongs to individual attempts; does not change XY",
+      "convergence": "Command opens when XY and Destination are both known",
+      "implementation_status": "current combined Android flow included in stable physical-device baseline",
+      "routing_invariant": "after Gesture Check: XY + no Destination → ВЕДЕТ В; XY + Destination → Command",
+      "pair_selection_geometry": "persistent [X]+[Y] row; two stable-position 6×6 stages; standalone header Back | ЗНАКОПАРА | Search; optional ДЛЯ: Destination",
+      "execution_regression": "a newly created command was invoked successfully through KnockUI three times",
+      "gesture_refinement": "AUTO→MANUAL + ACTION_DOWN feedback reset implemented and included in the stable physical-device baseline"
+    },
+    "constraints": [
+      "Pair Selection is the only canonical command-pair assignment mechanism.",
+      "Pair Selection uses two 6×6 Graffiti selection stages and is not a drawing surface.",
+      "Gesture Check follows selected free XY and may be skipped.",
+      "Gesture Check never changes XY and never selects Destination.",
+      "ВЕДЕТ В requires known XY.",
+      "НАЗНАЧИТЬ selects Destination before XY.",
+      "НАЗНАЧИТЬ is used only when Destination is chosen before XY."
+    ],
+    "open_questions": [
+      "Explicit physical-device review of existing-Command XY edit remains."
+    ],
+    "tags": [
+      "design",
+      "command",
+      "creation",
+      "destination",
+      "recommendation",
+      "canon"
+    ]
+  },
+  {
     "id": "assign-surface",
     "section": "product",
     "order": 36.7,
@@ -4414,223 +4711,5 @@
       "url",
       "real-device-pass"
     ]
-  },
-  {
-    "id": "command-create-flow",
-    "section": "product",
-    "order": 36.6,
-    "title": "Command Creation Flow",
-    "group": "UX SYSTEM",
-    "short": "Две ветки создания используют один общий блок: Pair Selection → Gesture Check.",
-    "description": "Command creation is normalized around one shared XY selector and one optional gesture-verification surface. Destination-first chooses Destination in НАЗНАЧИТЬ before Pair Selection; pair-first chooses XY first, checks/skips the gesture, then opens ВЕДЕТ В.",
-    "purpose": "Снизить когнитивную нагрузку при создании команды и использовать контекст назначения для полезных свободных рекомендаций.",
-    "kind": "core",
-    "models": [
-      "b2c",
-      "b2b"
-    ],
-    "platforms": [
-      "shared",
-      "android",
-      "ios"
-    ],
-    "status": "approved",
-    "inputs": [
-      "ADD COMMAND",
-      "Destination",
-      "Command Space occupancy",
-      "Free XY"
-    ],
-    "outputs": [
-      "Command draft with Destination and XY"
-    ],
-    "parameters": {
-      "shared_block": "Pair Selection → Gesture Check",
-      "destination_first": "ДОБАВИТЬ КОМАНДУ → НАЗНАЧИТЬ → Destination → Pair Selection → Gesture Check → Command",
-      "pair_first": "КОМАНДЫ / КОМБИНАЦИИ → Pair Selection → Gesture Check → ВЕДЕТ В → Destination → Command",
-      "edit_xy": "Command → Pair Selection → Gesture Check → Command",
-      "gesture_check": "optional/non-blocking; PASS/FAIL belongs to individual attempts; does not change XY",
-      "convergence": "Command opens when XY and Destination are both known",
-      "implementation_status": "current combined Android flow included in stable physical-device baseline",
-      "routing_invariant": "after Gesture Check: XY + no Destination → ВЕДЕТ В; XY + Destination → Command",
-      "pair_selection_geometry": "persistent [X]+[Y] row; two stable-position 6×6 stages; standalone header Back | ЗНАКОПАРА | Search; optional ДЛЯ: Destination",
-      "execution_regression": "a newly created command was invoked successfully through KnockUI three times",
-      "gesture_refinement": "AUTO→MANUAL + ACTION_DOWN feedback reset implemented and included in the stable physical-device baseline"
-    },
-    "constraints": [
-      "Pair Selection is the only canonical command-pair assignment mechanism.",
-      "Pair Selection uses two 6×6 Graffiti selection stages and is not a drawing surface.",
-      "Gesture Check follows selected free XY and may be skipped.",
-      "Gesture Check never changes XY and never selects Destination.",
-      "ВЕДЕТ В requires known XY.",
-      "НАЗНАЧИТЬ selects Destination before XY.",
-      "НАЗНАЧИТЬ is used only when Destination is chosen before XY."
-    ],
-    "open_questions": [
-      "Explicit physical-device review of existing-Command XY edit remains."
-    ],
-    "tags": [
-      "design",
-      "command",
-      "creation",
-      "destination",
-      "recommendation",
-      "canon"
-    ]
-  },
-  {
-    "id": "pair-selection-surface",
-    "section": "product",
-    "order": 36.45,
-    "title": "Pair Selection / Выбор знакопары",
-    "group": "UX SYSTEM",
-    "short": "Утверждённый единый выбор XY: постоянная строка контекста и две Graffiti-сетки 6×6.",
-    "description": "Pair Selection is the single canonical XY selector. The [X]+[Y] context row stays fixed above both 6×6 stages, so the grid does not move. If Destination is already known it is shown at right as ДЛЯ: Destination. Standalone contexts use Back | ЗНАКОПАРА | Search; Commands / КОМБИНАЦИИ hosts the same core inside Commands.",
-    "purpose": "Исключить дублирующие способы назначения XY и переиспользовать одну модель выбора во всех flow.",
-    "kind": "core",
-    "models": [
-      "b2c",
-      "b2b"
-    ],
-    "platforms": [
-      "shared",
-      "android",
-      "ios"
-    ],
-    "status": "approved",
-    "inputs": [
-      "A–Z + 0–9",
-      "Command Space occupancy",
-      "Optional current XY",
-      "Optional known Destination context"
-    ],
-    "outputs": [
-      "Selected free XY"
-    ],
-    "parameters": {
-      "capacity": 1296,
-      "same_symbol_pairs": "allowed",
-      "context_row": "persistent 64 dp on both stages; [empty]+[empty] → [X]+[empty]; grid position remains fixed",
-      "stage_1": "36 canonical Graffiti signs; 6×6; choose X",
-      "stage_2": "36 canonical Graffiti signs; 6×6; choose Y; state derives from full XY",
-      "standalone_header": "Back | ЗНАКОПАРА | Search",
-      "commands_host": "uses Commands header + НАЗНАЧЕНИЯ / КОМБИНАЦИИ; no second Pair Selection header",
-      "known_destination": "right side of context row: ДЛЯ: Destination; 18 sp / 800; one line; end ellipsis",
-      "graffiti_guides": "start point + direction arrow",
-      "family_occupancy": "at least one available pair = normal; no available continuations = muted",
-      "occupied_pair": "muted; Commands may inspect/open existing Command; creation/edit cannot select it",
-      "existing_self_pair": "available to the Command being edited; does not conflict with itself",
-      "next": "free XY → always Gesture Check; no ДАЛЬШЕ / ВЕДЕТ В / ДОБАВИТЬ КОМАНДУ inside Pair Selection",
-      "back": "Y→X; X after НАЗНАЧИТЬ→НАЗНАЧИТЬ preserving Destination; X from Command→Command unchanged",
-      "search": "text navigation in same selector: 1 char → X/Y-stage; 2 chars → exact XY",
-      "drawing": "not used for XY assignment",
-      "hosts": "Commands / КОМБИНАЦИИ; destination-first after НАЗНАЧИТЬ; Command XY edit",
-      "implementation_status": "pair-first and destination-first use passed on physical device 2026-10-01; existing-Command edit context still needs explicit device review",
-      "post_check_routing": "not owned by Pair Selection",
-      "android_components": "PairSelectionGridView; PairSelectionScreenView; PairSelectionActivity"
-    },
-    "constraints": [
-      "The same 6×6 X → 6×6 Y core is reused in every context.",
-      "The context row remains in a fixed position on both stages; the grid does not jump.",
-      "Destination is displayed only when already known.",
-      "Pair Selection does not choose Destination, check gestures, or save Command.",
-      "Successful free XY always proceeds directly to Gesture Check.",
-      "Occupied pairs are not recognition errors.",
-      "Canonical Back/Search/Frame assets come from the graphics registry."
-    ],
-    "open_questions": [],
-    "tags": [
-      "design",
-      "pair-selection",
-      "command-space",
-      "graffiti",
-      "canon"
-    ]
-  },
-  {
-    "id": "gesture-check-surface",
-    "section": "product",
-    "order": 36.55,
-    "title": "Gesture Check / Проверка жеста",
-    "group": "UX SYSTEM",
-    "short": "Необязательная практическая проверка выбранных X/Y с повторными попытками и независимым текстовым feedback.",
-    "description": "Gesture Check refinement is included in the current stable physical-device Android baseline. The stale-feedback fix and AUTO→MANUAL active-sign policy are implemented and verified as part of that build.",
-    "purpose": "Проверить воспроизводимость выбранной знакопары конкретным пользователем, не превращая проверку в обязательный gate.",
-    "kind": "core",
-    "models": [
-      "b2c",
-      "b2b"
-    ],
-    "platforms": [
-      "shared",
-      "android",
-      "ios"
-    ],
-    "status": "approved",
-    "inputs": [
-      "Selected free XY",
-      "4Tap Graffiti Profile",
-      "Recognizer",
-      "Optional known Destination context"
-    ],
-    "outputs": [
-      "Unchanged selected XY",
-      "Latest per-sign recognition feedback",
-      "Continue/skip routing"
-    ],
-    "parameters": {
-      "header": "Back | ПРОВЕРКА ЖЕСТА",
-      "pair_display": "[X] + [Y], both canonical Graffiti examples always visible",
-      "active_sign": "implemented: entry X/AUTO; X PASS → Y; FAIL stays; any explicit X/Y tap → MANUAL; MANUAL never auto-switches",
-      "attempt_order": "AUTO guides first X→Y success; after any manual slot tap user fully controls X/Y order",
-      "repeat_after_pass": "allowed without limit",
-      "drawing_canvas": "single adaptive canvas occupying the stable area between pair row and fixed result zone; does not shift with feedback",
-      "result_zone": "implemented candidate: fixed 4 × 24 dp lines; latest 2 lines X + latest 2 lines Y",
-      "pass_text": "РАСПОЗНАНО — [X/Y]",
-      "fail_unrecognized_text": "НЕ РАСПОЗНАНО — [X/Y]",
-      "fail_other_text": "НЕ РАСПОЗНАНО — [X/Y] → / ОПРЕДЕЛЕНО КАК [actual]",
-      "result_memory": "latest completed result per sign; active-sign result is blank while its next attempt is being drawn",
-      "attempt_states": "UNTOUCHED | PASS | FAIL_UNRECOGNIZED | FAIL_OTHER(actualSymbol)",
-      "icons": "no new PASS/FAIL icons; textual feedback",
-      "skip_continue": "before first attempt = ПРОПУСТИТЬ; after any attempt = ПРОДОЛЖИТЬ",
-      "gate": "none; any result or no attempt may continue",
-      "persistence": "check result is not stored as Command property",
-      "back": "return to Pair Selection with selected XY preserved",
-      "routing_rule": "XY + no Destination → ВЕДЕТ В; XY + Destination → Command",
-      "implementation_status": "feedback-reset + AUTO→MANUAL implemented; unit/build PASS; current physical-device build reported stable",
-      "pair_row": "implemented candidate: 72 dp; active sign teal, inactive sign muted teal",
-      "bottom_action": "implemented candidate: fixed 56 dp; SKIP before first attempt, CONTINUE afterwards",
-      "recognizer": "36 canonical A–Z + 0–9 SVG templates; recognizer v2.1; stable physical-device baseline",
-      "feedback_reset": "implemented: ACTION_DOWN clears only active-sign feedback and preserves the other sign"
-    },
-    "constraints": [
-      "Gesture Check never changes XY.",
-      "PASS/FAIL belongs to an individual attempt, not to the whole command.",
-      "PASS never disables further attempts.",
-      "FAIL never blocks continuation.",
-      "Canvas geometry remains fixed while result text changes.",
-      "X and Y results remain independent and persist until replaced.",
-      "No new canonical PASS/FAIL pictograms are required for this surface.",
-      "Automatic switching is allowed only in AUTO and only from successful first-sign X to Y.",
-      "Any explicit slot tap hands X/Y control to the user for the rest of the Gesture Check session.",
-      "Starting a retry clears stale feedback for that active sign immediately."
-    ],
-    "open_questions": [],
-    "tags": [
-      "design",
-      "gesture-check",
-      "recognition",
-      "graffiti",
-      "canon"
-    ],
-    "verification": {
-      "state": "real-device-pass-baseline",
-      "date": "2026-10-01",
-      "confidence": "high",
-      "summary": "Current Gesture Check refinement is included in the physical-device build the user reports as working well and stably.",
-      "sources": [],
-      "next_step": "Preserve current behavior unless a new reproducible UI issue appears.",
-      "implication": "Gesture Check refinement is no longer verification-pending."
-    }
   }
 ]
