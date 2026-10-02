@@ -707,3 +707,18 @@ Recognizer v2.1 / Gesture Check не изменены.
 
 Статус: **canon approved; Android implementation pending**.
 
+## Docked 4Tap implementation candidate — 2026-10-02
+
+Утверждённый Docked 4Tap реализован в Android-кандидате:
+
+- KnockUI переключается `floating ↔ full-width docked` без изменения своей высоты;
+- `Открыть 4Tap` сохраняет KnockUI и открывает `CommandsActivity` над ним;
+- общий lifecycle-координатор переносит нижний inset, равный высоте KnockUI, на все внутренние Activity 4Tap;
+- внутренние переходы 4Tap сохраняют docked layout;
+- `Close` снимает inset и закрывает только KnockUI;
+- выход из полного 4Tap возвращает KnockUI в floating;
+- внешний command launch из docked-state сначала возвращает KnockUI в floating, затем использует прежний executor;
+- recognizer v2.1 / Gesture Check не изменены.
+
+Статус: **implementation candidate; build/install/device review pending**.
+
