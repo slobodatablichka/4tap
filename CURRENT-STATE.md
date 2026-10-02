@@ -841,3 +841,20 @@ Android candidate теперь реализует утверждённую ге�
 
 Статус: **implementation candidate; build/install/device review pending**.
 
+## Commands assignment Graffiti two-column correction — 2026-10-02
+
+После первого просмотра implementation candidate уточнена структура Graffiti-зоны в `Команды → НАЗНАЧЕНИЯ`.
+
+Исправлено в каноне и Android-коде:
+
+- Graffiti-зона состоит из двух постоянных столбцов одинаковой рабочей ширины;
+- первый знак любой знакопары всегда центрируется в первом столбце, второй — во втором;
+- вертикальные оси обоих столбцов совпадают во всех строках списка;
+- видимого разделителя между внутренними столбцами нет, поэтому два знака продолжают читаться как единая команда;
+- каждый знак сохраняет естественную SVG-ширину внутри своего столбца;
+- ширина каждого столбца = ширина canonical `X` при target height `40 dp` + `8%` reserve;
+- межстолбцовый gap остаётся `4 dp`, боковые insets — по `4 dp`;
+- guide threshold `36 dp`, SVG-aware stroke scaling и recognizer v2.1 не менялись.
+
+Статус: **implementation corrected; build/install/device review pending**.
+
