@@ -734,3 +734,17 @@ Docked 4Tap уточнён как **симметричное** состояни�
 
 Статус: **canon approved; reverse-entry Android refinement pending**.
 
+## Symmetric Docked entry implemented — 2026-10-02
+
+Обратный вход в Docked 4Tap реализован в Android-кандидате:
+
+- `Application.ActivityLifecycleCallbacks` отслеживает реально resumed внутренние Activity 4Tap;
+- при corner-trigger `DrawingOverlay` централизованно решает, создавать KnockUI floating или docked;
+- если внутренний экран 4Tap уже foreground, KnockUI сразу создаётся full-width снизу;
+- текущий Activity/экран/состояние 4Tap сохраняются и не заменяются `Commands`;
+- в любом другом приложении сохраняется обычный floating KnockUI;
+- `CornerAccessibilityService` не изменён; trigger остаётся прежним;
+- recognizer v2.1 / Gesture Check не изменены.
+
+Статус: **implementation candidate; build/install/device review pending**.
+
