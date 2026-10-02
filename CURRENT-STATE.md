@@ -748,3 +748,15 @@ Docked 4Tap уточнён как **симметричное** состояни�
 
 Статус: **implementation candidate; build/install/device review pending**.
 
+## KnockUI close semantics restored — 2026-10-02
+
+После symmetric Docked entry восстановлен исходный контракт закрытия:
+
+- `X / Close` всегда закрывает KnockUI;
+- любая APP / WEB / SYSTEM-команда из KnockUI также закрывает его **до** запуска назначения;
+- правило одинаково для floating и docked;
+- если рядом открыт полный 4Tap, после `Close` он расправляется на всю доступную область;
+- выход из полного 4Tap без выполнения команды по-прежнему возвращает KnockUI из docked в floating.
+
+Регресс исправлен в private Android-коде; build/install/device review этой коррекции pending.
+
