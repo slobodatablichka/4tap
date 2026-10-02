@@ -176,7 +176,7 @@
     "title": "4Tap Design Canon",
     "group": "UX SYSTEM",
     "short": "Единый визуальный и поведенческий канон для KnockUI, состояний ввода, обратной связи и пользовательских экранов.",
-    "description": "Design Canon задаёт визуальный язык, implementation gate и нормализованную логику поверхностей. Для KnockUI утверждены двухпанельная модель, control strip, Draw AUTO/MANUAL, wide-bottom geometry, состояние `НЕ НАЗНАЧЕНО` и служебный Logo/About Hub с расширяемой action-icon area.",
+    "description": "Design Canon задаёт визуальный язык, implementation gate и нормализованную логику поверхностей. Для KnockUI утверждены двухпанельная модель, control strip, Draw AUTO/MANUAL, wide-bottom geometry, Logo/About Hub и новый layout-state Docked 4Tap.",
     "purpose": "Не допустить расхождения интерфейсов и закрепить узнаваемую механику продукта.",
     "kind": "core",
     "models": [
@@ -204,7 +204,7 @@
     "parameters": {
       "current_working_version": "v0.1",
       "core_surfaces": "KnockUI; 4Tap; Команды; Команда; Command Space / Pair Selection; Gesture Check / ПРОВЕРКА ЖЕСТА; Destination / ВЕДЕТ В; Assign / НАЗНАЧИТЬ; Алфавит; Настройки",
-      "immediate_next": "Implement approved KnockUI refinement: NOT ASSIGNED Destination state + Logo/About Hub first row; then build/device review; Quick Shortcuts population rules are a separate next canon block",
+      "immediate_next": "Implement Docked 4Tap layout/lifecycle; build/install/device review; recognizer v2.1 / Gesture Check remain unchanged",
       "next_revision": "v0.2 after first canon-driven implementation/usability pass",
       "public_beta": "v1.0 before public beta",
       "knockui_panel_model": "approved: quick_shortcuts / drawing_canvas; remember last active panel; Logo/About is service view, not third panel",
@@ -238,7 +238,8 @@
       "knockui_android_geometry_candidate": "12 dp side/bottom margin; 42% height clamped 300–420 dp; 48 dp control strip; 36 dp Destination-line",
       "knockui_auto_delay": "1.0 s",
       "knockui_unassigned_destination": "full recognized pair without assignment → НЕ НАЗНАЧЕНО / NOT ASSIGNED; Send disabled; no AUTO-send",
-      "knockui_hub": "Logo opens service Hub, not third panel; action-icon rows precede text/media; row 1 = Open 4Tap (active), ScreenCart (future placeholder), Support 4Tap (future placeholder)"
+      "knockui_hub": "Logo opens service Hub, not third panel; action-icon rows precede text/media; row 1 = Open 4Tap (active), ScreenCart (future placeholder), Support 4Tap (future placeholder)",
+      "knockui_docked_4tap": "Open 4Tap keeps KnockUI open, makes it full-width at bottom, constrains full 4Tap to remaining top area; Close expands 4Tap; leaving 4Tap restores floating KnockUI"
     },
     "constraints": [
       "Канон должен сохранять скорость и минимальное вмешательство в текущий контекст пользователя.",
@@ -362,7 +363,7 @@
       "android",
       "ios"
     ],
-    "status": "build-install-pass-device-pending",
+    "status": "approved-docked-refinement",
     "inputs": [
       "4Tap Logo tap",
       "Available Hub routes",
@@ -378,7 +379,7 @@
       "role": "service view; not third panel",
       "layout": "action-icon row 1 → future row 2/3 if needed → text/media",
       "row_1": "Open 4Tap; ScreenCart; Support 4Tap",
-      "open_4tap": "implemented candidate: closes KnockUI and opens current full-app working surface CommandsActivity",
+      "open_4tap": "approved target changed to Docked 4Tap: keep KnockUI open; make it full-width bottom; open full 4Tap in remaining upper area",
       "screencart": "implemented as visible future/placeholder; no route",
       "support_4tap": "implemented as visible future/placeholder; no route",
       "website_4tap": "possible future action; URL and final placement TBD; may be lower in Hub or removed",
@@ -1173,7 +1174,10 @@
       "canon_target": "implemented candidate: wide centered bottom panel + Logo/About + Slot1/Slot2/Send + Destination-line + AUTO/MANUAL; AUTO delay 1.0 s",
       "geometry_candidate": "12 dp side/bottom; 42% height clamp 300–420 dp; 48 dp control strip; 36 dp Destination-line",
       "device_review_2026_10_02": "initial review: wide lower surface generally good; refinement needed for NOT ASSIGNED destination and Logo/About Hub",
-      "hub_refinement_candidate": "Destination NOT ASSIGNED + Hub row 1 implemented; recognizer/Gesture Check untouched"
+      "hub_refinement_candidate": "Destination NOT ASSIGNED + Hub row 1 implemented; recognizer/Gesture Check untouched",
+      "docked_target": "KnockUI full-width bottom; same height unless separately revised; full 4Tap top; no overlap/gap",
+      "docked_close": "Close KnockUI only; full 4Tap expands to full available area",
+      "docked_exit": "Leaving full 4Tap restores ordinary floating KnockUI"
     },
     "constraints": [
       "AccessibilityService включается пользователем.",
@@ -1193,10 +1197,10 @@
       "canvas"
     ],
     "verification": {
-      "state": "refinement-build-install-pass-device-pending",
+      "state": "docked-canon-approved-implementation-pending",
       "date": "2026-10-02",
       "confidence": "high",
-      "summary": "NOT ASSIGNED + Logo/About Hub refinement passed testDebugUnitTest, assembleDebug and installDebug. Installed on physical device; focused device review still pending.",
+      "summary": "Previous Hub refinement passed build/install. New approved Docked 4Tap target keeps KnockUI open and full-width at bottom while full 4Tap occupies the remaining top area; implementation is pending.",
       "sources": [
         {
           "label": "Android AccessibilityService API",
@@ -1207,7 +1211,7 @@
           "url": "https://developer.android.com/reference/android/view/WindowManager.LayoutParams"
         }
       ],
-      "next_step": "Verify unassigned pair state and Logo/About Hub behavior on the physical device.",
+      "next_step": "Implement Docked 4Tap layout/lifecycle without recognizer/Gesture Check changes, then build/install/device review.",
       "implication": "Post-activation drawing is no longer an Android feasibility risk; current work is UX canon and compatibility."
     }
   },
@@ -3556,12 +3560,12 @@
     ],
     "parameters": {
       "stage_status": "active",
-      "current_task": "focused device review of build/install-passed KnockUI refinement",
+      "current_task": "implement approved Docked 4Tap layout/lifecycle",
       "graffiti": "4Tap Graffiti Profile v1 approved; Letter-F revised 2026-10-01",
-      "immediate_next": "verify NOT ASSIGNED + Hub row/open-4Tap on device; then Quick Shortcuts population canon",
+      "immediate_next": "code → testDebugUnitTest/assembleDebug/installDebug → focused device review; then Quick Shortcuts population canon",
       "subsequent": "later: explicit edit-XY review, broader productization/onboarding, planned recognizer calibration/personalization",
       "public_beta_gate": "Design Canon v1.0 before public beta",
-      "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; normalized dual create-flow with shared Pair Selection + Gesture Check; brand teal #159B92; Pair Selection contextual geometry; Gesture Check stable physical-device baseline; recognizer v2.1 stable physical-device baseline; KnockUI control strip; Logo/About service view; Draw Slot1/Slot2 + Destination-line + AUTO/MANUAL/Send flow; KnockUI wide-bottom-panel geometry principle; adaptive 40–45% height; 1.0 s AUTO delay; Logo/About Hub expandable action-icon rows; НЕ НАЗНАЧЕНО Destination state; Support 4Tap and ScreenCart Hub assets",
+      "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; normalized dual create-flow with shared Pair Selection + Gesture Check; brand teal #159B92; Pair Selection contextual geometry; Gesture Check stable physical-device baseline; recognizer v2.1 stable physical-device baseline; KnockUI control strip; Logo/About service view; Draw Slot1/Slot2 + Destination-line + AUTO/MANUAL/Send flow; KnockUI wide-bottom-panel geometry principle; adaptive 40–45% height; 1.0 s AUTO delay; Logo/About Hub expandable action-icon rows; НЕ НАЗНАЧЕНО Destination state; Support 4Tap and ScreenCart Hub assets; Docked 4Tap layout/lifecycle",
       "content_detailing": "separate follow-up per screen",
       "data_collection": "deferred: no real-trace accumulation/analysis in the next block",
       "personalization": "deferred: common templates + several user-specific samples"
@@ -4061,7 +4065,8 @@
       "hub_layout": "one or more action-icon rows first, then text/media; additional rows may be added without changing Hub architecture",
       "hub_row_1": "implemented candidate: Open 4Tap active → CommandsActivity; ScreenCart placeholder; Support 4Tap placeholder",
       "hub_assets": "logo-4tap.svg; screencart-logo.svg; back-4_tap-dev.svg",
-      "website_action": "possible future action; URL and placement not approved; not mandatory in row 1"
+      "website_action": "possible future action; URL and placement not approved; not mandatory in row 1",
+      "docked_4tap": "layout state only, not a third panel: full-width KnockUI bottom + full 4Tap above; internal 4Tap navigation remains above"
     },
     "constraints": [
       "Logo/About Hub is a service view, not a third working panel and not a remembered panel state.",
@@ -4073,7 +4078,8 @@
       "Количество и раскладка быстрых ярлыков пока не утверждены.",
       "Переключение свайпом пока не утверждено.",
       "Начальная панель первого запуска пока не утверждена.",
-      "A full unassigned recognized pair must show НЕ НАЗНАЧЕНО; Send remains disabled and AUTO-send does not run."
+      "A full unassigned recognized pair must show НЕ НАЗНАЧЕНО; Send remains disabled and AUTO-send does not run.",
+      "Docked 4Tap must not change Draw, recognizer, command or panel semantics."
     ],
     "open_questions": [
       "Какая панель открывается при самом первом запуске?",
@@ -4714,6 +4720,60 @@
       "share",
       "url",
       "real-device-pass"
+    ]
+  },
+  {
+    "id": "knockui-docked-4tap",
+    "section": "product",
+    "order": 34.6,
+    "title": "KnockUI Docked 4Tap",
+    "group": "UX SYSTEM",
+    "short": "При вызове полного 4Tap из KnockUI нижний KnockUI остаётся, становится full-width, а полный 4Tap занимает всю оставшуюся верхнюю область.",
+    "description": "Docked 4Tap — отдельное layout/lifecycle-состояние, возникающее только из Logo/About Hub по действию «Открыть 4Tap». Оно не создаёт новую панель KnockUI и не меняет recognizer, команды или Draw-flow.",
+    "purpose": "Сохранить KnockUI доступным одновременно с полным 4Tap и использовать весь доступный экран без взаимного перекрытия.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "android",
+      "shared"
+    ],
+    "status": "approved",
+    "inputs": [
+      "Open 4Tap action from Logo/About Hub"
+    ],
+    "outputs": [
+      "Full 4Tap upper area",
+      "Full-width docked KnockUI lower area"
+    ],
+    "parameters": {
+      "trigger": "Open 4Tap from KnockUI Logo/About Hub",
+      "knockui": "remains open; width = 100% available width; anchored bottom; current height preserved unless separately revised",
+      "full_4tap": "occupies all remaining available area above KnockUI",
+      "composition": "full 4Tap top + KnockUI bottom = whole available screen area; no overlap/gap",
+      "internal_navigation": "Commands / Command / Destination / Pair Selection / Gesture Check and later internal surfaces remain constrained to the upper area",
+      "close_knockui": "close KnockUI only; already-open 4Tap expands to the full available area",
+      "leave_4tap": "restore KnockUI ordinary floating geometry",
+      "external_launch_from_docked": "same as leave_4tap: KnockUI returns to floating geometry",
+      "repeat_open": "Open 4Tap from Hub creates Docked 4Tap again"
+    },
+    "constraints": [
+      "Docked 4Tap is a layout/lifecycle state, not a third working panel.",
+      "Do not change recognizer v2.1, Gesture Check, command semantics, AUTO/MANUAL or Hub content behavior.",
+      "Do not cover lower content of full 4Tap with the overlay; reserve the upper app area explicitly.",
+      "Other program functionality remains unchanged."
+    ],
+    "open_questions": [],
+    "tags": [
+      "knockui",
+      "docked",
+      "layout",
+      "lifecycle",
+      "android",
+      "ux",
+      "canon"
     ]
   }
 ]
