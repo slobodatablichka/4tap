@@ -827,3 +827,17 @@ Android-кандидат переведён на сохранение визуа
 
 Статус: **canon approved; Android implementation pending**. Recognizer v2.1 не затрагивается.
 
+## Commands assignment Graffiti layout implemented — 2026-10-02
+
+Android candidate теперь реализует утверждённую геометрию `Команды → НАЗНАЧЕНИЯ`:
+
+- Graffiti-колонка получает рабочую ширину, вычисленную от canonical `X`, а не жёсткий вес `24%`;
+- compact pair использует целевую высоту `40 dp`, естественные SVG-ширины, `4 dp` side inset и `4 dp` inter-glyph gap;
+- в расчёт ширины заложен `8%` reserve на каждый знак;
+- пара центрируется как единая композиция и не делится на две равные ячейки;
+- shared `GraffitiRenderer` показывает start circle + end triangle при rendered height `>=36 dp` и скрывает оба ниже порога;
+- локальные show/hide guides overrides удалены;
+- recognizer v2.1 и live finger stroke не изменены.
+
+Статус: **implementation candidate; build/install/device review pending**.
+
