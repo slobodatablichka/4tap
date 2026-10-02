@@ -790,3 +790,18 @@ Renderer должен сохранять `viewBox + trajectory geometry + stroke
 
 Текущий Android renderer этот контракт пока не выполняет: он извлекает path/viewBox, но заменяет SVG stroke/guide geometry фиксированными dp-значениями. Статус: **canon clarified; implementation pending**.
 
+## SVG-aware Graffiti renderer implemented — 2026-10-02
+
+Android-кандидат переведён на сохранение визуальных пропорций canonical 4Tap Graffiti SVG:
+
+- `GraffitiGlyphRepository` читает `stroke-width`, start marker и end arrow;
+- общий `GraffitiRenderer` масштабирует path, толщину trajectory и guide geometry одним transform;
+- `GraffitiGlyphView`, `GraffitiPairView` и KnockUI slots используют общий renderer;
+- прежние фиксированные толщины `3.5 / 6 / 2.2 dp` для эталонных знаков устранены;
+- практический эталон source SVG: около 45 мм высоты знака → около 3 мм trajectory;
+- правило относится только к 4Tap Graffiti, не к live finger stroke и другой UI-графике;
+- recognizer v2.1 и canonical SVG не изменены;
+- отдельный SVG metadata test не добавлен по принятому решению.
+
+Статус: **implementation candidate; build/install/device review pending**.
+
