@@ -929,3 +929,26 @@ Android candidate:
 
 Статус: **architecture + canonical assets approved; Android implementation pending**.
 
+## Expanded surface infrastructure implemented — 2026-10-03
+
+Single-window architecture `expanded surface above KnockUI` реализована в Android-коде как инфраструктурный candidate, без подключения feature content/actions.
+
+`DrawingOverlay` теперь поддерживает:
+
+- `WindowMode.COMPACT | EXPANDED`;
+- `ExpandedSurface.NONE | GRAFFITI_REFERENCE | APP_SEARCH`;
+- сохранённые compact width / KnockUI height / bottom margin;
+- `EXPANDED` через то же `WindowManager` overlay-window с `MATCH_PARENT × MATCH_PARENT`;
+- внутренний layout `expandedRect` сверху + сохранённый нижний KnockUI;
+- floating-expanded: прежняя компактная ширина/центрирование KnockUI;
+- docked-expanded: full-width KnockUI;
+- control strip / Destination / work-area / hit-regions относительно нижнего KnockUI rect;
+- `APP_SEARCH` focusability toggle через временное снятие `FLAG_NOT_FOCUSABLE`;
+- возврат к `NONE/GRAFFITI_REFERENCE` восстанавливает non-focusable contract;
+- Docked inset всегда использует compact KnockUI height, а не высоту полноэкранного expanded-window;
+- верхний expandedRect уже имеет отдельную touch boundary.
+
+Пока намеренно не подключены: новые control-strip actions, Android derivatives SVG, Graffiti Reference 6×6 content, EditText/IME/app list.
+
+Статус: **infrastructure implementation candidate; build/install/device review pending**.
+
