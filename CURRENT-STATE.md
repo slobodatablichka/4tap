@@ -1109,3 +1109,17 @@ Public alpha-gated WindowManager resize фиксируется как текущ
 - ставит canonical 48-dp control strip непосредственно над этой границей;
 - App Search заканчивается на верхней границе strip;
 - build/install/device layout-check pending.
+
+
+## App Search final IME composition — real-device PASS — 2026-10-03
+
+Повторный `testDebugUnitTest assembleDebug installDebug` — **BUILD SUCCESSFUL**. Physical review подтвердил финальный `APP_SEARCH`:
+
+- standard Android IME работает;
+- KnockUI не закрывается при появлении IME;
+- canonical 48-dp control strip полностью видна непосредственно над IME;
+- App Search занимает область выше control strip;
+- correction через public `View.getWindowVisibleDisplayFrame()` работает на основном Android 9 test device;
+- прежняя тонкая обрезанная полоса KnockUI устранена.
+
+`App Search / Клавиатура` фиксируется как real-device baseline. Следующий активный UI-блок — `Quick Shortcuts / Ярлыки`: сначала data/layout canon, затем реализация.
