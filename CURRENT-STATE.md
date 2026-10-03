@@ -1176,3 +1176,18 @@ Public alpha-gated WindowManager resize фиксируется как текущ
 Автоматический seeding `10 = 4 Need + 6 Opportunity` мнемонических XY пока намеренно не включён: существующий подтверждённый `SC → Settings` prototype baseline мигрируется отдельным sub-gate после physical PASS Quick Shortcuts.
 
 Статус: **build/install/device review pending**.
+
+
+## Personalized Assignments migration candidate — 2026-10-03
+
+Добавлен следующий Android sub-gate:
+
+- старый prototype CommandRegistry очищается одноразовой migration v2;
+- без Usage Access реестр ждёт персонализированное заполнение;
+- при Usage Access и до первой ручной правки создаётся до **10** APP-назначений по схеме `4 Need + 6 Opportunity` без destination-дублей;
+- для каждого приложения генерируется свободная mnemonic XY из display name;
+- кириллическое имя транслитерируется перед генерацией (`Калькулятор → KA` как первый candidate);
+- занятые пары пропускаются;
+- после первого ручного изменения registry становится user-owned и больше автоматически не пересеивается.
+
+Статус: **implementation candidate; build/device validation pending**.
