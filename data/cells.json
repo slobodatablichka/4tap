@@ -204,7 +204,7 @@
     "parameters": {
       "current_working_version": "v0.1",
       "core_surfaces": "KnockUI; 4Tap; Команды; Команда; Command Space / Pair Selection; Gesture Check / ПРОВЕРКА ЖЕСТА; Destination / ВЕДЕТ В; Assign / НАЗНАЧИТЬ; Алфавит; Настройки",
-      "immediate_next": "build/install/device re-review of persistent-fullscreen flicker fix and stronger Draw input group; then App Search content",
+      "immediate_next": "repeat testDebugUnitTest/assembleDebug/installDebug after hidden-API compile fix; then device review alpha-gated flicker fix + stronger Draw group",
       "next_revision": "v0.2 after first canon-driven implementation/usability pass",
       "public_beta": "v1.0 before public beta",
       "knockui_panel_model": "approved: quick_shortcuts / drawing_canvas; remember last active panel; Logo/About is service view, not third panel",
@@ -246,13 +246,13 @@
       "graffiti_reference": "~45 mm glyph height → ~3 mm trajectory in canonical source SVGs; 4Tap Graffiti only",
       "commands_assignment_graffiti": "implemented correction: two persistent X-based columns; 40 dp compact target height; natural widths; 4 dp side/gap; 8% reserve per column; global 36 dp guide threshold",
       "graffiti_end_arrow": "implemented candidate: end-arrow local visual scale 1.20× around nearest trajectory endpoint; start circle/trajectory/recognizer unchanged",
-      "knockui_expanded_surface": "one persistent fullscreen transparent WindowManager overlay; COMPACT/EXPANDED are inner rect + touchable-region states, not window-size states",
+      "knockui_expanded_surface": "single WindowManager overlay; COMPACT real compact size; EXPANDED same window resized full-screen while hidden",
       "knockui_expanded_docked": "may open over Docked 4Tap upper area without resetting underlying Activity; close restores same screen",
       "knockui_expanded_assets": "graffiti_reference.svg; app_search.svg",
       "knockui_expanded_surface_status": "actions wired; GRAFFITI_REFERENCE 6×6 implemented candidate; APP_SEARCH reserved state wired but content pending",
       "knockui_control_strip_geometry": "48 dp strip; Android candidate equal cell width min(48 dp, KnockUI width/9)",
       "knockui_draw_input_group": "Рисование + Slot1 + Slot2 = one rounded inactiveTeal module; 1.5/2 dp inset, 6 dp radius, 2 dp dark outline, 1 dp internal separators; pressedTeal selected; Send outside",
-      "knockui_expanded_transition": "NONE↔GRAFFITI_REFERENCE must not resize/reposition WindowManager surface; canvas cleared transparent each draw"
+      "knockui_expanded_transition": "public alpha-gated transition: alpha=0 → frame → resize/state/flags → frame → alpha=1; no internal touch-region API"
     },
     "constraints": [
       "Канон должен сохранять скорость и минимальное вмешательство в текущий контекст пользователя.",
@@ -3588,7 +3588,7 @@
     ],
     "parameters": {
       "stage_status": "active",
-      "current_task": "build/install/device re-review of persistent fullscreen expanded transition + strengthened Draw input group",
+      "current_task": "repeat testDebugUnitTest/assembleDebug/installDebug after compile fix; then device review alpha-gated expanded transition + Draw group",
       "graffiti": "4Tap Graffiti Profile v1 approved; Letter-F revised 2026-10-01",
       "immediate_next": "after PASS: Keyboard/App Search content; then Quick Shortcuts canon",
       "subsequent": "later: explicit edit-XY review, broader productization/onboarding, planned recognizer calibration/personalization",
@@ -4106,9 +4106,9 @@
       "expanded_interaction": "same-action tap toggles closed; another expanded action switches directly; Ярлыки/Рисование close expanded and activate panel; Close closes whole KnockUI",
       "expanded_docked": "entering Docked resets expanded to NONE; from Docked an expanded action may temporarily cover the upper 4Tap area without closing/resetting its Activity; closing restores same 4Tap screen",
       "expanded_focus": "NONE/GRAFFITI_REFERENCE non-focusable; APP_SEARCH temporarily focusable for standard Android IME, then restores flags",
-      "expanded_surface_status": "Graffiti Reference works physically; first resize-gate failed to remove flicker; persistent-fullscreen no-resize candidate implemented; re-review pending",
+      "expanded_surface_status": "Graffiti Reference works physically; current anti-flicker candidate uses public alpha-gated WindowManager resize after compile failure of hidden touch-region approach; build/device re-review pending",
       "control_strip_geometry": "48 dp strip; Android candidate cell width = min(48 dp, KnockUI width / 9) so the full Draw row fits without overlap",
-      "draw_input_group": "stronger candidate: Рисование + Slot1 + Slot2 share inactiveTeal rounded module; 1.5 dp horizontal / 2 dp vertical inset; 6 dp radius; 2 dp #171717 outline; 1 dp internal separators; pressedTeal selected state; Send outside group"
+      "draw_input_group": "stronger candidate: Рисование + Slot1 + Slot2 share rounded inactiveTeal module; 1.5 dp horizontal / 2 dp vertical inset; 6 dp radius; 2 dp #171717 outline; 1 dp internal separators; pressedTeal selected state; Send outside group"
     },
     "constraints": [
       "Logo/About Hub is a service view, not a third working panel and not a remembered panel state.",
@@ -5006,12 +5006,12 @@
       "sequence": "1 end-arrow ×1.20; 2 expanded-surface infrastructure; 3 Graffiti Reference 6×6; 4 Keyboard/App Search; 5 Quick Shortcuts; 6 Draw feedback",
       "per_block_gate": "canon → implementation → build/install → device review → state/public-map update",
       "end_arrow": "implemented candidate: shared renderer local 1.20× end-arrow scale; pivot = nearest geometric trajectory endpoint; recognizer unchanged",
-      "expanded_surface": "physical Graffiti Reference works; resize-gate failed; persistent fullscreen transparent overlay candidate now avoids WM resize and uses touchable region",
+      "expanded_surface": "Graffiti Reference works physically; current candidate replaces failed internal touch-region approach with public alpha-gated WindowManager resize",
       "graffiti_reference": "implemented candidate: control action + read-only 36-glyph 6×6 via GraffitiReferenceGridRenderer; canonical asset and Android derivative connected",
       "keyboard_search": "action + Android derivative connected to reserved APP_SEARCH state; standard IME/live app search content remains next",
       "shortcuts": "pinned user-managed grid first; optional horizontal pages; no system Usage Access in v1; optional frequent suggestions from 4Tap's own history",
       "draw_feedback": "de-emphasize empty frames; strengthen active/recognized/pair-ready/executing states; do not change recognizer or AUTO/MANUAL logic",
-      "current_step": "device re-review of persistent-fullscreen anti-flicker architecture + stronger Draw input group",
+      "current_step": "repeat build after compile fix, then device re-review of alpha-gated flicker fix + stronger Draw input group",
       "next_step": "after PASS: implement App Search EditText + standard IME + launchable-app live filter"
     },
     "constraints": [
@@ -5041,7 +5041,7 @@
     "title": "KnockUI Expanded Surfaces",
     "group": "UX SYSTEM",
     "short": "Временная полноформатная верхняя область, принадлежащая KnockUI и работающая над остающимся снизу KnockUI.",
-    "description": "Graffiti Reference works on-device. The first resize-gate did not remove compositor flicker, so the single overlay is now permanently fullscreen and transparent; COMPACT/EXPANDED change only internal rects and touchable region.",
+    "description": "Graffiti Reference works on-device. First resize-gate did not remove compositor flicker. A persistent-fullscreen touch-region attempt was rejected after compile failure on internal Android API. Current candidate uses public alpha-gated WindowManager resize.",
     "purpose": "Дать KnockUI большие временные рабочие поверхности без второй Activity/overlay и без потери текущего panel/Draw state.",
     "kind": "core",
     "models": [
@@ -5053,7 +5053,7 @@
       "android",
       "ios"
     ],
-    "status": "persistent-fullscreen-transition-candidate",
+    "status": "alpha-gated-transition-candidate",
     "inputs": [
       "KnockUI overlay",
       "Current panel state",
@@ -5065,7 +5065,7 @@
       "State-preserving compact return"
     ],
     "parameters": {
-      "window_model": "one persistent MATCH_PARENT × MATCH_PARENT transparent WindowManager overlay; no resize for NONE↔GRAFFITI_REFERENCE; no second overlay; no Activity",
+      "window_model": "one WindowManager overlay; COMPACT uses real compact size; EXPANDED resizes the same window to MATCH_PARENT; no second overlay; no Activity",
       "window_states": "COMPACT | EXPANDED",
       "layout": "expandedRect above | knockUiRect below",
       "expanded_state": "NONE | GRAFFITI_REFERENCE | APP_SEARCH",
@@ -5079,22 +5079,22 @@
       "graffiti_reference_icon": "design/knockui/icons/graffiti_reference.svg",
       "app_search_icon": "design/knockui/icons/app_search.svg",
       "android_implementation": "DrawingOverlay stores compact width/height/bottom margin; WindowMode COMPACT/EXPANDED; ExpandedSurface NONE/GRAFFITI_REFERENCE/APP_SEARCH; same View is relaid out into expandedRect above + preserved lower KnockUI",
-      "window_resize": "COMPACT keeps prior overlay dimensions; EXPANDED uses MATCH_PARENT × MATCH_PARENT in the same WindowManager window",
+      "window_resize": "alpha-gated: alpha=0 on old surface → next postOnAnimation applies target geometry/state/flags → next postOnAnimation alpha=1",
       "lower_knockui": "floating-expanded keeps compact width/centering and bottom margin; docked-expanded remains full-width; control/work/hit rectangles are relative to lower surfaceRect",
       "docked_height_contract": "DockedFourTap always receives compactHeightPx, never full expanded-window height",
-      "focus_implementation": "APP_SEARCH may still require updateViewLayout only to change focusability flags; separate device validation pending",
+      "focus_implementation": "APP_SEARCH focusability flags are applied during hidden resize/state phase",
       "touch_implementation": "expandedRect consumes upper-area touch and does not start lower Draw/About interaction",
       "feature_wiring": "implemented: both control-strip actions; GRAFFITI_REFERENCE renders 6×6; APP_SEARCH switches state but has no EditText/IME/app list yet",
       "control_strip_order": "Logo | Ярлыки | Graffiti Reference | Клавиатура | Рисование | Slot1 | Slot2 | Send | Close",
       "control_cell": "Android candidate: min(48 dp, KnockUI width / 9); strip height 48 dp",
       "graffiti_reference_grid": "6×6 A–Z+0–9; teal cells; 1 dp separators; 4 dp glyph inset; X-reference common height with 8% width reserve; shared GraffitiRenderer",
       "graffiti_reference_guides": "shared >=36 dp rule + global 1.20× end-arrow",
-      "transition_integrity": "no WindowManager surface resize for NONE↔GRAFFITI_REFERENCE; full canvas explicitly cleared transparent before each draw",
-      "transition_bug": "physical review found one-frame compact control-strip flash at top during expansion; fix implemented",
+      "transition_integrity": "public API only; old compositor buffer is hidden for a frame before resize and final composition is revealed only after another frame",
+      "transition_bug": "physical review found one-frame compact strip at top plus brief Graffiti Reference fragment at bottom; alpha-gated candidate awaits review",
       "draw_group": "Рисование + Slot1 + Slot2: inactiveTeal rounded module, 2 dp dark outline, 1 dp internal separators; Send outside",
-      "compact_mode": "draw only lower surfaceRect; touchable region limited to surfaceRect; transparent area above passes touches to underlying app",
-      "expanded_mode": "same window size; add expandedRect above lower KnockUI and expand touchable region",
-      "failed_attempt": "resize-gate/onDraw suppression did not eliminate physical flicker and is superseded"
+      "compact_mode": "real compact WindowManager window; area outside it naturally belongs to underlying app",
+      "expanded_mode": "same View/window resized to full screen while hidden; expandedRect above lower KnockUI",
+      "failed_attempt": "persistent full-screen touch-region attempt used ViewTreeObserver.OnComputeInternalInsetsListener and failed compileDebugKotlin; fully removed"
     },
     "constraints": [
       "Expanded surfaces are not remembered working panels.",
