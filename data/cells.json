@@ -27,7 +27,9 @@
       "Пользовательское назначение"
     ],
     "parameters": {
-      "editable": true
+      "editable": true,
+      "current_near_term_focus": "user assignments → robust destination types/WEB/deep links → configuration UX → cross-device Android field validation",
+      "production_criterion": "validated user flow on multiple Android devices before broad release"
     },
     "constraints": [
       "Доступность конкретного типа действия зависит от платформы."
@@ -744,8 +746,8 @@
     "order": 20,
     "title": "Android Permissions",
     "group": "PLATFORM",
-    "short": "Текущий Android-кандидат требует одного пользовательского включения Accessibility.",
-    "description": "Navigation-bar trigger и KnockUI подтверждены через один AccessibilityService + TYPE_ACCESSIBILITY_OVERLAY. SYSTEM_ALERT_WINDOW удалён из AndroidManifest.xml; после удаления полный flow повторно прошёл — PASS.",
+    "short": "Core 4Tap требует пользовательского включения Accessibility; Usage Access остаётся optional для персонализации starter set.",
+    "description": "Navigation-bar trigger и KnockUI подтверждены через один AccessibilityService + TYPE_ACCESSIBILITY_OVERLAY. SYSTEM_ALERT_WINDOW удалён. Без Usage Access core-flow, fallback Quick Shortcuts и fallback Assignments остаются рабочими; optional Usage Access используется только для первичного персонализированного starter set.",
     "purpose": "Сделать системные предпосылки Android явными и проверяемыми.",
     "kind": "core",
     "models": [
@@ -767,17 +769,22 @@
       "trigger_permission": "user-enabled AccessibilityService",
       "trigger_window": "TYPE_ACCESSIBILITY_OVERLAY",
       "knockui_window": "TYPE_ACCESSIBILITY_OVERLAY",
-      "current_user_steps": 1,
-      "system_alert_window": "not declared / not required"
+      "current_user_steps": "1 required core enablement + optional second personalization enablement",
+      "system_alert_window": "not declared / not required",
+      "usage_access": "optional special access for personalized starter set only",
+      "fallback_without_usage_access": "verified on Android 9: 4 Quick Shortcuts + 4 Assignments"
     },
     "constraints": [
       "AccessibilityService включается только пользователем.",
+      "Usage Access является optional и не должен быть условием core 4Tap flow.",
       "Текущий AccessibilityService использует canRetrieveWindowContent=false.",
       "Google Play требует declaration, prominent disclosure and affirmative consent for non-accessibility-tool AccessibilityService use.",
+      "После одной debug-переустановки на LGM-V300L / Android 9 потребовался Accessibility OFF→ON re-arm; cross-device install lifecycle validation обязательна.",
       "Cross-version validation on newer stock Android remains required."
     ],
     "open_questions": [
-      "Насколько стабилен one-permission flow на новых Android и разных navigation modes?"
+      "Насколько стабилен Accessibility core-flow на новых Android и разных navigation modes?",
+      "Какой onboarding и review narrative оптимален для optional Usage Access personalization?"
     ],
     "tags": [
       "android",
@@ -787,9 +794,9 @@
     ],
     "verification": {
       "state": "verified-constrained",
-      "date": "2026-09-29",
+      "date": "2026-10-04",
       "confidence": "high",
-      "summary": "Clean one-permission flow physically verified on LGM-V300L / Android 9 after removing SYSTEM_ALERT_WINDOW from manifest.",
+      "summary": "Accessibility-only core flow remains physically verified on LGM-V300L / Android 9. Without Usage Access the current device shows 4 fallback Quick Shortcuts and 4 fallback Assignments. One debug reinstall required Accessibility OFF→ON re-arm before 4-tap activation resumed.",
       "sources": [
         {
           "label": "Google Play AccessibilityService policy",
@@ -800,7 +807,7 @@
           "url": "https://developer.android.com/reference/android/view/WindowManager.LayoutParams"
         }
       ],
-      "next_step": "Current project task: Design Canon. Then build the one-step Accessibility onboarding around the single required Accessibility enablement.",
+      "next_step": "Cross-device USB installs, then non-public store testing; validate Accessibility re-arm/install behavior and optional Usage Access onboarding separately.",
       "implication": "Permissions are now a product/compliance problem, not an unknown technical prerequisite."
     }
   },
@@ -1000,7 +1007,8 @@
       "prototype_timing": "45–700 ms inter-tap; 280 ms max tap duration; 20 dp max movement",
       "trigger_surface": "TYPE_ACCESSIBILITY_OVERLAY",
       "current_proof": "navigation-bar 4-tap → KnockUI stable on LGM-V300L / Android 9",
-      "rearm_ms": 700
+      "rearm_ms": 700,
+      "private_ip_research": "separate private alternative-input research exists; technical mechanism intentionally withheld pending prior-art/patent review"
     },
     "constraints": [
       "Current proof is Android 9 / LGM-V300L and must be repeated on newer stock Android.",
@@ -1009,7 +1017,8 @@
     ],
     "open_questions": [
       "Какой порог используется по умолчанию: 3 или 4?",
-      "Какая минимальная/оптимальная геометрия зон нужна на разных navigation modes?"
+      "Какая минимальная/оптимальная геометрия зон нужна на разных navigation modes?",
+      "Private IP research-track по альтернативному input method ведётся вне публичной технической детализации до prior-art/patent review."
     ],
     "tags": [
       "android",
@@ -1750,7 +1759,8 @@
       "examples": "app activity, deep link, verified App Link, URL, settings intent",
       "execution": "Intent / startActivity",
       "background_start": "version- and target-SDK-constrained; no SYSTEM_ALERT_WINDOW dependency assumed",
-      "prototype_verification": "SC → Settings.ACTION_SETTINGS verified on LGM-V300L / Android 9 from Accessibility KnockUI"
+      "prototype_verification": "SC → Settings.ACTION_SETTINGS verified on LGM-V300L / Android 9 from Accessibility KnockUI",
+      "web_destination_refinement": "URL input/paste/normalization UX requires dedicated refinement before release"
     },
     "constraints": [
       "A URI may resolve to a browser, chooser, different app, or no handler.",
@@ -1759,7 +1769,8 @@
       "Current product architecture does not depend on SYSTEM_ALERT_WINDOW."
     ],
     "open_questions": [
-      "Which action types are part of MVP versus later extensions?"
+      "Which action types are part of MVP versus later extensions?",
+      "Какой финальный UX ввода/вставки WEB URL входит в release candidate?"
     ],
     "tags": [
       "android",
@@ -1781,7 +1792,7 @@
           "url": "https://developer.android.com/guide/components/activities/secure-bal"
         }
       ],
-      "next_step": "Validate representative app-launch and deep-link assignments on newer stock Android before defining the release action matrix.",
+      "next_step": "Validate representative app-launch/deep-link/WEB assignments on newer stock Android; finish URL input/paste UX before release action matrix.",
       "implication": "The action layer is viable, but broad action compatibility remains a separate validation task."
     }
   },
@@ -1953,7 +1964,7 @@
     "title": "Android Distribution & Compliance",
     "group": "DISTRIBUTION",
     "short": "RuStore — основной российский канал; Google Play и другие Android-магазины рассматриваются как дополнительные с собственными требованиями.",
-    "description": "Российский запуск планируется Android-first с RuStore как основным каналом. Текущий candidate использует AccessibilityService и для trigger, и для KnockUI. SYSTEM_ALERT_WINDOW больше не входит в current Android path; Google Play review narrative должен описывать одну core Accessibility-функцию.",
+    "description": "Ближайший distribution-cycle начинается с USB/debug установки на несколько stock Android, затем переходит к непубличному Google Play test-track до общего доступа. Параллельно готовится единый policy/review dossier по обязательному Accessibility core-flow и optional Usage Access personalization. RuStore сохраняется как основной российский канал публичного запуска.",
     "purpose": "Подготовить допустимую многоканальную публикацию и не строить продукт вокруг разрешений, которые ему фактически не нужны.",
     "kind": "core",
     "models": [
@@ -1975,10 +1986,13 @@
     "parameters": {
       "russia_primary_store": "RuStore",
       "secondary_channels": "Google Play + other Android stores where applicable",
-      "accessibility_policy": "current verified trigger uses AccessibilityService; declaration/review required for Google Play",
+      "accessibility_policy": "core capability; declaration/disclosure/consent/review package required",
       "overlay_policy": "SYSTEM_ALERT_WINDOW not declared / not required",
       "advance_notice": "Google Play App Review accepts advance notice for apps using AccessibilityService",
-      "store_matrix": "required before release"
+      "store_matrix": "required before production",
+      "google_play_pre_public_test": "internal/closed test track before general availability",
+      "usage_access_policy": "optional personalization capability; separate onboarding and Google-facing rationale",
+      "policy_dossier": "prepare Accessibility + Usage Access narratives, disclosures, consent flow and demo/review material"
     },
     "constraints": [
       "4Tap is not declared as isAccessibilityTool unless its product purpose materially changes.",
@@ -1987,8 +2001,8 @@
       "RuStore and other store policies require their own release-time audit."
     ],
     "open_questions": [
-      "Можно ли получить useful advance feedback from Google Play App Review before public release?",
-      "Останется ли AccessibilityService в финальной Android architecture?",
+      "Какой Google Play test-track и review route оптимальны для текущего pre-release candidate?",
+      "Можно ли получить useful advance feedback from Google Play/App Review before public release?",
       "Какие дополнительные Android-магазины войдут в стартовую матрицу?"
     ],
     "tags": [
@@ -1998,7 +2012,7 @@
     ],
     "verification": {
       "state": "verified-constrained",
-      "date": "2026-09-29",
+      "date": "2026-10-04",
       "confidence": "high",
       "summary": "Google Play explicitly permits AccessibilityService use outside accessibility tools subject to declaration, prominent disclosure and affirmative consent; advance notice to App Review is accepted for apps using an accessibility service. Final approval remains release-review dependent.",
       "sources": [
@@ -2015,7 +2029,7 @@
           "url": "https://support.google.com/googleplay/android-developer/answer/16558241"
         }
       ],
-      "next_step": "Prepare Accessibility disclosure/declaration/video around the verified one-permission flow; audit RuStore separately.",
+      "next_step": "Cross-device USB test first; then non-public Google Play testing and policy/review dossier before production.",
       "implication": "Accessibility is a review/compliance requirement to manage, not a categorical Google Play prohibition.",
       "source_note": "Current cited verification covers Google Play; other stores require separate current-policy checks."
     }
@@ -3565,7 +3579,7 @@
     "title": "Stage 2 — Product Canon",
     "group": "ROADMAP",
     "short": "Current Android recognizer/Gesture Check build is stable on-device; preserve as baseline.",
-    "description": "Recognizer v2.1/Gesture Check remain the accepted physical-device baseline. First wide-bottom KnockUI candidate passed build/install and initial device review; the surface was generally accepted. Current refinement is NOT ASSIGNED Destination state + Logo/About Hub, followed by a separate Quick Shortcuts population canon block.",
+    "description": "Recognizer v2.1/Gesture Check remain the accepted physical-device baseline. KnockUI/App Search/Quick Shortcuts/Assignments have moved through successive real-device candidates. Current polish focuses on slot-based shortcut drag, Draw assignment action, WEB destination UX and preserving the stable recognizer while the project enters broader Android field trials.",
     "purpose": "Стабилизировать визуальный язык и жестовые эталоны до масштабирования продукта.",
     "kind": "core",
     "models": [
@@ -3588,15 +3602,16 @@
     ],
     "parameters": {
       "stage_status": "active",
-      "current_task": "repeat testDebugUnitTest/assembleDebug/installDebug after compile fix; then device review alpha-gated expanded transition + Draw group",
+      "current_task": "field-trial polish: slot-based Quick Shortcuts drag, Draw assign, WEB destination UX, install/re-arm behavior",
       "graffiti": "4Tap Graffiti Profile v1 approved; Letter-F revised 2026-10-01",
-      "immediate_next": "after PASS: Keyboard/App Search content; then Quick Shortcuts canon",
-      "subsequent": "later: explicit edit-XY review, broader productization/onboarding, planned recognizer calibration/personalization",
+      "immediate_next": "cross-device stock Android USB installs; optional Usage Access personalized starter validation; non-public Google Play test",
+      "subsequent": "policy/review dossier, public web presence, broader B2C configuration/deep links, production gate",
       "public_beta_gate": "Design Canon v1.0 before public beta",
       "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; normalized dual create-flow with shared Pair Selection + Gesture Check; brand teal #159B92; Pair Selection contextual geometry; Gesture Check stable physical-device baseline; recognizer v2.1 stable physical-device baseline; KnockUI control strip; Logo/About service view; Draw Slot1/Slot2 + Destination-line + AUTO/MANUAL/Send flow; KnockUI wide-bottom-panel geometry principle; adaptive 40–45% height; 1.0 s AUTO delay; Logo/About Hub expandable action-icon rows; НЕ НАЗНАЧЕНО Destination state; Support 4Tap and ScreenCart Hub assets; Docked 4Tap layout/lifecycle; Commands assignment Graffiti composition; 36 dp guide visibility threshold; KnockUI refinement execution plan 2026-10-03",
       "content_detailing": "separate follow-up per screen",
       "data_collection": "deferred: no real-trace accumulation/analysis in the next block",
-      "personalization": "deferred: common templates + several user-specific samples"
+      "personalization": "deferred: common templates + several user-specific samples",
+      "field_trial_status": "LGM-V300L / Android 9 remains primary fixture; latest UI candidate is usable but still under polish"
     },
     "constraints": [
       "Не масштабировать recognizer и UI хаотично до фиксации соответствующих канонов.",
@@ -3695,7 +3710,7 @@
     "title": "Stage 5 — Launch, Monetization + B2B",
     "group": "ROADMAP",
     "short": "Подготовить российский релиз, Free/Pro монетизацию, demo-first продвижение и отдельный B2B/OEM-контур.",
-    "description": "Этап объединяет store/compliance matrix, RuStore-first запуск, дополнительные Android-магазины, Free + Pro, подписку только при постоянной услуге, demo-first продвижение и развитие SystemGestures/B2B/OEM.",
+    "description": "Этап теперь включает не только публичный запуск, но и предрелизный field-trial gate: несколько stock Android, непубличный store-test, policy/onboarding readiness, стабильные Quick Shortcuts/Assignments/WEB и отсутствие критических дефектов. Параллельно готовятся 4tap.ru и screencart.com.",
     "purpose": "Превратить подтверждённый продукт в распространяемый и монетизируемый сервис.",
     "kind": "core",
     "models": [
@@ -3719,10 +3734,16 @@
     "parameters": {
       "primary_russia_store": "RuStore",
       "baseline_monetization": "Free + Pro",
-      "promotion": "demo-first"
+      "promotion": "demo-first",
+      "google_play_pre_public": "non-public test track before general availability",
+      "field_trial_target": "approximately one month; gate-based, not calendar-only",
+      "production_gate": "cross-device PASS + store-test + permission/onboarding readiness + stable Assignments/WEB + no critical defects",
+      "public_sites": "initial content for 4tap.ru and screencart.com"
     },
     "constraints": [
-      "Цены, billing и store policies требуют отдельной актуальной проверки перед релизом."
+      "Цены, billing и store policies требуют отдельной актуальной проверки перед релизом.",
+      "Production date не определяется только календарём; release gate имеет приоритет.",
+      "Потенциально патентоспособные технические детали private IP research не публикуются до IP review."
     ],
     "open_questions": [],
     "tags": [
@@ -4743,7 +4764,9 @@
       "existing_command_slots": "always show known Graffiti XY without start point/direction arrow",
       "new_command_slots": "not applicable; activity refuses entry without full XY",
       "header_refinement_status": "known-XY guard implemented and present in the current physical-device build; no separate focused header-only review is recorded",
-      "search_icon": "canonical framed Search asset; system icon removed"
+      "search_icon": "canonical framed Search asset; system icon removed",
+      "web_input_status": "known UX gap after first real-device pass",
+      "web_next_refinement": "obvious URL field + standard IME + clipboard paste affordance + normalization/validation + clear confirm action"
     },
     "constraints": [
       "Categories describe destination type, not command type.",
@@ -4756,6 +4779,7 @@
       "ВЕДЕТ В cannot be opened without a known XY."
     ],
     "open_questions": [
+      "Финальный WEB input UX: клавиатура, вставка из clipboard и явное место ввода URL.",
       "Supported system destinations catalog.",
       "URL validation/normalization rules.",
       "Optional custom WEB labels.",
