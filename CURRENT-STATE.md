@@ -1217,3 +1217,20 @@ Public alpha-gated WindowManager resize фиксируется как текущ
 Quick Shortcuts pages остаются demand-driven: пустые соседние страницы не создаются. При standard capacity 8 cells `7 shortcuts + +` помещаются на одной странице; следующая появляется с восьмым shortcut.
 
 Usage Access остаётся special app access и выдаётся пользователем через системную страницу Settings; 4Tap может только направить пользователя туда.
+
+
+## Quick Shortcuts slot-drag + Draw assign candidate — 2026-10-03
+
+После real-device review dense-list drag заменён slot-based candidate:
+
+- каждый shortcut хранит явный slot;
+- пустые ячейки допустимы;
+- drop на occupied slot = swap;
+- drop на empty slot сохраняет новое место;
+- edge-drag вправо может создать соседнюю страницу;
+- единственный `+` располагается после последнего занятого slot;
+- старые записи без slot мигрируют как `0,1,2…`.
+
+В Draw добавлен action для свободной знакопары: `НЕ НАЗНАЧЕНО | НАЗНАЧИТЬ`. `НАЗНАЧИТЬ` открывает существующий Destination UI с уже нарисованной XY; повторный выбор пары/Gesture Check не выполняются; выбранные APP / SYSTEM / WEB сохраняются непосредственно в CommandRegistry.
+
+Статус: **implementation candidate; build/install/device validation pending**.
