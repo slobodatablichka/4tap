@@ -204,7 +204,7 @@
     "parameters": {
       "current_working_version": "v0.1",
       "core_surfaces": "KnockUI; 4Tap; Команды; Команда; Command Space / Pair Selection; Gesture Check / ПРОВЕРКА ЖЕСТА; Destination / ВЕДЕТ В; Assign / НАЗНАЧИТЬ; Алфавит; Настройки",
-      "immediate_next": "implement single-window expanded-surface infrastructure; then Graffiti Reference 6×6",
+      "immediate_next": "build/install/device validation of single-window COMPACT↔EXPANDED infrastructure; then wire Graffiti Reference 6×6",
       "next_revision": "v0.2 after first canon-driven implementation/usability pass",
       "public_beta": "v1.0 before public beta",
       "knockui_panel_model": "approved: quick_shortcuts / drawing_canvas; remember last active panel; Logo/About is service view, not third panel",
@@ -248,7 +248,8 @@
       "graffiti_end_arrow": "implemented candidate: end-arrow local visual scale 1.20× around nearest trajectory endpoint; start circle/trajectory/recognizer unchanged",
       "knockui_expanded_surface": "approved: same WindowManager overlay, COMPACT↔EXPANDED; expandedRect above preserved knockUiRect; NONE/GRAFFITI_REFERENCE/APP_SEARCH; APP_SEARCH focusable for IME",
       "knockui_expanded_docked": "may open over Docked 4Tap upper area without resetting underlying Activity; close restores same screen",
-      "knockui_expanded_assets": "graffiti_reference.svg; app_search.svg"
+      "knockui_expanded_assets": "graffiti_reference.svg; app_search.svg",
+      "knockui_expanded_surface_status": "Android infrastructure candidate implemented; feature actions/content pending"
     },
     "constraints": [
       "Канон должен сохранять скорость и минимальное вмешательство в текущий контекст пользователя.",
@@ -3582,9 +3583,9 @@
     ],
     "parameters": {
       "stage_status": "active",
-      "current_task": "implement approved single-window expanded-surface infrastructure above KnockUI",
+      "current_task": "build/install/device validation of single-window expanded-surface infrastructure",
       "graffiti": "4Tap Graffiti Profile v1 approved; Letter-F revised 2026-10-01",
-      "immediate_next": "after infrastructure device pass: Graffiti Reference 6×6, then Keyboard/App Search",
+      "immediate_next": "after infrastructure pass: Graffiti Reference 6×6 action/content, then Keyboard/App Search",
       "subsequent": "later: explicit edit-XY review, broader productization/onboarding, planned recognizer calibration/personalization",
       "public_beta_gate": "Design Canon v1.0 before public beta",
       "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; normalized dual create-flow with shared Pair Selection + Gesture Check; brand teal #159B92; Pair Selection contextual geometry; Gesture Check stable physical-device baseline; recognizer v2.1 stable physical-device baseline; KnockUI control strip; Logo/About service view; Draw Slot1/Slot2 + Destination-line + AUTO/MANUAL/Send flow; KnockUI wide-bottom-panel geometry principle; adaptive 40–45% height; 1.0 s AUTO delay; Logo/About Hub expandable action-icon rows; НЕ НАЗНАЧЕНО Destination state; Support 4Tap and ScreenCart Hub assets; Docked 4Tap layout/lifecycle; Commands assignment Graffiti composition; 36 dp guide visibility threshold; KnockUI refinement execution plan 2026-10-03",
@@ -4099,7 +4100,8 @@
       "expanded_geometry": "EXPANDED uses available viewport; expandedRect fills area above KnockUI; floating KnockUI keeps compact width/centering, Docked KnockUI remains full-width",
       "expanded_interaction": "same-action tap toggles closed; another expanded action switches directly; Ярлыки/Рисование close expanded and activate panel; Close closes whole KnockUI",
       "expanded_docked": "entering Docked resets expanded to NONE; from Docked an expanded action may temporarily cover the upper 4Tap area without closing/resetting its Activity; closing restores same 4Tap screen",
-      "expanded_focus": "NONE/GRAFFITI_REFERENCE non-focusable; APP_SEARCH temporarily focusable for standard Android IME, then restores flags"
+      "expanded_focus": "NONE/GRAFFITI_REFERENCE non-focusable; APP_SEARCH temporarily focusable for standard Android IME, then restores flags",
+      "expanded_surface_status": "single-window infrastructure implemented candidate; build/install/device review pending; no user-facing action wiring yet"
     },
     "constraints": [
       "Logo/About Hub is a service view, not a third working panel and not a remembered panel state.",
@@ -4997,13 +4999,13 @@
       "sequence": "1 end-arrow ×1.20; 2 expanded-surface infrastructure; 3 Graffiti Reference 6×6; 4 Keyboard/App Search; 5 Quick Shortcuts; 6 Draw feedback",
       "per_block_gate": "canon → implementation → build/install → device review → state/public-map update",
       "end_arrow": "implemented candidate: shared renderer local 1.20× end-arrow scale; pivot = nearest geometric trajectory endpoint; recognizer unchanged",
-      "expanded_surface": "architecture approved: single WindowManager window; COMPACT↔EXPANDED; expandedRect above preserved KnockUI; states NONE/GRAFFITI_REFERENCE/APP_SEARCH",
+      "expanded_surface": "implemented infrastructure candidate: same WindowManager window COMPACT↔EXPANDED; expandedRect + preserved lower KnockUI; NONE/GRAFFITI_REFERENCE/APP_SEARCH",
       "graffiti_reference": "read-only 36-glyph 6×6; maximize legibility; shared grid/cell renderer; canonical graffiti_reference.svg now approved",
       "keyboard_search": "Android IME + launchable-app live search by display label; existing app-launch path; canonical app_search.svg now approved",
       "shortcuts": "pinned user-managed grid first; optional horizontal pages; no system Usage Access in v1; optional frequent suggestions from 4Tap's own history",
       "draw_feedback": "de-emphasize empty frames; strengthen active/recognized/pair-ready/executing states; do not change recognizer or AUTO/MANUAL logic",
-      "current_step": "expanded-surface architecture approved; Android infrastructure implementation next",
-      "next_step": "implement single-window COMPACT↔EXPANDED layout/state without yet adding feature semantics"
+      "current_step": "build/install/device validation of expanded infrastructure",
+      "next_step": "after validation: create Android derivative for graffiti_reference.svg, place action, and wire Graffiti Reference 6×6"
     },
     "constraints": [
       "Recognizer v2.1 and Gesture Check remain stable baseline.",
@@ -5033,7 +5035,7 @@
     "title": "KnockUI Expanded Surfaces",
     "group": "UX SYSTEM",
     "short": "Временная полноформатная верхняя область, принадлежащая KnockUI и работающая над остающимся снизу KnockUI.",
-    "description": "Approved single-window architecture for Graffiti Reference and App Search. The same WindowManager overlay expands to the available viewport and splits into expandedRect above + preserved knockUiRect below.",
+    "description": "Approved single-window architecture is now implemented in DrawingOverlay as an infrastructure candidate. Feature actions/content are intentionally not wired yet.",
     "purpose": "Дать KnockUI большие временные рабочие поверхности без второй Activity/overlay и без потери текущего panel/Draw state.",
     "kind": "core",
     "models": [
@@ -5045,7 +5047,7 @@
       "android",
       "ios"
     ],
-    "status": "approved-architecture",
+    "status": "implemented-infrastructure-candidate",
     "inputs": [
       "KnockUI overlay",
       "Current panel state",
@@ -5069,7 +5071,14 @@
       "touch": "expandedRect owns touch; no passthrough to underlying foreground app",
       "background": "#171717",
       "graffiti_reference_icon": "design/knockui/icons/graffiti_reference.svg",
-      "app_search_icon": "design/knockui/icons/app_search.svg"
+      "app_search_icon": "design/knockui/icons/app_search.svg",
+      "android_implementation": "DrawingOverlay stores compact width/height/bottom margin; WindowMode COMPACT/EXPANDED; ExpandedSurface NONE/GRAFFITI_REFERENCE/APP_SEARCH; same View is relaid out into expandedRect above + preserved lower KnockUI",
+      "window_resize": "COMPACT keeps prior overlay dimensions; EXPANDED uses MATCH_PARENT × MATCH_PARENT in the same WindowManager window",
+      "lower_knockui": "floating-expanded keeps compact width/centering and bottom margin; docked-expanded remains full-width; control/work/hit rectangles are relative to lower surfaceRect",
+      "docked_height_contract": "DockedFourTap always receives compactHeightPx, never full expanded-window height",
+      "focus_implementation": "APP_SEARCH removes FLAG_NOT_FOCUSABLE; NONE/GRAFFITI_REFERENCE restore it",
+      "touch_implementation": "expandedRect consumes upper-area touch and does not start lower Draw/About interaction",
+      "feature_wiring": "not yet: no control-strip actions, VectorDrawable derivatives, Graffiti Reference content, EditText/IME/app list"
     },
     "constraints": [
       "Expanded surfaces are not remembered working panels.",
