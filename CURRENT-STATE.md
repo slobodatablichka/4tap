@@ -1095,3 +1095,17 @@ Public alpha-gated WindowManager resize фиксируется как текущ
 `standard Android IME → canonical 48 dp control strip KnockUI → App Search`.
 
 В режиме поиска остальное тело KnockUI не показывается. Строка иконок располагается непосредственно над IME, сохраняет обычную геометрию и действия; App Search занимает всё пространство выше неё. Android candidate реализован; build/install/device layout-check pending.
+
+
+## App Search visible-IME boundary correction — 2026-10-03
+
+Фактический build предыдущего layout-candidate: **BUILD SUCCESSFUL**. Physical review показал, что `APP_SEARCH` и standard Android IME работают, KnockUI при появлении IME **не закрывается**, но 48-dp control strip полностью скрыта за клавиатурой, из-за чего App Search визуально стыкуется непосредственно с IME.
+
+Текущий correction candidate для Android 9:
+
+- не считает resized `TYPE_ACCESSIBILITY_OVERLAY.height` надёжной верхней границей IME;
+- использует публичный `View.getWindowVisibleDisplayFrame(Rect)` + `OnGlobalLayoutListener`;
+- переводит нижнюю границу visible frame в локальные координаты overlay;
+- ставит canonical 48-dp control strip непосредственно над этой границей;
+- App Search заканчивается на верхней границе strip;
+- build/install/device layout-check pending.
