@@ -1191,3 +1191,10 @@ Public alpha-gated WindowManager resize фиксируется как текущ
 - после первого ручного изменения registry становится user-owned и больше автоматически не пересеивается.
 
 Статус: **implementation candidate; build/device validation pending**.
+
+
+## Quick Shortcuts first real-device PASS — 2026-10-03
+
+Первый Android gate `Quick Shortcuts / Ярлыки` подтверждён на реальном устройстве: сборка/установка прошли, панель открывается и работает. На устройстве без Usage Access fallback-набор дал 4 уникальных launchable shortcuts; personalized `7 = 3 Need + 4 Opportunity` остаётся проверить после выдачи Usage Access.
+
+Следующий sub-gate — одноразовая очистка старого prototype CommandRegistry и personalized seed до 10 мнемонических Назначений по схеме `4 Need + 6 Opportunity`.
