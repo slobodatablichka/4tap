@@ -1155,3 +1155,24 @@ Public alpha-gated WindowManager resize фиксируется как текущ
 - мнемонические XY для кириллических display names строятся через транслитерацию отображаемого пользователю имени.
 
 Следующий этап — первый implementation candidate Quick Shortcuts по утверждённому канону.
+
+
+## Quick Shortcuts first Android candidate — 2026-10-03
+
+Первый Android candidate `Quick Shortcuts / Ярлыки` реализован:
+
+- 4 ярлыка в ряд, стандартно 2 ряда;
+- единый ordered list, virtual final `+`, horizontal pagination;
+- tap = launch;
+- long press = локальные `Заменить / Удалить`;
+- long press + drag = reorder, включая переход к соседней странице через край;
+- add/replace используют существующий App Search в selection-mode;
+- порядок хранится отдельно и после ручной правки считается user-owned;
+- optional `PACKAGE_USAGE_STATS` объявлен без нового обязательного onboarding;
+- без Usage Access — fallback системно определяемых назначений;
+- при уже выданном Usage Access — personalized starter `7 = 3 Need + 4 Opportunity`;
+- current Opportunity candidate использует повторяемую задержку `Home → app` вместе с частотой/днями использования.
+
+Автоматический seeding `10 = 4 Need + 6 Opportunity` мнемонических XY пока намеренно не включён: существующий подтверждённый `SC → Settings` prototype baseline мигрируется отдельным sub-gate после physical PASS Quick Shortcuts.
+
+Статус: **build/install/device review pending**.
