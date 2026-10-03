@@ -84,12 +84,17 @@ Android 4Tap — обычное пользовательское приложе�
 
 Текущий trigger и KnockUI используют один `AccessibilityService + TYPE_ACCESSIBILITY_OVERLAY`; `SYSTEM_ALERT_WINDOW` удалён. ADB/debug broadcast для пользовательской цепочки не требуется. Recognizer v2.1 / Gesture Check / command flow входят в стабильный real-device baseline.
 
-Ближайшие задачи:
-1. сохранять текущий recognizer/Gesture Check baseline без изменений до новой воспроизводимой причины;
-2. усовершенствовать саму поверхность KnockUI по Design Canon: сначала геометрия и поведение, затем project docs → code → build → real-device test;
-3. после Design Canon сделать понятный one-step Accessibility onboarding;
-4. подготовить Google Play Accessibility declaration / prominent disclosure / consent / review video и advance notice;
-5. повторить механизм на более новых stock Android-устройствах.
+Ближайший цикл — Android field trials и подготовка к release:
+
+1. сохранять recognizer v2.1 / Gesture Check как стабильный baseline без новой воспроизводимой причины;
+2. установить текущий APK на несколько других stock Android сначала по USB, затем через непубличный Google Play test-track;
+3. подготовить policy/review dossier по обязательному Accessibility core-flow и optional Usage Access personalization;
+4. довести WEB destination UX: явное URL-поле, standard IME, paste, нормализация/валидация и подтверждение;
+5. продолжать Quick Shortcuts / Assignments / KnockUI bugfix и real-device polish;
+6. подготовить первичное содержательное наполнение `4tap.ru` и `screencart.com`;
+7. сверять дальнейшую B2C-реализацию с `product-b2c → user-gestures / roadmap-3 / android-actions`;
+8. вести private IP research-track альтернативного input-method без публичного раскрытия механики до prior-art/patent review;
+9. ориентироваться примерно на месяц ходовых испытаний, но выпускать production только после cross-device PASS, store-test, permission/onboarding readiness, стабильного WEB/Assignments flow и отсутствия критических дефектов.
 
 ## Полнота технических выводов
 
@@ -1234,3 +1239,14 @@ Usage Access остаётся special app access и выдаётся польз�
 В Draw добавлен action для свободной знакопары: `НЕ НАЗНАЧЕНО | НАЗНАЧИТЬ`. `НАЗНАЧИТЬ` открывает существующий Destination UI с уже нарисованной XY; повторный выбор пары/Gesture Check не выполняются; выбранные APP / SYSTEM / WEB сохраняются непосредственно в CommandRegistry.
 
 Статус: **implementation candidate; build/install/device validation pending**.
+
+
+## Android field-trial checkpoint — 2026-10-04
+
+На основном `LGM-V300L / Android 9` подтверждено текущее промежуточное состояние:
+
+- без Usage Access доступны 4 fallback Quick Shortcuts и 4 fallback Assignments;
+- personalized Usage Access starter set ещё не прошёл physical validation;
+- после одной debug-переустановки Accessibility визуально оставался включён, но trigger потребовал OFF→ON re-arm; после перевключения 4-tap снова работал;
+- slot-based Quick Shortcuts drag и Draw action `НЕ НАЗНАЧЕНО | НАЗНАЧИТЬ` достигли положительного промежуточного device-state, но ещё требуют polish;
+- WEB destination остаётся известным UX-gap перед широкой полевой проверкой.
