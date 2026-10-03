@@ -1198,3 +1198,10 @@ Public alpha-gated WindowManager resize фиксируется как текущ
 Первый Android gate `Quick Shortcuts / Ярлыки` подтверждён на реальном устройстве: сборка/установка прошли, панель открывается и работает. На устройстве без Usage Access fallback-набор дал 4 уникальных launchable shortcuts; personalized `7 = 3 Need + 4 Opportunity` остаётся проверить после выдачи Usage Access.
 
 Следующий sub-gate — одноразовая очистка старого prototype CommandRegistry и personalized seed до 10 мнемонических Назначений по схеме `4 Need + 6 Opportunity`.
+
+
+## Assignment fallback without Usage Access — 2026-10-03
+
+Отсутствие Usage Access больше не оставляет `Назначения` пустыми. При первом автоматическом состоянии формируется fallback-набор из реально доступных системно определяемых destinations с mnemonic XY. Если позже пользователь добровольно выдаёт Usage Access и ещё не редактировал реестр вручную, automatic fallback может один раз замениться personalized seed `4 Need + 6 Opportunity`. После ручной правки source = `user`, автоматическая замена запрещена.
+
+Текущий пустой migration-v2 registry на уже установленном устройстве будет заполнен fallback-набором при первом чтении после обновления; новая ручная очистка не требуется.
