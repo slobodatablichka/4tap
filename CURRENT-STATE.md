@@ -1073,3 +1073,16 @@ Public alpha-gated WindowManager resize фиксируется как текущ
 
 Статус: **implementation candidate; build/install и physical App Search review pending**.
 
+
+
+## App Search exit refinement — 2026-10-03
+
+Базовый Android `Клавиатура / APP_SEARCH` прошёл `testDebugUnitTest assembleDebug installDebug` и первичную physical review: вход в поиск и standard Android IME работают. На устройстве выявлен UX-пробел выхода при открытой IME, поскольку нижняя панель KnockUI перекрыта клавиатурой.
+
+Утверждён текущий exit-contract:
+
+- видимая кнопка `×` справа в верхней search-row закрывает только `APP_SEARCH`, скрывает IME и возвращает обычный KnockUI;
+- horizontal swipe влево/вправо по поверхности поиска, начатый вне поля ввода, выполняет то же действие;
+- vertical scroll списка приложений остаётся обычным;
+- Android candidate использует порог `max(72 dp, 25% ширины APP_SEARCH)`;
+- повторный build/install/device exit-check pending.
