@@ -1020,3 +1020,22 @@ Android architecture скорректирована:
 
 Статус: **implementation candidate; build/install/device re-review pending**.
 
+## Expanded transition compile fix — 2026-10-03
+
+После physical review первого anti-flicker pass пользователь сообщил, что при вызове `Graffiti Reference` всё ещё кратко видны верхняя панель и нижний фрагмент Reference перед стабилизацией.
+
+Попытка перейти на persistent full-screen overlay с custom touchable-region использовала `ViewTreeObserver.OnComputeInternalInsetsListener`. Реальный build пользователя завершился `compileDebugKotlin FAILED`: этот internal Android API недоступен обычному SDK. Подход удалён.
+
+Текущий Android candidate использует только публичный WindowManager API:
+
+- `COMPACT` снова имеет реальный compact window;
+- перед resize старый surface скрывается через `LayoutParams.alpha = 0`;
+- на следующем `postOnAnimation` применяются width/height/y, flags и expanded-state;
+- ещё через один `postOnAnimation` готовая композиция возвращается в `alpha = 1`;
+- `compositionGeneration` отменяет устаревшие transition callbacks;
+- View и Draw/Slot/panel state сохраняются.
+
+Draw input group усилен: `Рисование + Slot1 + Slot2` оформлены как отдельный скруглённый `inactiveTeal` модуль с `2 dp` тёмным контуром и `1 dp` внутренними разделителями; `Send` остаётся снаружи справа.
+
+Статус: **compile fix committed; новый build/device review pending**.
+
