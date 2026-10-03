@@ -886,3 +886,20 @@ Expanded surfaces не становятся новыми remembered panels. Ка
 
 Статус: **implementation candidate; build/install/device review pending**. Следующий подпункт после проверки — `expanded surface above KnockUI`.
 
+## Gesture Check reference guides enlargement — 2026-10-03
+
+Увеличена reference-row поверхности `Проверка жеста`, чтобы выбранные X/Y отображались с каноническими guide-маркерами и направление написания было явно видно.
+
+Android candidate:
+
+- pair row: `88 dp`;
+- reference slot: `80 × 80 dp`;
+- canonical Frame: `64 × 64 dp`;
+- glyph padding: `6 dp`;
+- X-reference height — около `40 dp`, то есть выше общего guide-threshold `36 dp`;
+- start circle и end-arrow поэтому показываются штатно через shared renderer;
+- end-arrow использует текущий global `1.20×` visual scale;
+- Gesture Check AUTO→MANUAL, feedback-reset, canvas и recognizer v2.1 не изменены.
+
+Статус: **implementation candidate; build/install/device review pending**.
+
