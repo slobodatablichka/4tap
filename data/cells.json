@@ -204,7 +204,7 @@
     "parameters": {
       "current_working_version": "v0.1",
       "core_surfaces": "KnockUI; 4Tap; Команды; Команда; Command Space / Pair Selection; Gesture Check / ПРОВЕРКА ЖЕСТА; Destination / ВЕДЕТ В; Assign / НАЗНАЧИТЬ; Алфавит; Настройки",
-      "immediate_next": "build/install + focused device review of Commands assignment Graffiti composition; then Quick Shortcuts canon",
+      "immediate_next": "execute approved KnockUI refinement block: end-arrow ×1.20 → expanded surfaces → Graffiti Reference → Keyboard/App Search → Quick Shortcuts → Draw feedback",
       "next_revision": "v0.2 after first canon-driven implementation/usability pass",
       "public_beta": "v1.0 before public beta",
       "knockui_panel_model": "approved: quick_shortcuts / drawing_canvas; remember last active panel; Logo/About is service view, not third panel",
@@ -3573,12 +3573,12 @@
     ],
     "parameters": {
       "stage_status": "active",
-      "current_task": "build/install/device review of corrected two-column Commands assignment Graffiti layout + SVG-aware rendering",
+      "current_task": "KnockUI refinement block planning accepted; first implementation step is global Graffiti end-arrow ×1.20",
       "graffiti": "4Tap Graffiti Profile v1 approved; Letter-F revised 2026-10-01",
-      "immediate_next": "verify shared first/second Graffiti columns, full glyph height, compact gap and 36 dp guide threshold on physical device; then Quick Shortcuts canon",
+      "immediate_next": "end-arrow ×1.20, then expanded-surface infrastructure and Graffiti Reference; follow with Keyboard/App Search, Quick Shortcuts and Draw feedback",
       "subsequent": "later: explicit edit-XY review, broader productization/onboarding, planned recognizer calibration/personalization",
       "public_beta_gate": "Design Canon v1.0 before public beta",
-      "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; normalized dual create-flow with shared Pair Selection + Gesture Check; brand teal #159B92; Pair Selection contextual geometry; Gesture Check stable physical-device baseline; recognizer v2.1 stable physical-device baseline; KnockUI control strip; Logo/About service view; Draw Slot1/Slot2 + Destination-line + AUTO/MANUAL/Send flow; KnockUI wide-bottom-panel geometry principle; adaptive 40–45% height; 1.0 s AUTO delay; Logo/About Hub expandable action-icon rows; НЕ НАЗНАЧЕНО Destination state; Support 4Tap and ScreenCart Hub assets; Docked 4Tap layout/lifecycle; Commands assignment Graffiti composition; 36 dp guide visibility threshold",
+      "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; normalized dual create-flow with shared Pair Selection + Gesture Check; brand teal #159B92; Pair Selection contextual geometry; Gesture Check stable physical-device baseline; recognizer v2.1 stable physical-device baseline; KnockUI control strip; Logo/About service view; Draw Slot1/Slot2 + Destination-line + AUTO/MANUAL/Send flow; KnockUI wide-bottom-panel geometry principle; adaptive 40–45% height; 1.0 s AUTO delay; Logo/About Hub expandable action-icon rows; НЕ НАЗНАЧЕНО Destination state; Support 4Tap and ScreenCart Hub assets; Docked 4Tap layout/lifecycle; Commands assignment Graffiti composition; 36 dp guide visibility threshold; KnockUI refinement execution plan 2026-10-03",
       "content_detailing": "separate follow-up per screen",
       "data_collection": "deferred: no real-trace accumulation/analysis in the next block",
       "personalization": "deferred: common templates + several user-specific samples"
@@ -4031,7 +4031,7 @@
     "title": "KnockUI Panels",
     "group": "UX SYSTEM",
     "short": "KnockUI: две рабочие панели плюс канонический control strip и Draw AUTO/MANUAL flow.",
-    "description": "KnockUI сохраняет две взаимоисключающие рабочие панели «Ярлыки» (`quick_shortcuts`) и «Рисование» (`drawing_canvas`) в одной рабочей области. Logo открывает отдельное служебное Logo/About Hub-представление, которое не является третьей панелью. В Draw полная неназначенная пара показывает `НЕ НАЗНАЧЕНО`, оставляет Send disabled и не запускает AUTO-send. Первый wide-bottom candidate прошёл build/install и первичный device review; общая поверхность принята как удачная. Правила наполнения «Ярлыков» пока не спроектированы.",
+    "description": "KnockUI keeps two remembered working panels: Ярлыки and Рисование. The next approved refinement block adds temporary expanded surfaces above the still-visible KnockUI for Graffiti Reference and Keyboard/App Search, then completes Quick Shortcuts and Draw visual feedback.",
     "purpose": "Дать пользователю два быстрых способа действия — визуальный запуск по ярлыку и моторный запуск по двухзнаковой команде — без увеличения размера KnockUI одновременным показом обеих поверхностей.",
     "kind": "core",
     "models": [
@@ -4079,7 +4079,13 @@
       "hub_row_1": "implemented candidate: Open 4Tap active → CommandsActivity; ScreenCart placeholder; Support 4Tap placeholder",
       "hub_assets": "logo-4tap.svg; screencart-logo.svg; back-4_tap-dev.svg",
       "website_action": "possible future action; URL and placement not approved; not mandatory in row 1",
-      "docked_4tap": "layout state only, not a third panel: full-width KnockUI bottom + full 4Tap above; internal 4Tap navigation remains above"
+      "docked_4tap": "layout state only, not a third panel: full-width KnockUI bottom + full 4Tap above; internal 4Tap navigation remains above",
+      "next_refinement_sequence": "end-arrow ×1.20 → expanded-surface infrastructure → Graffiti Reference 6×6 → Keyboard/App Search → Quick Shortcuts → Draw visual feedback",
+      "expanded_surface_model": "temporary upper surface above visible bottom KnockUI; not a third remembered panel; one at a time; initial states NONE / GRAFFITI_REFERENCE / APP_SEARCH",
+      "graffiti_reference": "planned: read-only 6×6 A–Z+0–9 using shared grid/cell renderer; no Pair Selection semantics; icon asset pending from project owner",
+      "app_search": "planned Android v1: standard IME + live filter of launchable apps by display name + existing safe app launch path; keyboard icon asset pending",
+      "shortcuts_plan": "design/data pass first; pinned user order wins; optional horizontal pages; no PACKAGE_USAGE_STATS in v1; frequent suggestions may use only 4Tap-owned launch history",
+      "draw_feedback_plan": "empty → active target → recognized → pair ready → executing; frames de-emphasized; recognition/action feedback emphasized; AUTO/MANUAL semantics unchanged"
     },
     "constraints": [
       "Logo/About Hub is a service view, not a third working panel and not a remembered panel state.",
@@ -4092,7 +4098,9 @@
       "Переключение свайпом пока не утверждено.",
       "Начальная панель первого запуска пока не утверждена.",
       "A full unassigned recognized pair must show НЕ НАЗНАЧЕНО; Send remains disabled and AUTO-send does not run.",
-      "Docked 4Tap must not change Draw, recognizer, command or panel semantics."
+      "Docked 4Tap must not change Draw, recognizer, command or panel semantics.",
+      "Expanded surfaces above KnockUI are temporary service surfaces, not additional remembered working panels.",
+      "Missing Graffiti Reference and Keyboard icons must not be replaced by system/final-looking substitute assets before approval."
     ],
     "open_questions": [
       "Какая панель открывается при самом первом запуске?",
@@ -4848,7 +4856,9 @@
       "verification": "build/install/device review pending",
       "guides_visibility": ">=36 dp rendered SVG height → show both start circle and end triangle; <36 dp → hide both",
       "guide_threshold_unit": "density-independent dp, not raw physical pixels",
-      "guide_threshold_implementation": "implemented in shared GraffitiRenderer; local showGuides overrides removed"
+      "guide_threshold_implementation": "implemented in shared GraffitiRenderer; local showGuides overrides removed",
+      "planned_end_arrow_refinement": "approved next step: render end-arrow at 1.20× local scale while preserving its trajectory attachment; start circle/trajectory/recognizer unchanged",
+      "planned_end_arrow_status": "implementation pending"
     },
     "constraints": [
       "Do not change canonical glyph geometry as part of this refinement.",
@@ -4884,7 +4894,7 @@
       "android",
       "ios"
     ],
-    "status": "implemented-candidate",
+    "status": "focused-device-pass",
     "inputs": [
       "4Tap Graffiti Profile v1",
       "Commands row 64 dp",
@@ -4908,7 +4918,7 @@
       "text_pressure_rule": "Destination yields through end ellipsis before Graffiti height is reduced",
       "guide_threshold": "rendered glyph height >=36 dp → start circle + end triangle mandatory; <36 dp → hide both",
       "android_implementation": "GraffitiPairView compactAssignmentLayout now centers each glyph in a fixed X-based column; assignmentWorkingWidthPx uses the same two-column geometry",
-      "verification": "build/install/device review pending after two-column correction",
+      "verification": "focused real-device PASS: user confirmed the corrected two-column composition works",
       "column_model": "two persistent equal working-width columns: first glyph always in column 1, second glyph always in column 2; no visible divider",
       "column_width": "X width at target height × 1.08",
       "width_reserve_per_column": "8% relative to X width; covers current W/M at ~6.7% wider than X"
@@ -4927,6 +4937,71 @@
       "pair",
       "layout",
       "design-canon"
+    ]
+  },
+  {
+    "id": "knockui-refinement-block",
+    "section": "roadmap",
+    "order": 20.5,
+    "title": "KnockUI Refinement Block",
+    "group": "ROADMAP",
+    "short": "Утверждённая последовательность следующего этапа KnockUI: guide refinement, expanded surfaces, reference grid, app search, shortcuts и visual feedback.",
+    "description": "Technical execution plan accepted 2026-10-03. Each sub-block goes through canon → implementation → build/install → physical-device review.",
+    "purpose": "Развивать KnockUI последовательными изолированными блоками без повторной переделки control strip, layout-state и Draw semantics.",
+    "kind": "core",
+    "models": [
+      "b2c",
+      "b2b"
+    ],
+    "platforms": [
+      "shared",
+      "android",
+      "ios"
+    ],
+    "status": "approved-plan",
+    "inputs": [
+      "Stable recognizer v2.1",
+      "Wide-bottom KnockUI",
+      "Focused PASS of two-column Commands Graffiti",
+      "Canonical 4Tap Graffiti renderer"
+    ],
+    "outputs": [
+      "Larger end-arrow",
+      "Expanded upper surfaces",
+      "Graffiti reference surface",
+      "Keyboard/App Search",
+      "Quick Shortcuts",
+      "Improved Draw feedback"
+    ],
+    "parameters": {
+      "sequence": "1 end-arrow ×1.20; 2 expanded-surface infrastructure; 3 Graffiti Reference 6×6; 4 Keyboard/App Search; 5 Quick Shortcuts; 6 Draw feedback",
+      "per_block_gate": "canon → implementation → build/install → device review → state/public-map update",
+      "end_arrow": "shared renderer local 1.20× end-arrow scale; preserve trajectory attachment; recognizer unchanged",
+      "expanded_surface": "upper available viewport above visible KnockUI; one temporary surface at a time; not remembered panel",
+      "graffiti_reference": "read-only 36-glyph 6×6; maximize legibility; shared grid/cell renderer; icon asset pending",
+      "keyboard_search": "Android IME + launchable-app live search by display label; use existing app-launch path; icon asset pending",
+      "shortcuts": "pinned user-managed grid first; optional horizontal pages; no system Usage Access in v1; optional frequent suggestions from 4Tap's own history",
+      "draw_feedback": "de-emphasize empty frames; strengthen active/recognized/pair-ready/executing states; do not change recognizer or AUTO/MANUAL logic"
+    },
+    "constraints": [
+      "Recognizer v2.1 and Gesture Check remain stable baseline.",
+      "Do not implement UI that depends on missing canonical icons.",
+      "Do not introduce PACKAGE_USAGE_STATS for v1 shortcut suggestions.",
+      "Do not turn expanded service surfaces into remembered KnockUI working panels."
+    ],
+    "open_questions": [
+      "Exact icon geometry/placement after owner supplies Graffiti Reference and Keyboard SVGs.",
+      "Exact Quick Shortcuts rows × columns and first-pass supported destination types.",
+      "Exact Draw feedback alpha/motion/haptic values after device review."
+    ],
+    "tags": [
+      "knockui",
+      "roadmap",
+      "refinement",
+      "shortcuts",
+      "search",
+      "graffiti",
+      "feedback"
     ]
   }
 ]
