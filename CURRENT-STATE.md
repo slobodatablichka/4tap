@@ -1000,3 +1000,23 @@ Control strip также перестроен:
 
 Статус: **implementation candidate; build/install/device re-review pending**.
 
+## Persistent fullscreen expanded transition correction — 2026-10-03
+
+Повторный physical review подтвердил работоспособность `Graffiti Reference`, но показал, что первый anti-flash `resize gate` не устранил однокадровый compositor-artifact.
+
+Android architecture скорректирована:
+
+- одно overlay-window теперь постоянно `MATCH_PARENT × MATCH_PARENT` и прозрачно;
+- `COMPACT / EXPANDED` больше не resize/reposition WindowManager surface;
+- `COMPACT`: рисуется только нижний KnockUI, touchable-region ограничена его rect, прозрачная область выше pass-through;
+- `EXPANDED`: в том же окне добавляется `expandedRect` и расширяется touchable-region;
+- `NONE ↔ GRAFFITI_REFERENCE` не вызывает `updateViewLayout()`;
+- canvas очищается до transparent перед каждым draw;
+- изменение focusability через `updateViewLayout()` остаётся только для будущего `APP_SEARCH`, где оно функционально необходимо.
+
+Одновременно усилен Draw input group:
+
+`Рисование + Slot1 + Slot2` — общий `inactiveTeal` rounded-module с inset `1.5/2 dp`, radius `6 dp`, внешним контуром `2 dp #171717` и внутренними separators `1 dp`. Selected-state остаётся `pressedTeal`; `Send` расположен отдельно справа.
+
+Статус: **implementation candidate; build/install/device re-review pending**.
+
