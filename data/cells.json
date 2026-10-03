@@ -204,7 +204,7 @@
     "parameters": {
       "current_working_version": "v0.1",
       "core_surfaces": "KnockUI; 4Tap; Команды; Команда; Command Space / Pair Selection; Gesture Check / ПРОВЕРКА ЖЕСТА; Destination / ВЕДЕТ В; Assign / НАЗНАЧИТЬ; Алфавит; Настройки",
-      "immediate_next": "execute approved KnockUI refinement block: end-arrow ×1.20 → expanded surfaces → Graffiti Reference → Keyboard/App Search → Quick Shortcuts → Draw feedback",
+      "immediate_next": "build/install/device review of end-arrow ×1.20; then expanded-surface infrastructure above KnockUI",
       "next_revision": "v0.2 after first canon-driven implementation/usability pass",
       "public_beta": "v1.0 before public beta",
       "knockui_panel_model": "approved: quick_shortcuts / drawing_canvas; remember last active panel; Logo/About is service view, not third panel",
@@ -244,7 +244,8 @@
       "graffiti_live_input_exception": "live finger stroke in KnockUI/Gesture Check is a separate feedback layer and may use its own UI thickness",
       "graffiti_relative_thickness_status": "no separate ratio TBD; use each SVG's own stroke-width and marker proportions",
       "graffiti_reference": "~45 mm glyph height → ~3 mm trajectory in canonical source SVGs; 4Tap Graffiti only",
-      "commands_assignment_graffiti": "implemented correction: two persistent X-based columns; 40 dp compact target height; natural widths; 4 dp side/gap; 8% reserve per column; global 36 dp guide threshold"
+      "commands_assignment_graffiti": "implemented correction: two persistent X-based columns; 40 dp compact target height; natural widths; 4 dp side/gap; 8% reserve per column; global 36 dp guide threshold",
+      "graffiti_end_arrow": "implemented candidate: end-arrow local visual scale 1.20× around nearest trajectory endpoint; start circle/trajectory/recognizer unchanged"
     },
     "constraints": [
       "Канон должен сохранять скорость и минимальное вмешательство в текущий контекст пользователя.",
@@ -3573,9 +3574,9 @@
     ],
     "parameters": {
       "stage_status": "active",
-      "current_task": "KnockUI refinement block planning accepted; first implementation step is global Graffiti end-arrow ×1.20",
+      "current_task": "build/install/device review of global Graffiti end-arrow ×1.20 implementation",
       "graffiti": "4Tap Graffiti Profile v1 approved; Letter-F revised 2026-10-01",
-      "immediate_next": "end-arrow ×1.20, then expanded-surface infrastructure and Graffiti Reference; follow with Keyboard/App Search, Quick Shortcuts and Draw feedback",
+      "immediate_next": "after end-arrow review: expanded-surface infrastructure, then Graffiti Reference 6×6",
       "subsequent": "later: explicit edit-XY review, broader productization/onboarding, planned recognizer calibration/personalization",
       "public_beta_gate": "Design Canon v1.0 before public beta",
       "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; normalized dual create-flow with shared Pair Selection + Gesture Check; brand teal #159B92; Pair Selection contextual geometry; Gesture Check stable physical-device baseline; recognizer v2.1 stable physical-device baseline; KnockUI control strip; Logo/About service view; Draw Slot1/Slot2 + Destination-line + AUTO/MANUAL/Send flow; KnockUI wide-bottom-panel geometry principle; adaptive 40–45% height; 1.0 s AUTO delay; Logo/About Hub expandable action-icon rows; НЕ НАЗНАЧЕНО Destination state; Support 4Tap and ScreenCart Hub assets; Docked 4Tap layout/lifecycle; Commands assignment Graffiti composition; 36 dp guide visibility threshold; KnockUI refinement execution plan 2026-10-03",
@@ -4853,12 +4854,14 @@
       "implementation": "GraffitiGlyphRepository parses stroke-width/start marker/end arrow; shared GraffitiRenderer scales all visual geometry; GlyphView, PairView and KnockUI slots use it",
       "removed_fixed_strokes": "3.5 dp GlyphView; 6 dp PairView; 2.2 dp KnockUI slot",
       "tests": "no separate SVG metadata test added by project decision",
-      "verification": "build/install/device review pending",
+      "verification": "build/install/device review pending for SVG-aware rendering + end-arrow 1.20×",
       "guides_visibility": ">=36 dp rendered SVG height → show both start circle and end triangle; <36 dp → hide both",
       "guide_threshold_unit": "density-independent dp, not raw physical pixels",
       "guide_threshold_implementation": "implemented in shared GraffitiRenderer; local showGuides overrides removed",
       "planned_end_arrow_refinement": "approved next step: render end-arrow at 1.20× local scale while preserving its trajectory attachment; start circle/trajectory/recognizer unchanged",
-      "planned_end_arrow_status": "implementation pending"
+      "planned_end_arrow_status": "implemented candidate; build/install/device review pending",
+      "end_arrow_scale": "1.20× local visual scale in shared GraffitiRenderer",
+      "end_arrow_anchor": "nearest geometric trajectory endpoint to end-arrow; independent of raw SVG path direction"
     },
     "constraints": [
       "Do not change canonical glyph geometry as part of this refinement.",
@@ -4976,12 +4979,14 @@
     "parameters": {
       "sequence": "1 end-arrow ×1.20; 2 expanded-surface infrastructure; 3 Graffiti Reference 6×6; 4 Keyboard/App Search; 5 Quick Shortcuts; 6 Draw feedback",
       "per_block_gate": "canon → implementation → build/install → device review → state/public-map update",
-      "end_arrow": "shared renderer local 1.20× end-arrow scale; preserve trajectory attachment; recognizer unchanged",
+      "end_arrow": "implemented candidate: shared renderer local 1.20× end-arrow scale; pivot = nearest geometric trajectory endpoint; recognizer unchanged",
       "expanded_surface": "upper available viewport above visible KnockUI; one temporary surface at a time; not remembered panel",
       "graffiti_reference": "read-only 36-glyph 6×6; maximize legibility; shared grid/cell renderer; icon asset pending",
       "keyboard_search": "Android IME + launchable-app live search by display label; use existing app-launch path; icon asset pending",
       "shortcuts": "pinned user-managed grid first; optional horizontal pages; no system Usage Access in v1; optional frequent suggestions from 4Tap's own history",
-      "draw_feedback": "de-emphasize empty frames; strengthen active/recognized/pair-ready/executing states; do not change recognizer or AUTO/MANUAL logic"
+      "draw_feedback": "de-emphasize empty frames; strengthen active/recognized/pair-ready/executing states; do not change recognizer or AUTO/MANUAL logic",
+      "current_step": "end-arrow implementation ready for build/install/device review",
+      "next_step": "expanded-surface infrastructure above visible bottom KnockUI"
     },
     "constraints": [
       "Recognizer v2.1 and Gesture Check remain stable baseline.",
