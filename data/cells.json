@@ -204,7 +204,7 @@
     "parameters": {
       "current_working_version": "v0.1",
       "core_surfaces": "KnockUI; 4Tap; Команды; Команда; Command Space / Pair Selection; Gesture Check / ПРОВЕРКА ЖЕСТА; Destination / ВЕДЕТ В; Assign / НАЗНАЧИТЬ; Алфавит; Настройки",
-      "immediate_next": "build/install/physical expanded-geometry and 6×6 readability review; after PASS implement App Search content",
+      "immediate_next": "build/install/device review of transition-flash fix and Draw input group; then App Search content",
       "next_revision": "v0.2 after first canon-driven implementation/usability pass",
       "public_beta": "v1.0 before public beta",
       "knockui_panel_model": "approved: quick_shortcuts / drawing_canvas; remember last active panel; Logo/About is service view, not third panel",
@@ -232,7 +232,7 @@
       "pair_selection": "approved and implemented candidate: persistent 64 dp [X]+[Y] row; 6×6 X → 6×6 Y; optional ДЛЯ: Destination; standalone Back | ЗНАКОПАРА | Search; free XY → Gesture Check",
       "gesture_check": "stable interaction baseline; new visual candidate: pair row 88 dp, slots 80 dp, Frame 64 dp, glyph padding 6 dp so X/Y references render ~40 dp and show guides",
       "recognizer_next": "v2.1 stable real-device baseline; reopen only for a new reproducible issue or planned calibration/personalization",
-      "knockui_control_strip": "approved order: 4Tap Logo | Ярлыки | Рисование | Graffiti Reference | Клавиатура | [Slot 1 | Slot 2 | Send in Draw] | flexible space | Close",
+      "knockui_control_strip": "approved order: 4Tap Logo | Ярлыки | Graffiti Reference | Клавиатура | Рисование | Slot1 | Slot2 | Send | flexible space | Close",
       "knockui_draw_flow": "AUTO without slot selection → sequential Slot 1/2 → Destination preview → delayed auto-Send; tap Slot → MANUAL, cancel pending auto-Send, no auto-advance, explicit Send",
       "knockui_geometry": "approved principle: wide compact bottom floating panel; horizontal center independent of LEFT/RIGHT trigger; near-full width with symmetric margins; adaptive 40–45% height",
       "knockui_android_geometry_candidate": "12 dp side/bottom margin; 42% height clamped 300–420 dp; 48 dp control strip; 36 dp Destination-line",
@@ -250,7 +250,9 @@
       "knockui_expanded_docked": "may open over Docked 4Tap upper area without resetting underlying Activity; close restores same screen",
       "knockui_expanded_assets": "graffiti_reference.svg; app_search.svg",
       "knockui_expanded_surface_status": "actions wired; GRAFFITI_REFERENCE 6×6 implemented candidate; APP_SEARCH reserved state wired but content pending",
-      "knockui_control_strip_geometry": "48 dp strip; Android candidate equal cell width min(48 dp, KnockUI width/9)"
+      "knockui_control_strip_geometry": "48 dp strip; Android candidate equal cell width min(48 dp, KnockUI width/9)",
+      "knockui_draw_input_group": "Рисование + Slot1 + Slot2 = one contiguous visual group; common inactiveTeal background in Android candidate; Send adjacent outside group",
+      "knockui_expanded_transition": "no intermediate old-layout frame; Android candidate suppresses drawing/touch until actual window size matches target"
     },
     "constraints": [
       "Канон должен сохранять скорость и минимальное вмешательство в текущий контекст пользователя.",
@@ -3586,7 +3588,7 @@
     ],
     "parameters": {
       "stage_status": "active",
-      "current_task": "build/install/physical review of expanded geometry, 9-cell control strip and Graffiti Reference 6×6",
+      "current_task": "build/install/device review of expanded transition gate + Draw-group visual refinement",
       "graffiti": "4Tap Graffiti Profile v1 approved; Letter-F revised 2026-10-01",
       "immediate_next": "after PASS: implement Keyboard/App Search content; then Quick Shortcuts canon",
       "subsequent": "later: explicit edit-XY review, broader productization/onboarding, planned recognizer calibration/personalization",
@@ -4078,7 +4080,7 @@
       "remember_last_panel": true,
       "first_launch_panel": "TBD",
       "icon_sources": "4tap-app/design/knockui/icons/",
-      "control_strip": "4Tap Logo | Ярлыки | Рисование | Graffiti Reference | Клавиатура | [Slot 1 | Slot 2 | Send in Draw] | flexible space | Close",
+      "control_strip": "4Tap Logo | Ярлыки | Graffiti Reference | Клавиатура | Рисование | Slot1 | Slot2 | Send | flexible space | Close",
       "logo_role": "service Logo/About Hub button; not third panel; does not replace remembered Ярлыки/Рисование state",
       "draw_slots": "two Frame-based slots; visible only in drawing mode",
       "destination_line": "implemented candidate: empty until full pair; assigned → destination; unassigned full pair → НЕ НАЗНАЧЕНО / NOT ASSIGNED; inactive-assignment presentation TBD",
@@ -4104,8 +4106,9 @@
       "expanded_interaction": "same-action tap toggles closed; another expanded action switches directly; Ярлыки/Рисование close expanded and activate panel; Close closes whole KnockUI",
       "expanded_docked": "entering Docked resets expanded to NONE; from Docked an expanded action may temporarily cover the upper 4Tap area without closing/resetting its Activity; closing restores same 4Tap screen",
       "expanded_focus": "NONE/GRAFFITI_REFERENCE non-focusable; APP_SEARCH temporarily focusable for standard Android IME, then restores flags",
-      "expanded_surface_status": "actions wired; Graffiti Reference content implemented candidate; APP_SEARCH content pending; build/install/device review pending",
-      "control_strip_geometry": "48 dp strip; Android candidate cell width = min(48 dp, KnockUI width / 9) so the full Draw row fits without overlap"
+      "expanded_surface_status": "Graffiti Reference works on device; transition-flash fix + Draw-group reorder implemented candidate; re-review pending",
+      "control_strip_geometry": "48 dp strip; Android candidate cell width = min(48 dp, KnockUI width / 9) so the full Draw row fits without overlap",
+      "draw_input_group": "Рисование + Slot1 + Slot2 are one contiguous visual group; Android candidate uses inactiveTeal group background with pressedTeal selected state; Send adjacent but outside group"
     },
     "constraints": [
       "Logo/About Hub is a service view, not a third working panel and not a remembered panel state.",
@@ -5008,8 +5011,8 @@
       "keyboard_search": "action + Android derivative connected to reserved APP_SEARCH state; standard IME/live app search content remains next",
       "shortcuts": "pinned user-managed grid first; optional horizontal pages; no system Usage Access in v1; optional frequent suggestions from 4Tap's own history",
       "draw_feedback": "de-emphasize empty frames; strengthen active/recognized/pair-ready/executing states; do not change recognizer or AUTO/MANUAL logic",
-      "current_step": "build/install/physical review of expanded geometry and Graffiti Reference readability",
-      "next_step": "after expanded/reference PASS: implement App Search EditText + standard IME + launchable-app live filter"
+      "current_step": "device re-review of expanded transition flash fix + Draw input group",
+      "next_step": "after PASS: implement App Search EditText + standard IME + launchable-app live filter"
     },
     "constraints": [
       "Recognizer v2.1 and Gesture Check remain stable baseline.",
@@ -5050,7 +5053,7 @@
       "android",
       "ios"
     ],
-    "status": "graffiti-reference-implemented-candidate",
+    "status": "transition-fix-and-draw-group-candidate",
     "inputs": [
       "KnockUI overlay",
       "Current panel state",
@@ -5082,10 +5085,13 @@
       "focus_implementation": "APP_SEARCH removes FLAG_NOT_FOCUSABLE; NONE/GRAFFITI_REFERENCE restore it",
       "touch_implementation": "expandedRect consumes upper-area touch and does not start lower Draw/About interaction",
       "feature_wiring": "implemented: both control-strip actions; GRAFFITI_REFERENCE renders 6×6; APP_SEARCH switches state but has no EditText/IME/app list yet",
-      "control_strip_order": "Logo | Ярлыки | Рисование | Graffiti Reference | Клавиатура | [Slot1 | Slot2 | Send in Draw] | flexible | Close",
+      "control_strip_order": "Logo | Ярлыки | Graffiti Reference | Клавиатура | Рисование | Slot1 | Slot2 | Send | Close",
       "control_cell": "Android candidate: min(48 dp, KnockUI width / 9); strip height 48 dp",
       "graffiti_reference_grid": "6×6 A–Z+0–9; teal cells; 1 dp separators; 4 dp glyph inset; X-reference common height with 8% width reserve; shared GraffitiRenderer",
-      "graffiti_reference_guides": "shared >=36 dp rule + global 1.20× end-arrow"
+      "graffiti_reference_guides": "shared >=36 dp rule + global 1.20× end-arrow",
+      "transition_integrity": "implemented candidate: target window dimensions are precomputed; onDraw/touch suppressed while actual window size differs; onSizeChanged releases gate and renders final composition",
+      "transition_bug": "physical review found one-frame compact control-strip flash at top during expansion; fix implemented",
+      "draw_group": "Draw + Slot1 + Slot2 contiguous, common inactiveTeal background; Send adjacent outside group"
     },
     "constraints": [
       "Expanded surfaces are not remembered working panels.",
