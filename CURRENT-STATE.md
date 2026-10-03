@@ -1141,3 +1141,17 @@ Public alpha-gated WindowManager resize фиксируется как текущ
 - существующие пользовательские XY автоматикой не перезаписываются.
 
 Следующий decision: exact `4Tap Opportunity` scoring, затем первый implementation candidate.
+
+
+## Quick Shortcuts starter composition approved — 2026-10-03
+
+Утверждена композиция персонализированного starter set при добровольном Usage Access:
+
+- `Quick Shortcuts`: **7 = 3 самых востребованных + 4 лучших по 4Tap Opportunity**;
+- стартовая раскладка — **4 ярлыка в ряд**; виртуальный `+` остаётся последним элементом ordered list и при 7 ярлыках занимает восьмую ячейку второго ряда;
+- `Назначения`: **10 = 4 самых востребованных + 6 лучших по 4Tap Opportunity**;
+- автоматический starter set не создаёт несколько назначений на одно destination/application;
+- пользователь вручную может создать несколько разных XY для одного destination, например `KA` и `CA` для одного Калькулятора;
+- мнемонические XY для кириллических display names строятся через транслитерацию отображаемого пользователю имени.
+
+Следующий этап — первый implementation candidate Quick Shortcuts по утверждённому канону.
