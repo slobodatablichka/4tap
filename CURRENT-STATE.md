@@ -952,3 +952,32 @@ Single-window architecture `expanded surface above KnockUI` реализован
 
 Статус: **infrastructure implementation candidate; build/install/device review pending**.
 
+## Graffiti Reference expanded surface implemented — 2026-10-03
+
+Подключены новые canonical actions KnockUI и реализована первая полноценная expanded surface.
+
+Control strip:
+
+`Logo | Ярлыки | Рисование | Graffiti Reference | Клавиатура | [Slot1 | Slot2 | Send в Draw] | flexible | Close`.
+
+Android candidate:
+
+- strip height `48 dp`;
+- cell width = `min(48 dp, KnockUI width / 9)`;
+- `Close` закреплён справа;
+- добавлены `ic_knockui_graffiti_reference.xml` и `ic_knockui_app_search.xml` с сохранением SVG fill rules.
+
+`Graffiti Reference`:
+
+- собственная action-кнопка открывает/закрывает `GRAFFITI_REFERENCE`;
+- expandedRect содержит read-only `6 × 6` всех `A–Z + 0–9`;
+- renderer: `GraffitiReferenceGridRenderer`;
+- teal cells, `1 dp` separators, `4 dp` glyph inset;
+- общая высота от X-reference, `8%` width reserve для широких W/M;
+- общий `GraffitiRenderer` сохраняет SVG-aware stroke, `>=36 dp` guides и end-arrow `1.20×`;
+- Pair Selection semantics отсутствуют.
+
+`Клавиатура / App Search` action также подключена к `APP_SEARCH`, но верхняя область пока намеренно пустая: поиск, `EditText`, standard IME и app list относятся к следующему подпункту.
+
+Статус: **implementation candidate; build/install/physical expanded-geometry review pending**.
+
