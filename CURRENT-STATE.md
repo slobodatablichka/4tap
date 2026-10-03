@@ -856,5 +856,20 @@ Android candidate теперь реализует утверждённую ге�
 - межстолбцовый gap остаётся `4 dp`, боковые insets — по `4 dp`;
 - guide threshold `36 dp`, SVG-aware stroke scaling и recognizer v2.1 не менялись.
 
-Статус: **implementation corrected; build/install/device review pending**.
+Статус: **focused real-device PASS** — пользователь подтвердил, что исправленная двухстолбцовая композиция работает.
+
+## KnockUI refinement block approved — 2026-10-03
+
+После focused PASS двухстолбцового `Commands → НАЗНАЧЕНИЯ` утверждён следующий технический этап KnockUI.
+
+Очередь:
+
+1. end-arrow всех отображаемых 4Tap Graffiti — `1.20×` через shared renderer, без изменений recognizer;
+2. инфраструктура временной expanded surface над остающимся снизу KnockUI;
+3. read-only `6×6` поверхность всех 36 образцов Graffiti; новая пиктограмма ожидается от владельца проекта;
+4. `Клавиатура` / Android App Search: standard IME, live-search launchable apps по display name, запуск через существующий app path; новая пиктограмма ожидается;
+5. `Ярлыки`: пользовательская закрепляемая grid, возможные горизонтальные страницы; frequent suggestions только из собственной истории 4Tap, без `PACKAGE_USAGE_STATS` в v1;
+6. Draw visual feedback: `empty → active → recognized → pair ready → executing`, с ослаблением пустых Frames и усилением feedback результата/действия.
+
+Expanded surfaces не становятся новыми remembered panels. Каждый подпункт проходит отдельный canon/build/device-review gate.
 
