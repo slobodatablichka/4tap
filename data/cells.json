@@ -204,7 +204,7 @@
     "parameters": {
       "current_working_version": "v0.1",
       "core_surfaces": "KnockUI; 4Tap; Команды; Команда; Command Space / Pair Selection; Gesture Check / ПРОВЕРКА ЖЕСТА; Destination / ВЕДЕТ В; Assign / НАЗНАЧИТЬ; Алфавит; Настройки",
-      "immediate_next": "build/install/device review of end-arrow ×1.20; then expanded-surface infrastructure above KnockUI",
+      "immediate_next": "build/install/device review of end-arrow ×1.20 + enlarged Gesture Check reference slots; then expanded-surface infrastructure above KnockUI",
       "next_revision": "v0.2 after first canon-driven implementation/usability pass",
       "public_beta": "v1.0 before public beta",
       "knockui_panel_model": "approved: quick_shortcuts / drawing_canvas; remember last active panel; Logo/About is service view, not third panel",
@@ -230,7 +230,7 @@
       "destination_semantics": "ВЕДЕТ В requires known XY",
       "assign_semantics": "НАЗНАЧИТЬ selects Destination before XY",
       "pair_selection": "approved and implemented candidate: persistent 64 dp [X]+[Y] row; 6×6 X → 6×6 Y; optional ДЛЯ: Destination; standalone Back | ЗНАКОПАРА | Search; free XY → Gesture Check",
-      "gesture_check": "approved and implemented: X starts AUTO; X PASS → Y; manual slot tap → MANUAL; ACTION_DOWN clears only active-sign feedback; included in stable real-device baseline",
+      "gesture_check": "stable interaction baseline; new visual candidate: pair row 88 dp, slots 80 dp, Frame 64 dp, glyph padding 6 dp so X/Y references render ~40 dp and show guides",
       "recognizer_next": "v2.1 stable real-device baseline; reopen only for a new reproducible issue or planned calibration/personalization",
       "knockui_control_strip": "approved order: 4Tap Logo | Ярлыки | Рисование | [Slot 1 | Slot 2 | Send in Draw] | flexible space | Close",
       "knockui_draw_flow": "AUTO without slot selection → sequential Slot 1/2 → Destination preview → delayed auto-Send; tap Slot → MANUAL, cancel pending auto-Send, no auto-advance, explicit Send",
@@ -3574,9 +3574,9 @@
     ],
     "parameters": {
       "stage_status": "active",
-      "current_task": "build/install/device review of global Graffiti end-arrow ×1.20 implementation",
+      "current_task": "build/install/device review of end-arrow ×1.20 plus enlarged Gesture Check reference slots",
       "graffiti": "4Tap Graffiti Profile v1 approved; Letter-F revised 2026-10-01",
-      "immediate_next": "after end-arrow review: expanded-surface infrastructure, then Graffiti Reference 6×6",
+      "immediate_next": "verify Gesture Check X/Y guides and overall balance; then expanded-surface infrastructure and Graffiti Reference 6×6",
       "subsequent": "later: explicit edit-XY review, broader productization/onboarding, planned recognizer calibration/personalization",
       "public_beta_gate": "Design Canon v1.0 before public beta",
       "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; normalized dual create-flow with shared Pair Selection + Gesture Check; brand teal #159B92; Pair Selection contextual geometry; Gesture Check stable physical-device baseline; recognizer v2.1 stable physical-device baseline; KnockUI control strip; Logo/About service view; Draw Slot1/Slot2 + Destination-line + AUTO/MANUAL/Send flow; KnockUI wide-bottom-panel geometry principle; adaptive 40–45% height; 1.0 s AUTO delay; Logo/About Hub expandable action-icon rows; НЕ НАЗНАЧЕНО Destination state; Support 4Tap and ScreenCart Hub assets; Docked 4Tap layout/lifecycle; Commands assignment Graffiti composition; 36 dp guide visibility threshold; KnockUI refinement execution plan 2026-10-03",
@@ -4437,7 +4437,7 @@
     "title": "Gesture Check / Проверка жеста",
     "group": "UX SYSTEM",
     "short": "Необязательная практическая проверка выбранных X/Y с повторными попытками и независимым текстовым feedback.",
-    "description": "Gesture Check refinement is included in the current stable physical-device Android baseline. The stale-feedback fix and AUTO→MANUAL active-sign policy are implemented and verified as part of that build.",
+    "description": "Gesture Check keeps the stable AUTO→MANUAL/feedback behavior, with enlarged reference slots so selected X/Y show canonical start/end guides clearly.",
     "purpose": "Проверить воспроизводимость выбранной знакопары конкретным пользователем, не превращая проверку в обязательный gate.",
     "kind": "core",
     "models": [
@@ -4463,7 +4463,7 @@
     ],
     "parameters": {
       "header": "Back | ПРОВЕРКА ЖЕСТА",
-      "pair_display": "[X] + [Y], both canonical Graffiti examples always visible",
+      "pair_display": "[X] + [Y], both canonical Graffiti examples always visible with guides at current size",
       "active_sign": "implemented: entry X/AUTO; X PASS → Y; FAIL stays; any explicit X/Y tap → MANUAL; MANUAL never auto-switches",
       "attempt_order": "AUTO guides first X→Y success; after any manual slot tap user fully controls X/Y order",
       "repeat_after_pass": "allowed without limit",
@@ -4480,11 +4480,16 @@
       "persistence": "check result is not stored as Command property",
       "back": "return to Pair Selection with selected XY preserved",
       "routing_rule": "XY + no Destination → ВЕДЕТ В; XY + Destination → Command",
-      "implementation_status": "feedback-reset + AUTO→MANUAL implemented; unit/build PASS; current physical-device build reported stable",
-      "pair_row": "implemented candidate: 72 dp; active sign teal, inactive sign muted teal",
+      "implementation_status": "stable Gesture Check logic + enlarged reference-slot visual candidate; build/install/device review pending for new geometry",
+      "pair_row": "implemented candidate: 88 dp; active sign teal, inactive sign muted teal",
       "bottom_action": "implemented candidate: fixed 56 dp; SKIP before first attempt, CONTINUE afterwards",
       "recognizer": "36 canonical A–Z + 0–9 SVG templates; recognizer v2.1; stable physical-device baseline",
-      "feedback_reset": "implemented: ACTION_DOWN clears only active-sign feedback and preserves the other sign"
+      "feedback_reset": "implemented: ACTION_DOWN clears only active-sign feedback and preserves the other sign",
+      "reference_slot": "80 × 80 dp",
+      "reference_frame": "64 × 64 dp canonical Frame",
+      "reference_glyph_padding": "6 dp",
+      "reference_height": "X-reference approximately 40 dp, intentionally >=36 dp guide threshold",
+      "reference_guides": "start circle + end-arrow mandatory at this geometry; end-arrow uses global 1.20× renderer refinement"
     },
     "constraints": [
       "Gesture Check never changes XY.",
@@ -4507,13 +4512,13 @@
       "canon"
     ],
     "verification": {
-      "state": "real-device-pass-baseline",
-      "date": "2026-10-01",
+      "state": "baseline-pass-plus-visual-candidate",
+      "date": "2026-10-03",
       "confidence": "high",
-      "summary": "Current Gesture Check refinement is included in the physical-device build the user reports as working well and stably.",
+      "summary": "AUTO→MANUAL and feedback-reset remain stable baseline; new 88/80/64/6 dp reference geometry is implemented to expose guides and awaits device review.",
       "sources": [],
-      "next_step": "Preserve current behavior unless a new reproducible UI issue appears.",
-      "implication": "Gesture Check refinement is no longer verification-pending."
+      "next_step": "Build/install and verify guide visibility, legibility and canvas balance on physical device.",
+      "implication": "Do not change recognizer or Gesture Check interaction logic during this visual refinement."
     }
   },
   {
