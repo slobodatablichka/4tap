@@ -903,3 +903,29 @@ Android candidate:
 
 Статус: **implementation candidate; build/install/device review pending**.
 
+## Expanded surface architecture + canonical actions — 2026-10-03
+
+В проект внесены новые канонические KnockUI assets:
+
+- `design/knockui/icons/graffiti_reference.svg` — действие `Graffiti Reference`;
+- `design/knockui/icons/app_search.svg` — действие `Клавиатура / App Search`.
+
+Предоставленные SVG были в UTF-16; для хранения в Git нормализована только кодировка до UTF-8. Геометрия, viewBox, paths и цвет `#FEFEFE` сохранены.
+
+Утверждена архитектура `expanded surface above KnockUI`:
+
+- используется одно `WindowManager` overlay-window, без второго overlay и без отдельной Activity;
+- состояния окна: `COMPACT | EXPANDED`;
+- `EXPANDED` делится на `expandedRect` сверху и сохранённый `knockUiRect` снизу;
+- expanded state: `NONE | GRAFFITI_REFERENCE | APP_SEARCH`;
+- expanded surface не является remembered panel; запоминаются только `Ярлыки / Рисование`;
+- Slot/Draw/Destination state при открытии expanded surface сохраняется;
+- `GRAFFITI_REFERENCE` остаётся non-focusable;
+- `APP_SEARCH` временно делает то же окно focusable для standard Android IME и восстанавливает flags после закрытия;
+- same-action tap закрывает surface; другая expanded-action переключает её напрямую; `Ярлыки / Рисование` закрывают expanded surface; `Close` закрывает весь KnockUI;
+- expanded area owns touch и не передаёт его underlying foreground app;
+- вход в Docked 4Tap начинает с `ExpandedSurface.NONE`;
+- из уже Docked KnockUI expanded surface можно открыть поверх верхней области, не закрывая и не сбрасывая underlying 4Tap Activity; после закрытия возвращается тот же экран.
+
+Статус: **architecture + canonical assets approved; Android implementation pending**.
+
