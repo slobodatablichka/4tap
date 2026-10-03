@@ -1205,3 +1205,15 @@ Public alpha-gated WindowManager resize фиксируется как текущ
 Отсутствие Usage Access больше не оставляет `Назначения` пустыми. При первом автоматическом состоянии формируется fallback-набор из реально доступных системно определяемых destinations с mnemonic XY. Если позже пользователь добровольно выдаёт Usage Access и ещё не редактировал реестр вручную, automatic fallback может один раз замениться personalized seed `4 Need + 6 Opportunity`. После ручной правки source = `user`, автоматическая замена запрещена.
 
 Текущий пустой migration-v2 registry на уже установленном устройстве будет заполнен fallback-набором при первом чтении после обновления; новая ручная очистка не требуется.
+
+
+## KnockUI drawing activation refinements — 2026-10-03
+
+По real-device UI review реализованы два refinement:
+
+- `Logo/About Hub → Открыть 4Tap` перед Docked 4Tap переводит нижний KnockUI в `Рисование`;
+- `Graffiti Reference / ABCD` перед expanded reference также переводит KnockUI в `Рисование`.
+
+Quick Shortcuts pages остаются demand-driven: пустые соседние страницы не создаются. При standard capacity 8 cells `7 shortcuts + +` помещаются на одной странице; следующая появляется с восьмым shortcut.
+
+Usage Access остаётся special app access и выдаётся пользователем через системную страницу Settings; 4Tap может только направить пользователя туда.
