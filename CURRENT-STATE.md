@@ -1086,3 +1086,12 @@ Public alpha-gated WindowManager resize фиксируется как текущ
 - vertical scroll списка приложений остаётся обычным;
 - Android candidate использует порог `max(72 dp, 25% ширины APP_SEARCH)`;
 - повторный build/install/device exit-check pending.
+
+
+## App Search control-strip composition — 2026-10-03
+
+После physical PASS базового `APP_SEARCH` и выхода `× + horizontal swipe` утверждён следующий UI-layout:
+
+`standard Android IME → canonical 48 dp control strip KnockUI → App Search`.
+
+В режиме поиска остальное тело KnockUI не показывается. Строка иконок располагается непосредственно над IME, сохраняет обычную геометрию и действия; App Search занимает всё пространство выше неё. Android candidate реализован; build/install/device layout-check pending.
