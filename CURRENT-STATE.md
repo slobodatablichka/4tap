@@ -981,3 +981,22 @@ Android candidate:
 
 Статус: **implementation candidate; build/install/physical expanded-geometry review pending**.
 
+## Expanded transition + Draw input group refinement — 2026-10-03
+
+Physical review подтвердил работоспособность `Graffiti Reference`, но выявил однокадровый flash старой compact-строки при `COMPACT → EXPANDED`.
+
+Android candidate исправлен:
+
+- target width/height нового window-state вычисляются заранее;
+- View временно подавляет drawing и touch, пока фактический размер окна не совпал с target;
+- `onSizeChanged` снимает gate и сразу показывает конечную композицию;
+- panel/Slot/Draw state не сбрасываются.
+
+Control strip также перестроен:
+
+`Logo | Ярлыки | Graffiti Reference | Клавиатура | Рисование | Slot1 | Slot2 | Send | Close`.
+
+`Рисование + Slot1 + Slot2` теперь образуют единый contiguous Draw input group на общем `inactiveTeal` фоне; selected Draw/Slot state использует `pressedTeal`. `Send` остаётся соседним действием выполнения, но визуально не входит в input group.
+
+Статус: **implementation candidate; build/install/device re-review pending**.
+
