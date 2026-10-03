@@ -1039,3 +1039,37 @@ Draw input group усилен: `Рисование + Slot1 + Slot2` оформл
 
 Статус: **compile fix committed; новый build/device review pending**.
 
+## Expanded transition physical PASS + App Search candidate — 2026-10-03
+
+Повторный пользовательский запуск:
+
+`gradlew testDebugUnitTest assembleDebug installDebug`
+
+завершился **PASS**.
+
+Physical review подтвердил:
+
+- flicker при открытии `Graffiti Reference` исчез;
+- flicker при закрытии исчез;
+- краткая верхняя панель больше не появляется;
+- нижний фрагмент `Graffiti Reference` больше не появляется;
+- floating/Docked KnockUI и закрытие expanded surface работают;
+- `Рисование + Slot1 + Slot2` читается лучше как единый input group; дальнейшая визуальная шлифовка группы отложена и не блокирует следующий этап.
+
+Public alpha-gated WindowManager resize фиксируется как текущий подтверждённый baseline expanded transition. Persistent full-screen/touchable-region вариант на internal Android API остаётся отклонённым.
+
+Следующий утверждённый подпункт — `App Search / Клавиатура` — реализован в Android candidate:
+
+- используется существующее состояние `ExpandedSurface.APP_SEARCH`;
+- верхняя область получила обычный Android `EditText` и standard IME;
+- launchable applications получаются через `PackageManager` + `MAIN / CATEGORY_LAUNCHER`, без расширения package visibility;
+- поиск выполняется case-insensitive по display label с live-filter;
+- строки показывают app icon + display label;
+- запуск использует общий safe app-launch path 4Tap на базе `getLaunchIntentForPackage`;
+- перед успешным внешним APP-launch KnockUI закрывается по общему контракту;
+- поиск не создаёт и не изменяет 4Tap-команду;
+- history, fuzzy ranking и recommendations в первый pass не добавлялись;
+- recognizer v2.1, Gesture Check и Draw AUTO/MANUAL не изменялись.
+
+Статус: **implementation candidate; build/install и physical App Search review pending**.
+
