@@ -873,3 +873,16 @@ Android candidate теперь реализует утверждённую ге�
 
 Expanded surfaces не становятся новыми remembered panels. Каждый подпункт проходит отдельный canon/build/device-review gate.
 
+## Graffiti end-arrow +20% implementation — 2026-10-03
+
+Первый подпункт утверждённого KnockUI refinement block реализован в Android candidate.
+
+- shared `GraffitiRenderer` увеличивает end-arrow до `1.20×`;
+- local scale применяется только к конечному треугольнику;
+- pivot выбирается как геометрический конец trajectory, ближайший к end-arrow, поэтому raw SVG path direction не влияет на привязку;
+- trajectory, stroke-width, start circle, canonical SVG и recognizer v2.1 не изменены;
+- общее guide visibility rule `>=36 dp` сохранено;
+- изменение распространяется на все поверхности, использующие shared renderer.
+
+Статус: **implementation candidate; build/install/device review pending**. Следующий подпункт после проверки — `expanded surface above KnockUI`.
+
