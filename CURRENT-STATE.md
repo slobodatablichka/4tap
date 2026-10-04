@@ -1267,3 +1267,18 @@ Usage Access остаётся special app access и выдаётся польз�
 - recognizer v2.1, Gesture Check и Draw AUTO/MANUAL не затронуты.
 
 Статус: **implementation candidate; build/install/device review pending**. Новый physical PASS не объявлен.
+
+## Service Menu + WEB validation + Docked IME candidate — 2026-10-04
+
+Android candidate синхронизирован с новым UX-блоком:
+
+- 4Tap Logo ведёт прямо в Commands; отдельный Logo/About Hub удалён;
+- Hamburger Menu получил текстовые разделы Активация / Персонализация / Тестирование / О 4Tap;
+- ScreenCart = SC и Поддержать 4Tap = 4T являются зарезервированными системными знакопарами;
+- root Back в Commands неактивен, пока нет внутреннего уровня возврата;
+- SYSTEM расширен до Settings / Wi-Fi / Bluetooth / Display / Sound;
+- WEB использует live syntactic validation и disabled action до корректного адреса;
+- Docked 4Tap получил IME priority: KnockUI временно скрывается на время Activity IME и восстанавливается с сохранённым состоянием.
+
+Статус: implementation candidate; build/install/device review pending. Новый physical PASS не объявлен.
+

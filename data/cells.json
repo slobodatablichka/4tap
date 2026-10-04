@@ -178,7 +178,7 @@
     "title": "4Tap Design Canon",
     "group": "UX SYSTEM",
     "short": "Единый визуальный и поведенческий канон для KnockUI, состояний ввода, обратной связи и пользовательских экранов.",
-    "description": "Design Canon задаёт визуальный язык, implementation gate и нормализованную логику поверхностей. Для KnockUI утверждены двухпанельная модель, control strip, Draw AUTO/MANUAL, wide-bottom geometry, Logo/About Hub и новый layout-state Docked 4Tap.",
+    "description": "Design Canon задаёт визуальный язык, implementation gate и нормализованную логику поверхностей. Для KnockUI утверждены двухпанельная модель, control strip, Draw AUTO/MANUAL и layout-state Docked 4Tap; 4Tap Logo ведёт прямо в Commands, а служебные функции собраны в Hamburger Menu.",
     "purpose": "Не допустить расхождения интерфейсов и закрепить узнаваемую механику продукта.",
     "kind": "core",
     "models": [
@@ -206,10 +206,10 @@
     "parameters": {
       "current_working_version": "v0.1",
       "core_surfaces": "KnockUI; 4Tap; Команды; Команда; Command Space / Pair Selection; Gesture Check / ПРОВЕРКА ЖЕСТА; Destination / ВЕДЕТ В; Assign / НАЗНАЧИТЬ; Алфавит; Настройки",
-      "immediate_next": "WEB v0.2 testDebugUnitTest/assembleDebug/installDebug + focused device review; then cross-device Android field trials",
+      "immediate_next": "Service Menu + WEB validation + Docked IME build/install/device review; then cross-device Android field trials",
       "next_revision": "v0.2 after first canon-driven implementation/usability pass",
       "public_beta": "v1.0 before public beta",
-      "knockui_panel_model": "approved: quick_shortcuts / drawing_canvas; remember last active panel; Logo/About is service view, not third panel",
+      "knockui_panel_model": "approved: quick_shortcuts / drawing_canvas; remember last active panel; no Logo/About service view",
       "brand_teal": "#159B92",
       "common_list_row": "64 dp; 8 dp vertical padding; 1 dp separator",
       "common_header": "72 dp; Roboto Slab 28 sp / 800",
@@ -217,13 +217,13 @@
       "common_graffiti_pair": "Commands assignment target: 38–40 dp rendered height; two persistent X-based columns; natural SVG width inside each; 4 dp side insets; 4 dp inter-column gap; 8% reserve per column",
       "commands_screen": "approved structural block; detailed population later",
       "command_screen": "accepted on real Android device; future changes are refinement",
-      "destination_surface": "v0.1 real-device baseline; WEB v0.2 canon approved and implementation candidate: standard IME, explicit paste, normalize/validate, browser Share→4Tap; device review pending; history reserved",
+      "destination_surface": "v0.1 real-device baseline; current candidate adds stricter WEB live validation, disabled invalid action, browser Share→4Tap and five verified SYSTEM settings destinations; device review pending",
       "destination_web_entry": "manual input / clipboard / Android ACTION_SEND text/plain converge to one WEB Destination → XY flow",
       "command_space_view": "approved Pair Selection host in Commands / КОМБИНАЦИИ; same persistent context row and 6×6→6×6 core",
       "command_creation": "destination-first: ADD COMMAND → НАЗНАЧИТЬ → Destination → Pair Selection → Gesture Check → Command; pair-first: Commands/Combinations → Pair Selection → Gesture Check → ВЕДЕТ В → Destination → Command",
       "graffiti_display_priority": "default: canonical 4Tap Graffiti for alphabet signs being shown/selected/formed; plain text only for explicitly defined roles such as existing XY identifier or keyboard search",
       "graffiti_guides": "rendered glyph height >=36 dp → mandatory start circle + end triangle; <36 dp → hide both; threshold measured in dp, not raw pixels",
-      "back_navigation": "single Back in top header; one level back in current context; secondary rows do not duplicate",
+      "back_navigation": "root Commands Back stays in place but is dimmed/inactive; it becomes active only when a real previous internal level exists",
       "implementation_gate": "DESIGN-CANON → canonical graphics registry → surface canon → code",
       "missing_rule": "stop implementation; approve rule first",
       "missing_graphic": "stop implementation; create/approve asset first",
@@ -241,8 +241,8 @@
       "knockui_android_geometry_candidate": "12 dp side/bottom margin; 42% height clamped 300–420 dp; 48 dp control strip; 36 dp Destination-line",
       "knockui_auto_delay": "1.0 s",
       "knockui_unassigned_destination": "full recognized pair without assignment → НЕ НАЗНАЧЕНО / NOT ASSIGNED; Send disabled; no AUTO-send",
-      "knockui_hub": "Logo opens service Hub, not third panel; action-icon rows precede text/media; row 1 = Open 4Tap (active), ScreenCart (future placeholder), Support 4Tap (future placeholder)",
-      "knockui_docked_4tap": "symmetric: KnockUI→Open 4Tap and full 4Tap→corner-trigger→KnockUI produce same split composition; reverse entry preserves current screen/state",
+      "knockui_hub": "removed: 4Tap Logo now opens Commands directly; About moved to Hamburger Service Menu",
+      "knockui_docked_4tap": "symmetric split layout; current candidate adds IME priority: temporarily hide Docked KnockUI while standard IME is visible, then restore state",
       "graffiti_scaling": "implemented candidate: canonical SVG viewBox + path + stroke-width + marker geometry scale with one transform",
       "graffiti_live_input_exception": "live finger stroke in KnockUI/Gesture Check is a separate feedback layer and may use its own UI thickness",
       "graffiti_relative_thickness_status": "no separate ratio TBD; use each SVG's own stroke-width and marker proportions",
@@ -255,7 +255,8 @@
       "knockui_expanded_surface_status": "actions wired; GRAFFITI_REFERENCE 6×6 implemented candidate; APP_SEARCH reserved state wired but content pending",
       "knockui_control_strip_geometry": "48 dp strip; Android candidate equal cell width min(48 dp, KnockUI width/9)",
       "knockui_draw_input_group": "Рисование + Slot1 + Slot2 = one rounded inactiveTeal module; 1.5/2 dp inset, 6 dp radius, 2 dp dark outline, 1 dp internal separators; pressedTeal selected; Send outside",
-      "knockui_expanded_transition": "public alpha-gated transition: alpha=0 → frame → resize/state/flags → frame → alpha=1; no internal touch-region API"
+      "knockui_expanded_transition": "public alpha-gated transition: alpha=0 → frame → resize/state/flags → frame → alpha=1; no internal touch-region API",
+      "service_menu": "Hamburger Menu candidate: Activation / Personalization / Testing / About 4Tap as text rows; ScreenCart=SC and Support 4Tap=4T are reserved system pairs shown as icon + pair + brief description"
     },
     "constraints": [
       "Канон должен сохранять скорость и минимальное вмешательство в текущий контекст пользователя.",
@@ -366,73 +367,6 @@
       "graphics",
       "canon",
       "assets"
-    ]
-  },
-  {
-    "id": "knockui-about-hub",
-    "section": "product",
-    "order": 34.5,
-    "title": "KnockUI Logo/About Hub",
-    "group": "UX SYSTEM",
-    "short": "Служебное представление по кнопке Logo: action-icons сверху, затем материал о 4Tap.",
-    "description": "Logo/About Hub открывается по 4Tap Logo в control strip и не является третьей рабочей панелью. Его верхняя часть — расширяемая область action-icons: один или несколько рядов, после которых начинается информационный текст/мультимедиа. Первый утверждённый ряд: «Открыть 4Tap» (рабочее действие), ScreenCart (future/placeholder) и «Поддержать 4Tap» (future/placeholder).",
-    "purpose": "Собрать в одной служебной точке вход в полное приложение, связанные продукты/поддержку и объяснение 4Tap, не перегружая control strip.",
-    "kind": "core",
-    "models": [
-      "b2c",
-      "b2b"
-    ],
-    "platforms": [
-      "shared",
-      "android",
-      "ios"
-    ],
-    "status": "approved-docked-refinement",
-    "inputs": [
-      "4Tap Logo tap",
-      "Available Hub routes",
-      "Localized About content"
-    ],
-    "outputs": [
-      "Open full 4Tap",
-      "ScreenCart future action",
-      "Support 4Tap future action",
-      "About content"
-    ],
-    "parameters": {
-      "role": "service view; not third panel",
-      "layout": "action-icon row 1 → future row 2/3 if needed → text/media",
-      "row_1": "Open 4Tap; ScreenCart; Support 4Tap",
-      "open_4tap": "approved target changed to Docked 4Tap: keep KnockUI open; make it full-width bottom; open full 4Tap in remaining upper area",
-      "screencart": "implemented as visible future/placeholder; no route",
-      "support_4tap": "implemented as visible future/placeholder; no route",
-      "website_4tap": "possible future action; URL and final placement TBD; may be lower in Hub or removed",
-      "assets": "logo-4tap.svg; screencart-logo.svg; back-4_tap-dev.svg",
-      "about_content": "temporary localized text + images with vertical scroll; future target may include a short animation/video",
-      "android_assets": "ic_knockui_screencart.xml; ic_knockui_support_4tap.xml",
-      "placeholder_visual_candidate": "reduced alpha, reusing disabled-style treatment; implementation candidate only, not separate visual canon",
-      "verification_2026_10_02": "testDebugUnitTest + assembleDebug + installDebug PASS; focused device review pending"
-    },
-    "constraints": [
-      "Hub does not become a third remembered panel; remembered state remains Ярлыки or Рисование.",
-      "Additional action-icon rows may be added before informational content without changing Hub architecture.",
-      "Future/placeholder actions without a route must not imitate successful navigation.",
-      "Support 4Tap uses approved back-4_tap-dev.svg; its artwork is not re-typeset by code.",
-      "ScreenCart uses the locally stored canonical copy of the ScreenCart logo."
-    ],
-    "open_questions": [
-      "Как визуально обозначать future/placeholder actions?",
-      "Нужен ли Сайт 4Tap внутри Hub и где его размещать?",
-      "Какие действия войдут во второй и последующие ряды?"
-    ],
-    "tags": [
-      "knockui",
-      "about",
-      "hub",
-      "support",
-      "screencart",
-      "ux",
-      "canon"
     ]
   },
   {
@@ -4089,7 +4023,6 @@
     "outputs": [
       "quick_shortcuts panel",
       "drawing_canvas panel",
-      "About service view",
       "Two command slots",
       "Destination preview",
       "Manual or automatic command execution"
@@ -4103,7 +4036,7 @@
       "first_launch_panel": "TBD",
       "icon_sources": "4tap-app/design/knockui/icons/",
       "control_strip": "4Tap Logo | Ярлыки | Graffiti Reference | Клавиатура | Рисование | Slot1 | Slot2 | Send | flexible space | Close",
-      "logo_role": "service Logo/About Hub button; not third panel; does not replace remembered Ярлыки/Рисование state",
+      "logo_role": "direct Commands entry; if floating, forms Docked 4Tap and opens Commands; no Logo/About service view",
       "draw_slots": "two Frame-based slots; visible only in drawing mode",
       "destination_line": "implemented candidate: empty until full pair; assigned → destination; unassigned full pair → НЕ НАЗНАЧЕНО / NOT ASSIGNED; inactive-assignment presentation TBD",
       "send": "always visible in Draw; disabled until complete executable pair; enabled thereafter",
@@ -4112,10 +4045,6 @@
       "exact_geometry": "principle approved; candidate dp values pending build/device review",
       "geometry": "approved principle: wide compact bottom floating panel; centered regardless of LEFT/RIGHT trigger; near-full width; adaptive 40–45% height",
       "android_geometry_candidate": "12 dp side/bottom margin; 42% screen height, clamp 300–420 dp; 48 dp control strip; 36 dp Destination-line",
-      "hub_layout": "one or more action-icon rows first, then text/media; additional rows may be added without changing Hub architecture",
-      "hub_row_1": "implemented candidate: Open 4Tap active → CommandsActivity; ScreenCart placeholder; Support 4Tap placeholder",
-      "hub_assets": "logo-4tap.svg; screencart-logo.svg; back-4_tap-dev.svg",
-      "website_action": "possible future action; URL and placement not approved; not mandatory in row 1",
       "docked_4tap": "layout state only, not a third panel: full-width KnockUI bottom + full 4Tap above; internal 4Tap navigation remains above",
       "next_refinement_sequence": "end-arrow ×1.20 → expanded-surface infrastructure → Graffiti Reference 6×6 → Keyboard/App Search → Quick Shortcuts → Draw visual feedback",
       "expanded_surface_model": "approved architecture: one WindowManager overlay switches COMPACT ↔ EXPANDED; expandedRect above preserved knockUiRect; states NONE / GRAFFITI_REFERENCE / APP_SEARCH; not a remembered panel",
@@ -4130,10 +4059,10 @@
       "expanded_focus": "NONE/GRAFFITI_REFERENCE non-focusable; APP_SEARCH temporarily focusable for standard Android IME, then restores flags",
       "expanded_surface_status": "Graffiti Reference works physically; current anti-flicker candidate uses public alpha-gated WindowManager resize after compile failure of hidden touch-region approach; build/device re-review pending",
       "control_strip_geometry": "48 dp strip; Android candidate cell width = min(48 dp, KnockUI width / 9) so the full Draw row fits without overlap",
-      "draw_input_group": "stronger candidate: Рисование + Slot1 + Slot2 share rounded inactiveTeal module; 1.5 dp horizontal / 2 dp vertical inset; 6 dp radius; 2 dp #171717 outline; 1 dp internal separators; pressedTeal selected state; Send outside group"
+      "draw_input_group": "stronger candidate: Рисование + Slot1 + Slot2 share rounded inactiveTeal module; 1.5 dp horizontal / 2 dp vertical inset; 6 dp radius; 2 dp #171717 outline; 1 dp internal separators; pressedTeal selected state; Send outside group",
+      "service_menu": "moved to full-4Tap Commands Hamburger; not a KnockUI panel/view"
     },
     "constraints": [
-      "Logo/About Hub is a service view, not a third working panel and not a remembered panel state.",
       "Обе рабочие панели занимают одну рабочую область KnockUI и не показываются рядом одновременно.",
       "Control strip KnockUI не является обычным application header и не требует отдельного Back/title.",
       "Send всегда присутствует в Draw, но не исполняется без полной исполнимой пары.",
@@ -4236,7 +4165,9 @@
       "command_space_first_header": "[empty slot] + [empty slot] above first 6×6; same position as second-stage row",
       "graffiti_pair_model": "two persistent X-based columns with common row alignment; first glyph in column 1, second in column 2; each glyph keeps natural SVG width",
       "graffiti_width_reference": "each column uses X at target height with 8% reserve so W/M (~6.7% wider than X at equal height) keep full height",
-      "graffiti_pair_android": "implemented correction: two aligned X-based columns, 40 dp target height, natural SVG widths, 4 dp side inset, 4 dp gap, 8% reserve per column"
+      "graffiti_pair_android": "implemented correction: two aligned X-based columns, 40 dp target height, natural SVG widths, 4 dp side inset, 4 dp gap, 8% reserve per column",
+      "root_back": "visible position preserved but dimmed/inactive at root; active only on internal previous level such as second-stage КОМБИНАЦИИ",
+      "hamburger_menu": "working candidate: opens text Service Menu with Activation / Personalization / Testing / About 4Tap plus reserved ScreenCart SC and Support 4Tap 4T rows"
     },
     "constraints": [
       "Graffiti-column uses real canonical trajectories from 4Tap Graffiti Profile v1, not font imitation.",
@@ -4753,7 +4684,7 @@
       "header": "72 dp",
       "category_strip": "48 dp; dark strip; three equal segments; active #159B92",
       "app_rows": "64 dp; icon ~40×40 dp; 18 sp / 800; alphabetical; compact reveal search",
-      "system_rows": "64 dp; verified destinations only; v0.1 = Settings",
+      "system_rows": "64 dp text rows; current candidate = Settings / Wi-Fi / Bluetooth / Display / Sound, shown only when system Intent resolves",
       "web_block": "~184 dp; 16 top + 20 label + 8 + 56 input + 12 + 56 use + 16 bottom",
       "android_code": "implemented; assembleDebug PASS; real-device PASS",
       "real_device_review": "PASS: app selection; SYSTEM → Settings; WEB URL → domain in Command; category switching; Back unchanged; app search; 4-tap → KnockUI remains working",
@@ -4766,8 +4697,8 @@
       "new_command_slots": "not applicable; activity refuses entry without full XY",
       "header_refinement_status": "known-XY guard implemented and present in the current physical-device build; no separate focused header-only review is recorded",
       "search_icon": "canonical framed Search asset; system icon removed",
-      "web_input_status": "known UX gap after first real-device pass",
-      "web_next_refinement": "obvious URL field + standard IME + clipboard paste affordance + normalization/validation + clear confirm action"
+      "web_input_status": "candidate: local syntactic plausibility check; arbitrary bare words rejected; action disabled until valid; previous error clears on edit",
+      "web_next_refinement": "build/install/device review of live validation, Share path and Docked IME priority"
     },
     "constraints": [
       "Categories describe destination type, not command type.",
@@ -4775,17 +4706,13 @@
       "System category contains only technically verified supported destinations.",
       "WEB stores URL, not browser + URL.",
       "WEB history is anticipated but excluded from first UI canon.",
-      "Browser Share → 4Tap is architecturally reserved but not implemented in v0.1.",
       "User-facing strings are localizable.",
-      "ВЕДЕТ В cannot be opened without a known XY."
+      "ВЕДЕТ В cannot be opened without a known XY.",
+      "WEB validation is local syntax/plausibility only; do not require DNS/network reachability."
     ],
     "open_questions": [
-      "Финальный WEB input UX: клавиатура, вставка из clipboard и явное место ввода URL.",
-      "Supported system destinations catalog.",
-      "URL validation/normalization rules.",
       "Optional custom WEB labels.",
       "Future WEB history UI.",
-      "Future Share → 4Tap UI.",
       "Whether a separate deep-link model is ever needed."
     ],
     "tags": [
@@ -4821,14 +4748,15 @@
     ],
     "status": "preliminary-device-pass",
     "inputs": [
-      "Open 4Tap action from Logo/About Hub"
+      "4Tap Logo from KnockUI",
+      "Corner trigger while internal 4Tap Activity is foreground"
     ],
     "outputs": [
       "Full 4Tap upper area",
       "Full-width docked KnockUI lower area"
     ],
     "parameters": {
-      "trigger": "two symmetric entries: KnockUI → Open 4Tap; full 4Tap foreground → corner trigger → KnockUI",
+      "trigger": "two symmetric entries: KnockUI Logo → Commands; full 4Tap foreground → corner trigger → KnockUI",
       "knockui": "remains open; width = 100% available width; anchored bottom; current height preserved unless separately revised",
       "full_4tap": "occupies all remaining available area above KnockUI",
       "composition": "full 4Tap top + KnockUI bottom = whole available screen area; no overlap/gap",
@@ -4836,7 +4764,7 @@
       "close_knockui": "X/Close always closes KnockUI; if full 4Tap is open, it expands to the full available area",
       "leave_4tap": "restore KnockUI ordinary floating geometry",
       "external_launch_from_docked": "APP / WEB / SYSTEM command from KnockUI closes KnockUI before launching the destination",
-      "repeat_open": "Open 4Tap from Hub creates Docked 4Tap again",
+      "repeat_open": "4Tap Logo routes directly to root Commands",
       "android_implementation": "DockedFourTap lifecycle coordinator + FourTapApplication ActivityLifecycleCallbacks + DrawingOverlay floating/docked resize",
       "activity_fit": "internal Activity content receives bottom inset/padding equal to current KnockUI height",
       "external_command": "same close-before-launch rule in floating and docked; no persistent floating KnockUI after command execution",
@@ -4845,11 +4773,12 @@
       "reverse_entry_no_reset": "do not auto-navigate to Commands and do not recreate/reset current 4Tap screen",
       "non_4tap_trigger": "corner-trigger in any other foreground context keeps ordinary floating KnockUI",
       "foreground_detection": "Application.ActivityLifecycleCallbacks tracks resumed internal 4Tap hosts",
-      "trigger_layer": "CornerAccessibilityService unchanged; DrawingOverlay chooses docked/floating centrally"
+      "trigger_layer": "CornerAccessibilityService unchanged; DrawingOverlay chooses docked/floating centrally",
+      "ime_priority": "candidate: while standard IME is visible inside full 4Tap, hide/non-touchable Docked KnockUI and release dock inset; restore same state when IME closes"
     },
     "constraints": [
       "Docked 4Tap is a layout/lifecycle state, not a third working panel.",
-      "Do not change recognizer v2.1, Gesture Check, command semantics, AUTO/MANUAL or Hub content behavior.",
+      "Do not change recognizer v2.1, Gesture Check, command semantics, AUTO/MANUAL.",
       "Do not cover lower content of full 4Tap with the overlay; reserve the upper app area explicitly.",
       "Other program functionality remains unchanged."
     ],
@@ -5108,7 +5037,7 @@
       "lower_knockui": "floating-expanded keeps compact width/centering and bottom margin; docked-expanded remains full-width; control/work/hit rectangles are relative to lower surfaceRect",
       "docked_height_contract": "DockedFourTap always receives compactHeightPx, never full expanded-window height",
       "focus_implementation": "APP_SEARCH focusability flags are applied during hidden resize/state phase",
-      "touch_implementation": "expandedRect consumes upper-area touch and does not start lower Draw/About interaction",
+      "touch_implementation": "expandedRect consumes upper-area touch and does not start lower Draw interaction",
       "feature_wiring": "implemented: both control-strip actions; GRAFFITI_REFERENCE renders 6×6; APP_SEARCH switches state but has no EditText/IME/app list yet",
       "control_strip_order": "Logo | Ярлыки | Graffiti Reference | Клавиатура | Рисование | Slot1 | Slot2 | Send | Close",
       "control_cell": "Android candidate: min(48 dp, KnockUI width / 9); strip height 48 dp",
@@ -5119,7 +5048,8 @@
       "draw_group": "Рисование + Slot1 + Slot2: inactiveTeal rounded module, 2 dp dark outline, 1 dp internal separators; Send outside",
       "compact_mode": "real compact WindowManager window; area outside it naturally belongs to underlying app",
       "expanded_mode": "same View/window resized to full screen while hidden; expandedRect above lower KnockUI",
-      "failed_attempt": "persistent full-screen touch-region attempt used ViewTreeObserver.OnComputeInternalInsetsListener and failed compileDebugKotlin; fully removed"
+      "failed_attempt": "persistent full-screen touch-region attempt used ViewTreeObserver.OnComputeInternalInsetsListener and failed compileDebugKotlin; fully removed",
+      "full_4tap_ime": "separate Docked IME priority candidate hides the lower Docked KnockUI while Activity IME is visible; App Search retains its own expanded-overlay IME contract"
     },
     "constraints": [
       "Expanded surfaces are not remembered working panels.",
@@ -5128,9 +5058,7 @@
       "Do not reset recognizer, Draw AUTO/MANUAL or command slots.",
       "Entering Docked 4Tap resets expanded state to NONE before the docked composition is established."
     ],
-    "open_questions": [
-      "Exact Android IME inset/resize mechanics require device validation."
-    ],
+    "open_questions": [],
     "tags": [
       "knockui",
       "expanded",
