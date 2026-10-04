@@ -206,7 +206,7 @@
     "parameters": {
       "current_working_version": "v0.1",
       "core_surfaces": "KnockUI; 4Tap; Команды; Команда; Command Space / Pair Selection; Gesture Check / ПРОВЕРКА ЖЕСТА; Destination / ВЕДЕТ В; Assign / НАЗНАЧИТЬ; Алфавит; Настройки",
-      "immediate_next": "repeat testDebugUnitTest/assembleDebug/installDebug after hidden-API compile fix; then device review alpha-gated flicker fix + stronger Draw group",
+      "immediate_next": "WEB v0.2 testDebugUnitTest/assembleDebug/installDebug + focused device review; then cross-device Android field trials",
       "next_revision": "v0.2 after first canon-driven implementation/usability pass",
       "public_beta": "v1.0 before public beta",
       "knockui_panel_model": "approved: quick_shortcuts / drawing_canvas; remember last active panel; Logo/About is service view, not third panel",
@@ -217,7 +217,8 @@
       "common_graffiti_pair": "Commands assignment target: 38–40 dp rendered height; two persistent X-based columns; natural SVG width inside each; 4 dp side insets; 4 dp inter-column gap; 8% reserve per column",
       "commands_screen": "approved structural block; detailed population later",
       "command_screen": "accepted on real Android device; future changes are refinement",
-      "destination_surface": "approved v0.1; Apps / System / WEB; WEB URL model; history/share reserved",
+      "destination_surface": "v0.1 real-device baseline; WEB v0.2 canon approved and implementation candidate: standard IME, explicit paste, normalize/validate, browser Share→4Tap; device review pending; history reserved",
+      "destination_web_entry": "manual input / clipboard / Android ACTION_SEND text/plain converge to one WEB Destination → XY flow",
       "command_space_view": "approved Pair Selection host in Commands / КОМБИНАЦИИ; same persistent context row and 6×6→6×6 core",
       "command_creation": "destination-first: ADD COMMAND → НАЗНАЧИТЬ → Destination → Pair Selection → Gesture Check → Command; pair-first: Commands/Combinations → Pair Selection → Gesture Check → ВЕДЕТ В → Destination → Command",
       "graffiti_display_priority": "default: canonical 4Tap Graffiti for alphabet signs being shown/selected/formed; plain text only for explicitly defined roles such as existing XY identifier or keyboard search",

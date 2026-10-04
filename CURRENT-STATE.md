@@ -89,7 +89,7 @@ Android 4Tap — обычное пользовательское приложе�
 1. сохранять recognizer v2.1 / Gesture Check как стабильный baseline без новой воспроизводимой причины;
 2. установить текущий APK на несколько других stock Android сначала по USB, затем через непубличный Google Play test-track;
 3. подготовить policy/review dossier по обязательному Accessibility core-flow и optional Usage Access personalization;
-4. довести WEB destination UX: явное URL-поле, standard IME, paste, нормализация/валидация и подтверждение;
+4. проверить WEB v0.2 candidate: standard IME, явный paste, нормализация/валидация, `https://` при отсутствии схемы и browser `Поделиться → 4Tap`;
 5. продолжать Quick Shortcuts / Assignments / KnockUI bugfix и real-device polish;
 6. подготовить первичное содержательное наполнение `4tap.ru` и `screencart.com`;
 7. сверять дальнейшую B2C-реализацию с `product-b2c → user-gestures / roadmap-3 / android-actions`;
@@ -1250,3 +1250,20 @@ Usage Access остаётся special app access и выдаётся польз�
 - после одной debug-переустановки Accessibility визуально оставался включён, но trigger потребовал OFF→ON re-arm; после перевключения 4-tap снова работал;
 - slot-based Quick Shortcuts drag и Draw action `НЕ НАЗНАЧЕНО | НАЗНАЧИТЬ` достигли положительного промежуточного device-state, но ещё требуют polish;
 - WEB destination остаётся известным UX-gap перед широкой полевой проверкой.
+
+## WEB destination v0.2 checkpoint — 2026-10-04
+
+Утверждён и внесён Android implementation candidate:
+
+- ручной ввод WEB использует standard Android IME;
+- рядом с URL-полем есть явное действие `ВСТАВИТЬ`; системный long-press/paste сохраняется;
+- применяется единый `trim → normalize → validate` pipeline;
+- при отсутствии схемы добавляется `https://`, если адрес проходит WEB-валидацию;
+- полный URL сохраняется как WEB destination, короткий host используется в Command/KnockUI;
+- добавлен штатный Android вход `браузер → Поделиться → 4Tap`;
+- Share только предварительно заполняет существующий `НАЗНАЧИТЬ / WEB` и не создаёт команду автоматически;
+- далее используется общий destination-first flow `WEB → ЗНАКОПАРА → Проверка жеста → КОМАНДА`;
+- новых runtime permissions нет;
+- recognizer v2.1, Gesture Check и Draw AUTO/MANUAL не затронуты.
+
+Статус: **implementation candidate; build/install/device review pending**. Новый physical PASS не объявлен.
