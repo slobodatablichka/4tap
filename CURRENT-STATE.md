@@ -1282,3 +1282,17 @@ Android candidate синхронизирован с новым UX-блоком:
 
 Статус: implementation candidate; build/install/device review pending. Новый physical PASS не объявлен.
 
+## Full 4Tap navigation refinement — 2026-10-05
+
+Синхронизирован новый Android candidate:
+
+- 4Tap Logo работает как toggle Floating ↔ Docked Commands;
+- Full 4Tap surfaces получили отдельный Close ×;
+- Back означает только внутренний возврат; root Commands Back неактивен;
+- XY-search удалён из КОМБИНАЦИИ и standalone ЗНАКОПАРА;
+- Android Back / Home / Recents остаются системными;
+- Service Menu получил vertical scroll;
+- ScreenCart / Support 4Tap получили раздельные визуальные блоки; SC — на контрастной тёмной подложке.
+
+Статус: implementation candidate; build/install/device review pending.
+

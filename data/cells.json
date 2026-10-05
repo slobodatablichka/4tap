@@ -206,7 +206,7 @@
     "parameters": {
       "current_working_version": "v0.1",
       "core_surfaces": "KnockUI; 4Tap; Команды; Команда; Command Space / Pair Selection; Gesture Check / ПРОВЕРКА ЖЕСТА; Destination / ВЕДЕТ В; Assign / НАЗНАЧИТЬ; Алфавит; Настройки",
-      "immediate_next": "Service Menu + WEB validation + Docked IME build/install/device review; then cross-device Android field trials",
+      "immediate_next": "Full 4Tap navigation refinement build/install/device review; then continue Service Menu / SYSTEM / WEB / Docked IME gate",
       "next_revision": "v0.2 after first canon-driven implementation/usability pass",
       "public_beta": "v1.0 before public beta",
       "knockui_panel_model": "approved: quick_shortcuts / drawing_canvas; remember last active panel; no Logo/About service view",
@@ -223,7 +223,7 @@
       "command_creation": "destination-first: ADD COMMAND → НАЗНАЧИТЬ → Destination → Pair Selection → Gesture Check → Command; pair-first: Commands/Combinations → Pair Selection → Gesture Check → ВЕДЕТ В → Destination → Command",
       "graffiti_display_priority": "default: canonical 4Tap Graffiti for alphabet signs being shown/selected/formed; plain text only for explicitly defined roles such as existing XY identifier or keyboard search",
       "graffiti_guides": "rendered glyph height >=36 dp → mandatory start circle + end triangle; <36 dp → hide both; threshold measured in dp, not raw pixels",
-      "back_navigation": "root Commands Back stays in place but is dimmed/inactive; it becomes active only when a real previous internal level exists",
+      "back_navigation": "Back = internal previous level only; root Commands Back remains visible but inactive; Close × = close Full 4Tap; Android Back/Home/Recents remain system navigation",
       "implementation_gate": "DESIGN-CANON → canonical graphics registry → surface canon → code",
       "missing_rule": "stop implementation; approve rule first",
       "missing_graphic": "stop implementation; create/approve asset first",
@@ -256,7 +256,7 @@
       "knockui_control_strip_geometry": "48 dp strip; Android candidate equal cell width min(48 dp, KnockUI width/9)",
       "knockui_draw_input_group": "Рисование + Slot1 + Slot2 = one rounded inactiveTeal module; 1.5/2 dp inset, 6 dp radius, 2 dp dark outline, 1 dp internal separators; pressedTeal selected; Send outside",
       "knockui_expanded_transition": "public alpha-gated transition: alpha=0 → frame → resize/state/flags → frame → alpha=1; no internal touch-region API",
-      "service_menu": "Hamburger Menu candidate: Activation / Personalization / Testing / About 4Tap as text rows; ScreenCart=SC and Support 4Tap=4T are reserved system pairs shown as icon + pair + brief description"
+      "service_menu": "Hamburger Service Menu scrolls vertically; text rows Activation / Personalization / Testing / About 4Tap; ScreenCart=SC and Support 4Tap=4T use icon + pair + brief text with spacing; SC icon has dark contrast background"
     },
     "constraints": [
       "Канон должен сохранять скорость и минимальное вмешательство в текущий контекст пользователя.",
@@ -4036,7 +4036,7 @@
       "first_launch_panel": "TBD",
       "icon_sources": "4tap-app/design/knockui/icons/",
       "control_strip": "4Tap Logo | Ярлыки | Graffiti Reference | Клавиатура | Рисование | Slot1 | Slot2 | Send | flexible space | Close",
-      "logo_role": "direct Commands entry; if floating, forms Docked 4Tap and opens Commands; no Logo/About service view",
+      "logo_role": "toggle: Floating KnockUI → Docked Commands; repeated Logo while Docked closes Full 4Tap and returns Floating KnockUI with state preserved",
       "draw_slots": "two Frame-based slots; visible only in drawing mode",
       "destination_line": "implemented candidate: empty until full pair; assigned → destination; unassigned full pair → НЕ НАЗНАЧЕНО / NOT ASSIGNED; inactive-assignment presentation TBD",
       "send": "always visible in Draw; disabled until complete executable pair; enabled thereafter",
@@ -4148,7 +4148,7 @@
       "layout_style": "flat continuous table; no cards/gaps",
       "command_space_view": "НАЗНАЧЕНИЯ / КОМБИНАЦИИ; Pair Selection uses persistent [X]+[Y] context row on both 6×6 stages",
       "add_command_flow": "ДОБАВИТЬ КОМАНДУ → НАЗНАЧИТЬ → Destination → Pair Selection → Gesture Check → Command",
-      "command_space_search": "standard Android keyboard; A–Z + 0–9; max 2 chars; 1 char opens family; 2 chars opens exact pair",
+      "command_space_search": "removed: XY search duplicated the two-step X→Y grid and introduced unnecessary IME/state complexity",
       "command_space_android": "shared PairSelectionGridView pair-first creation flow passed on physical device 2026-10-01",
       "add_command_current_implementation": "implemented: opens AssignActivity / НАЗНАЧИТЬ",
       "assignment_alignment": "destination right-aligned",
@@ -4166,8 +4166,9 @@
       "graffiti_pair_model": "two persistent X-based columns with common row alignment; first glyph in column 1, second in column 2; each glyph keeps natural SVG width",
       "graffiti_width_reference": "each column uses X at target height with 8% reserve so W/M (~6.7% wider than X at equal height) keep full height",
       "graffiti_pair_android": "implemented correction: two aligned X-based columns, 40 dp target height, natural SVG widths, 4 dp side inset, 4 dp gap, 8% reserve per column",
-      "root_back": "visible position preserved but dimmed/inactive at root; active only on internal previous level such as second-stage КОМБИНАЦИИ",
-      "hamburger_menu": "working candidate: opens text Service Menu with Activation / Personalization / Testing / About 4Tap plus reserved ScreenCart SC and Support 4Tap 4T rows"
+      "root_back": "visible but dimmed/inactive at root; active only where a real previous internal level exists",
+      "hamburger_menu": "working candidate: opens text Service Menu with Activation / Personalization / Testing / About 4Tap plus reserved ScreenCart SC and Support 4Tap 4T rows",
+      "close_full_4tap": "Close × at right side of Full 4Tap header closes the whole Full 4Tap surface"
     },
     "constraints": [
       "Graffiti-column uses real canonical trajectories from 4Tap Graffiti Profile v1, not font imitation.",
@@ -4232,7 +4233,7 @@
       "occupancy_states": "available = normal; fully occupied family / occupied Y = muted; Commands may still inspect occupied",
       "implementation_status": "shared PairSelectionGridView implemented in Commands and standalone host; unit/build PASS; pair-first and destination-first real-device PASS; Existing-Command XY edit remains a separate explicit device check",
       "first_level_full_family": "muted color; remains openable for inspection",
-      "search": "A–Z + 0–9; max 2; 1 char selects X/opens Y stage; 2 chars resolves exact XY; same occupancy/context rules",
+      "search": "removed from both Commands/КОМБИНАЦИИ and standalone ЗНАКОПАРА; selection remains direct X→Y",
       "free_pair_tap": "complete Pair Selection → always Gesture Check",
       "occupied_pair_tap": "Commands: may open existing Command; destination-first/edit: unavailable except current self-pair",
       "height_normalization": "common target height derived from X fit; proportions preserved",
@@ -4756,7 +4757,7 @@
       "Full-width docked KnockUI lower area"
     ],
     "parameters": {
-      "trigger": "two symmetric entries: KnockUI Logo → Commands; full 4Tap foreground → corner trigger → KnockUI",
+      "trigger": "KnockUI Logo toggles Floating ↔ Docked Commands; corner-trigger over internal 4Tap still creates Docked KnockUI without resetting current 4Tap screen",
       "knockui": "remains open; width = 100% available width; anchored bottom; current height preserved unless separately revised",
       "full_4tap": "occupies all remaining available area above KnockUI",
       "composition": "full 4Tap top + KnockUI bottom = whole available screen area; no overlap/gap",
@@ -4774,7 +4775,9 @@
       "non_4tap_trigger": "corner-trigger in any other foreground context keeps ordinary floating KnockUI",
       "foreground_detection": "Application.ActivityLifecycleCallbacks tracks resumed internal 4Tap hosts",
       "trigger_layer": "CornerAccessibilityService unchanged; DrawingOverlay chooses docked/floating centrally",
-      "ime_priority": "candidate: while standard IME is visible inside full 4Tap, hide/non-touchable Docked KnockUI and release dock inset; restore same state when IME closes"
+      "ime_priority": "candidate: while standard IME is visible inside full 4Tap, hide/non-touchable Docked KnockUI and release dock inset; restore same state when IME closes",
+      "close_full_4tap": "Close × in Full 4Tap closes the Full 4Tap surface; in Docked state KnockUI returns to floating",
+      "android_navigation": "system Navigation Bar / gesture navigation stays system-owned and must remain available; 4Tap does not draw replicas"
     },
     "constraints": [
       "Docked 4Tap is a layout/lifecycle state, not a third working panel.",
