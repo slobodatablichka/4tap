@@ -256,7 +256,8 @@
       "knockui_control_strip_geometry": "48 dp strip; Android candidate equal cell width min(48 dp, KnockUI width/9)",
       "knockui_draw_input_group": "Рисование + Slot1 + Slot2 = one rounded inactiveTeal module; 1.5/2 dp inset, 6 dp radius, 2 dp dark outline, 1 dp internal separators; pressedTeal selected; Send outside",
       "knockui_expanded_transition": "public alpha-gated transition: alpha=0 → frame → resize/state/flags → frame → alpha=1; no internal touch-region API",
-      "service_menu": "Hamburger Service Menu scrolls vertically; text rows Activation / Personalization / Testing / About 4Tap; ScreenCart=SC and Support 4Tap=4T use icon + pair + brief text with spacing; SC icon has dark contrast background"
+      "service_menu": "Hamburger Service Menu scrolls vertically; text rows Activation / Personalization / Testing / About 4Tap; ScreenCart=SC and Support 4Tap=4T use icon + pair + brief text with spacing; SC icon has dark contrast background",
+      "tester_questionnaire": "approved spec: human-readable task-based flow; quick/full modes; factual answers Да/Частично/Нет/Не проверял; internal technical IDs; implementation pending"
     },
     "constraints": [
       "Канон должен сохранять скорость и минимальное вмешательство в текущий контекст пользователя.",
@@ -3539,14 +3540,15 @@
       "stage_status": "active",
       "current_task": "field-trial polish: slot-based Quick Shortcuts drag, Draw assign, WEB destination UX, install/re-arm behavior",
       "graffiti": "4Tap Graffiti Profile v1 approved; Letter-F revised 2026-10-01",
-      "immediate_next": "cross-device stock Android USB installs; optional Usage Access personalized starter validation; non-public Google Play test",
+      "immediate_next": "implement tester questionnaire UI/report flow alongside current field-trial polish; then cross-device stock Android USB installs and non-public Google Play test",
       "subsequent": "policy/review dossier, public web presence, broader B2C configuration/deep links, production gate",
       "public_beta_gate": "Design Canon v1.0 before public beta",
       "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; normalized dual create-flow with shared Pair Selection + Gesture Check; brand teal #159B92; Pair Selection contextual geometry; Gesture Check stable physical-device baseline; recognizer v2.1 stable physical-device baseline; KnockUI control strip; Logo/About service view; Draw Slot1/Slot2 + Destination-line + AUTO/MANUAL/Send flow; KnockUI wide-bottom-panel geometry principle; adaptive 40–45% height; 1.0 s AUTO delay; Logo/About Hub expandable action-icon rows; НЕ НАЗНАЧЕНО Destination state; Support 4Tap and ScreenCart Hub assets; Docked 4Tap layout/lifecycle; Commands assignment Graffiti composition; 36 dp guide visibility threshold; KnockUI refinement execution plan 2026-10-03",
       "content_detailing": "separate follow-up per screen",
       "data_collection": "deferred: no real-trace accumulation/analysis in the next block",
       "personalization": "deferred: common templates + several user-specific samples",
-      "field_trial_status": "LGM-V300L / Android 9 remains primary fixture; latest UI candidate is usable but still under polish"
+      "field_trial_status": "LGM-V300L / Android 9 remains primary fixture; latest UI candidate is usable but still under polish",
+      "tester_flow": "approved specification in private 4tap-app: Quick/Full tester modes, task-based wording for non-expert users, structured report; implementation pending"
     },
     "constraints": [
       "Не масштабировать recognizer и UI хаотично до фиксации соответствующих канонов.",
