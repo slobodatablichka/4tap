@@ -1321,3 +1321,17 @@ Android candidate синхронизирован с новым UX-блоком:
 
 Статус: **approved correction plan / implementation pending**.
 
+## Docked composition / swipe / Back refinement — 2026-10-10
+
+Уточнена модель Docked 4Tap:
+
+- Docked 4Tap допускает только нижнюю панель `Рисование`;
+- `Full 4Tap + Ярлыки` исключено;
+- Graffiti Reference, App Search и Full 4Tap получают horizontal swipe-dismiss;
+- App Search использует системную IME в поисковом режиме, без отдельной клавиатуры 4Tap;
+- Commands Back становится детерминированным: `Y-stage → X-stage → НАЗНАЧЕНИЯ → выход`;
+- видимый Back и системный Android Back должны совпадать по смыслу;
+- Android Navigation Bar / gesture area остаётся системной.
+
+Статус: **refinement approved / implementation pending**.
+
