@@ -206,7 +206,7 @@
     "parameters": {
       "current_working_version": "v0.1",
       "core_surfaces": "KnockUI; 4Tap; Команды; Команда; Command Space / Pair Selection; Gesture Check / ПРОВЕРКА ЖЕСТА; Destination / ВЕДЕТ В; Assign / НАЗНАЧИТЬ; Алфавит; Настройки",
-      "immediate_next": "Priority correction block: Docked→Floating white-screen/window lifecycle, App Search close asset, IME source split, Android Back regression; then tester/onboarding field-trial flow",
+      "immediate_next": "device-review implemented Docked/IME/Back correction candidate; then onboarding/tester questionnaire",
       "next_revision": "v0.2 after first canon-driven implementation/usability pass",
       "public_beta": "v1.0 before public beta",
       "knockui_panel_model": "approved: quick_shortcuts / drawing_canvas; remember last active panel; no Logo/About service view",
@@ -3539,9 +3539,9 @@
     ],
     "parameters": {
       "stage_status": "active",
-      "current_task": "priority correction: Docked→Floating white-screen/lifecycle defect, App Search canonical Close, IME source split, Android Back/system-navigation regression",
+      "current_task": "device-review implemented Docked/IME/Back correction candidate",
       "graffiti": "4Tap Graffiti Profile v1 approved; Letter-F revised 2026-10-01",
-      "immediate_next": "implement and device-test priority correction block; only then continue onboarding/tester questionnaire and cross-device field trials",
+      "immediate_next": "build/install focused regression on LG V30: white flash/residual field, Docked App Search, system nav, Android Back; then onboarding/tester questionnaire",
       "subsequent": "policy/review dossier, public web presence, broader B2C configuration/deep links, production gate",
       "public_beta_gate": "Design Canon v1.0 before public beta",
       "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; normalized dual create-flow with shared Pair Selection + Gesture Check; brand teal #159B92; Pair Selection contextual geometry; Gesture Check stable physical-device baseline; recognizer v2.1 stable physical-device baseline; KnockUI control strip; Logo/About service view; Draw Slot1/Slot2 + Destination-line + AUTO/MANUAL/Send flow; KnockUI wide-bottom-panel geometry principle; adaptive 40–45% height; 1.0 s AUTO delay; Logo/About Hub expandable action-icon rows; НЕ НАЗНАЧЕНО Destination state; Support 4Tap and ScreenCart Hub assets; Docked 4Tap layout/lifecycle; Commands assignment Graffiti composition; 36 dp guide visibility threshold; KnockUI refinement execution plan 2026-10-03",
@@ -4750,7 +4750,7 @@
       "android",
       "shared"
     ],
-    "status": "correction-plan",
+    "status": "implemented-candidate",
     "inputs": [
       "4Tap Logo from KnockUI",
       "Corner trigger while internal 4Tap Activity is foreground"
@@ -4772,18 +4772,21 @@
       "android_implementation": "DockedFourTap lifecycle coordinator + FourTapApplication ActivityLifecycleCallbacks + DrawingOverlay floating/docked resize",
       "activity_fit": "internal Activity content receives bottom inset/padding equal to current KnockUI height",
       "external_command": "same close-before-launch rule in floating and docked; no persistent floating KnockUI after command execution",
-      "verification": "4-tap activation, Logo→Commands and repeated Logo behavior are functionally stable on LG V30 / Android 9; transition/IME/navigation defects remain open",
+      "verification": "build/install/device review pending after 2026-10-10 correction implementation",
       "reverse_entry": "implemented candidate: resumed internal 4Tap Activity → corner-trigger → new KnockUI starts docked; current Activity/screen/state preserved",
       "reverse_entry_no_reset": "do not auto-navigate to Commands and do not recreate/reset current 4Tap screen",
       "non_4tap_trigger": "corner-trigger in any other foreground context keeps ordinary floating KnockUI",
       "foreground_detection": "Application.ActivityLifecycleCallbacks tracks resumed internal 4Tap hosts",
       "trigger_layer": "CornerAccessibilityService unchanged; DrawingOverlay chooses docked/floating centrally",
-      "ime_priority": "refined rule: IME from Full 4Tap text input may suspend Docked KnockUI; IME from KnockUI App Search must keep KnockUI visible as App Search + control strip + IME",
+      "ime_priority": "implemented candidate: Full 4Tap IME may suspend Docked KnockUI; KnockUI App Search IME does not suspend it",
       "close_full_4tap": "Close × in Full 4Tap closes the Full 4Tap surface; in Docked state KnockUI returns to floating",
       "android_navigation": "system Navigation Bar / gesture area remains system-owned and visible; inner Android Back mirrors visible Back, root Commands Android Back exits Full 4Tap",
       "transition_defect": "physical review found brief white flash and intermittent persistent white field on Docked→Floating/close paths; correction and focused lifecycle diagnostics are priority before external field trials",
       "transition_target": "Docked compact → Floating compact should avoid unnecessary hide/resize/show; restore visible Floating KnockUI before finishing Full 4Tap; Full 4Tap uses dark window background",
-      "app_search_docked": "must preserve KnockUI and system navigation; current Commands + orphan IME composition is a defect"
+      "app_search_docked": "implemented candidate: App Search keeps KnockUI active, uses canonical Close asset, and removes FLAG_LAYOUT_IN_SCREEN while focusable so Android navigation area remains system-owned",
+      "transition_fix": "implemented candidate: compact Docked↔Floating uses synchronous resize without alpha-hide; Full 4Tap Activities use dark window background",
+      "android_back": "implemented candidate: inner screens keep their Back semantics; root Commands system Back exits Full 4Tap to Floating KnockUI",
+      "diagnostics": "minimal 4TapWindow lifecycle/window transition logging added for intermittent residual-window diagnosis"
     },
     "constraints": [
       "Docked 4Tap is a layout/lifecycle state, not a third working panel.",
