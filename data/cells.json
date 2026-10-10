@@ -204,9 +204,9 @@
       "Settings UI rules"
     ],
     "parameters": {
-      "current_working_version": "v0.1",
+      "current_working_version": "working baseline PASS on primary Android fixture; canon refinement continues",
       "core_surfaces": "KnockUI; 4Tap; Команды; Команда; Command Space / Pair Selection; Gesture Check / ПРОВЕРКА ЖЕСТА; Destination / ВЕДЕТ В; Assign / НАЗНАЧИТЬ; Алфавит; Настройки",
-      "immediate_next": "device-review implemented Docked-only-Drawing / swipe-dismiss / deterministic Back / App Search system-nav candidate; then onboarding/tester questionnaire",
+      "immediate_next": "preserve current baseline; continue onboarding/tester flow/cross-device validation and UX refinement",
       "next_revision": "v0.2 after first canon-driven implementation/usability pass",
       "public_beta": "v1.0 before public beta",
       "knockui_panel_model": "approved: quick_shortcuts / drawing_canvas; remember last active panel; no Logo/About service view",
@@ -3540,17 +3540,17 @@
       "4Tap Graffiti Profile"
     ],
     "parameters": {
-      "stage_status": "active",
-      "current_task": "device-review implemented Docked/swipe/Back/App Search candidate",
+      "stage_status": "active — working baseline physical PASS on LGM-V300L / Android 9",
+      "current_task": "refinement on top of a confirmed working baseline; preserve regression stability",
       "graffiti": "4Tap Graffiti Profile v1 approved; Letter-F revised 2026-10-01",
-      "immediate_next": "build/install focused regression; then onboarding/tester questionnaire and cross-device field trials",
+      "immediate_next": "onboarding + tester questionnaire + cross-device Android validation, while preserving current working baseline",
       "subsequent": "policy/review dossier, public web presence, broader B2C configuration/deep links, production gate",
       "public_beta_gate": "Design Canon v1.0 before public beta",
       "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; normalized dual create-flow with shared Pair Selection + Gesture Check; brand teal #159B92; Pair Selection contextual geometry; Gesture Check stable physical-device baseline; recognizer v2.1 stable physical-device baseline; KnockUI control strip; Logo/About service view; Draw Slot1/Slot2 + Destination-line + AUTO/MANUAL/Send flow; KnockUI wide-bottom-panel geometry principle; adaptive 40–45% height; 1.0 s AUTO delay; Logo/About Hub expandable action-icon rows; НЕ НАЗНАЧЕНО Destination state; Support 4Tap and ScreenCart Hub assets; Docked 4Tap layout/lifecycle; Commands assignment Graffiti composition; 36 dp guide visibility threshold; KnockUI refinement execution plan 2026-10-03",
       "content_detailing": "separate follow-up per screen",
       "data_collection": "deferred: no real-trace accumulation/analysis in the next block",
       "personalization": "deferred: common templates + several user-specific samples",
-      "field_trial_status": "LG V30 / Android 9: 4-tap and Logo toggle stable; intermittent white residual field and Docked App Search/IME/system-nav defect block external field trials",
+      "field_trial_status": "primary-device physical PASS achieved; not final design canon and not production-ready",
       "tester_flow": "approved specification in private 4tap-app: Quick/Full tester modes, task-based wording for non-expert users, structured report; implementation pending"
     },
     "constraints": [
@@ -4752,7 +4752,7 @@
       "android",
       "shared"
     ],
-    "status": "implemented-candidate",
+    "status": "physical-pass-working-baseline",
     "inputs": [
       "4Tap Logo from KnockUI",
       "Corner trigger while internal 4Tap Activity is foreground"
@@ -4774,7 +4774,7 @@
       "android_implementation": "DockedFourTap lifecycle coordinator + FourTapApplication ActivityLifecycleCallbacks + DrawingOverlay floating/docked resize",
       "activity_fit": "internal Activity content receives bottom inset/padding equal to current KnockUI height",
       "external_command": "same close-before-launch rule in floating and docked; no persistent floating KnockUI after command execution",
-      "verification": "build/install/device review pending",
+      "verification": "LGM-V300L / Android 9 physical PASS; current Docked/IME/Back/swipe composition is a working baseline, not final design canon",
       "reverse_entry": "implemented candidate: resumed internal 4Tap Activity → corner-trigger → new KnockUI starts docked; current Activity/screen/state preserved",
       "reverse_entry_no_reset": "do not auto-navigate to Commands and do not recreate/reset current 4Tap screen",
       "non_4tap_trigger": "corner-trigger in any other foreground context keeps ordinary floating KnockUI",

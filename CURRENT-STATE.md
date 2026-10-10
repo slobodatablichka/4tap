@@ -1335,3 +1335,9 @@ Android candidate синхронизирован с новым UX-блоком:
 
 Статус: **refinement approved / implementation pending**.
 
+## Working system baseline PASS — 2026-10-10
+
+На основном устройстве `LGM-V300L / Android 9` текущая система 4Tap зафиксирована как **physical PASS / working baseline**.
+
+Это уже рабочая система, но ещё не финальный эталон и не production gate. Следующие этапы выполняются как refinement поверх подтверждённого baseline: onboarding, tester questionnaire, cross-device Android validation, store-test и дальнейший Design Canon.
+
