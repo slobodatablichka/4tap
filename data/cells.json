@@ -206,7 +206,7 @@
     "parameters": {
       "current_working_version": "v0.1",
       "core_surfaces": "KnockUI; 4Tap; Команды; Команда; Command Space / Pair Selection; Gesture Check / ПРОВЕРКА ЖЕСТА; Destination / ВЕДЕТ В; Assign / НАЗНАЧИТЬ; Алфавит; Настройки",
-      "immediate_next": "Full 4Tap navigation refinement build/install/device review; then continue Service Menu / SYSTEM / WEB / Docked IME gate",
+      "immediate_next": "Priority correction block: Docked→Floating white-screen/window lifecycle, App Search close asset, IME source split, Android Back regression; then tester/onboarding field-trial flow",
       "next_revision": "v0.2 after first canon-driven implementation/usability pass",
       "public_beta": "v1.0 before public beta",
       "knockui_panel_model": "approved: quick_shortcuts / drawing_canvas; remember last active panel; no Logo/About service view",
@@ -223,7 +223,7 @@
       "command_creation": "destination-first: ADD COMMAND → НАЗНАЧИТЬ → Destination → Pair Selection → Gesture Check → Command; pair-first: Commands/Combinations → Pair Selection → Gesture Check → ВЕДЕТ В → Destination → Command",
       "graffiti_display_priority": "default: canonical 4Tap Graffiti for alphabet signs being shown/selected/formed; plain text only for explicitly defined roles such as existing XY identifier or keyboard search",
       "graffiti_guides": "rendered glyph height >=36 dp → mandatory start circle + end triangle; <36 dp → hide both; threshold measured in dp, not raw pixels",
-      "back_navigation": "Back = internal previous level only; root Commands Back remains visible but inactive; Close × = close Full 4Tap; Android Back/Home/Recents remain system navigation",
+      "back_navigation": "Visible Back = internal previous level only; root Commands visible Back remains inactive. System Android Back mirrors internal Back on inner surfaces and exits Full 4Tap from root Commands. Home/Recents remain system-owned.",
       "implementation_gate": "DESIGN-CANON → canonical graphics registry → surface canon → code",
       "missing_rule": "stop implementation; approve rule first",
       "missing_graphic": "stop implementation; create/approve asset first",
@@ -242,7 +242,7 @@
       "knockui_auto_delay": "1.0 s",
       "knockui_unassigned_destination": "full recognized pair without assignment → НЕ НАЗНАЧЕНО / NOT ASSIGNED; Send disabled; no AUTO-send",
       "knockui_hub": "removed: 4Tap Logo now opens Commands directly; About moved to Hamburger Service Menu",
-      "knockui_docked_4tap": "symmetric split layout; current candidate adds IME priority: temporarily hide Docked KnockUI while standard IME is visible, then restore state",
+      "knockui_docked_4tap": "approved correction plan: Full-4Tap IME may temporarily hide Docked KnockUI; KnockUI App Search IME must not hide KnockUI; Android system navigation stays visible",
       "graffiti_scaling": "implemented candidate: canonical SVG viewBox + path + stroke-width + marker geometry scale with one transform",
       "graffiti_live_input_exception": "live finger stroke in KnockUI/Gesture Check is a separate feedback layer and may use its own UI thickness",
       "graffiti_relative_thickness_status": "no separate ratio TBD; use each SVG's own stroke-width and marker proportions",
@@ -257,7 +257,8 @@
       "knockui_draw_input_group": "Рисование + Slot1 + Slot2 = one rounded inactiveTeal module; 1.5/2 dp inset, 6 dp radius, 2 dp dark outline, 1 dp internal separators; pressedTeal selected; Send outside",
       "knockui_expanded_transition": "public alpha-gated transition: alpha=0 → frame → resize/state/flags → frame → alpha=1; no internal touch-region API",
       "service_menu": "Hamburger Service Menu scrolls vertically; text rows Activation / Personalization / Testing / About 4Tap; ScreenCart=SC and Support 4Tap=4T use icon + pair + brief text with spacing; SC icon has dark contrast background",
-      "tester_questionnaire": "approved spec: human-readable task-based flow; quick/full modes; factual answers Да/Частично/Нет/Не проверял; internal technical IDs; implementation pending"
+      "tester_questionnaire": "approved spec: human-readable task-based flow; quick/full modes; factual answers Да/Частично/Нет/Не проверял; internal technical IDs; implementation pending",
+      "app_search_close": "must use canonical close.svg asset; text × is not canonical UI graphics"
     },
     "constraints": [
       "Канон должен сохранять скорость и минимальное вмешательство в текущий контекст пользователя.",
@@ -3538,16 +3539,16 @@
     ],
     "parameters": {
       "stage_status": "active",
-      "current_task": "field-trial polish: slot-based Quick Shortcuts drag, Draw assign, WEB destination UX, install/re-arm behavior",
+      "current_task": "priority correction: Docked→Floating white-screen/lifecycle defect, App Search canonical Close, IME source split, Android Back/system-navigation regression",
       "graffiti": "4Tap Graffiti Profile v1 approved; Letter-F revised 2026-10-01",
-      "immediate_next": "implement tester questionnaire UI/report flow alongside current field-trial polish; then cross-device stock Android USB installs and non-public Google Play test",
+      "immediate_next": "implement and device-test priority correction block; only then continue onboarding/tester questionnaire and cross-device field trials",
       "subsequent": "policy/review dossier, public web presence, broader B2C configuration/deep links, production gate",
       "public_beta_gate": "Design Canon v1.0 before public beta",
       "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; normalized dual create-flow with shared Pair Selection + Gesture Check; brand teal #159B92; Pair Selection contextual geometry; Gesture Check stable physical-device baseline; recognizer v2.1 stable physical-device baseline; KnockUI control strip; Logo/About service view; Draw Slot1/Slot2 + Destination-line + AUTO/MANUAL/Send flow; KnockUI wide-bottom-panel geometry principle; adaptive 40–45% height; 1.0 s AUTO delay; Logo/About Hub expandable action-icon rows; НЕ НАЗНАЧЕНО Destination state; Support 4Tap and ScreenCart Hub assets; Docked 4Tap layout/lifecycle; Commands assignment Graffiti composition; 36 dp guide visibility threshold; KnockUI refinement execution plan 2026-10-03",
       "content_detailing": "separate follow-up per screen",
       "data_collection": "deferred: no real-trace accumulation/analysis in the next block",
       "personalization": "deferred: common templates + several user-specific samples",
-      "field_trial_status": "LGM-V300L / Android 9 remains primary fixture; latest UI candidate is usable but still under polish",
+      "field_trial_status": "LG V30 / Android 9: 4-tap and Logo toggle stable; intermittent white residual field and Docked App Search/IME/system-nav defect block external field trials",
       "tester_flow": "approved specification in private 4tap-app: Quick/Full tester modes, task-based wording for non-expert users, structured report; implementation pending"
     },
     "constraints": [
@@ -4749,7 +4750,7 @@
       "android",
       "shared"
     ],
-    "status": "preliminary-device-pass",
+    "status": "correction-plan",
     "inputs": [
       "4Tap Logo from KnockUI",
       "Corner trigger while internal 4Tap Activity is foreground"
@@ -4771,15 +4772,18 @@
       "android_implementation": "DockedFourTap lifecycle coordinator + FourTapApplication ActivityLifecycleCallbacks + DrawingOverlay floating/docked resize",
       "activity_fit": "internal Activity content receives bottom inset/padding equal to current KnockUI height",
       "external_command": "same close-before-launch rule in floating and docked; no persistent floating KnockUI after command execution",
-      "verification": "physical-device check reported 'Вроде всё в порядке'; preliminary PASS for symmetric Docked entry + X close + command-close semantics",
+      "verification": "4-tap activation, Logo→Commands and repeated Logo behavior are functionally stable on LG V30 / Android 9; transition/IME/navigation defects remain open",
       "reverse_entry": "implemented candidate: resumed internal 4Tap Activity → corner-trigger → new KnockUI starts docked; current Activity/screen/state preserved",
       "reverse_entry_no_reset": "do not auto-navigate to Commands and do not recreate/reset current 4Tap screen",
       "non_4tap_trigger": "corner-trigger in any other foreground context keeps ordinary floating KnockUI",
       "foreground_detection": "Application.ActivityLifecycleCallbacks tracks resumed internal 4Tap hosts",
       "trigger_layer": "CornerAccessibilityService unchanged; DrawingOverlay chooses docked/floating centrally",
-      "ime_priority": "candidate: while standard IME is visible inside full 4Tap, hide/non-touchable Docked KnockUI and release dock inset; restore same state when IME closes",
+      "ime_priority": "refined rule: IME from Full 4Tap text input may suspend Docked KnockUI; IME from KnockUI App Search must keep KnockUI visible as App Search + control strip + IME",
       "close_full_4tap": "Close × in Full 4Tap closes the Full 4Tap surface; in Docked state KnockUI returns to floating",
-      "android_navigation": "system Navigation Bar / gesture navigation stays system-owned and must remain available; 4Tap does not draw replicas"
+      "android_navigation": "system Navigation Bar / gesture area remains system-owned and visible; inner Android Back mirrors visible Back, root Commands Android Back exits Full 4Tap",
+      "transition_defect": "physical review found brief white flash and intermittent persistent white field on Docked→Floating/close paths; correction and focused lifecycle diagnostics are priority before external field trials",
+      "transition_target": "Docked compact → Floating compact should avoid unnecessary hide/resize/show; restore visible Floating KnockUI before finishing Full 4Tap; Full 4Tap uses dark window background",
+      "app_search_docked": "must preserve KnockUI and system navigation; current Commands + orphan IME composition is a defect"
     },
     "constraints": [
       "Docked 4Tap is a layout/lifecycle state, not a third working panel.",

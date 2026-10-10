@@ -1306,3 +1306,18 @@ Android candidate синхронизирован с новым UX-блоком:
 
 Статус: **spec approved / implementation pending**.
 
+## Docked / IME / Android Back correction plan — 2026-10-10
+
+На LG V30 / Android 9 подтверждены стабильные 4-tap activation и Logo toggle Floating ↔ Docked. Одновременно выявлены открытые дефекты переходов: краткий белый flash, редкое постоянное белое поле после закрытия/сворачивания, некорректный Docked App Search с orphan IME и исчезновением системной Android Navigation Bar.
+
+Утверждён приоритетный correction block:
+
+- убрать белый переход и диагностировать постоянное белое поле;
+- разделить IME от Full 4Tap и IME от KnockUI App Search;
+- App Search должен сохранять KnockUI и системную навигацию;
+- Close App Search использует канонический Close asset;
+- Android Back внутри Full 4Tap повторяет внутренний Back, а на root Commands покидает Full 4Tap;
+- пройти focused regression по основным Full 4Tap surfaces до внешних field trials.
+
+Статус: **approved correction plan / implementation pending**.
+
