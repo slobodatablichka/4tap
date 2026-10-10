@@ -206,7 +206,7 @@
     "parameters": {
       "current_working_version": "v0.1",
       "core_surfaces": "KnockUI; 4Tap; Команды; Команда; Command Space / Pair Selection; Gesture Check / ПРОВЕРКА ЖЕСТА; Destination / ВЕДЕТ В; Assign / НАЗНАЧИТЬ; Алфавит; Настройки",
-      "immediate_next": "implement Docked-only-Drawing, shared swipe-dismiss, deterministic Commands Back-chain and system-navigation preservation; then continue tester/onboarding work",
+      "immediate_next": "device-review implemented Docked-only-Drawing / swipe-dismiss / deterministic Back / App Search system-nav candidate; then onboarding/tester questionnaire",
       "next_revision": "v0.2 after first canon-driven implementation/usability pass",
       "public_beta": "v1.0 before public beta",
       "knockui_panel_model": "approved: quick_shortcuts / drawing_canvas; remember last active panel; no Logo/About service view",
@@ -223,7 +223,7 @@
       "command_creation": "destination-first: ADD COMMAND → НАЗНАЧИТЬ → Destination → Pair Selection → Gesture Check → Command; pair-first: Commands/Combinations → Pair Selection → Gesture Check → ВЕДЕТ В → Destination → Command",
       "graffiti_display_priority": "default: canonical 4Tap Graffiti for alphabet signs being shown/selected/formed; plain text only for explicitly defined roles such as existing XY identifier or keyboard search",
       "graffiti_guides": "rendered glyph height >=36 dp → mandatory start circle + end triangle; <36 dp → hide both; threshold measured in dp, not raw pixels",
-      "back_navigation": "deterministic shared semantics: Commands Y-stage → X-stage → Assignments → exit Full 4Tap; visible Back and Android Back must match; Home/Recents remain system-owned",
+      "back_navigation": "implemented candidate: Commands Y-stage → X-stage → Assignments → exit Full 4Tap; visible/system Back aligned",
       "implementation_gate": "DESIGN-CANON → canonical graphics registry → surface canon → code",
       "missing_rule": "stop implementation; approve rule first",
       "missing_graphic": "stop implementation; create/approve asset first",
@@ -242,7 +242,7 @@
       "knockui_auto_delay": "1.0 s",
       "knockui_unassigned_destination": "full recognized pair without assignment → НЕ НАЗНАЧЕНО / NOT ASSIGNED; Send disabled; no AUTO-send",
       "knockui_hub": "removed: 4Tap Logo now opens Commands directly; About moved to Hamburger Service Menu",
-      "knockui_docked_4tap": "refined canon: Docked 4Tap uses Drawing panel only; Full 4Tap + Quick Shortcuts is not allowed",
+      "knockui_docked_4tap": "implemented candidate: Docked uses Drawing only; selecting Quick Shortcuts exits Full 4Tap to Floating KnockUI",
       "graffiti_scaling": "implemented candidate: canonical SVG viewBox + path + stroke-width + marker geometry scale with one transform",
       "graffiti_live_input_exception": "live finger stroke in KnockUI/Gesture Check is a separate feedback layer and may use its own UI thickness",
       "graffiti_relative_thickness_status": "no separate ratio TBD; use each SVG's own stroke-width and marker proportions",
@@ -259,8 +259,8 @@
       "service_menu": "Hamburger Service Menu scrolls vertically; text rows Activation / Personalization / Testing / About 4Tap; ScreenCart=SC and Support 4Tap=4T use icon + pair + brief text with spacing; SC icon has dark contrast background",
       "tester_questionnaire": "approved spec: human-readable task-based flow; quick/full modes; factual answers Да/Частично/Нет/Не проверял; internal technical IDs; implementation pending",
       "app_search_close": "must use canonical close.svg asset; text × is not canonical UI graphics",
-      "knockui_expanded_dismiss": "Graffiti Reference, App Search and Full 4Tap support horizontal swipe-dismiss as an alternative to Close",
-      "app_search_ime": "system IME requested in search-oriented mode; 4Tap does not create a custom keyboard only to suppress vendor emoji/microphone toolbar"
+      "knockui_expanded_dismiss": "implemented candidate: Graffiti Reference and Full 4Tap horizontal swipe-dismiss; App Search keeps existing swipe-dismiss",
+      "app_search_ime": "implemented candidate: search-oriented system IME; overlay constrained to available display height so system navigation remains outside; vendor keyboard toolbar remains device-dependent"
     },
     "constraints": [
       "Канон должен сохранять скорость и минимальное вмешательство в текущий контекст пользователя.",
@@ -3541,9 +3541,9 @@
     ],
     "parameters": {
       "stage_status": "active",
-      "current_task": "implement Docked-only-Drawing composition, swipe-dismiss for upper surfaces, deterministic Commands Back-chain and Docked App Search system-nav preservation",
+      "current_task": "device-review implemented Docked/swipe/Back/App Search candidate",
       "graffiti": "4Tap Graffiti Profile v1 approved; Letter-F revised 2026-10-01",
-      "immediate_next": "build/install focused regression after refinement; then onboarding/tester questionnaire and cross-device field trials",
+      "immediate_next": "build/install focused regression; then onboarding/tester questionnaire and cross-device field trials",
       "subsequent": "policy/review dossier, public web presence, broader B2C configuration/deep links, production gate",
       "public_beta_gate": "Design Canon v1.0 before public beta",
       "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; normalized dual create-flow with shared Pair Selection + Gesture Check; brand teal #159B92; Pair Selection contextual geometry; Gesture Check stable physical-device baseline; recognizer v2.1 stable physical-device baseline; KnockUI control strip; Logo/About service view; Draw Slot1/Slot2 + Destination-line + AUTO/MANUAL/Send flow; KnockUI wide-bottom-panel geometry principle; adaptive 40–45% height; 1.0 s AUTO delay; Logo/About Hub expandable action-icon rows; НЕ НАЗНАЧЕНО Destination state; Support 4Tap and ScreenCart Hub assets; Docked 4Tap layout/lifecycle; Commands assignment Graffiti composition; 36 dp guide visibility threshold; KnockUI refinement execution plan 2026-10-03",
@@ -4752,7 +4752,7 @@
       "android",
       "shared"
     ],
-    "status": "refinement-approved",
+    "status": "implemented-candidate",
     "inputs": [
       "4Tap Logo from KnockUI",
       "Corner trigger while internal 4Tap Activity is foreground"
@@ -4774,7 +4774,7 @@
       "android_implementation": "DockedFourTap lifecycle coordinator + FourTapApplication ActivityLifecycleCallbacks + DrawingOverlay floating/docked resize",
       "activity_fit": "internal Activity content receives bottom inset/padding equal to current KnockUI height",
       "external_command": "same close-before-launch rule in floating and docked; no persistent floating KnockUI after command execution",
-      "verification": "refinement approved; implementation/device review pending",
+      "verification": "build/install/device review pending",
       "reverse_entry": "implemented candidate: resumed internal 4Tap Activity → corner-trigger → new KnockUI starts docked; current Activity/screen/state preserved",
       "reverse_entry_no_reset": "do not auto-navigate to Commands and do not recreate/reset current 4Tap screen",
       "non_4tap_trigger": "corner-trigger in any other foreground context keeps ordinary floating KnockUI",
@@ -4789,12 +4789,12 @@
       "transition_fix": "implemented candidate: compact Docked↔Floating uses synchronous resize without alpha-hide; Full 4Tap Activities use dark window background",
       "android_back": "implemented candidate: inner screens keep their Back semantics; root Commands system Back exits Full 4Tap to Floating KnockUI",
       "diagnostics": "minimal 4TapWindow lifecycle/window transition logging added for intermittent residual-window diagnosis",
-      "allowed_bottom_panel": "Drawing only",
-      "logo_from_shortcuts": "switch Floating KnockUI to Drawing before opening Full 4Tap",
-      "shortcuts_from_docked": "close Full 4Tap and return Floating KnockUI with Quick Shortcuts over previous Android context",
-      "swipe_dismiss": "Full 4Tap horizontal swipe dismisses upper surface and returns Floating KnockUI",
-      "app_search_ime": "App Search keeps KnockUI; search-oriented system IME; system navigation must remain available",
-      "back_chain": "Commands: Y-stage → X-stage → Assignments → exit Full 4Tap; visible and system Back share semantics"
+      "allowed_bottom_panel": "Drawing only — implemented candidate",
+      "logo_from_shortcuts": "implemented: Docked transition forces Drawing",
+      "shortcuts_from_docked": "implemented: closes Full 4Tap then shows Floating Quick Shortcuts",
+      "swipe_dismiss": "implemented through shared FullFourTapActivity swipe host",
+      "app_search_ime": "implemented candidate: search-oriented IME + available-display-height overlay; device verification pending",
+      "back_chain": "implemented candidate: Commands Y-stage → X-stage → Assignments → exit"
     },
     "constraints": [
       "Docked 4Tap is a layout/lifecycle state, not a third working panel.",
