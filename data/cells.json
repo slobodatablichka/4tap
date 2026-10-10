@@ -262,7 +262,8 @@
       "knockui_expanded_dismiss": "implemented candidate: Graffiti Reference and Full 4Tap horizontal swipe-dismiss; App Search keeps existing swipe-dismiss",
       "app_search_ime": "implemented candidate: search-oriented system IME; overlay constrained to available display height so system navigation remains outside; vendor keyboard toolbar remains device-dependent",
       "usage_access_semantics": "not required for 4Tap operation; recommended during onboarding for better initial personalization and starter assignments",
-      "first_run_settings_flow": "after first launch, explain → user confirms → open system Accessibility / Usage Access screens → auto-check on return; app never auto-grants special access"
+      "first_run_settings_flow": "after first launch, explain → user confirms → open system Accessibility / Usage Access screens → auto-check on return; app never auto-grants special access",
+      "special_access_navigation": "4Tap should navigate as close as safely possible to required system toggles using verified OEM-specific routes with capability-check, version/manufacturer gating, official fallback and state verification; never automate the user's system decision"
     },
     "constraints": [
       "Канон должен сохранять скорость и минимальное вмешательство в текущий контекст пользователя.",
@@ -3545,7 +3546,7 @@
       "stage_status": "active — working baseline physical PASS on LGM-V300L / Android 9",
       "current_task": "refinement on top of a confirmed working baseline; preserve regression stability",
       "graffiti": "4Tap Graffiti Profile v1 approved; Letter-F revised 2026-10-01",
-      "immediate_next": "design first-run guided special-access onboarding, then tester questionnaire and cross-device validation",
+      "immediate_next": "build/install verify SpecialAccessRouter on primary device; then approve detailed first-run UI and expand OEM route matrix during cross-device trials",
       "subsequent": "policy/review dossier, public web presence, broader B2C configuration/deep links, production gate",
       "public_beta_gate": "Design Canon v1.0 before public beta",
       "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; normalized dual create-flow with shared Pair Selection + Gesture Check; brand teal #159B92; Pair Selection contextual geometry; Gesture Check stable physical-device baseline; recognizer v2.1 stable physical-device baseline; KnockUI control strip; Logo/About service view; Draw Slot1/Slot2 + Destination-line + AUTO/MANUAL/Send flow; KnockUI wide-bottom-panel geometry principle; adaptive 40–45% height; 1.0 s AUTO delay; Logo/About Hub expandable action-icon rows; НЕ НАЗНАЧЕНО Destination state; Support 4Tap and ScreenCart Hub assets; Docked 4Tap layout/lifecycle; Commands assignment Graffiti composition; 36 dp guide visibility threshold; KnockUI refinement execution plan 2026-10-03",
@@ -3554,7 +3555,8 @@
       "personalization": "deferred: common templates + several user-specific samples",
       "field_trial_status": "primary-device physical PASS achieved; not final design canon and not production-ready",
       "tester_flow": "approved specification in private 4tap-app: Quick/Full tester modes, task-based wording for non-expert users, structured report; implementation pending",
-      "onboarding_special_access": "Accessibility required core access with explicit user enable in system Settings; Usage Access optional for operation but recommended for correct initial setup/personalization; fallback remains functional"
+      "onboarding_special_access": "Accessibility required; Usage Access recommended for correct initial personalization but not required. SpecialAccessRouter now uses verified OEM route → capability/version gate → Android fallback → factual state check.",
+      "oem_settings_router": "implemented candidate: Samsung Accessibility is first OEM-specific route; other OEMs stay on official fallback until real-device verification"
     },
     "constraints": [
       "Не масштабировать recognizer и UI хаотично до фиксации соответствующих канонов.",

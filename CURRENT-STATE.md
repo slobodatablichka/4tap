@@ -1354,3 +1354,17 @@ Android candidate синхронизирован с новым UX-блоком:
 
 Статус: **principle approved / detailed onboarding UI pending**.
 
+## OEM Special Access Router — 2026-10-10
+
+Утверждён и реализован infrastructure candidate:
+
+- 4Tap стремится привести пользователя максимально близко к нужному системному переключателю;
+- разрешены только проверенные OEM-specific Settings routes;
+- обязательны capability-check, manufacturer/version gating, официальный Android fallback и проверка фактического состояния после возврата;
+- системное решение пользователя никогда не автоматизируется;
+- первый OEM-specific Accessibility route реализован для Samsung;
+- другие OEM получают отдельные рецепты только после проверки на реальных устройствах;
+- Usage Access остаётся рекомендуемым для правильной первоначальной персонализации, но не обязательным для работы 4Tap.
+
+Статус: **implemented candidate / device review pending**.
+
