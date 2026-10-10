@@ -1341,3 +1341,16 @@ Android candidate синхронизирован с новым UX-блоком:
 
 Это уже рабочая система, но ещё не финальный эталон и не production gate. Следующие этапы выполняются как refinement поверх подтверждённого baseline: onboarding, tester questionnaire, cross-device Android validation, store-test и дальнейший Design Canon.
 
+## First-run special-access onboarding principle — 2026-10-10
+
+Уточнено:
+
+- Accessibility обязателен для core-механики и включается только самим пользователем в системных настройках;
+- Usage Access не обязателен для работоспособности, но **рекомендуется для правильной первоначальной настройки и персонализации**;
+- без Usage Access сохраняется рабочий fallback;
+- после первого запуска 4Tap должен сам вести пользователя к нужным системным экранам и автоматически проверять состояние доступа после возврата;
+- системные подтверждения не обходятся и не выдаются приложением автоматически;
+- Android 13+ sideload/debug flow должен учитывать `Allow restricted settings`.
+
+Статус: **principle approved / detailed onboarding UI pending**.
+
