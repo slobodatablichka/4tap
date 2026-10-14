@@ -1397,3 +1397,16 @@ Status: **implemented candidate / device review pending**. Previous primary-devi
 
 Статус: **implemented fix / device review pending**.
 
+## Global control strip — 2026-10-14
+
+Implemented candidate:
+
+- Full 4Tap без KnockUI получает единый нижний GLOBAL strip: `Logo | Ярлыки | Graffiti Reference | Клавиатура | Рисование`;
+- GLOBAL не содержит `Close / Slot1 / Slot2 / Send`;
+- KnockUI сохраняет KNOCKUI-вариант той же базовой строки с контекстными Draw-controls и `Close KnockUI`;
+- одновременно виден только один strip;
+- Keyboard из GLOBAL использует GLOBAL-вариант без нижнего Close, сохраняя локальный Close в поисковом header;
+- Docked KnockUI скрывает GLOBAL strip и восстанавливает его после undock, если Full 4Tap остаётся открыт.
+
+Статус: **implemented candidate / device review pending**.
+
