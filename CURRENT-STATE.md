@@ -1423,3 +1423,10 @@ Implemented candidate:
 
 Статус: **implemented candidate / primary-device review pending**.
 
+
+
+## Gesture Check swipe fix PASS — 2026-10-14
+
+На основном Android-устройстве подтверждено: после отключения глобального Full 4Tap swipe-dismiss на `ПРОВЕРКЕ ЖЕСТА` рисование первого/второго знака больше не сворачивает Full 4Tap.
+
+Статус: **physical PASS**.
