@@ -1368,3 +1368,13 @@ Android candidate синхронизирован с новым UX-блоком:
 
 Статус: **implemented candidate / device review pending**.
 
+## Design Canon: special-access journey — 2026-10-14
+
+Зафиксирован обязательный паттерн:
+
+`4Tap explanation → canonical 4Tap action → system Settings → factual state check → canonical 4Tap result state`.
+
+Системный Android/OEM Settings UI остаётся системным и не имитируется. Весь интерфейс до перехода и после возврата оформляется по Design Canon 4Tap. Правило обязательно для onboarding, Activation и Personalization.
+
+Статус: **canon approved**.
+

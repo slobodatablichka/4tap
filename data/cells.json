@@ -263,7 +263,9 @@
       "app_search_ime": "implemented candidate: search-oriented system IME; overlay constrained to available display height so system navigation remains outside; vendor keyboard toolbar remains device-dependent",
       "usage_access_semantics": "not required for 4Tap operation; recommended during onboarding for better initial personalization and starter assignments",
       "first_run_settings_flow": "after first launch, explain → user confirms → open system Accessibility / Usage Access screens → auto-check on return; app never auto-grants special access",
-      "special_access_navigation": "4Tap should navigate as close as safely possible to required system toggles using verified OEM-specific routes with capability-check, version/manufacturer gating, official fallback and state verification; never automate the user's system decision"
+      "special_access_navigation": "4Tap should navigate as close as safely possible to required system toggles using verified OEM-specific routes with capability-check, version/manufacturer gating, official fallback and state verification; never automate the user's system decision",
+      "special_access_journey": "canonical pattern: 4Tap explanation → canonical 4Tap action → system Settings → factual state check → canonical 4Tap result state",
+      "system_settings_visual_rule": "Android/OEM Settings remains system-owned and is never imitated or restyled; all UI before transition and after return follows 4Tap Design Canon"
     },
     "constraints": [
       "Канон должен сохранять скорость и минимальное вмешательство в текущий контекст пользователя.",
@@ -3555,7 +3557,7 @@
       "personalization": "deferred: common templates + several user-specific samples",
       "field_trial_status": "primary-device physical PASS achieved; not final design canon and not production-ready",
       "tester_flow": "approved specification in private 4tap-app: Quick/Full tester modes, task-based wording for non-expert users, structured report; implementation pending",
-      "onboarding_special_access": "Accessibility required; Usage Access recommended for correct initial personalization but not required. SpecialAccessRouter now uses verified OEM route → capability/version gate → Android fallback → factual state check.",
+      "onboarding_special_access": "first-run and Service Menu special-access flows must wrap system Settings with branded explanation before and verified branded result after return",
       "oem_settings_router": "implemented candidate: Samsung Accessibility is first OEM-specific route; other OEMs stay on official fallback until real-device verification"
     },
     "constraints": [
