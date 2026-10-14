@@ -1378,3 +1378,16 @@ Android candidate синхронизирован с новым UX-блоком:
 
 Статус: **canon approved**.
 
+## Commands logic + Docked transition normalization — 2026-10-14
+
+Implemented candidate over the existing working baseline:
+
+- `НАЗНАЧЕНИЯ` / `КОМБИНАЦИИ` are peer views; tabs switch views, Back only handles real nesting `Y → X`;
+- occupied XY opens `КОМАНДА` directly; destructive Delete requires confirmation;
+- Docked startup now requires confirmed resumed `FullFourTapActivity`;
+- Docked session is separated from current overlay geometry;
+- temporary external context may float KnockUI without docking the external app; return to the same Full 4Tap session may restore Docked;
+- explicit Full 4Tap close waits for confirmed host stop before transitioning KnockUI to Floating.
+
+Status: **implemented candidate / device review pending**. Previous primary-device working baseline remains the regression reference.
+
