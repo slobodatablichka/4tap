@@ -1391,3 +1391,9 @@ Implemented candidate over the existing working baseline:
 
 Status: **implemented candidate / device review pending**. Previous primary-device working baseline remains the regression reference.
 
+## Gesture Check swipe conflict fix — 2026-10-14
+
+Зафиксирована и исправлена регрессия: штрих на `ПРОВЕРКЕ ЖЕСТА` мог быть принят за horizontal swipe-dismiss Full 4Tap. Теперь Gesture Check является явным исключением: canvas рисования имеет приоритет, глобальный swipe-dismiss на этой поверхности отключён, Back / Close остаются доступными.
+
+Статус: **implemented fix / device review pending**.
+

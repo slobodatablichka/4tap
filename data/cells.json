@@ -265,7 +265,8 @@
       "first_run_settings_flow": "after first launch, explain → user confirms → open system Accessibility / Usage Access screens → auto-check on return; app never auto-grants special access",
       "special_access_navigation": "4Tap should navigate as close as safely possible to required system toggles using verified OEM-specific routes with capability-check, version/manufacturer gating, official fallback and state verification; never automate the user's system decision",
       "special_access_journey": "canonical pattern: 4Tap explanation → canonical 4Tap action → system Settings → factual state check → canonical 4Tap result state",
-      "system_settings_visual_rule": "Android/OEM Settings remains system-owned and is never imitated or restyled; all UI before transition and after return follows 4Tap Design Canon"
+      "system_settings_visual_rule": "Android/OEM Settings remains system-owned and is never imitated or restyled; all UI before transition and after return follows 4Tap Design Canon",
+      "gesture_check_swipe_priority": "Gesture Check drawing canvas has priority over Full 4Tap swipe-dismiss; global swipe is disabled on Gesture Check, Back/Close remain canonical exits"
     },
     "constraints": [
       "Канон должен сохранять скорость и минимальное вмешательство в текущий контекст пользователя.",
@@ -3546,7 +3547,7 @@
     ],
     "parameters": {
       "stage_status": "active — working baseline physical PASS on LGM-V300L / Android 9",
-      "current_task": "device-review Commands logic normalization + Docked session/transition refinement on top of the working baseline",
+      "current_task": "device-review Commands/Docked normalization plus Gesture Check swipe-conflict fix",
       "graffiti": "4Tap Graffiti Profile v1 approved; Letter-F revised 2026-10-01",
       "immediate_next": "build/install focused regression: peer-view Back semantics, occupied XY direct open, delete confirmation, Docked external-context suspend/resume and confirmed close transition",
       "subsequent": "policy/review dossier, public web presence, broader B2C configuration/deep links, production gate",
