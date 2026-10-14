@@ -1410,3 +1410,16 @@ Implemented candidate:
 
 Статус: **implemented candidate / device review pending**.
 
+## Global strip + command save canon — 2026-10-14
+
+Зафиксирована correction-candidate модель:
+
+- Full 4Tap без реального KnockUI получает Global control strip `Logo | Ярлыки | Graffiti Reference | Клавиатура | Рисование`;
+- GLOBAL не содержит `Close / Slot1 / Slot2 / Send`; локальный Close рабочей поверхности остаётся;
+- скрытие GLOBAL определяется фактическим наличием KnockUI, а не одним docked-флагом;
+- GLOBAL `КЛАВИАТУРА` не имеет нижнего Close и использует собственный Close search-header;
+- успешный Save завершает flow в `Commands → НАЗНАЧЕНИЯ`, показывает и кратко выделяет сохранённую строку;
+- продуктовый канон: `один точный Destination → одна XY`; UI уже назначенного Destination остаётся следующим refinement.
+
+Статус: **implemented candidate / primary-device review pending**.
+

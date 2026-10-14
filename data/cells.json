@@ -267,9 +267,11 @@
       "special_access_journey": "canonical pattern: 4Tap explanation → canonical 4Tap action → system Settings → factual state check → canonical 4Tap result state",
       "system_settings_visual_rule": "Android/OEM Settings remains system-owned and is never imitated or restyled; all UI before transition and after return follows 4Tap Design Canon",
       "gesture_check_swipe_priority": "Gesture Check drawing canvas has priority over Full 4Tap swipe-dismiss; global swipe is disabled on Gesture Check, Back/Close remain canonical exits",
-      "global_control_strip": "implemented candidate: Full 4Tap without KnockUI shows bottom GLOBAL strip = Logo | Shortcuts | Graffiti Reference | Keyboard | Drawing; no Close, Slot1, Slot2 or Send",
-      "control_strip_visibility": "exactly one strip visible: GLOBAL when Full 4Tap has no KnockUI; KNOCKUI strip when KnockUI is open/docked",
-      "app_search_global_strip": "Keyboard opened from GLOBAL uses GLOBAL strip without lower Close; its local search-header Close remains"
+      "global_control_strip": "Full 4Tap without real KnockUI: Logo | Quick Shortcuts | Graffiti Reference | App Search | Drawing; no Close/Slot1/Slot2/Send; local surface Close remains",
+      "control_strip_visibility": "hide Global strip only when a real KnockUI with its own strip is present; do not use stale docked flag alone",
+      "app_search_global_strip": "Keyboard opened from GLOBAL uses GLOBAL strip without lower Close; its local search-header Close remains",
+      "command_destination_uniqueness": "one exact Destination → one user XY; repeated destination opens/edits existing assignment rather than creating an alias; no silent auto-reassign",
+      "command_save_completion": "SAVE → Commands / Assignments; saved row is scrolled into view and briefly highlighted; Combinations is not a post-save confirmation screen"
     },
     "constraints": [
       "Канон должен сохранять скорость и минимальное вмешательство в текущий контекст пользователя.",
@@ -3550,9 +3552,9 @@
     ],
     "parameters": {
       "stage_status": "active — working baseline physical PASS on LGM-V300L / Android 9",
-      "current_task": "device-review Global control strip plus Commands/Docked refinements",
+      "current_task": "device-review completed Global control strip correction + post-save reveal; next design/implementation refinement is duplicate-Destination handling",
       "graffiti": "4Tap Graffiti Profile v1 approved; Letter-F revised 2026-10-01",
-      "immediate_next": "build/install focused regression: all Full 4Tap surfaces show GLOBAL strip only without KnockUI; Keyboard/Graffiti GLOBAL variant; Drawing/Shortcuts transition to KNOCKUI variant; no duplicate Close/strip",
+      "immediate_next": "build/install primary-device gate: Global strip on every Full 4Tap surface without KnockUI, GLOBAL Keyboard without lower Close, Save→Assignments reveal/highlight, then implement already-assigned Destination UX",
       "subsequent": "policy/review dossier, public web presence, broader B2C configuration/deep links, production gate",
       "public_beta_gate": "Design Canon v1.0 before public beta",
       "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; normalized dual create-flow with shared Pair Selection + Gesture Check; brand teal #159B92; Pair Selection contextual geometry; Gesture Check stable physical-device baseline; recognizer v2.1 stable physical-device baseline; KnockUI control strip; Logo/About service view; Draw Slot1/Slot2 + Destination-line + AUTO/MANUAL/Send flow; KnockUI wide-bottom-panel geometry principle; adaptive 40–45% height; 1.0 s AUTO delay; Logo/About Hub expandable action-icon rows; НЕ НАЗНАЧЕНО Destination state; Support 4Tap and ScreenCart Hub assets; Docked 4Tap layout/lifecycle; Commands assignment Graffiti composition; 36 dp guide visibility threshold; KnockUI refinement execution plan 2026-10-03",
@@ -4807,7 +4809,7 @@
       "app_search_ime": "implemented candidate: search-oriented IME + available-display-height overlay; device verification pending",
       "back_chain": "Commands: tabs switch peer views; Back only Y-stage → X-stage; root Android Back exits Full 4Tap",
       "session_model": "Docked session is separate from current Floating/Docked geometry; temporary external context floats KnockUI, returning Full 4Tap may re-dock only within the same session",
-      "global_strip_interlock": "Docked KnockUI hides Full 4Tap GLOBAL strip; undock restores it if Full 4Tap remains open"
+      "global_strip_interlock": "Global strip visibility is driven by actual KnockUI presence, not docked boolean alone; real Docked KnockUI owns the single visible control strip"
     },
     "constraints": [
       "Docked 4Tap is a layout/lifecycle state, not a third working panel.",
