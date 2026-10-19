@@ -933,7 +933,7 @@
     "title": "Corner Tap Sequence",
     "group": "ACTIVATION",
     "short": "В LEFT/RIGHT области navigation bar 4Tap стабильно активируется последовательностью из 4 быстрых тапов; продуктовый порог остаётся 3/4.",
-    "description": "Текущий physical-device prototype получает тапы через две небольшие TYPE_ACCESSIBILITY_OVERLAY зоны, размещённые AccessibilityService внутри navigation bar. Четыре валидных тапа формируют ActivationRequest. LEFT и RIGHT работают независимо; после активации зоны автоматически перевооружаются.",
+    "description": "Текущий physical-device prototype получает тапы через две небольшие TYPE_ACCESSIBILITY_OVERLAY зоны, размещённые AccessibilityService внутри navigation bar. Четыре валидных тапа формируют ActivationRequest. LEFT и RIGHT работают независимо; после активации зоны автоматически перевооружаются. По физической проверке 19.10.2026 ширина обеих нижних зон уменьшена с 96 до 64 dp при высоте 48 dp: активация с обеих сторон и Android △ Back — PASS.",
     "purpose": "Активировать 4Tap короткой угловой последовательностью.",
     "kind": "core",
     "models": [
@@ -958,7 +958,9 @@
       "trigger_surface": "TYPE_ACCESSIBILITY_OVERLAY",
       "current_proof": "navigation-bar 4-tap → KnockUI stable on LGM-V300L / Android 9",
       "rearm_ms": 700,
-      "private_ip_research": "separate private alternative-input research exists; technical mechanism intentionally withheld pending prior-art/patent review"
+      "private_ip_research": "separate private alternative-input research exists; technical mechanism intentionally withheld pending prior-art/patent review",
+      "current_zone_geometry": "LEFT and RIGHT: 64 × 48 dp, anchored to bottom screen corners (verified LGM-V300L / Android 9).",
+      "system_back_regression_fix": "Narrow both touch zones from 96 to 64 dp horizontally, without vertical displacement. Four taps and Android Back device PASS."
     },
     "constraints": [
       "Current proof is Android 9 / LGM-V300L and must be repeated on newer stock Android.",
@@ -3529,7 +3531,7 @@
     "title": "Stage 2 — Product Canon",
     "group": "ROADMAP",
     "short": "Current Android recognizer/Gesture Check build is stable on-device; preserve as baseline.",
-    "description": "Recognizer v2.1/Gesture Check remain the accepted physical-device baseline. KnockUI/App Search/Quick Shortcuts/Assignments have moved through successive real-device candidates. Current polish focuses on slot-based shortcut drag, Draw assignment action, WEB destination UX and preserving the stable recognizer while the project enters broader Android field trials.",
+    "description": "Recognizer v2.1/Gesture Check remain the accepted physical-device baseline. KnockUI/App Search/Quick Shortcuts/Assignments have moved through successive real-device candidates. Current polish focuses on slot-based shortcut drag, Draw assignment action, WEB destination UX and preserving the stable recognizer while the project enters broader Android field trials. Контрольная точка № 3 зафиксирована в 4tap-app: основные Docked/Home/Recents/Back и Full → ABCD физически подтверждены. Ближайший Product Canon: утверждённая кнопка РЕДАКТИРОВАТЬ на КОМАНДА, затем Quick Shortcuts, Draw assignment action и WEB UX; отдельно Android cross-device field trials.",
     "purpose": "Стабилизировать визуальный язык и жестовые эталоны до масштабирования продукта.",
     "kind": "core",
     "models": [
@@ -3552,7 +3554,7 @@
     ],
     "parameters": {
       "stage_status": "active — working baseline physical PASS on LGM-V300L / Android 9",
-      "current_task": "device-review completed Global control strip correction + post-save reveal; next design/implementation refinement is duplicate-Destination handling",
+      "current_task": "После Control Point 3 — синхронизированная карта, затем КОМАНДА: РЕДАКТИРОВАТЬ между УДАЛИТЬ и СОХРАНИТЬ (не реализовано/не подтверждено); далее Quick Shortcuts / Draw action / WEB UX.",
       "graffiti": "4Tap Graffiti Profile v1 approved; Letter-F revised 2026-10-01",
       "immediate_next": "build/install primary-device gate: Global strip on every Full 4Tap surface without KnockUI, GLOBAL Keyboard without lower Close, Save→Assignments reveal/highlight, then implement already-assigned Destination UX",
       "subsequent": "policy/review dossier, public web presence, broader B2C configuration/deep links, production gate",
@@ -3564,7 +3566,8 @@
       "field_trial_status": "primary-device physical PASS achieved; not final design canon and not production-ready",
       "tester_flow": "approved specification in private 4tap-app: Quick/Full tester modes, task-based wording for non-expert users, structured report; implementation pending",
       "onboarding_special_access": "first-run and Service Menu special-access flows must wrap system Settings with branded explanation before and verified branded result after return",
-      "oem_settings_router": "implemented candidate: Samsung Accessibility is first OEM-specific route; other OEMs stay on official fallback until real-device verification"
+      "oem_settings_router": "implemented candidate: Samsung Accessibility is first OEM-specific route; other OEMs stay on official fallback until real-device verification",
+      "checkpoint_3": "4tap-app control-point-3 branch at 7cb84e719e2ac3edab51feb173815a5d8b4c98d0; 2026-10-19; Android 9 device PASS routes listed in CONTROL-POINT-3.md."
     },
     "constraints": [
       "Не масштабировать recognizer и UI хаотично до фиксации соответствующих канонов.",
@@ -4078,7 +4081,8 @@
       "expanded_surface_status": "Graffiti Reference works physically; current anti-flicker candidate uses public alpha-gated WindowManager resize after compile failure of hidden touch-region approach; build/device re-review pending",
       "control_strip_geometry": "48 dp strip; Android candidate cell width = min(48 dp, KnockUI width / 9) so the full Draw row fits without overlap",
       "draw_input_group": "stronger candidate: Рисование + Slot1 + Slot2 share rounded inactiveTeal module; 1.5 dp horizontal / 2 dp vertical inset; 6 dp radius; 2 dp #171717 outline; 1 dp internal separators; pressedTeal selected state; Send outside group",
-      "service_menu": "moved to full-4Tap Commands Hamburger; not a KnockUI panel/view"
+      "service_menu": "moved to full-4Tap Commands Hamburger; not a KnockUI panel/view",
+      "system_navigation_checkpoint_3": "Floating → Recents hide and four-tap reactivation: device PASS; Floating → Home hide intermittent; docked Home/Recents return and Close device PASS."
     },
     "constraints": [
       "Обе рабочие панели занимают одну рабочую область KnockUI и не показываются рядом одновременно.",
@@ -4318,7 +4322,7 @@
       "inactive_surface": "#365C58",
       "title": "Roboto Slab 28 sp / 800",
       "row_text": "Roboto Slab 18 sp / 800",
-      "bottom_actions": "DELETE | SAVE; fixed 56 dp",
+      "bottom_actions": "УДАЛИТЬ | РЕДАКТИРОВАТЬ | СОХРАНИТЬ — утверждённый целевой ряд; кнопка РЕДАКТИРОВАТЬ между двумя другими пока не подтверждена в Android-коде.",
       "command_xy": "editable",
       "command_edit": "implemented candidate: standalone Pair Selection → Gesture Check → selected XY returns to current CommandDraft; final change remains pending until SAVE",
       "status_toggle": "ACTIVE ↔ INACTIVE; no Android switch",
@@ -4332,7 +4336,8 @@
       "scale_review": "current implementation feels somewhat large; review during refinement",
       "destination_flow": "implemented first pass: opens Destination and receives APP/SYSTEM/WEB result",
       "existing_command_edit": "Destination and XY remain independently editable",
-      "new_command_entry": "complete draft arrives after XY + Destination; Gesture Check is optional/non-blocking with per-attempt feedback; both destination-first and pair-first creation flows passed on physical device"
+      "new_command_entry": "complete draft arrives after XY + Destination; Gesture Check is optional/non-blocking with per-attempt feedback; both destination-first and pair-first creation flows passed on physical device",
+      "edit_button_plan": "РЕДАКТИРОВАТЬ: утверждено в 4tap-app/ROADMAP.md 18.10.2026, реализация/взаимодействия требуют следующего локального согласования и device PASS."
     },
     "constraints": [
       "Destination surface is detailed and implemented through its own Design Canon.",
@@ -4343,7 +4348,8 @@
       "During XY edit, the Command's current pair does not conflict with itself; final change remains unsaved until SAVE."
     ],
     "open_questions": [
-      "Final delete confirmation behavior."
+      "Final delete confirmation behavior.",
+      "Функциональный контракт режима РЕДАКТИРОВАТЬ перед реализацией: что блокируется в режиме просмотра и как завершаются изменения."
     ],
     "tags": [
       "design",
@@ -4754,7 +4760,7 @@
     "title": "KnockUI Docked 4Tap",
     "group": "UX SYSTEM",
     "short": "При вызове полного 4Tap из KnockUI нижний KnockUI остаётся, становится full-width, а полный 4Tap занимает всю оставшуюся верхнюю область.",
-    "description": "Docked 4Tap — единое layout/lifecycle-состояние, которое возникает симметрично: при `Открыть 4Tap` из KnockUI и при corner-trigger KnockUI поверх уже открытого пользовательского UI 4Tap.",
+    "description": "Docked 4Tap — единое layout/lifecycle-состояние, которое возникает симметрично: при `Открыть 4Tap` из KnockUI и при corner-trigger KnockUI поверх уже открытого пользовательского UI 4Tap. Контрольная точка № 3 (19.10.2026): физические PASS Docked → Close → Floating; Docked → Home → Docked → Close → Floating; Docked → Recents → Docked → Close → Floating.",
     "purpose": "Сохранить KnockUI доступным одновременно с полным 4Tap и использовать весь доступный экран без взаимного перекрытия.",
     "kind": "core",
     "models": [
@@ -4809,7 +4815,11 @@
       "app_search_ime": "implemented candidate: search-oriented IME + available-display-height overlay; device verification pending",
       "back_chain": "Commands: tabs switch peer views; Back only Y-stage → X-stage; root Android Back exits Full 4Tap",
       "session_model": "Docked session is separate from current Floating/Docked geometry; temporary external context floats KnockUI, returning Full 4Tap may re-dock only within the same session",
-      "global_strip_interlock": "Global strip visibility is driven by actual KnockUI presence, not docked boolean alone; real Docked KnockUI owns the single visible control strip"
+      "global_strip_interlock": "Global strip visibility is driven by actual KnockUI presence, not docked boolean alone; real Docked KnockUI owns the single visible control strip",
+      "checkpoint_3": "Android 9 / LGM-V300L: 3 device PASS for Docked close and resume routes; source: 4tap-app CONTROL-POINT-3.md",
+      "home_recents_return": "Full или Docked → Home/Recents → повторное открытие 4Tap: Docked. Если KnockUI уже существовал, сохранить панель/XY/AUTO-MANUAL; иначе новый Рисование, XY пустые, AUTO.",
+      "system_back": "Device PASS: системный △ Back работает при включённой службе и в Full/Docked; не распространять на непроверенные IME edge-cases.",
+      "floating_home_limitation": "Floating → ○ Home иногда не скрывает KnockUI (примерно через раз); известный открытый дефект, дальнейшие эвристики отложены."
     },
     "constraints": [
       "Docked 4Tap is a layout/lifecycle state, not a third working panel.",
@@ -5030,7 +5040,7 @@
     "title": "KnockUI Expanded Surfaces",
     "group": "UX SYSTEM",
     "short": "Временная полноформатная верхняя область, принадлежащая KnockUI и работающая над остающимся снизу KnockUI.",
-    "description": "Graffiti Reference works on-device. First resize-gate did not remove compositor flicker. A persistent-fullscreen touch-region attempt was rejected after compile failure on internal Android API. Current candidate uses public alpha-gated WindowManager resize.",
+    "description": "Graffiti Reference works on-device. First resize-gate did not remove compositor flicker. A persistent-fullscreen touch-region attempt was rejected after compile failure on internal Android API. Current candidate uses public alpha-gated WindowManager resize. Контрольная точка № 3: Full → ABCD отображает справочник сверху и полноценный работающий KnockUI снизу (device PASS). КЛАВИАТУРА → ABCD: один вылет ранее, затем около 20 успешных повторов без изменения кода; первопричина неизвестна.",
     "purpose": "Дать KnockUI большие временные рабочие поверхности без второй Activity/overlay и без потери текущего panel/Draw state.",
     "kind": "core",
     "models": [
@@ -5084,7 +5094,8 @@
       "compact_mode": "real compact WindowManager window; area outside it naturally belongs to underlying app",
       "expanded_mode": "same View/window resized to full screen while hidden; expandedRect above lower KnockUI",
       "failed_attempt": "persistent full-screen touch-region attempt used ViewTreeObserver.OnComputeInternalInsetsListener and failed compileDebugKotlin; fully removed",
-      "full_4tap_ime": "separate Docked IME priority candidate hides the lower Docked KnockUI while Activity IME is visible; App Search retains its own expanded-overlay IME contract"
+      "full_4tap_ime": "separate Docked IME priority candidate hides the lower Docked KnockUI while Activity IME is visible; App Search retains its own expanded-overlay IME contract",
+      "checkpoint_3": "Full → ABCD + lower working KnockUI: PASS; Keyboard → ABCD repeated passes, initial isolated crash unresolved."
     },
     "constraints": [
       "Expanded surfaces are not remembered working panels.",
