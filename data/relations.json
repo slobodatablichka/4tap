@@ -1228,5 +1228,47 @@
     "to": "gesture-check-surface",
     "relation": "обе ветки проходят или пропускают проверку жеста",
     "type": "flow"
+  },
+  {
+    "from": "roadmap-2",
+    "to": "knockui-docked-4tap",
+    "relation": "этап продуктового канона: Docked и восстановление после системной навигации",
+    "type": "roadmap"
+  },
+  {
+    "from": "knockui-panels",
+    "to": "knockui-expanded-surfaces",
+    "relation": "расширенные поверхности поверх рабочего KnockUI",
+    "type": "model"
+  },
+  {
+    "from": "knockui-panels",
+    "to": "knockui-docked-4tap",
+    "relation": "встраивает KnockUI снизу полного 4Tap",
+    "type": "model"
+  },
+  {
+    "from": "roadmap-2",
+    "to": "graffiti-rendering-scale",
+    "relation": "контроль масштаба эталонной графики",
+    "type": "roadmap"
+  },
+  {
+    "from": "roadmap-2",
+    "to": "commands-graffiti-composition",
+    "relation": "композиция Graffiti в списке команд",
+    "type": "roadmap"
+  },
+  {
+    "from": "roadmap-2",
+    "to": "knockui-refinement-block",
+    "relation": "очередь улучшений KnockUI",
+    "type": "roadmap"
+  },
+  {
+    "from": "command-screen",
+    "to": "roadmap-2",
+    "relation": "редактор КОМАНДА требует реализации режима РЕДАКТИРОВАТЬ",
+    "type": "roadmap"
   }
 ]
