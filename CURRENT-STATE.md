@@ -1430,3 +1430,11 @@ Implemented candidate:
 На основном Android-устройстве подтверждено: после отключения глобального Full 4Tap swipe-dismiss на `ПРОВЕРКЕ ЖЕСТА` рисование первого/второго знака больше не сворачивает Full 4Tap.
 
 Статус: **physical PASS**.
+
+## Governance checkpoint — контрольная точка № 3 (19.10.2026)
+
+Публичная карта синхронизирована с подтверждённым Android baseline в `slobodatablichka/4tap-app`: контрольная ветка `control-point-3` закреплена на `7cb84e719e2ac3edab51feb173815a5d8b4c98d0`, документ `CONTROL-POINT-3.md`. В `data/cells.json` обновлены существующие узлы `knockui-docked-4tap`, `knockui-expanded-surfaces`, `android-quad-tap`, `knockui-panels`, `command-screen`, `roadmap-2`; отношения сохранены без изменений.
+
+Физические PASS на LG Android 9: Docked → Close → Floating, Docked → Home/Recents → Docked → Close → Floating; работающий KnockUI под ABCD из Full; системный △ Back при ширине обеих угловых зон **64 dp** (высота 48 dp), повторная активация четырьмя тапами; Back в Full/Docked. КЛАВИАТУРА → ABCD: первоначальный единичный сбой не повторился в ~20 ручных тестах (причина не установлена). Известное ограничение: Floating → Home иногда не скрывает KnockUI.
+
+**Ближайший UX-блок по согласованному плану:** поверхность **КОМАНДА** — кнопка **РЕДАКТИРОВАТЬ между УДАЛИТЬ и СОХРАНИТЬ**. Это утверждённое требование из `4tap-app/ROADMAP.md`, ещё не device PASS. Затем Quick Shortcuts, Draw assignment action, WEB UX; параллельно — полевые испытания на новых Android и подготовка compliance. Статусы и будущие задачи не смешивать с физически подтверждённым кодом.
