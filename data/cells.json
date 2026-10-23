@@ -1537,8 +1537,8 @@
     "order": 115,
     "title": "Android Registry Storage",
     "group": "STORAGE",
-    "short": "Android связывает общие SystemGestures/UserGestures с конкретным способом хранения.",
-    "description": "По исходной архитектуре SystemGestures поставляются как защищённые системные данные приложения/resources, а UserGestures хранятся локально в Room/SQLite. Это платформенная реализация общих реестров KnockUI.",
+    "short": "Единый Room-реестр APP/WEB и связи назначений работают в Android-прототипе; отдельные источники команд используют существующие хранилища.",
+    "description": "По исходной архитектуре SystemGestures поставляются как защищённые системные данные приложения/resources, а UserGestures хранятся локально в Room/SQLite. Это платформенная реализация общих реестров KnockUI. Контрольная точка 5: в действующем Android-коде реализована общая Room-таблица объектов «Команды» и карточка «Назначения» со знакопарой, ярлыком, тап-тап и комментарием. Пользователь подтвердил функциональную связность Room с пятью способами вызова и независимость удаления назначений. Историческая схема полного переноса SystemGestures/UserGestures в Room не должна считаться подтверждённой только этим PASS.",
     "purpose": "Разделить общий протокол реестров и Android-способ их хранения.",
     "kind": "core",
     "models": [
@@ -1558,7 +1558,8 @@
     ],
     "parameters": {
       "system_store": "code/resources",
-      "user_store": "Room / SQLite"
+      "user_store": "Room / SQLite",
+      "cp5_room": "APP/WEB objects + notes integrated; assignment links reuse active registries/stores"
     },
     "constraints": [
       "Схема обновления SystemGestures ещё не определена."
@@ -1572,7 +1573,15 @@
       "storage",
       "room",
       "sqlite"
-    ]
+    ],
+    "verification": {
+      "state": "verified-constrained",
+      "date": "2026-10-23",
+      "confidence": "high",
+      "summary": "User reports PASS for Room object links, five invocation methods, independent deletion and explicit APP/WEB launch on LG V30. Full storage migration and cross-device validation not implied.",
+      "sources": [],
+      "next_step": "Preserve working data paths; investigate regressions only when reproduced during field trials."
+    }
   },
   {
     "id": "android-dispatcher",
@@ -3531,7 +3540,7 @@
     "title": "Stage 2 — Product Canon",
     "group": "ROADMAP",
     "short": "Current Android recognizer/Gesture Check build is stable on-device; preserve as baseline.",
-    "description": "Recognizer v2.1/Gesture Check remain the accepted physical-device baseline. KnockUI/App Search/Quick Shortcuts/Assignments have moved through successive real-device candidates. Current polish focuses on slot-based shortcut drag, Draw assignment action, WEB destination UX and preserving the stable recognizer while the project enters broader Android field trials. Контрольная точка № 3 зафиксирована в 4tap-app: основные Docked/Home/Recents/Back и Full → ABCD физически подтверждены. Ближайший Product Canon: утверждённая кнопка РЕДАКТИРОВАТЬ на КОМАНДА, затем Quick Shortcuts, Draw assignment action и WEB UX; отдельно Android cross-device field trials.",
+    "description": "Recognizer v2.1/Gesture Check remain the accepted physical-device baseline. KnockUI/App Search/Quick Shortcuts/Assignments have moved through successive real-device candidates. Current polish focuses on slot-based shortcut drag, Draw assignment action, WEB destination UX and preserving the stable recognizer while the project enters broader Android field trials. Контрольная точка № 3 зафиксирована в 4tap-app: основные Docked/Home/Recents/Back и Full → ABCD физически подтверждены. Ближайший Product Canon: утверждённая кнопка РЕДАКТИРОВАТЬ на КОМАНДА, затем Quick Shortcuts, Draw assignment action и WEB UX; отдельно Android cross-device field trials. По контрольной точке 5 (23.10.2026) пользователь дополнительно подтвердил PASS карточки «Назначения», четырёх редакторов, канонических подтверждений, кнопки «НАЗНАЧИТЬ», поиска APP, связей Room с пятью вызовами и явного ВЫЗВАТЬ. Навигация оценивается в длительной эксплуатации, точная SVG-геометрия отложена.",
     "purpose": "Стабилизировать визуальный язык и жестовые эталоны до масштабирования продукта.",
     "kind": "core",
     "models": [
@@ -3554,9 +3563,9 @@
     ],
     "parameters": {
       "stage_status": "active — working baseline physical PASS on LGM-V300L / Android 9",
-      "current_task": "После Control Point 3 — синхронизированная карта, затем КОМАНДА: РЕДАКТИРОВАТЬ между УДАЛИТЬ и СОХРАНИТЬ (не реализовано/не подтверждено); далее Quick Shortcuts / Draw action / WEB UX.",
+      "current_task": "Контрольная точка 5: подтверждены пользовательские редакторы, прямые переходы, канонические подтверждения удаления, поиск APP и вызов APP/WEB; длительные испытания навигации и других браузеров идут в рабочем порядке.",
       "graffiti": "4Tap Graffiti Profile v1 approved; Letter-F revised 2026-10-01",
-      "immediate_next": "build/install primary-device gate: Global strip on every Full 4Tap surface without KnockUI, GLOBAL Keyboard without lower Close, Save→Assignments reveal/highlight, then implement already-assigned Destination UX",
+      "immediate_next": "Переход к длительным эксплуатационным испытаниям Floating / Full / Docked и точечной фиксации возникающих регрессий; визуальные эталоны CorelDRAW/SVG — позже.",
       "subsequent": "policy/review dossier, public web presence, broader B2C configuration/deep links, production gate",
       "public_beta_gate": "Design Canon v1.0 before public beta",
       "approved_blocks": "KnockUI two-panel model; Commands; Command accepted on device; Destination v0.1 real-device PASS; 1296 Command Space; Command Space UI structure; normalized dual create-flow with shared Pair Selection + Gesture Check; brand teal #159B92; Pair Selection contextual geometry; Gesture Check stable physical-device baseline; recognizer v2.1 stable physical-device baseline; KnockUI control strip; Logo/About service view; Draw Slot1/Slot2 + Destination-line + AUTO/MANUAL/Send flow; KnockUI wide-bottom-panel geometry principle; adaptive 40–45% height; 1.0 s AUTO delay; Logo/About Hub expandable action-icon rows; НЕ НАЗНАЧЕНО Destination state; Support 4Tap and ScreenCart Hub assets; Docked 4Tap layout/lifecycle; Commands assignment Graffiti composition; 36 dp guide visibility threshold; KnockUI refinement execution plan 2026-10-03",
@@ -5114,5 +5123,61 @@
       "ux",
       "architecture"
     ]
+  },
+  {
+    "id": "android-cp5-field-state",
+    "section": "android",
+    "order": 155,
+    "title": "Android CP5 — Field State",
+    "group": "MILESTONE",
+    "short": "LG V30: почти всё PASS; базовый APP/WEB UX, Room и пять способов вызова подтверждены, длительные испытания продолжаются.",
+    "description": "Контрольная точка 5 в 4tap-app: ветка control-point-5 на 586d68e59db0c041725fb2ba0eea94550240f008. Пользователь подтвердил PASS: «Команды» → «Назначения» → знакопара/ярлык/тап-тап/комментарий, удаление с каноническими подтверждениями, скрытие KnockUI в «ТАП-ТАП», подпись «НАЗНАЧИТЬ», Back/Docked на проверенных маршрутах, поиск приложения в «НАЗНАЧИТЬ»/«ВЕДЕТ В», сохранение APP/WEB, связи Room с пятью способами вызова и явное «ВЫЗВАТЬ». Визуальные диалоги оценены как «более-менее PASS», не как окончательная пиксельная приёмка. Длительная навигация, CorelDRAW/SVG-геометрия и совместимость Chrome/прочих браузеров отложены до будущих испытаний. Это физическое подтверждение конкретных сценариев, не production или cross-device PASS.",
+    "purpose": "Связать карту продукта с актуальным устройственным результатом без замены утверждённой архитектуры.",
+    "kind": "core",
+    "models": [
+      "b2c"
+    ],
+    "platforms": [
+      "android"
+    ],
+    "status": "approved",
+    "inputs": [
+      "APP/WEB objects",
+      "L/R taps",
+      "User assignments"
+    ],
+    "outputs": [
+      "Working commands and assignment editors"
+    ],
+    "parameters": {
+      "source_repository": "slobodatablichka/4tap-app",
+      "checkpoint": "control-point-5",
+      "checkpoint_sha": "586d68e59db0c041725fb2ba0eea94550240f008",
+      "device": "LGM-V300L / Android 9",
+      "next_validation": "long-duration navigation, SVG geometry, browser compatibility"
+    },
+    "constraints": [
+      "PASS относится к названным пользовательским сценариям на LG V30, а не к полному циклу регрессии.",
+      "Не менять работающую навигацию без воспроизводимого дефекта.",
+      "Пиксельная геометрия по CorelDRAW/SVG будет утверждаться позже."
+    ],
+    "open_questions": [
+      "Что выявят длительные испытания Floating/Full/Docked на разных Android-устройствах?",
+      "Какова подтверждённая совместимость браузеров после последних изменений?"
+    ],
+    "tags": [
+      "android",
+      "cp5",
+      "room",
+      "field-test"
+    ],
+    "verification": {
+      "state": "verified-constrained",
+      "date": "2026-10-23",
+      "confidence": "high",
+      "summary": "User-reported physical PASS of specified flows on LG V30; not a comprehensive release test.",
+      "sources": [],
+      "next_step": "Run long-duration field trials; record and fix reproducible regressions only."
+    }
   }
 ]
