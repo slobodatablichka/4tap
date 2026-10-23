@@ -1270,5 +1270,29 @@
     "to": "roadmap-2",
     "relation": "редактор КОМАНДА требует реализации режима РЕДАКТИРОВАТЬ",
     "type": "roadmap"
+  },
+  {
+    "from": "roadmap-2",
+    "to": "android-cp5-field-state",
+    "relation": "фиксирует текущий подтверждённый Android-результат",
+    "type": "flow"
+  },
+  {
+    "from": "android-cp5-field-state",
+    "to": "android-registry-storage",
+    "relation": "подтверждает работающие связи Room и способов вызова",
+    "type": "model"
+  },
+  {
+    "from": "android-cp5-field-state",
+    "to": "android-quad-tap",
+    "relation": "использует нижние угловые последовательности",
+    "type": "model"
+  },
+  {
+    "from": "android-cp5-field-state",
+    "to": "design-canon",
+    "relation": "следует канону оформления поверхностей и диалогов",
+    "type": "constraint"
   }
 ]
