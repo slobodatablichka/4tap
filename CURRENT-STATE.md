@@ -133,7 +133,7 @@ Android 4Tap — обычное пользовательское приложе�
 
 - `AccessibilityService + TYPE_ACCESSIBILITY_OVERLAY` — и navigation-bar trigger, и KnockUI поверх текущего приложения.
 
-`SYSTEM_ALERT_WINDOW` удалён из manifest и не входит в текущий Android-path. AccessibilityService использует `canRetrieveWindowContent=false` и не читает содержимое экранов.
+`SYSTEM_ALERT_WINDOW` удалён из manifest и не входит в текущий Android-path. **Актуальная конфигурация после реализации WEB Context Assign:** `android:canRetrieveWindowContent="true"`, `flagReportViewIds`; доступ используется для ограниченного определения текущего APP и достоверного URL адресного поля браузера по явному правому вызову. Историю посещений и произвольное содержимое страниц не сохранять. Старое утверждение `false` относится к раннему prototype.
 
 Google Play допускает AccessibilityService и для приложений, не являющихся accessibility tools, но требует declaration, prominent in-app disclosure, affirmative consent и review. Для приложения с AccessibilityService доступен advance notice App Review.
 
