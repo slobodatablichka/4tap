@@ -3919,7 +3919,7 @@
     ],
     "parameters": {
       "trigger": "AccessibilityService + TYPE_ACCESSIBILITY_OVERLAY",
-      "accessibility_window_content": "canRetrieveWindowContent=false in current prototype",
+      "accessibility_window_content": "canRetrieveWindowContent=true; constrained APP/verified browser address extraction only on explicit Context Assign; no browsing history",
       "knockui": "TYPE_ACCESSIBILITY_OVERLAY — verified",
       "app_launch": "Intent / startActivity",
       "background_launch": "version/target-SDK constrained",
