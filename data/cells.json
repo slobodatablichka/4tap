@@ -3540,7 +3540,7 @@
     "title": "Stage 2 — Product Canon",
     "group": "ROADMAP",
     "short": "Current Android recognizer/Gesture Check build is stable on-device; preserve as baseline.",
-    "description": "Recognizer v2.1/Gesture Check remain the accepted physical-device baseline. KnockUI/App Search/Quick Shortcuts/Assignments have moved through successive real-device candidates. Current polish focuses on slot-based shortcut drag, Draw assignment action, WEB destination UX and preserving the stable recognizer while the project enters broader Android field trials. Контрольная точка № 3 зафиксирована в 4tap-app: основные Docked/Home/Recents/Back и Full → ABCD физически подтверждены. Ближайший Product Canon: утверждённая кнопка РЕДАКТИРОВАТЬ на КОМАНДА, затем Quick Shortcuts, Draw assignment action и WEB UX; отдельно Android cross-device field trials. По контрольной точке 5 (23.10.2026) пользователь дополнительно подтвердил PASS карточки «Назначения», четырёх редакторов, канонических подтверждений, кнопки «НАЗНАЧИТЬ», поиска APP, связей Room с пятью вызовами и явного ВЫЗВАТЬ. Навигация оценивается в длительной эксплуатации, точная SVG-геометрия отложена.",
+    "description": "Recognizer v2.1/Gesture Check remain the accepted physical-device baseline. KnockUI/App Search/Quick Shortcuts/Assignments have moved through successive real-device candidates. Current polish focuses on slot-based shortcut drag, Draw assignment action, WEB destination UX and preserving the stable recognizer while the project enters broader Android field trials. Контрольная точка № 3 зафиксирована в 4tap-app: основные Docked/Home/Recents/Back и Full → ABCD физически подтверждены. Ближайший Product Canon: утверждённая кнопка РЕДАКТИРОВАТЬ на КОМАНДА, затем Quick Shortcuts, Draw assignment action и WEB UX; отдельно Android cross-device field trials. По контрольной точке 5 (23.10.2026) пользователь дополнительно подтвердил PASS карточки «Назначения», четырёх редакторов, канонических подтверждений, кнопки «НАЗНАЧИТЬ», поиска APP, связей Room с пятью вызовами и явного ВЫЗВАТЬ. Навигация оценивается в длительной эксплуатации, точная SVG-геометрия отложена. Новый приоритет 24.10.2026: полная интеграция существующего NavigationStateRegistry, исправление маршрутов Floating Context Assign и Back/Close; затем первый запуск с сохранением Room; затем отдельно SOS при погашенном экране. SOS не подтверждён как готовая функция. Инвентаризация маршрутов в приватном приложении начата.",
     "purpose": "Стабилизировать визуальный язык и жестовые эталоны до масштабирования продукта.",
     "kind": "core",
     "models": [
@@ -3563,7 +3563,7 @@
     ],
     "parameters": {
       "stage_status": "active — working baseline physical PASS on LGM-V300L / Android 9",
-      "current_task": "Контрольная точка 5: подтверждены пользовательские редакторы, прямые переходы, канонические подтверждения удаления, поиск APP и вызов APP/WEB; длительные испытания навигации и других браузеров идут в рабочем порядке.",
+      "current_task": "24.10.2026: approved order — NavigationStateRegistry full integration (currently route inventory), then Accessibility/optional Usage Access first-run without erasing Room assignments, then screen-off SOS feasibility and reliable call, then resume roadmap",
       "graffiti": "4Tap Graffiti Profile v1 approved; Letter-F revised 2026-10-01",
       "immediate_next": "Переход к длительным эксплуатационным испытаниям Floating / Full / Docked и точечной фиксации возникающих регрессий; визуальные эталоны CorelDRAW/SVG — позже.",
       "subsequent": "policy/review dossier, public web presence, broader B2C configuration/deep links, production gate",
@@ -5154,7 +5154,7 @@
       "checkpoint": "control-point-5",
       "checkpoint_sha": "586d68e59db0c041725fb2ba0eea94550240f008",
       "device": "LGM-V300L / Android 9",
-      "next_validation": "long-duration navigation, SVG geometry, browser compatibility"
+      "next_validation": "NavigationStateRegistry route inventory and integration; Floating Context Assign Back/Close; first-run onboarding; SOS feasibility (screen off)"
     },
     "constraints": [
       "PASS относится к названным пользовательским сценариям на LG V30, а не к полному циклу регрессии.",
