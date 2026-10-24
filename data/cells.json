@@ -5016,11 +5016,11 @@
       "end_arrow": "implemented candidate: shared renderer local 1.20× end-arrow scale; pivot = nearest geometric trajectory endpoint; recognizer unchanged",
       "expanded_surface": "Graffiti Reference works physically; current candidate replaces failed internal touch-region approach with public alpha-gated WindowManager resize",
       "graffiti_reference": "implemented candidate: control action + read-only 36-glyph 6×6 via GraffitiReferenceGridRenderer; canonical asset and Android derivative connected",
-      "keyboard_search": "action + Android derivative connected to reserved APP_SEARCH state; standard IME/live app search content remains next",
+      "keyboard_search": "implemented and device-tested: Android IME, launchable app search, standard APP execution; further refinement only for reproduced issues",
       "shortcuts": "pinned user-managed grid first; optional horizontal pages; no system Usage Access in v1; optional frequent suggestions from 4Tap's own history",
       "draw_feedback": "de-emphasize empty frames; strengthen active/recognized/pair-ready/executing states; do not change recognizer or AUTO/MANUAL logic",
       "current_step": "repeat build after compile fix, then device re-review of alpha-gated flicker fix + stronger Draw input group",
-      "next_step": "after PASS: implement App Search EditText + standard IME + launchable-app live filter"
+      "next_step": "Historical next step completed: App Search active; current priority first-run onboarding and field testing"
     },
     "constraints": [
       "Recognizer v2.1 and Gesture Check remain stable baseline.",
@@ -5092,7 +5092,7 @@
       "docked_height_contract": "DockedFourTap always receives compactHeightPx, never full expanded-window height",
       "focus_implementation": "APP_SEARCH focusability flags are applied during hidden resize/state phase",
       "touch_implementation": "expandedRect consumes upper-area touch and does not start lower Draw interaction",
-      "feature_wiring": "implemented: both control-strip actions; GRAFFITI_REFERENCE renders 6×6; APP_SEARCH switches state but has no EditText/IME/app list yet",
+      "feature_wiring": "Implemented: Graffiti Reference grid and App Search with EditText, standard IME and launchable app list; physical PASS recorded in app state",
       "control_strip_order": "Logo | Ярлыки | Graffiti Reference | Клавиатура | Рисование | Slot1 | Slot2 | Send | Close",
       "control_cell": "Android candidate: min(48 dp, KnockUI width / 9); strip height 48 dp",
       "graffiti_reference_grid": "6×6 A–Z+0–9; teal cells; 1 dp separators; 4 dp glyph inset; X-reference common height with 8% width reserve; shared GraffitiRenderer",
