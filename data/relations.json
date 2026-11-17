@@ -1294,5 +1294,35 @@
     "to": "design-canon",
     "relation": "следует канону оформления поверхностей и диалогов",
     "type": "constraint"
+  },
+  {
+    "from": "android-ui-backlog-2026-11",
+    "to": "roadmap-2",
+    "relation": "отложенная доработка Android Product Canon",
+    "type": "model"
+  },
+  {
+    "from": "android-ui-backlog-2026-11",
+    "to": "design-canon",
+    "relation": "требует согласования перед UI-реализацией",
+    "type": "constraint"
+  },
+  {
+    "from": "android-ui-backlog-2026-11",
+    "to": "knockui-panels",
+    "relation": "предлагает новый контекстный вход, сохраняя текущие панели до утверждения",
+    "type": "model"
+  },
+  {
+    "from": "android-ui-backlog-2026-11",
+    "to": "commands-screen",
+    "relation": "расширяет отображение действующих APP-назначений",
+    "type": "model"
+  },
+  {
+    "from": "android-ui-backlog-2026-11",
+    "to": "roadmap-5",
+    "relation": "выделение 4Tap-SC откладывается до технической приёмки 4Tap",
+    "type": "constraint"
   }
 ]
