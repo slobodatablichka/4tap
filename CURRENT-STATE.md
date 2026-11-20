@@ -1,3 +1,7 @@
+## 2026-11-20 — KnockUI stage 3: approved glowing active icon, Android candidate
+
+User approved the selected icon design: light field under the active icon and grey icon+frame instead of a dark overlay frame. Candidate KnockUI in private `4tap-app/main`: 48dp 8-icon control strip, 48dp Destination/Slot1/Slot2/Send row, embedded `Контекст` with shared Room assignments and Full editors, SC button visibly disabled until AI-shell. The shared `drag_handle.svg` is stored but needs approved dp/gesture before WindowManager changes. **CI and on-device acceptance are tracked separately** in private `CURRENT-STATE.md`; stage 2 remains device PASS. Details: map node `android-ui-backlog-2026-11`.
+
 ## 2026-11-20 — этап 2 Android «Ярлыки»: device PASS; подготовка этапа 3
 
 Пользователь подтвердил физический PASS переноса ярлыка на свободный slot, обмена занятых (swap) и сохранности размещений при повторном открытии панели, дополнительно к принятым ранее сценариям назначения и полноэкранного выбора ячейки. Этап 2 закрыт по его приёмочным сценариям; это не общая Android-регрессия. Далее — KnockUI / Контекст: функциональный порядок полосы и перенос Slot1/Slot2/Send утверждены, но SVG пиктограммы «Контекст» отсутствует и должен быть предоставлен пользователем; точная геометрия и active-state ещё требуют решения до изменения Kotlin. Статусы отражены в ячейке `android-ui-backlog-2026-11`.
